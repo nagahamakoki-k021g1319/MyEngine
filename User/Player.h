@@ -58,6 +58,7 @@ public:
 	//音を止める関数
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
 
+
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
