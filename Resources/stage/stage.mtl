@@ -1,0 +1,10 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl None
+	Ka 0.000 0.000 0.000
+	Kd 1.000 1.000 1.000
+	Ks 0.000 0.000 0.000
+	map_Kd skydome.png
+illum 2
+

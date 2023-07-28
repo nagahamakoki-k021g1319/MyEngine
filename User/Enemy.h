@@ -1,0 +1,107 @@
+#pragma once
+#include "DirectXCommon.h"
+#include "Object3d.h"
+#include "Input.h"
+#include "Camera.h"
+
+class Player;
+#include "Collision.h"
+#include "ParticleManager.h"
+#include "Audio.h"
+
+#include "FBXModel.h"
+#include "FbxLoader.h"
+#include "FBXObject3d.h"
+#include "SplinePosition.h"
+
+class Enemy
+{
+public:
+	Enemy();
+	~Enemy();
+
+	void Initialize(DirectXCommon* dxCommon, Input* input);
+	void Update();
+
+	void Draw();
+	void FbxDraw();
+
+	//エフェクトの更新処理
+	void EffUpdate();
+	//エフェクトの情報
+	void EffSummary(Vector3 enemyPos);
+	void EffSimpleSummary();
+	//エフェクトの描画
+	void EffDraw();
+
+	////ワールド座標を取得
+	Vector3 GetWorldPosition();
+
+	////ワールド座標を取得(雑魚敵)
+	Vector3 GetWinpWorldPosition();
+
+	void OnColision();
+
+	/// <summary>
+	/// ポジション
+	/// </summary>
+	/// <param name="pos"></param>
+	void SetPos(Vector3 pos) { fbxObject3d_->wtf.position = pos; };
+
+	void SetPlayer(Player* player) { player_ = player; };
+
+public:
+	//音を止める関数
+	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
+	//雑魚敵が動き始める
+	bool bossGostAt = false;
+
+private:
+	const float PI = 3.141592f;
+	Input* input_ = nullptr;
+	DirectXCommon* dxCommon = nullptr;
+	Audio* audio = nullptr;
+	Player* player_ = nullptr;
+	SplinePosition* splinePosition_ = nullptr;
+
+	Collision coll;
+	//待機(消えるBoss)
+	FBXModel* fbxModel_ = nullptr;
+	FBXObject3d* fbxObject3d_ = nullptr;
+	int bossGostMove = 0;
+
+	//雑魚敵
+	FBXModel* fbxWinpModel_ = nullptr;
+	FBXObject3d* fbxWinpObject3d_[4] = {0};
+	bool isAliveFlag = true;
+	//生きているかどうか(0生きる,1死亡)
+	int isWinpAliveFlag_[4] = { 0 };
+
+	//ローカル移動
+	Vector3 enemyWinplocalpos = { 0.0f,0.0f,0.0f };
+
+	//弾発射(誘導弾)
+	Object3d* shootObj_ = nullptr;
+	Model* shootModel_ = nullptr;
+	bool isShootFlag = false;
+	int isShootTimer = -20;
+	Vector3 playerlen;
+	Vector3 len;
+
+	//パーティクル
+	std::unique_ptr<ParticleManager> DamageParticle;
+	int EffTimer = 0;
+	int isEffFlag = 0;
+
+
+
+	const float moveSpeed_ = 0.1f;
+	const float rotaSpeed_ = 0.1f;
+
+	
+
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+
+};
+
