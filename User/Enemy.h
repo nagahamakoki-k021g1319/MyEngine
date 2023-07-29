@@ -21,7 +21,7 @@ public:
 	~Enemy();
 
 	void Initialize(DirectXCommon* dxCommon, Input* input);
-	void Update();
+	void Update(SplinePosition* spPosition_);
 
 	void Draw();
 	void FbxDraw();
@@ -47,7 +47,7 @@ public:
 	/// </summary>
 	/// <param name="pos"></param>
 	void SetPos(Vector3 pos) { fbxObject3d_->wtf.position = pos; };
-
+	void SetCamera(Camera* cam) { camera = cam; };
 	void SetPlayer(Player* player) { player_ = player; };
 
 public:
@@ -62,6 +62,7 @@ private:
 	DirectXCommon* dxCommon = nullptr;
 	Audio* audio = nullptr;
 	Player* player_ = nullptr;
+	Camera* camera = nullptr;
 	SplinePosition* splinePosition_ = nullptr;
 
 	Collision coll;
@@ -78,7 +79,12 @@ private:
 	int isWinpAliveFlag_[4] = { 0 };
 
 	//ÉçÅ[ÉJÉãà⁄ìÆ
-	Vector3 enemyWinplocalpos = { 0.0f,0.0f,0.0f };
+	Vector3 enemyWinplocalpos = { 0.0f,0.0f,10.0f };
+
+	//é~ÇﬂÇÈÇ∆Ç´
+	Vector3 Start = { 0.0f,0.0f,0.0f };
+	Vector3 end = { 0.0f,0.0f,0.0f };
+	std::vector<Vector3> points{ Start, Start,end, end };
 
 	//íeî≠éÀ(óUì±íe)
 	Object3d* shootObj_ = nullptr;
@@ -92,8 +98,6 @@ private:
 	std::unique_ptr<ParticleManager> DamageParticle;
 	int EffTimer = 0;
 	int isEffFlag = 0;
-
-
 
 	const float moveSpeed_ = 0.1f;
 	const float rotaSpeed_ = 0.1f;

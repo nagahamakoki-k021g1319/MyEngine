@@ -121,7 +121,7 @@ void GameScene::Update() {
 	if (sceneNo_ == SceneNo::Game) {
 		
 		player_->Update();
-		enemy_->Update();
+		enemy_->Update(player_->splinePosition_);
 		enemyBoss_->Update();
 		obstacle_->Update();
 

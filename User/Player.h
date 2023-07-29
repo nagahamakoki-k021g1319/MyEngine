@@ -57,7 +57,7 @@ public:
 public:
 	//音を止める関数
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
-
+	SplinePosition* splinePosition_ = nullptr;
 
 private:
 	const float PI = 3.141592f;
@@ -65,7 +65,7 @@ private:
 	DirectXCommon* dxCommon = nullptr;
 	Audio* audio = nullptr;
 	Enemy* enemy_ = nullptr;
-	SplinePosition* splinePosition_ = nullptr;
+	
 
 	//待機
 	FBXModel* fbxModel_ = nullptr;

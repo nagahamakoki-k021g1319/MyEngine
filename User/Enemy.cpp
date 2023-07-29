@@ -26,6 +26,9 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 	this->dxCommon = dxCommon;
 	input_ = input;
 
+	camera = new Camera(WinApp::window_width, WinApp::window_height);
+	splinePosition_ = new SplinePosition(points);
+
 	fbxModel_ = FbxLoader::GetInstance()->LoadModelFromFile("kuma");
 	fbxWinpModel_ = FbxLoader::GetInstance()->LoadModelFromFile("enemyfanneru");
 	// デバイスをセット
@@ -46,15 +49,15 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 		fbxWinpObject3d_[i] = new FBXObject3d;
 		fbxWinpObject3d_[i]->Initialize();
 		fbxWinpObject3d_[i]->SetModel(fbxWinpModel_);
-		fbxWinpObject3d_[i]->wtf.scale = { 0.05f,0.05f,0.05f };
+		fbxWinpObject3d_[i]->wtf.scale = { 0.1f,0.1f,0.1f };
 		fbxWinpObject3d_[i]->PlayAnimation(1.0f, true);
 	}
 	//雑魚敵の挙動とポジション
 	//最初に出てくる0~3の敵
-	fbxWinpObject3d_[0]->wtf.position = { 0.4f,  1.3f, 5.0f };  //右上{  0.4f, 0.3f,2.0f };   
-	fbxWinpObject3d_[1]->wtf.position = { -2.8f,  1.4f, 25.0f }; //左上{ -0.4f, 0.2f,2.0f }; 
-	fbxWinpObject3d_[2]->wtf.position = { 3.0f, 0.6f, 25.0f }; //右下{  0.4f,-0.3f,2.0f }; 
-	fbxWinpObject3d_[3]->wtf.position = { -3.0f, -0.2f, 25.0f }; //左下{ -0.4f,-0.3f,2.0f };
+	fbxWinpObject3d_[0]->wtf.position = { 0.4f,  1.3f, 10.0f };  //右上{  0.4f, 0.3f,2.0f };   
+	fbxWinpObject3d_[1]->wtf.position = { -2.8f,  1.4f, 10.0f }; //左上{ -0.4f, 0.2f,2.0f }; 
+	fbxWinpObject3d_[2]->wtf.position = { 3.0f, 0.6f, 10.0f }; //右下{  0.4f,-0.3f,2.0f }; 
+	fbxWinpObject3d_[3]->wtf.position = { -3.0f, -0.2f, 10.0f }; //左下{ -0.4f,-0.3f,2.0f };
 
 
 	shootModel_ = Model::LoadFromOBJ("eneboll");
@@ -71,8 +74,10 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 
 }
 
-void Enemy::Update()
+void Enemy::Update(SplinePosition* spPosition_)
 {
+	splinePosition_ = spPosition_;
+
 	//最初のボスの消えて雑魚敵が出てくるまでの挙動
 	fbxObject3d_->Update();
 	shootObj_->Update();
@@ -83,6 +88,7 @@ void Enemy::Update()
 	if (fbxObject3d_->wtf.position.z >= 12.0f) { fbxObject3d_->wtf.position.z = 10000.0f; }
 	for (int i = 0; i < 4; i++) {
 		fbxWinpObject3d_[i]->Update();
+		fbxWinpObject3d_[i]->wtf.position.z = 30.0f;
 	}
 	EffUpdate();
 
@@ -90,6 +96,14 @@ void Enemy::Update()
 	if (bossGostAt == true) {
 
 		isShootTimer++;
+
+		//スプライン曲線の更新
+		float speed = 0.0f;
+		splinePosition_->Update(speed);
+		fbxWinpObject3d_[0]->wtf.position = splinePosition_->NowPos;
+
+		//移動
+		fbxWinpObject3d_[0]->wtf.position = fbxWinpObject3d_[0]->wtf.position + enemyWinplocalpos;
 
 
 
