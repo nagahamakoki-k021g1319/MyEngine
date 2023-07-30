@@ -3,6 +3,8 @@
 #include "Object3d.h"
 #include "Input.h"
 #include "Camera.h"
+#include "SpriteCommon.h"
+#include "Sprite.h"
 
 #include "ParticleManager.h"
 #include "Audio.h"
@@ -21,10 +23,12 @@ public:
 	~Player();
 
 	void Initialize(DirectXCommon* dxCommon, Input* input);
+	void UIInitialize();
 	void Update();
 
 	void Draw();
 	void FbxDraw();
+	void UIDraw();
 
 	//プレイヤーの行動一覧
 	void PlayerAction();
@@ -65,7 +69,7 @@ private:
 	DirectXCommon* dxCommon = nullptr;
 	Audio* audio = nullptr;
 	Enemy* enemy_ = nullptr;
-	
+	SpriteCommon* spriteCommon = nullptr;
 
 	//待機
 	FBXModel* fbxModel_ = nullptr;
@@ -92,10 +96,21 @@ private:
 	Vector3 len2;
 	int storeStBulletTime = 0;
 	
-
 	//弾の弾数表示
-
-
+	int bulletRest = 0;
+	Sprite* BulletFlameUI = nullptr;
+	
+	Sprite* Bullet1dUI = nullptr;
+	Sprite* Bullet1fUI = nullptr;
+	Sprite* Bullet1mUI = nullptr;
+	
+	Sprite* Bullet2dUI = nullptr;
+	Sprite* Bullet2fUI = nullptr;
+	Sprite* Bullet2mUI = nullptr;
+	
+	Sprite* Bullet3dUI = nullptr;
+	Sprite* Bullet3fUI = nullptr;
+	Sprite* Bullet3mUI = nullptr;
 
 	//切り払いモーション
 	FBXModel* fbxSlashModel_ = nullptr;
@@ -131,7 +146,7 @@ private:
 	bool isAliveFlag = true;
 
 	//ローカル移動
-	Vector3 playerlocalpos = { 0.0f,-0.1f,0.0f };
+	Vector3 playerlocalpos = { 0.0f,-0.3f,0.0f };
 	Vector3 playerlocalpos0 = { 0.0f,0.0f,-3.0f };
 	Vector3 retlocalpos = { 0.0f,0.0f,0.0f };
 
@@ -151,10 +166,22 @@ private:
 	Vector3 p4 = { -1.0f,2.0f,25.0f };
 	Vector3 p5 = { 1.0f,-2.0f,30.0f };
 	Vector3 p6 = { 0.0f,0.0f,35.0f };
+	Vector3 p7 = { 1.0f,2.0f,40.0f };
+	Vector3 p8 = { 3.0f,0.0f,45.0f };
+	Vector3 p9 = { 1.0f,-1.0f,50.0f };
+	Vector3 p10 = { 0.0f,0.0f,55.0f };
+	Vector3 p11 = { 2.0f,2.0f,60.0f };
+	Vector3 p12 = { 0.0f,0.0f,65.0f };
+	Vector3 p13 = { -1.0f,0.0f,70.0f };
+	Vector3 p14 = { 0.0f,0.0f,75.0f };
+	Vector3 p15 = { -2.0f,3.0f,80.0f };
+	Vector3 p16 = { -1.0f,0.0f,85.0f };
+	Vector3 p17 = { 1.0f,-2.0f,90.0f };
+	Vector3 p18 = { 0.0f,-1.0f,95.0f };
 	Vector3 end = { 0.0f,0.0f,100.0f };
 	std::vector<Vector3> points{ 
 		Start, Start, 
-		p1, p2, p3,p4,p5,p6,
+		p1, p2, p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,
 		end, end 
 	};
 	
