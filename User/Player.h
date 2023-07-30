@@ -131,7 +131,8 @@ private:
 	bool isAliveFlag = true;
 
 	//ローカル移動
-	Vector3 playerlocalpos = { 0.0f,0.0f,0.0f };
+	Vector3 playerlocalpos = { 0.0f,-0.1f,0.0f };
+	Vector3 playerlocalpos0 = { 0.0f,0.0f,-3.0f };
 	Vector3 retlocalpos = { 0.0f,0.0f,0.0f };
 
 	//スプライン曲線
@@ -144,16 +145,16 @@ private:
 
 	//動かすとき
 	Vector3 Start = { 0.0f,0.0f,0.0f };
-	Vector3 p1 = { 0.0f,-2.0f,3.0f };
+	Vector3 p1 = { 0.0f,-2.0f,5.0f };
 	Vector3 p2 = { 0.0f,2.0f,10.0f };
 	Vector3 p3 = { 3.0f,0.0f,20.0f };
-	Vector3 p4 = { -1.0f,2.0f,20.0f };
+	Vector3 p4 = { -1.0f,2.0f,25.0f };
 	Vector3 p5 = { 1.0f,-2.0f,30.0f };
 	Vector3 p6 = { 0.0f,0.0f,35.0f };
 	Vector3 end = { 0.0f,0.0f,100.0f };
 	std::vector<Vector3> points{ 
 		Start, Start, 
-		p1, p2, p3,p4,p3,p4,p3,p4,p3,p4,p3,p4,p3,p4,p3,p4,p3,p4,p5,p6,
+		p1, p2, p3,p4,p5,p6,
 		end, end 
 	};
 	

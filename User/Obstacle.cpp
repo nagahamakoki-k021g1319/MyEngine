@@ -25,12 +25,12 @@ void Obstacle::Initialize(DirectXCommon* dxCommon, Input* input)
 	for (int i = 0; i < 4; i++) {
 		obstacleObj_[i] = Object3d::Create();
 		obstacleObj_[i]->SetModel(obstacleModel_);
-		obstacleObj_[i]->wtf.scale = { 0.08f,0.08f,0.08f };
+		obstacleObj_[i]->wtf.scale = { 1.0f,1.0f,1.0f };
 	}
-	obstacleObj_[0]->wtf.position = { 0.5f,0.3f,12.0f };
-	obstacleObj_[1]->wtf.position = { -0.5f,0.1f,17.0f };
-	obstacleObj_[2]->wtf.position = { -0.1f,0.4f,22.0f };
-	obstacleObj_[3]->wtf.position = { 0.3f,-0.1f,27.0f }; //27
+	obstacleObj_[0]->wtf.position = { 0.5f,0.3f,20.0f };
+	obstacleObj_[1]->wtf.position = { -2.0f,-1.0f,28.0f };
+	obstacleObj_[2]->wtf.position = { 3.0f,0.4f,36.0f };
+	obstacleObj_[3]->wtf.position = { 0.3f,-0.1f,44.0f }; //27
 
 }
 
@@ -42,13 +42,15 @@ void Obstacle::Update()
 
 	//áŠQ•¨‚ª“®‚«Žn‚ß‚é
 	if (enemy_->bossGostAt == true) {
-		
+		for (int i = 0; i < 4; i++) {
+			obstacleObj_[i]->wtf.rotation.x -= 0.03f;
+		}
 
 	}
 
 	//“–‚½‚è”»’è(Ž©‹@’e‚ÆŽG‹›“G)
 	for (int i = 0; i < 4; i++) {
-		if (coll.CircleCollision(player_->GetSwordWorldPosition(), obstacleObj_[i]->wtf.position, 0.1f, 0.1f)) {
+		if (coll.CircleCollision(player_->GetWorldPosition(), obstacleObj_[i]->wtf.position, 1.0f, 1.0f)) {
 			isObsAliveFlag_[i] = 1;
 		};
 	}
