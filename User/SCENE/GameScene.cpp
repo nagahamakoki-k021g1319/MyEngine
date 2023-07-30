@@ -71,7 +71,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	floorMD = Model::LoadFromOBJ("stage");
 	floor = Object3d::Create();
 	floor->SetModel(floorMD);
-	floor->wtf.position = (Vector3{ 0, -5, 0 });
+	floor->wtf.position = (Vector3{ 0, -10, 0 });
 	floor->wtf.scale = (Vector3{ 0.5f, 0.5f, 0.5f });
 
 	//プレイヤー

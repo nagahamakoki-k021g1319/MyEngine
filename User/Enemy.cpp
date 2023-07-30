@@ -50,16 +50,15 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 		fbxWinpObject3d_[i]->Initialize();
 		fbxWinpObject3d_[i]->SetModel(fbxWinpModel_);
 		fbxWinpObject3d_[i]->wtf.scale = { 0.1f,0.1f,0.1f };
+		fbxWinpObject3d_[i]->wtf.position.z = 30.0f;
 		fbxWinpObject3d_[i]->PlayAnimation(1.0f, true);
 	}
+	
+	
+	
+	
+	
 	//雑魚敵の挙動とポジション
-	//最初に出てくる0~3の敵
-	fbxWinpObject3d_[0]->wtf.position = { 0.4f,  1.3f, 10.0f };  //右上{  0.4f, 0.3f,2.0f };   
-	fbxWinpObject3d_[1]->wtf.position = { -2.8f,  1.4f, 10.0f }; //左上{ -0.4f, 0.2f,2.0f }; 
-	fbxWinpObject3d_[2]->wtf.position = { 3.0f, 0.6f, 10.0f }; //右下{  0.4f,-0.3f,2.0f }; 
-	fbxWinpObject3d_[3]->wtf.position = { -3.0f, -0.2f, 10.0f }; //左下{ -0.4f,-0.3f,2.0f };
-
-
 	shootModel_ = Model::LoadFromOBJ("eneboll");
 	shootObj_ = Object3d::Create();
 	shootObj_->SetModel(shootModel_);
@@ -74,10 +73,37 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 
 }
 
+void Enemy::WinpUpdate()
+{
+	//雑魚敵の出現速度
+	float WinpSpeedX = 0.1f;
+	float WinpSpeedZ = 1.0f;
+
+	//雑魚敵の初期位置
+	// 左が初期値                  右が最終到達点
+	//{ 10.0f, -1.0f, 10.0f };{ 0.0f,-1.0f,10.0f };
+	fbxWinpObject3d_[0]->wtf.position = fbxWinpObject3d_[0]->wtf.position + enemyWinplocalpos0;
+	//{ 10.0f, 0.0f, 10.0f };{ 3.0f,0.0f,10.0f }
+	fbxWinpObject3d_[1]->wtf.position = fbxWinpObject3d_[1]->wtf.position + enemyWinplocalpos1;
+	//{ -10.0f, 0.0f, 10.0f };{ -3.0f,0.0f,10.0f }
+	fbxWinpObject3d_[2]->wtf.position = fbxWinpObject3d_[2]->wtf.position + enemyWinplocalpos2;
+	//{ -10.0f, 1.0f, 10.0f };{ 0.0f,1.0f,10.0f 
+	fbxWinpObject3d_[3]->wtf.position = fbxWinpObject3d_[3]->wtf.position + enemyWinplocalpos3;
+
+	enemyWinplocalpos0.x -= WinpSpeedX;
+	enemyWinplocalpos1.x -= WinpSpeedX;
+	enemyWinplocalpos2.x += WinpSpeedX;
+	enemyWinplocalpos3.x += WinpSpeedX;
+	if (enemyWinplocalpos0.x <= 0.0f) {enemyWinplocalpos0.x = 0.0f;}
+	if (enemyWinplocalpos1.x <= 3.0f) { enemyWinplocalpos1.x = 3.0f; }
+	if (enemyWinplocalpos2.x >= -3.0f) { enemyWinplocalpos2.x = -3.0f; }
+	if (enemyWinplocalpos3.x >= 0.0f) { enemyWinplocalpos3.x = 0.0f; }
+}
+
 void Enemy::Update(SplinePosition* spPosition_)
 {
 	splinePosition_ = spPosition_;
-
+	camera->Update();
 	//最初のボスの消えて雑魚敵が出てくるまでの挙動
 	fbxObject3d_->Update();
 	shootObj_->Update();
@@ -88,7 +114,6 @@ void Enemy::Update(SplinePosition* spPosition_)
 	if (fbxObject3d_->wtf.position.z >= 12.0f) { fbxObject3d_->wtf.position.z = 10000.0f; }
 	for (int i = 0; i < 4; i++) {
 		fbxWinpObject3d_[i]->Update();
-		fbxWinpObject3d_[i]->wtf.position.z = 30.0f;
 	}
 	EffUpdate();
 
@@ -100,29 +125,13 @@ void Enemy::Update(SplinePosition* spPosition_)
 		//スプライン曲線の更新
 		float speed = 0.0f;
 		splinePosition_->Update(speed);
-		fbxWinpObject3d_[0]->wtf.position = splinePosition_->NowPos;
-
-		//移動
-		fbxWinpObject3d_[0]->wtf.position = fbxWinpObject3d_[0]->wtf.position + enemyWinplocalpos;
-
-
-
-		//弾発射
-		if (isShootTimer >= 30) {
-			isShootFlag = true;
+		camera->wtf.position = splinePosition_->NowPos;
+		for (int i = 0; i < 4; i++) {
+			fbxWinpObject3d_[i]->wtf.position = splinePosition_->NowPos;
 		}
-		if (isShootFlag == true) {
-			shootObj_->wtf.position.z -= 0.05f;
-		}
-		else {
-			shootObj_->wtf.position = { fbxWinpObject3d_[0]->wtf.position.x,fbxWinpObject3d_[0]->wtf.position.y, fbxWinpObject3d_[0]->wtf.position.z };
-		}
-		if (shootObj_->wtf.position.z <= -2.0f) {
-			isShootFlag = false;
-			isShootTimer = 0;
-		}
-
-
+		
+		//雑魚敵の発生と移動
+		WinpUpdate();
 	}
 
 
@@ -130,8 +139,8 @@ void Enemy::Update(SplinePosition* spPosition_)
 	//当たり判定(自機弾と雑魚敵)
 	for (int i = 0; i < 4; i++) {
 		if (isWinpAliveFlag_[i] == 0) {
-			if (coll.CircleCollision(player_->GetBulletWorldPosition(), fbxWinpObject3d_[i]->wtf.position, 0.1f, 0.2f)) {
-				isEffFlag = 1;
+			if (coll.CircleCollision(player_->GetBulletWorldPosition(), fbxWinpObject3d_[i]->wtf.position, 1.0f, 0.2f)) {
+				isEffFlag_[i] = 1;
 				isWinpAliveFlag_[i] = 1;
 			};
 		}
@@ -139,6 +148,8 @@ void Enemy::Update(SplinePosition* spPosition_)
 
 
 }
+
+
 
 void Enemy::Draw()
 {
@@ -156,27 +167,31 @@ void Enemy::FbxDraw()
 	fbxObject3d_->Draw(dxCommon->GetCommandList());
 
 
-
-	for (int i = 0; i < 4; i++) {
-		if (isWinpAliveFlag_[i] == 0) {
-			fbxWinpObject3d_[i]->Draw(dxCommon->GetCommandList());
+	if (bossGostAt == true) {
+		for (int i = 0; i < 4; i++) {
+			if (isWinpAliveFlag_[i] == 0) {
+				fbxWinpObject3d_[i]->Draw(dxCommon->GetCommandList());
+			}
 		}
 	}
+
 
 
 }
 
 void Enemy::EffUpdate()
 {
-	if (isEffFlag == 1) {
-		EffTimer++;
-	}
-	if (EffTimer <= 10 && EffTimer >= 1) {
-		EffSummary(Vector3(fbxWinpObject3d_[0]->wtf.position.x, fbxWinpObject3d_[0]->wtf.position.y, fbxWinpObject3d_[0]->wtf.position.z));
-	}
-	if (EffTimer >= 10) {
-		isEffFlag = 0;
-		EffTimer = 0;
+	for (int i = 0; i < 4; i++) {
+		if (isEffFlag_[i] == 1) {
+			EffTimer_[i]++;
+		}
+		if (EffTimer_[i] <= 10 && EffTimer_[i] >= 1) {
+			EffSummary(Vector3(fbxWinpObject3d_[i]->wtf.position.x, fbxWinpObject3d_[i]->wtf.position.y, fbxWinpObject3d_[i]->wtf.position.z));
+		}
+		if (EffTimer_[i] >= 10) {
+			isEffFlag_[i] = 0;
+			EffTimer_[i] = 0;
+		}
 	}
 
 }
@@ -224,7 +239,7 @@ void Enemy::EffSimpleSummary()
 		pos.x += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 		pos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 		pos.z += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		
+
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 		const float rnd_vel = 0.1f;
@@ -249,9 +264,11 @@ void Enemy::EffSimpleSummary()
 
 void Enemy::EffDraw()
 {
-	if (isEffFlag == 1) {
-		// 3Dオブクジェクトの描画
-		DamageParticle->Draw();
+	for (int i = 0; i < 4; i++) {
+		if (isEffFlag_[i] == 1) {
+			// 3Dオブクジェクトの描画
+			DamageParticle->Draw();
+		}
 	}
 }
 

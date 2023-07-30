@@ -22,7 +22,7 @@ public:
 
 	void Initialize(DirectXCommon* dxCommon, Input* input);
 	void Update(SplinePosition* spPosition_);
-
+	void WinpUpdate();
 	void Draw();
 	void FbxDraw();
 
@@ -78,12 +78,17 @@ private:
 	//生きているかどうか(0生きる,1死亡)
 	int isWinpAliveFlag_[4] = { 0 };
 
-	//ローカル移動
-	Vector3 enemyWinplocalpos = { 0.0f,0.0f,10.0f };
+	//ローカル移動座標
+	Vector3 enemyWinplocalpos0 = { 10.0f,-1.0f,10.0f };//{ 0.0f,-1.0f,10.0f };
+	Vector3 enemyWinplocalpos1 = { 10.0f,0.0f,10.0f };//{ 3.0f,0.0f,10.0f }
+	Vector3 enemyWinplocalpos2 = { -10.0f,0.0f,10.0f };//{ -3.0f,0.0f,10.0f }
+	Vector3 enemyWinplocalpos3 = { -10.0f,1.0f,10.0f };//{ 0.0f,1.0f,10.0f 
+
+	
 
 	//止めるとき
 	Vector3 Start = { 0.0f,0.0f,0.0f };
-	Vector3 end = { 0.0f,0.0f,0.0f };
+	Vector3 end = { 0.0f,10.0f,10.0f };
 	std::vector<Vector3> points{ Start, Start,end, end };
 
 	//弾発射(誘導弾)
@@ -96,8 +101,8 @@ private:
 
 	//パーティクル
 	std::unique_ptr<ParticleManager> DamageParticle;
-	int EffTimer = 0;
-	int isEffFlag = 0;
+	int EffTimer_[4] = {0};
+	int isEffFlag_[4] = {0};
 
 	const float moveSpeed_ = 0.1f;
 	const float rotaSpeed_ = 0.1f;

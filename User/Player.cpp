@@ -127,12 +127,14 @@ void Player::Update() {
 
 		//移動
 		fbxObject3d_->wtf.position = fbxObject3d_->wtf.position + playerlocalpos;
+	
 		retObj_->wtf.position = retObj_->wtf.position + retlocalpos;
 		retObj_->wtf.position.z = fbxObject3d_->wtf.position.z + 10.0f;
-	}
 
-	//プレイヤーの行動一覧
-	PlayerAction();
+		//プレイヤーの行動一覧
+		PlayerAction();
+	}
+	
 
 	
 
@@ -207,6 +209,12 @@ void Player::PlayerAction()
 	if (input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT)) {
 		playerlocalpos.x += playerSpeed;
 	}
+	if (input_->PushKey(DIK_R)) {
+		playerlocalpos.z += playerSpeed;
+	}
+	if (input_->PushKey(DIK_F)) {
+		playerlocalpos.z -= playerSpeed;
+	}
 	//移動(レティクル)
 	if (input_->PushKey(DIK_UP) || input_->StickInput(R_UP)) {
 		retlocalpos.y += retSpeed;
@@ -249,7 +257,7 @@ void Player::PlayerAction()
 
 	//弾発射(弱)
 	float ShortSpeed = 0.01f;
-	if (input_->PushKey(DIK_SPACE) || input_->ButtonInput(RT)) {
+	if (input_->TriggerKey(DIK_SPACE) || input_->ButtonInput(RT)) {
 		isShootFlag = true;
 	}
 	if (isShootFlag == true) {
