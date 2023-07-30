@@ -127,7 +127,7 @@ void GameScene::Update() {
 
 		floor->Update();
 		skydome->Update();
-		skydome->wtf.position.z += 0.01f;
+		skydome->wtf.position.z += 0.02f;
 		skydome->wtf.rotation.y += 0.0008f;
 	}
 }
@@ -162,6 +162,7 @@ void GameScene::Draw() {
 	if (sceneNo_ == SceneNo::Game) {
 		//// パーティクル UI FBX スプライト描画
 		player_->FbxDraw();
+		player_->UIDraw();
 		enemy_->FbxDraw();
 		enemy_->EffDraw();
 		enemyBoss_->FbxDraw();

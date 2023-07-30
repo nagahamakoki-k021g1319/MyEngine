@@ -73,36 +73,46 @@ private:
 
 	//éGãõìG
 	FBXModel* fbxWinpModel_ = nullptr;
-	FBXObject3d* fbxWinpObject3d_[4] = {0};
+	FBXObject3d* fbxWinpObject3d_[10] = {0};
 	bool isAliveFlag = true;
 	//ê∂Ç´ÇƒÇ¢ÇÈÇ©Ç«Ç§Ç©(0ê∂Ç´ÇÈ,1éÄñS)
-	int isWinpAliveFlag_[4] = { 0 };
+	int isWinpAliveFlag_[10] = { 0 };
+
+	//éGãõìGèoåªÉ^ÉCÉ}Å[
+	int winpArrivalTimer = 0;
 
 	//ÉçÅ[ÉJÉãà⁄ìÆç¿ïW
 	Vector3 enemyWinplocalpos0 = { 10.0f,-1.0f,10.0f };//{ 0.0f,-1.0f,10.0f };
 	Vector3 enemyWinplocalpos1 = { 10.0f,0.0f,10.0f };//{ 3.0f,0.0f,10.0f }
 	Vector3 enemyWinplocalpos2 = { -10.0f,0.0f,10.0f };//{ -3.0f,0.0f,10.0f }
 	Vector3 enemyWinplocalpos3 = { -10.0f,1.0f,10.0f };//{ 0.0f,1.0f,10.0f 
-
 	
+	Vector3 enemyWinplocalpos4 = {  12.0f, 2.0f,10.0f };//{  2.0f, 2.0f,10.0f };
+	Vector3 enemyWinplocalpos5 = { -12.0f, 2.0f,10.0f };//{ -2.0f, 2.0f,10.0f };
+	Vector3 enemyWinplocalpos6 = {  12.0f,-2.0f,10.0f };//{  2.0f,-2.0f,10.0f };
+	Vector3 enemyWinplocalpos7 = { -12.0f,-2.0f,10.0f };//{ -2.0f,-2.0f,10.0f };
+	
+	Vector3 enemyWinplocalpos8 = { 2.0f,0.0f,150.0f };//{ 2.0f,0.0f,10.0f }
+	Vector3 enemyWinplocalpos9 = { -2.0f,0.0f,150.0f };//{ -2.0f,0.0f,10.0f }
 
 	//é~ÇﬂÇÈÇ∆Ç´
 	Vector3 Start = { 0.0f,0.0f,0.0f };
 	Vector3 end = { 0.0f,10.0f,10.0f };
 	std::vector<Vector3> points{ Start, Start,end, end };
 
-	//íeî≠éÀ(óUì±íe)
+	//íeî≠éÀ(íºê¸)
 	Object3d* shootObj_ = nullptr;
 	Model* shootModel_ = nullptr;
-	bool isShootFlag = false;
-	int isShootTimer = -20;
-	Vector3 playerlen;
-	Vector3 len;
+	Object3d* shootObj2_ = nullptr;
+	Model* shootModel2_ = nullptr;
+	int isShootFlag_[2] = {0};
+	int isShootexistTimer_[2] = {0};
+	int isShootCoolTimer_[2] = { 0 };
 
 	//ÉpÅ[ÉeÉBÉNÉã
 	std::unique_ptr<ParticleManager> DamageParticle;
-	int EffTimer_[4] = {0};
-	int isEffFlag_[4] = {0};
+	int EffTimer_[10] = {0};
+	int isEffFlag_[10] = {0};
 
 	const float moveSpeed_ = 0.1f;
 	const float rotaSpeed_ = 0.1f;

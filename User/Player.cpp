@@ -7,7 +7,7 @@ Player::Player() {
 }
 
 Player::~Player() {
-
+	delete spriteCommon;
 	//FBXオブジェクト解放
 	delete fbxObject3d_;
 	delete fbxModel_;
@@ -23,6 +23,22 @@ Player::~Player() {
 	delete hitboxModel_;
 	delete retObj_;
 	delete retModel_;
+
+	delete BulletFlameUI;
+	
+	delete Bullet1dUI;
+	delete Bullet1fUI;
+	delete Bullet1mUI;
+
+	delete Bullet2dUI;
+	delete Bullet2fUI;
+	delete Bullet2mUI;
+
+	delete Bullet3dUI;
+	delete Bullet3fUI;
+	delete Bullet3mUI;
+
+
 }
 
 void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
@@ -32,6 +48,10 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 	this->dxCommon = dxCommon;
 	input_ = input;
+	//スプライト共通部分の初期化
+	spriteCommon = new SpriteCommon;
+	spriteCommon->Initialize(dxCommon);
+
 	camTransForm = new Transform();
 	camera = new Camera(WinApp::window_width, WinApp::window_height);
 
@@ -94,7 +114,14 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	retObj_->SetModel(retModel_);
 	retObj_->wtf.scale = { 0.5f,0.5f,0.5f };
 	retObj_->wtf.position = { fbxObject3d_->wtf.position.x -1.5f,fbxObject3d_->wtf.position.y + 1.0f,fbxObject3d_->wtf.position.z + 10.0f };
+
+	//UIの初期化(枚数が多いため)
+	UIInitialize();
+
+
 }
+
+
 
 void Player::Update() {
 	camera->Update();
@@ -167,7 +194,9 @@ void Player::Draw() {
 }
 
 void Player::FbxDraw() {
-	
+	//ここにスプライト関係も入れる
+
+	//FBX
 	if (isSlashFlag == true) {
 		fbxSlashObject3d_->Draw(dxCommon->GetCommandList());
 	}
@@ -178,6 +207,145 @@ void Player::FbxDraw() {
 	{
 		fbxObject3d_->Draw(dxCommon->GetCommandList());
 	}
+
+
+	
+
+
+
+
+
+}
+
+void Player::UIInitialize()
+{
+	//UI
+	BulletFlameUI = new Sprite();
+	BulletFlameUI->Initialize(spriteCommon);
+	BulletFlameUI->SetPozition({ 0,0 });
+	BulletFlameUI->SetSize({ 1280.0f, 720.0f });
+
+	//1発目
+	Bullet1dUI = new Sprite();
+	Bullet1dUI->Initialize(spriteCommon);
+	Bullet1dUI->SetPozition({ 0,0 });
+	Bullet1dUI->SetSize({ 1280.0f, 720.0f });
+
+	Bullet1fUI = new Sprite();
+	Bullet1fUI->Initialize(spriteCommon);
+	Bullet1fUI->SetPozition({ 0,0 });
+	Bullet1fUI->SetSize({ 1280.0f, 720.0f });
+
+	Bullet1mUI = new Sprite();
+	Bullet1mUI->Initialize(spriteCommon);
+	Bullet1mUI->SetPozition({ 0,0 });
+	Bullet1mUI->SetSize({ 1280.0f, 720.0f });
+
+	//2発目
+	Bullet2dUI = new Sprite();
+	Bullet2dUI->Initialize(spriteCommon);
+	Bullet2dUI->SetPozition({ 0,0 });
+	Bullet2dUI->SetSize({ 1280.0f, 720.0f });
+
+	Bullet2fUI = new Sprite();
+	Bullet2fUI->Initialize(spriteCommon);
+	Bullet2fUI->SetPozition({ 0,0 });
+	Bullet2fUI->SetSize({ 1280.0f, 720.0f });
+
+	Bullet2mUI = new Sprite();
+	Bullet2mUI->Initialize(spriteCommon);
+	Bullet2mUI->SetPozition({ 0,0 });
+	Bullet2mUI->SetSize({ 1280.0f, 720.0f });
+
+	//3発目
+	Bullet3dUI = new Sprite();
+	Bullet3dUI->Initialize(spriteCommon);
+	Bullet3dUI->SetPozition({ 0,0 });
+	Bullet3dUI->SetSize({ 1280.0f, 720.0f });
+
+	Bullet3fUI = new Sprite();
+	Bullet3fUI->Initialize(spriteCommon);
+	Bullet3fUI->SetPozition({ 0,0 });
+	Bullet3fUI->SetSize({ 1280.0f, 720.0f });
+
+	Bullet3mUI = new Sprite();
+	Bullet3mUI->Initialize(spriteCommon);
+	Bullet3mUI->SetPozition({ 0,0 });
+	Bullet3mUI->SetSize({ 1280.0f, 720.0f });
+
+	//画像読み込み
+	//フレーム
+	spriteCommon->LoadTexture(1, "ff.png");
+	BulletFlameUI->SetTextureIndex(1);
+
+	//1発目
+	spriteCommon->LoadTexture(2, "ff1d.png");
+	Bullet1dUI->SetTextureIndex(2);
+	spriteCommon->LoadTexture(3, "ff1f.png");
+	Bullet1fUI->SetTextureIndex(3);
+	spriteCommon->LoadTexture(4, "ff1m.png");
+	Bullet1mUI->SetTextureIndex(4);
+
+	//2発目
+	spriteCommon->LoadTexture(5, "ff2d.png");
+	Bullet2dUI->SetTextureIndex(5);
+	spriteCommon->LoadTexture(6, "ff2f.png");
+	Bullet2fUI->SetTextureIndex(6);
+	spriteCommon->LoadTexture(7, "ff2m.png");
+	Bullet2mUI->SetTextureIndex(7);
+
+	//3発目
+	spriteCommon->LoadTexture(8, "ff3d.png");
+	Bullet3dUI->SetTextureIndex(8);
+	spriteCommon->LoadTexture(9, "ff3f.png");
+	Bullet3fUI->SetTextureIndex(9);
+	spriteCommon->LoadTexture(10, "ff3m.png");
+	Bullet3mUI->SetTextureIndex(10);
+
+
+}
+
+void Player::UIDraw()
+{
+	//スプライト、UI
+	BulletFlameUI->Draw();
+	if (bulletRest == 0) {
+		Bullet1mUI->Draw();
+	}
+	else if (bulletRest == 1)
+	{
+		Bullet1fUI->Draw();
+	}
+	else if (bulletRest >= 2)
+	{
+		Bullet1dUI->Draw();
+	}
+	
+	if (bulletRest <= 2) {
+		Bullet2mUI->Draw();
+	}
+	else if (bulletRest == 3)
+	{
+		Bullet2fUI->Draw();
+	}
+	else if (bulletRest >= 4)
+	{
+		Bullet2dUI->Draw();
+	}
+
+	if (bulletRest <= 4) {
+		Bullet3mUI->Draw();
+	}
+	else if (bulletRest == 5)
+	{
+		Bullet3fUI->Draw();
+	}
+	else if (bulletRest >= 6)
+	{
+		Bullet3dUI->Draw();
+	}
+
+
 }
 
 void Player::PlayerAction()
@@ -259,6 +427,7 @@ void Player::PlayerAction()
 	float ShortSpeed = 0.01f;
 	if (input_->TriggerKey(DIK_SPACE) || input_->ButtonInput(RT)) {
 		isShootFlag = true;
+		bulletRest += 1;
 	}
 	if (isShootFlag == true) {
 		BulletCoolTime++;
@@ -277,17 +446,19 @@ void Player::PlayerAction()
 	//弾発射(強)
 	float ShortStSpeed = 0.02f;
 	if (input_->PushKey(DIK_Z) || input_->ButtonInput(RT)) {storeStBulletTime++;}
-	if(storeStBulletTime >= 30){isShootStFlag = true;}
+	if(storeStBulletTime >= 30){isShootStFlag = true; }
 	if (isShootStFlag == true) {
 		StBulletCoolTime++;
 		shootStObj_->wtf.position += enemylen2;
 		len2 = enemylen2;
 		len2 *= ShortStSpeed;
+		
 	}
 	else {
 		shootStObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z };
 	}
 	if (StBulletCoolTime >= 10.0f) {
+		bulletRest += 2;
 		storeStBulletTime = 0;
 		StBulletCoolTime = 0;
 		isShootStFlag = false;
@@ -312,6 +483,7 @@ void Player::PlayerAction()
 	if (input_->TriggerKey(DIK_E) || input_->PButtonTrigger(RB)) {
 		isGardFlag = true;
 		fbxGardObject3d_->PlayAnimation(1.5f, true);
+		bulletRest = 0;
 	}
 	if (isGardFlag == true) {
 		isGardTimer++;
