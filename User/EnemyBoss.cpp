@@ -33,6 +33,7 @@ void EnemyBoss::Initialize(DirectXCommon* dxCommon, Input* input)
 void EnemyBoss::Update()
 {
 	fbxObject3d_->Update();
+
 }
 
 void EnemyBoss::Draw()
