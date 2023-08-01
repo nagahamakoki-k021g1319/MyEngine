@@ -118,7 +118,7 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	//UIの初期化(枚数が多いため)
 	UIInitialize();
 
-
+	
 }
 
 
@@ -153,13 +153,27 @@ void Player::Update() {
 		camera->wtf.position = splinePosition_->NowPos;
 
 		//移動
+		camera->wtf.rotation = camera->wtf.rotation + cameralocalpos;
+
 		fbxObject3d_->wtf.position = fbxObject3d_->wtf.position + playerlocalpos;
-	
+		
 		retObj_->wtf.position = retObj_->wtf.position + retlocalpos;
 		retObj_->wtf.position.z = fbxObject3d_->wtf.position.z + 10.0f;
 
+
 		//プレイヤーの行動一覧
 		PlayerAction();
+		
+		
+
+
+
+
+
+
+
+
+
 	}
 	
 
@@ -427,7 +441,7 @@ void Player::PlayerAction()
 	float ShortSpeed = 0.01f;
 	if (input_->TriggerKey(DIK_SPACE) || input_->ButtonInput(RT)) {
 		isShootFlag = true;
-		bulletRest += 1;
+		
 	}
 	if (isShootFlag == true) {
 		BulletCoolTime++;
@@ -439,13 +453,14 @@ void Player::PlayerAction()
 		shootObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z};
 	}
 	if (BulletCoolTime >= 10.0f) {
+		bulletRest += 1;
 		BulletCoolTime = 0;
 		isShootFlag = false;
 	}
 
 	//弾発射(強)
 	float ShortStSpeed = 0.02f;
-	if (input_->PushKey(DIK_Z) || input_->ButtonInput(RT)) {storeStBulletTime++;}
+	if (input_->PushKey(DIK_Z) || input_->ButtonInput(LT)) {storeStBulletTime++;}
 	if(storeStBulletTime >= 30){isShootStFlag = true; }
 	if (isShootStFlag == true) {
 		StBulletCoolTime++;
@@ -467,7 +482,7 @@ void Player::PlayerAction()
 
 
 	//斬り払い
-	if (input_->TriggerKey(DIK_Q) || input_->PButtonTrigger(LT)) {
+	if (input_->TriggerKey(DIK_Q) || input_->PButtonTrigger(LB)) {
 		isSlashFlag = true;
 		fbxSlashObject3d_->PlayAnimation(1.5f, true);
 	}
@@ -541,6 +556,20 @@ Vector3 Player::GetBulletWorldPosition()
 	BulletWorldPos.z = shootObj_->wtf.matWorld.m[3][2];
 
 	return BulletWorldPos;
+}
+
+Vector3 Player::GetBulletStWorldPosition()
+{
+	//ワールド座標を入れる変数
+	Vector3 BulletStWorldPos;
+
+	shootObj_->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	BulletStWorldPos.x = shootStObj_->wtf.matWorld.m[3][0];
+	BulletStWorldPos.y = shootStObj_->wtf.matWorld.m[3][1];
+	BulletStWorldPos.z = shootStObj_->wtf.matWorld.m[3][2];
+
+	return BulletStWorldPos;
 }
 
 Vector3 Player::GetRetWorldPosition()

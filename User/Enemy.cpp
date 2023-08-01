@@ -95,16 +95,16 @@ void Enemy::WinpUpdate()
 	fbxWinpObject3d_[2]->wtf.position = fbxWinpObject3d_[2]->wtf.position + enemyWinplocalpos2;
 	//{ -10.0f, 1.0f, 10.0f };{ 0.0f,1.0f,10.0f 
 	fbxWinpObject3d_[3]->wtf.position = fbxWinpObject3d_[3]->wtf.position + enemyWinplocalpos3;
-	
-	/*enemyWinplocalpos0.x -= WinpSpeedX;
+
+	enemyWinplocalpos0.x -= WinpSpeedX;
 	enemyWinplocalpos1.x -= WinpSpeedX;
 	enemyWinplocalpos2.x += WinpSpeedX;
 	enemyWinplocalpos3.x += WinpSpeedX;
 	if (enemyWinplocalpos0.x <= 0.0f) { enemyWinplocalpos0.x = 0.0f; }
 	if (enemyWinplocalpos1.x <= 3.0f) { enemyWinplocalpos1.x = 3.0f; }
 	if (enemyWinplocalpos2.x >= -3.0f) { enemyWinplocalpos2.x = -3.0f; }
-	if (enemyWinplocalpos3.x >= 0.0f) { enemyWinplocalpos3.x = 0.0f; }*/
-	
+	if (enemyWinplocalpos3.x >= 0.0f) { enemyWinplocalpos3.x = 0.0f; }
+
 	//雑魚敵の初期位置(第二ウェーブ)
 	// 左が初期値                  右が最終到達点
 	//{ 12.0f, 2.0f, 10.0f };{  2.0f, 2.0f,10.0f };
@@ -124,7 +124,7 @@ void Enemy::WinpUpdate()
 
 		if (enemyWinplocalpos4.x <= 2.0f) { enemyWinplocalpos4.x = 2.0f; }
 		if (enemyWinplocalpos5.x >= -2.0f) { enemyWinplocalpos5.x = -2.0f; }
-		if (enemyWinplocalpos6.x <= 2.0f){ enemyWinplocalpos6.x = 2.0f; }
+		if (enemyWinplocalpos6.x <= 2.0f) { enemyWinplocalpos6.x = 2.0f; }
 		if (enemyWinplocalpos7.x >= -2.0f) { enemyWinplocalpos7.x = -2.0f; }
 
 	}
@@ -177,7 +177,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 		for (int i = 0; i < 10; i++) {
 			fbxWinpObject3d_[i]->wtf.position = splinePosition_->NowPos;
 		}
-		
+
 		//雑魚敵の発生と移動
 		WinpUpdate();
 
@@ -230,6 +230,10 @@ void Enemy::Update(SplinePosition* spPosition_)
 		}
 	}
 
+	if (coll.CircleCollision(player_->GetBulletStWorldPosition(), shootObj_->wtf.position, 1.0f, 0.2f)) {
+	
+	};
+
 
 }
 
@@ -238,11 +242,11 @@ void Enemy::Update(SplinePosition* spPosition_)
 void Enemy::Draw()
 {
 	if (isWinpAliveFlag_[8] == 0) {
-		if (isShootFlag_[0] == 1) {
+		if (isShootFlag_[0] == 1 && isOffsetFlag_ == 0) {
 			shootObj_->Draw();
 		}
 	}
-	if (isWinpAliveFlag_[9] == 0) {
+	if (isWinpAliveFlag_[9] == 0 && isOffsetFlag_ == 0) {
 		if (isShootFlag_[1] == 1) {
 			shootObj2_->Draw();
 		}

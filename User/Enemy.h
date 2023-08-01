@@ -106,6 +106,7 @@ private:
 	Object3d* shootObj2_ = nullptr;
 	Model* shootModel2_ = nullptr;
 	int isShootFlag_[2] = {0};
+	int isOffsetFlag_ = 0;
 	int isShootexistTimer_[2] = {0};
 	int isShootCoolTimer_[2] = { 0 };
 

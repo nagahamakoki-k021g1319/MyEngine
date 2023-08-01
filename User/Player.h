@@ -33,12 +33,16 @@ public:
 	//プレイヤーの行動一覧
 	void PlayerAction();
 
+
+
 	Vector3 bVelocity(Vector3& velocity, Transform& worldTransform);
 
 	////ワールド座標を取得
 	Vector3 GetWorldPosition();
 	//ワールド座標を取得(弾)
 	Vector3 GetBulletWorldPosition();
+	//ワールド座標を取得(弾)
+	Vector3 GetBulletStWorldPosition();
 	//ワールド座標を取得(レティクル)
 	Vector3 GetRetWorldPosition();
 	//ワールド座標を取得(抜刀)
@@ -47,7 +51,7 @@ public:
 
 
 	Vector3 GetPos() { return fbxObject3d_->wtf.position; };
-
+	Vector3 GetCamShake() { return camShakeVec; };
 
 	/// <summary>
 	/// ポジション
@@ -62,7 +66,7 @@ public:
 	//音を止める関数
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
 	SplinePosition* splinePosition_ = nullptr;
-
+	
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
@@ -74,7 +78,8 @@ private:
 	//待機
 	FBXModel* fbxModel_ = nullptr;
 	FBXObject3d* fbxObject3d_ = nullptr;
-	
+	bool isAliveFlag = true;
+
 	//レティクル
 	Object3d* retObj_ = nullptr;
 	Model* retModel_ = nullptr;
@@ -143,11 +148,19 @@ private:
   
 	Vector2 camRotaSpeed = { PI / 1800, PI / 1800};
 
-	bool isAliveFlag = true;
+	//画面シェイク
+	bool isCamShake;
+	const int camShakeLimit = 20;
+	int camShakeTimer = camShakeLimit;
+	Vector3 camShakeVec;
+	Vector3 moveBack;
+
+
+	
 
 	//ローカル移動
 	Vector3 playerlocalpos = { 0.0f,-0.3f,0.0f };
-	Vector3 playerlocalpos0 = { 0.0f,0.0f,-3.0f };
+	Vector3 cameralocalpos = { 0.0f,0.0f,0.0f };
 	Vector3 retlocalpos = { 0.0f,0.0f,0.0f };
 
 	//スプライン曲線

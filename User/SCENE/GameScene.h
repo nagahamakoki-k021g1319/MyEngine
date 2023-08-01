@@ -79,7 +79,7 @@ private:	//メンバ変数
 		Title, //タイトル
 		Game //射撃
 	};
-	SceneNo sceneNo_ = SceneNo::Game;
+	SceneNo sceneNo_ = SceneNo::Title;
 
 
 
