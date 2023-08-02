@@ -342,22 +342,11 @@ void Player::UIDraw()
 	{
 		Bullet2fUI->Draw();
 	}
-	else if (bulletRest >= 4)
-	{
-		Bullet2dUI->Draw();
-	}
+	else if (bulletRest >= 4){Bullet2dUI->Draw();}
 
-	if (bulletRest <= 4) {
-		Bullet3mUI->Draw();
-	}
-	else if (bulletRest == 5)
-	{
-		Bullet3fUI->Draw();
-	}
-	else if (bulletRest >= 6)
-	{
-		Bullet3dUI->Draw();
-	}
+	if (bulletRest <= 4) {Bullet3mUI->Draw();}
+	else if (bulletRest == 5){Bullet3fUI->Draw();}
+	else if (bulletRest >= 6){Bullet3dUI->Draw();}
 
 
 }
@@ -440,8 +429,9 @@ void Player::PlayerAction()
 	//弾発射(弱)
 	float ShortSpeed = 0.01f;
 	if (input_->TriggerKey(DIK_SPACE) || input_->ButtonInput(RT)) {
-		isShootFlag = true;
-		
+		if (isShootFlag == false && bulletRest <= bulletMax) {
+			isShootFlag = true;
+		}
 	}
 	if (isShootFlag == true) {
 		BulletCoolTime++;
@@ -461,7 +451,11 @@ void Player::PlayerAction()
 	//弾発射(強)
 	float ShortStSpeed = 0.02f;
 	if (input_->PushKey(DIK_Z) || input_->ButtonInput(LT)) {storeStBulletTime++;}
-	if(storeStBulletTime >= 30){isShootStFlag = true; }
+	if(storeStBulletTime >= 30){
+		if (isShootStFlag == false && bulletRest <= bulletMax) {
+			isShootStFlag = true;
+		}
+	}
 	if (isShootStFlag == true) {
 		StBulletCoolTime++;
 		shootStObj_->wtf.position += enemylen2;

@@ -226,8 +226,13 @@ void Enemy::Update(SplinePosition* spPosition_)
 			if (coll.CircleCollision(player_->GetBulletWorldPosition(), fbxWinpObject3d_[i]->wtf.position, 1.0f, 0.2f)) {
 				isEffFlag_[i] = 1;
 				isWinpAliveFlag_[i] = 1;
+				player_->bulletUpCount ++;
 			};
 		}
+	}
+	if (player_->bulletUpCount == 2) {
+		player_->bulletMax++;
+		player_->bulletUpCount = 0;
 	}
 
 	if (coll.CircleCollision(player_->GetBulletStWorldPosition(), shootObj_->wtf.position, 1.0f, 0.2f)) {
