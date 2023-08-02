@@ -67,6 +67,11 @@ public:
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
 	SplinePosition* splinePosition_ = nullptr;
 	
+	//弾の弾数表示
+	int bulletRest = 0;
+	int bulletMax = 6;
+	int bulletUpCount = 0;
+
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
@@ -101,8 +106,7 @@ private:
 	Vector3 len2;
 	int storeStBulletTime = 0;
 	
-	//弾の弾数表示
-	int bulletRest = 0;
+	
 	Sprite* BulletFlameUI = nullptr;
 	
 	Sprite* Bullet1dUI = nullptr;

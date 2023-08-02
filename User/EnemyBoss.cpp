@@ -1,4 +1,5 @@
 #include "EnemyBoss.h"
+#include "Enemy.h"
 
 EnemyBoss::EnemyBoss()
 {
@@ -25,7 +26,7 @@ void EnemyBoss::Initialize(DirectXCommon* dxCommon, Input* input)
 	fbxObject3d_->Initialize();
 	fbxObject3d_->SetModel(fbxModel_);
 	fbxObject3d_->wtf.position = { 0.0f,-0.3f,30.0f };
-	fbxObject3d_->wtf.rotation = { 0.0f,1.0f,0.0f };
+	fbxObject3d_->wtf.rotation = { 0.0f,2.7f,0.0f };
 	fbxObject3d_->PlayAnimation(1.0f, true);
 
 }
@@ -34,6 +35,9 @@ void EnemyBoss::Update()
 {
 	fbxObject3d_->Update();
 
+	if (enemy_->bossGostAt == true) {
+
+	}
 }
 
 void EnemyBoss::Draw()

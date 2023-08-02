@@ -12,7 +12,7 @@ class Player;
 #include "FBXModel.h"
 #include "FbxLoader.h"
 #include "FBXObject3d.h"
-#include "Enemy.h"
+class Enemy;
 
 class EnemyBoss
 {
@@ -54,7 +54,7 @@ private:
 	const float moveSpeed_ = 0.1f;
 	const float rotaSpeed_ = 0.1f;
 
-
+	
 
 	//ƒ[ƒ‹ƒhÀ•W‚ğ“ü‚ê‚é•Ï”
 	Vector3 worldPos;

@@ -69,7 +69,7 @@ private:
 	//ë“ã@(è¡Ç¶ÇÈBoss)
 	FBXModel* fbxModel_ = nullptr;
 	FBXObject3d* fbxObject3d_ = nullptr;
-	int bossGostMove = 0;
+	bool bossGostMove = false;
 
 	//éGãõìG
 	FBXModel* fbxWinpModel_ = nullptr;
