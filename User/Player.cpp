@@ -25,7 +25,7 @@ Player::~Player() {
 	delete retModel_;
 
 	delete BulletFlameUI;
-	
+
 	delete Bullet1dUI;
 	delete Bullet1fUI;
 	delete Bullet1mUI;
@@ -38,6 +38,9 @@ Player::~Player() {
 	delete Bullet3fUI;
 	delete Bullet3mUI;
 
+	delete Bullet4dUI;
+	delete Bullet4fUI;
+	delete Bullet4mUI;
 
 }
 
@@ -99,7 +102,7 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	shootStObj_ = Object3d::Create();
 	shootStObj_->SetModel(shootStModel_);
 	shootStObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z };
-	shootStObj_->wtf.scale = { 0.1f,0.1f,0.1f };
+	shootStObj_->wtf.scale = { 0.5f,0.5f,0.5f };
 
 	//ヒットボックス可視化
 	hitboxModel_ = Model::LoadFromOBJ("hit");
@@ -113,12 +116,12 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	retObj_ = Object3d::Create();
 	retObj_->SetModel(retModel_);
 	retObj_->wtf.scale = { 0.5f,0.5f,0.5f };
-	retObj_->wtf.position = { fbxObject3d_->wtf.position.x -1.5f,fbxObject3d_->wtf.position.y + 1.0f,fbxObject3d_->wtf.position.z + 10.0f };
+	retObj_->wtf.position = { fbxObject3d_->wtf.position.x - 1.5f,fbxObject3d_->wtf.position.y + 1.0f,fbxObject3d_->wtf.position.z + 10.0f };
 
 	//UIの初期化(枚数が多いため)
 	UIInitialize();
 
-	
+
 }
 
 
@@ -156,17 +159,20 @@ void Player::Update() {
 		camera->wtf.rotation = camera->wtf.rotation + cameralocalpos;
 
 		fbxObject3d_->wtf.position = fbxObject3d_->wtf.position + playerlocalpos;
-		
+
 		retObj_->wtf.position = retObj_->wtf.position + retlocalpos;
 		retObj_->wtf.position.z = fbxObject3d_->wtf.position.z + 10.0f;
 
 
 		//プレイヤーの行動一覧
 		PlayerAction();
-		
-		
 
-
+		if (input_->PushKey(DIK_1)) {
+			camera->wtf.rotation.y -= 0.01f;
+		}
+		if (input_->PushKey(DIK_2)) {
+			camera->wtf.rotation.y += 0.01f;
+		}
 
 
 
@@ -175,9 +181,9 @@ void Player::Update() {
 
 
 	}
-	
 
-	
+
+
 
 
 	ImGui::Begin("Player");
@@ -204,7 +210,7 @@ void Player::Draw() {
 	if (splineTimer >= 100) {
 		retObj_->Draw();
 	}
-	
+
 }
 
 void Player::FbxDraw() {
@@ -223,7 +229,7 @@ void Player::FbxDraw() {
 	}
 
 
-	
+
 
 
 
@@ -287,6 +293,22 @@ void Player::UIInitialize()
 	Bullet3mUI->SetPozition({ 0,0 });
 	Bullet3mUI->SetSize({ 1280.0f, 720.0f });
 
+	//4発目
+	Bullet4dUI = new Sprite();
+	Bullet4dUI->Initialize(spriteCommon);
+	Bullet4dUI->SetPozition({ 0,0 });
+	Bullet4dUI->SetSize({ 1280.0f, 720.0f });
+
+	Bullet4fUI = new Sprite();
+	Bullet4fUI->Initialize(spriteCommon);
+	Bullet4fUI->SetPozition({ 0,0 });
+	Bullet4fUI->SetSize({ 1280.0f, 720.0f });
+
+	Bullet4mUI = new Sprite();
+	Bullet4mUI->Initialize(spriteCommon);
+	Bullet4mUI->SetPozition({ 0,0 });
+	Bullet4mUI->SetSize({ 1280.0f, 720.0f });
+
 	//画像読み込み
 	//フレーム
 	spriteCommon->LoadTexture(1, "ff.png");
@@ -316,6 +338,13 @@ void Player::UIInitialize()
 	spriteCommon->LoadTexture(10, "ff3m.png");
 	Bullet3mUI->SetTextureIndex(10);
 
+	//4発目
+	spriteCommon->LoadTexture(11, "ff4d.png");
+	Bullet4dUI->SetTextureIndex(11);
+	spriteCommon->LoadTexture(12, "ff4f.png");
+	Bullet4fUI->SetTextureIndex(12);
+	spriteCommon->LoadTexture(13, "ff4m.png");
+	Bullet4mUI->SetTextureIndex(13);
 
 }
 
@@ -323,31 +352,23 @@ void Player::UIDraw()
 {
 	//スプライト、UI
 	BulletFlameUI->Draw();
-	if (bulletRest == 0) {
-		Bullet1mUI->Draw();
-	}
-	else if (bulletRest == 1)
-	{
-		Bullet1fUI->Draw();
-	}
-	else if (bulletRest >= 2)
-	{
-		Bullet1dUI->Draw();
-	}
-	
-	if (bulletRest <= 2) {
-		Bullet2mUI->Draw();
-	}
-	else if (bulletRest == 3)
-	{
-		Bullet2fUI->Draw();
-	}
-	else if (bulletRest >= 4){Bullet2dUI->Draw();}
+	if (bulletRest == 0) { Bullet1mUI->Draw(); }
+	else if (bulletRest == 1) { Bullet1fUI->Draw(); }
+	else if (bulletRest >= 2) { Bullet1dUI->Draw(); }
 
-	if (bulletRest <= 4) {Bullet3mUI->Draw();}
-	else if (bulletRest == 5){Bullet3fUI->Draw();}
-	else if (bulletRest >= 6){Bullet3dUI->Draw();}
+	if (bulletRest <= 2) { Bullet2mUI->Draw(); }
+	else if (bulletRest == 3) { Bullet2fUI->Draw(); }
+	else if (bulletRest >= 4) { Bullet2dUI->Draw(); }
 
+	if (bulletRest <= 4) { Bullet3mUI->Draw(); }
+	else if (bulletRest == 5) { Bullet3fUI->Draw(); }
+	else if (bulletRest >= 6) { Bullet3dUI->Draw(); }
+
+	if (bulletMax >= 7) {
+		if (bulletRest <= 6) { Bullet4mUI->Draw(); }
+		else if (bulletRest == 7) { Bullet4fUI->Draw(); }
+		else if (bulletRest >= 8) { Bullet4dUI->Draw(); }
+	}
 
 }
 
@@ -426,6 +447,11 @@ void Player::PlayerAction()
 	//	retObj_->wtf.position.y = -retLimitY;
 	//}
 
+	//弾の制限
+	if (bulletMax >= bulletMax + 1) {
+		bulletMax = bulletMax;
+	}
+
 	//弾発射(弱)
 	float ShortSpeed = 0.01f;
 	if (input_->TriggerKey(DIK_SPACE) || input_->ButtonInput(RT)) {
@@ -440,7 +466,7 @@ void Player::PlayerAction()
 		len *= ShortSpeed;
 	}
 	else {
-		shootObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z};
+		shootObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z };
 	}
 	if (BulletCoolTime >= 10.0f) {
 		bulletRest += 1;
@@ -450,8 +476,8 @@ void Player::PlayerAction()
 
 	//弾発射(強)
 	float ShortStSpeed = 0.02f;
-	if (input_->PushKey(DIK_Z) || input_->ButtonInput(LT)) {storeStBulletTime++;}
-	if(storeStBulletTime >= 30){
+	if (input_->PushKey(DIK_Z) || input_->ButtonInput(LT)) { storeStBulletTime++; }
+	if (storeStBulletTime >= 30) {
 		if (isShootStFlag == false && bulletRest <= bulletMax) {
 			isShootStFlag = true;
 		}
@@ -461,10 +487,10 @@ void Player::PlayerAction()
 		shootStObj_->wtf.position += enemylen2;
 		len2 = enemylen2;
 		len2 *= ShortStSpeed;
-		
+
 	}
 	else {
-		shootStObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z };
+		shootStObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y - 1.5f, fbxObject3d_->wtf.position.z + 1.0f };
 	}
 	if (StBulletCoolTime >= 10.0f) {
 		bulletRest += 2;
@@ -557,7 +583,7 @@ Vector3 Player::GetBulletStWorldPosition()
 	//ワールド座標を入れる変数
 	Vector3 BulletStWorldPos;
 
-	shootObj_->wtf.UpdateMat();
+	shootStObj_->wtf.UpdateMat();
 	//ワールド行列の平行移動成分
 	BulletStWorldPos.x = shootStObj_->wtf.matWorld.m[3][0];
 	BulletStWorldPos.y = shootStObj_->wtf.matWorld.m[3][1];
@@ -571,7 +597,7 @@ Vector3 Player::GetRetWorldPosition()
 	//ワールド座標を入れる変数
 	Vector3 RetWorldPos;
 
-	shootObj_->wtf.UpdateMat();
+	retObj_->wtf.UpdateMat();
 	//ワールド行列の平行移動成分
 	RetWorldPos.x = retObj_->wtf.matWorld.m[3][0];
 	RetWorldPos.y = retObj_->wtf.matWorld.m[3][1];

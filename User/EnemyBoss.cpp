@@ -1,5 +1,7 @@
 #include "EnemyBoss.h"
 #include "Enemy.h"
+#include "Player.h"
+
 
 EnemyBoss::EnemyBoss()
 {
@@ -25,7 +27,7 @@ void EnemyBoss::Initialize(DirectXCommon* dxCommon, Input* input)
 	fbxObject3d_ = new FBXObject3d;
 	fbxObject3d_->Initialize();
 	fbxObject3d_->SetModel(fbxModel_);
-	fbxObject3d_->wtf.position = { 0.0f,-0.3f,30.0f };
+	fbxObject3d_->wtf.position = { 0.0f,-5.0f,120.0f };
 	fbxObject3d_->wtf.rotation = { 0.0f,2.7f,0.0f };
 	fbxObject3d_->PlayAnimation(1.0f, true);
 
@@ -47,9 +49,9 @@ void EnemyBoss::Draw()
 
 void EnemyBoss::FbxDraw()
 {
-	/*if (enemy_->bossGostAt == true) {
+	if (player_->splinePosition_->GetIndex() >= 18) {
 		fbxObject3d_->Draw(dxCommon->GetCommandList());
-	}*/
+	}
 }
 
 Vector3 EnemyBoss::GetWorldPosition()

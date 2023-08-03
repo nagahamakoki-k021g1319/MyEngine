@@ -120,6 +120,10 @@ private:
 	Sprite* Bullet3dUI = nullptr;
 	Sprite* Bullet3fUI = nullptr;
 	Sprite* Bullet3mUI = nullptr;
+	
+	Sprite* Bullet4dUI = nullptr;
+	Sprite* Bullet4fUI = nullptr;
+	Sprite* Bullet4mUI = nullptr;
 
 	//切り払いモーション
 	FBXModel* fbxSlashModel_ = nullptr;
