@@ -24,6 +24,8 @@ Player::~Player() {
 	delete retObj_;
 	delete retModel_;
 
+	delete BloodUI;
+
 	delete BulletFlameUI;
 
 	delete Bullet1dUI;
@@ -308,6 +310,13 @@ void Player::UIInitialize()
 	Bullet4mUI->Initialize(spriteCommon);
 	Bullet4mUI->SetPozition({ 0,0 });
 	Bullet4mUI->SetSize({ 1280.0f, 720.0f });
+
+	//被弾時エフェクト
+	BloodUI = new Sprite();
+	BloodUI->Initialize(spriteCommon);
+	BloodUI->SetPozition({ 0,0 });
+	BloodUI->SetSize({ 1280.0f, 720.0f });
+
 
 	//画像読み込み
 	//フレーム

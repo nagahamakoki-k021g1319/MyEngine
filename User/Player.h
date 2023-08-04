@@ -106,7 +106,12 @@ private:
 	Vector3 len2;
 	int storeStBulletTime = 0;
 	
-	
+	//被弾時エフェクト
+	Sprite* BloodUI = nullptr;
+	int EffTimer = 0;
+	int isEffFlag = 0;
+
+	//弾の弾数表示(スプライト)
 	Sprite* BulletFlameUI = nullptr;
 	
 	Sprite* Bullet1dUI = nullptr;
