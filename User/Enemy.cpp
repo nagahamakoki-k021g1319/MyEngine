@@ -26,6 +26,7 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 	assert(dxCommon);
 	assert(input);
 
+
 	this->dxCommon = dxCommon;
 	input_ = input;
 
