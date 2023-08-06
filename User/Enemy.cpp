@@ -97,14 +97,26 @@ void Enemy::WinpUpdate()
 	//{ -10.0f, 1.0f, 10.0f };{ 0.0f,1.0f,10.0f 
 	fbxWinpObject3d_[3]->wtf.position = fbxWinpObject3d_[3]->wtf.position + enemyWinplocalpos3;
 
-	enemyWinplocalpos0.x -= WinpSpeedX;
-	enemyWinplocalpos1.x -= WinpSpeedX;
-	enemyWinplocalpos2.x += WinpSpeedX;
-	enemyWinplocalpos3.x += WinpSpeedX;
-	if (enemyWinplocalpos0.x <= 0.0f) { enemyWinplocalpos0.x = 0.0f; }
-	if (enemyWinplocalpos1.x <= 3.0f) { enemyWinplocalpos1.x = 3.0f; }
-	if (enemyWinplocalpos2.x >= -3.0f) { enemyWinplocalpos2.x = -3.0f; }
-	if (enemyWinplocalpos3.x >= 0.0f) { enemyWinplocalpos3.x = 0.0f; }
+	if (winpArrivalTimer >= 0 && winpArrivalTimer < 250) {
+		enemyWinplocalpos0.x -= WinpSpeedX;
+		enemyWinplocalpos1.x -= WinpSpeedX;
+		enemyWinplocalpos2.x += WinpSpeedX;
+		enemyWinplocalpos3.x += WinpSpeedX;
+		if (enemyWinplocalpos0.x <= 0.0f) { enemyWinplocalpos0.x = 0.0f; }
+		if (enemyWinplocalpos1.x <= 3.0f) { enemyWinplocalpos1.x = 3.0f; }
+		if (enemyWinplocalpos2.x >= -3.0f) { enemyWinplocalpos2.x = -3.0f; }
+		if (enemyWinplocalpos3.x >= 0.0f) { enemyWinplocalpos3.x = 0.0f; }
+	}
+	if (winpArrivalTimer >= 250) {
+		enemyWinplocalpos0.x += WinpSpeedX;
+		enemyWinplocalpos1.x += WinpSpeedX;
+		enemyWinplocalpos2.x -= WinpSpeedX;
+		enemyWinplocalpos3.x -= WinpSpeedX;
+		if (enemyWinplocalpos0.x >= 15.0f)  { enemyWinplocalpos0.x =  10000.0f; }
+		if (enemyWinplocalpos1.x >= 15.0f)  { enemyWinplocalpos1.x =  10000.0f; }
+		if (enemyWinplocalpos2.x <= -15.0f) { enemyWinplocalpos2.x = -10000.0f; }
+		if (enemyWinplocalpos3.x <= -15.0f) { enemyWinplocalpos3.x = -10000.0f; }
+	}
 
 	//雑魚敵の初期位置(第二ウェーブ)
 	// 左が初期値                  右が最終到達点
@@ -127,7 +139,6 @@ void Enemy::WinpUpdate()
 		if (enemyWinplocalpos5.x >= -2.0f) { enemyWinplocalpos5.x = -2.0f; }
 		if (enemyWinplocalpos6.x <= 2.0f) { enemyWinplocalpos6.x = 2.0f; }
 		if (enemyWinplocalpos7.x >= -2.0f) { enemyWinplocalpos7.x = -2.0f; }
-
 	}
 
 	//雑魚敵の初期位置(第三ウェーブ)
@@ -136,7 +147,7 @@ void Enemy::WinpUpdate()
 	fbxWinpObject3d_[8]->wtf.position = fbxWinpObject3d_[8]->wtf.position + enemyWinplocalpos8;
 	//{ -2.0f,0.0f,50.0f };//{ -2.0f,0.0f,10.0f }
 	fbxWinpObject3d_[9]->wtf.position = fbxWinpObject3d_[9]->wtf.position + enemyWinplocalpos9;
-	if (winpArrivalTimer >= 400) {
+	if (winpArrivalTimer >= 500) {
 		enemyWinplocalpos8.z -= WinpSpeedZ;
 		enemyWinplocalpos9.z -= WinpSpeedZ;
 
