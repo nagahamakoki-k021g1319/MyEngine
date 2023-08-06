@@ -176,9 +176,16 @@ void Player::Update() {
 			camera->wtf.rotation.y += 0.01f;
 		}
 
-
-
-
+		if (input_->PushKey(DIK_Q)) {
+			isEffFlag = 1;
+		}
+		if (isEffFlag == 1) {
+			EffTimer++;
+		}
+		if (EffTimer >= 20) {
+			EffTimer = 0;
+			isEffFlag = 0;
+		}
 
 
 
@@ -355,10 +362,21 @@ void Player::UIInitialize()
 	spriteCommon->LoadTexture(13, "ff4m.png");
 	Bullet4mUI->SetTextureIndex(13);
 
+	//被弾エフェクト
+	spriteCommon->LoadTexture(14, "blood.png");
+	BloodUI->SetTextureIndex(14);
+	
+
+
 }
 
 void Player::UIDraw()
 {
+	if (EffTimer <= 20 && EffTimer >= 1) {
+		BloodUI->Draw();
+	}
+
+
 	//スプライト、UI
 	BulletFlameUI->Draw();
 	if (bulletRest == 0) { Bullet1mUI->Draw(); }
