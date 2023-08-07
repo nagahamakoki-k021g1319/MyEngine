@@ -475,7 +475,7 @@ void Player::PlayerAction()
 	//}
 
 	//弾の制限
-	if (bulletMax >= bulletMax + 1) {
+	if (bulletMax > bulletMax + 1) {
 		bulletMax = bulletMax;
 	}
 
@@ -483,6 +483,7 @@ void Player::PlayerAction()
 	float ShortSpeed = 0.01f;
 	if (input_->TriggerKey(DIK_SPACE) || input_->ButtonInput(RT)) {
 		if (isShootFlag == false && bulletRest <= bulletMax) {
+			bulletRest += 1;
 			isShootFlag = true;
 		}
 	}
@@ -496,7 +497,6 @@ void Player::PlayerAction()
 		shootObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z };
 	}
 	if (BulletCoolTime >= 10.0f) {
-		bulletRest += 1;
 		BulletCoolTime = 0;
 		isShootFlag = false;
 	}
@@ -505,7 +505,7 @@ void Player::PlayerAction()
 	float ShortStSpeed = 0.02f;
 	if (input_->PushKey(DIK_Z) || input_->ButtonInput(LT)) { storeStBulletTime++; }
 	if (storeStBulletTime >= 30) {
-		if (isShootStFlag == false && bulletRest <= bulletMax) {
+		if (isShootStFlag == false && bulletRest < bulletMax) {
 			isShootStFlag = true;
 		}
 	}
