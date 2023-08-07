@@ -98,6 +98,7 @@ void Enemy::WinpUpdate()
 	fbxWinpObject3d_[3]->wtf.position = fbxWinpObject3d_[3]->wtf.position + enemyWinplocalpos3;
 
 	if (winpArrivalTimer >= 0 && winpArrivalTimer < 250) {
+		//登場
 		enemyWinplocalpos0.x -= WinpSpeedX;
 		enemyWinplocalpos1.x -= WinpSpeedX;
 		enemyWinplocalpos2.x += WinpSpeedX;
@@ -108,14 +109,15 @@ void Enemy::WinpUpdate()
 		if (enemyWinplocalpos3.x >= 0.0f) { enemyWinplocalpos3.x = 0.0f; }
 	}
 	if (winpArrivalTimer >= 250) {
+		//去る
 		enemyWinplocalpos0.x += WinpSpeedX;
 		enemyWinplocalpos1.x += WinpSpeedX;
 		enemyWinplocalpos2.x -= WinpSpeedX;
 		enemyWinplocalpos3.x -= WinpSpeedX;
-		if (enemyWinplocalpos0.x >= 15.0f)  { enemyWinplocalpos0.x =  10000.0f; }
-		if (enemyWinplocalpos1.x >= 15.0f)  { enemyWinplocalpos1.x =  10000.0f; }
-		if (enemyWinplocalpos2.x <= -15.0f) { enemyWinplocalpos2.x = -10000.0f; }
-		if (enemyWinplocalpos3.x <= -15.0f) { enemyWinplocalpos3.x = -10000.0f; }
+		if (enemyWinplocalpos0.x >= 15.0f)  { isWinpAliveFlag_[0] = 1; }
+		if (enemyWinplocalpos1.x >= 15.0f)  { isWinpAliveFlag_[1] = 1; }
+		if (enemyWinplocalpos2.x <= -15.0f) { isWinpAliveFlag_[2] = 1; }
+		if (enemyWinplocalpos3.x <= -15.0f) { isWinpAliveFlag_[3] = 1; }
 	}
 
 	//雑魚敵の初期位置(第二ウェーブ)
@@ -129,7 +131,8 @@ void Enemy::WinpUpdate()
 	//{ -12.0f, 2.0f, 10.0f };{  -2.0f, -2.0f,10.0f };
 	fbxWinpObject3d_[7]->wtf.position = fbxWinpObject3d_[7]->wtf.position + enemyWinplocalpos7;
 
-	if (winpArrivalTimer >= 300) {
+	if (winpArrivalTimer >= 300 && winpArrivalTimer < 550) {
+		//登場
 		enemyWinplocalpos4.x -= WinpSpeedX;
 		enemyWinplocalpos5.x += WinpSpeedX;
 		enemyWinplocalpos6.x -= WinpSpeedX;
@@ -140,6 +143,18 @@ void Enemy::WinpUpdate()
 		if (enemyWinplocalpos6.x <= 2.0f) { enemyWinplocalpos6.x = 2.0f; }
 		if (enemyWinplocalpos7.x >= -2.0f) { enemyWinplocalpos7.x = -2.0f; }
 	}
+	if (winpArrivalTimer >= 550) {
+		//去る
+		enemyWinplocalpos4.x += WinpSpeedX;
+		enemyWinplocalpos5.x -= WinpSpeedX;
+		enemyWinplocalpos6.x += WinpSpeedX;
+		enemyWinplocalpos7.x -= WinpSpeedX;
+
+		if (enemyWinplocalpos4.x >= 15.0f)  { isWinpAliveFlag_[4] = 1;}
+		if (enemyWinplocalpos5.x <= -15.0f) { isWinpAliveFlag_[5] = 1;}
+		if (enemyWinplocalpos6.x >= 15.0f)  { isWinpAliveFlag_[6] = 1;}
+		if (enemyWinplocalpos7.x <= -15.0f) { isWinpAliveFlag_[7] = 1;}
+	}
 
 	//雑魚敵の初期位置(第三ウェーブ)
 	// 左が初期値                  右が最終到達点
@@ -147,7 +162,7 @@ void Enemy::WinpUpdate()
 	fbxWinpObject3d_[8]->wtf.position = fbxWinpObject3d_[8]->wtf.position + enemyWinplocalpos8;
 	//{ -2.0f,0.0f,50.0f };//{ -2.0f,0.0f,10.0f }
 	fbxWinpObject3d_[9]->wtf.position = fbxWinpObject3d_[9]->wtf.position + enemyWinplocalpos9;
-	if (winpArrivalTimer >= 500) {
+	if (winpArrivalTimer >= 550) {
 		enemyWinplocalpos8.z -= WinpSpeedZ;
 		enemyWinplocalpos9.z -= WinpSpeedZ;
 
