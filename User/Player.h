@@ -172,7 +172,7 @@ private:
 	//ローカル移動
 	Vector3 playerlocalpos = { 0.0f,-0.3f,0.0f };
 	Vector3 cameralocalpos = { 0.0f,0.0f,0.0f };
-	Vector3 retlocalpos = { 0.0f,0.0f,0.0f };
+	Vector3 retlocalpos = { 0.0f,0.0f,10.0f };
 	Vector3 retRotlocalpos = { 0.0f,0.0f,0.0f };
 
 	//スプライン曲線
