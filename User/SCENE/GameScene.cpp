@@ -63,8 +63,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	skydomeMD = Model::LoadFromOBJ("skydome");
 	skydome = Object3d::Create();
 	skydome->SetModel(skydomeMD);
-	skydome->wtf.scale = { 100.0f,100.0f,100.0f };
-	skydome->wtf.position = { 0.0f,50.0f,50.0f };
+	skydome->wtf.scale = { 1000.0f,1000.0f,1000.0f };
+	skydome->wtf.position = { 0.0f,-20.0f,50.0f };
 	skydome->wtf.rotation = {0.0f,0.0f,0.0f};
 
 	//地面

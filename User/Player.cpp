@@ -163,17 +163,27 @@ void Player::Update() {
 		fbxObject3d_->wtf.position = fbxObject3d_->wtf.position + playerlocalpos;
 
 		retObj_->wtf.position = retObj_->wtf.position + retlocalpos;
-		retObj_->wtf.position.z = fbxObject3d_->wtf.position.z + 10.0f;
+		retObj_->wtf.rotation = retObj_->wtf.rotation + retRotlocalpos;
 
 
 		//プレイヤーの行動一覧
 		PlayerAction();
 
 		if (input_->PushKey(DIK_1)) {
-			camera->wtf.rotation.y -= 0.01f;
+			camera->wtf.rotation.y = 1.2f;
+			retlocalpos.x = 10.0f;
 		}
 		if (input_->PushKey(DIK_2)) {
-			camera->wtf.rotation.y += 0.01f;
+			camera->wtf.rotation.y = 0.0f;
+			retlocalpos.x = 0.0f;
+			retlocalpos.z = 10.0f;
+		}
+		//移動(レティクル)
+		if (input_->PushKey(DIK_3)) {
+			retlocalpos.z += 0.1f;
+		}
+		if (input_->PushKey(DIK_4)) {
+			retlocalpos.z -= 0.1f;
 		}
 
 		if (input_->PushKey(DIK_Q)) {
@@ -198,7 +208,9 @@ void Player::Update() {
 	ImGui::Begin("Player");
 
 	ImGui::Text("position:%f,%f,%f", fbxObject3d_->wtf.position.x, fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z);
-	ImGui::Text("Cameraposition:%f,%f,%f", camera->wtf.position.x, camera->wtf.position.y, camera->wtf.position.z);
+	ImGui::Text("Cameraposition:%f,%f,%f", camera->wtf.rotation.x, camera->wtf.rotation.y, camera->wtf.rotation.z);
+	ImGui::Text("RetPosition:%f,%f,%f", retlocalpos.x, retlocalpos.y, retlocalpos.z);
+	ImGui::Text("RetRotation:%f,%f,%f", retObj_->wtf.rotation.x, retObj_->wtf.rotation.y, retObj_->wtf.rotation.z);
 
 	ImGui::End();
 
@@ -213,7 +225,7 @@ void Player::Draw() {
 		shootStObj_->Draw();
 	}
 
-	if (isSlashFlag == true || isGardFlag == true) {
+	if (isSlashFlag == true) {
 		hitboxObj_->Draw();
 	}
 	if (splineTimer >= 100) {
@@ -413,7 +425,8 @@ void Player::PlayerAction()
 	float retLimitY = 3.0f;
 
 	if (input_->PushKey(DIK_P)) {
-		splinePosition_->Reset();
+		retlocalpos.z = 10.0f;
+		/*splinePosition_->Reset();*/
 	}
 	//移動(自機)
 	if (input_->PushKey(DIK_W) || input_->StickInput(L_UP)) {
