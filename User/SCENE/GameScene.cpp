@@ -120,7 +120,7 @@ void GameScene::Update() {
 
 	if (sceneNo_ == SceneNo::Game) {
 		
-		player_->Update();
+		player_->Update(enemy_->winpArrivalTimer);
 		enemy_->Update(player_->splinePosition_);
 		enemyBoss_->Update();
 		obstacle_->Update();

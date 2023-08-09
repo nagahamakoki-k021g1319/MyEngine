@@ -128,7 +128,7 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 
 
-void Player::Update() {
+void Player::Update(int winpArrivalTimer) {
 	camera->Update();
 	fbxObject3d_->Update();
 	fbxSlashObject3d_->Update();
@@ -169,23 +169,27 @@ void Player::Update() {
 		//プレイヤーの行動一覧
 		PlayerAction();
 
+		if (winpArrivalTimer >= 650) {
+			isCameraBehavior = 1;
+			camera->wtf.rotation.y = 1.2f;
+			retlocalpos.x = 10.0f;
+		}
+
+
 		if (input_->PushKey(DIK_1)) {
+			isCameraBehavior = 1;
 			camera->wtf.rotation.y = 1.2f;
 			retlocalpos.x = 10.0f;
 		}
 		if (input_->PushKey(DIK_2)) {
+			isCameraBehavior = 0;
 			camera->wtf.rotation.y = 0.0f;
 			retlocalpos.x = 0.0f;
 			retlocalpos.z = 10.0f;
 		}
-		//移動(レティクル)
-		if (input_->PushKey(DIK_3)) {
-			retlocalpos.z += 0.1f;
-		}
-		if (input_->PushKey(DIK_4)) {
-			retlocalpos.z -= 0.1f;
-		}
 
+
+		//自機の被弾エフェクト(敵の攻撃がないのでおいてる)
 		if (input_->PushKey(DIK_Q)) {
 			isEffFlag = 1;
 		}
@@ -455,10 +459,21 @@ void Player::PlayerAction()
 		retlocalpos.y -= retSpeed;
 	}
 	if (input_->PushKey(DIK_LEFT) || input_->StickInput(R_LEFT)) {
-		retlocalpos.x -= retSpeed;
+		if (isCameraBehavior == 0) {
+			retlocalpos.x -= retSpeed;
+		}
+		else if (isCameraBehavior == 1) {
+			retlocalpos.z += retSpeed;
+		}
+
 	}
 	if (input_->PushKey(DIK_RIGHT) || input_->StickInput(R_RIGHT)) {
-		retlocalpos.x += retSpeed;
+		if (isCameraBehavior == 0) {
+			retlocalpos.x += retSpeed;
+		}
+		else if (isCameraBehavior == 1) {
+			retlocalpos.z -= retSpeed;
+		}
 	}
 	////移動制限(自機とレティクル)
 	//if (fbxObject3d_->wtf.position.x >= playerLimitX) {
