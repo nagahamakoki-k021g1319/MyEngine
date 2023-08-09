@@ -4,7 +4,7 @@
 #include "Input.h"
 #include "Camera.h"
 
-class Player;
+
 #include "Collision.h"
 #include "ParticleManager.h"
 #include "Audio.h"
@@ -13,6 +13,8 @@ class Player;
 #include "FbxLoader.h"
 #include "FBXObject3d.h"
 #include "SplinePosition.h"
+
+class Player;
 
 class Enemy
 {
@@ -55,6 +57,8 @@ public:
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
 	//雑魚敵が動き始める
 	bool bossGostAt = false;
+	//雑魚敵出現タイマー
+	int winpArrivalTimer = 0;
 
 private:
 	const float PI = 3.141592f;
@@ -78,8 +82,7 @@ private:
 	//生きているかどうか(0生きる,1死亡)
 	int isWinpAliveFlag_[10] = { 0 };
 
-	//雑魚敵出現タイマー
-	int winpArrivalTimer = 0;
+	
 
 	//ローカル移動座標
 	Vector3 enemyWinplocalpos0 = { 10.0f,-1.0f,10.0f };//{ 0.0f,-1.0f,10.0f };

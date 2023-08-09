@@ -24,7 +24,7 @@ public:
 
 	void Initialize(DirectXCommon* dxCommon, Input* input);
 	void UIInitialize();
-	void Update();
+	void Update(int winpArrivalTimer);
 
 	void Draw();
 	void FbxDraw();
@@ -72,6 +72,9 @@ public:
 	int bulletMax = 6;
 	int bulletUpCount = 0;
 
+	//カメラの向きによって自機の動きをかえるフラグ
+	int isCameraBehavior = 0;
+
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
@@ -79,6 +82,9 @@ private:
 	Audio* audio = nullptr;
 	Enemy* enemy_ = nullptr;
 	SpriteCommon* spriteCommon = nullptr;
+
+	//雑魚敵出現タイマー
+	int winpArrivalTimer = 0;
 
 	//待機
 	FBXModel* fbxModel_ = nullptr;
@@ -174,6 +180,9 @@ private:
 	Vector3 cameralocalpos = { 0.0f,0.0f,0.0f };
 	Vector3 retlocalpos = { 0.0f,0.0f,10.0f };
 	Vector3 retRotlocalpos = { 0.0f,0.0f,0.0f };
+
+	
+
 
 	//スプライン曲線
 	int splineTimer = 0;
