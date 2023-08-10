@@ -83,9 +83,6 @@ private:
 	Enemy* enemy_ = nullptr;
 	SpriteCommon* spriteCommon = nullptr;
 
-	//雑魚敵出現タイマー
-	int winpArrivalTimer = 0;
-
 	//待機
 	FBXModel* fbxModel_ = nullptr;
 	FBXObject3d* fbxObject3d_ = nullptr;
@@ -94,6 +91,7 @@ private:
 	//レティクル
 	Object3d* retObj_ = nullptr;
 	Model* retModel_ = nullptr;
+	int retResetTimer = 0;
 
 	//弾発射(弱)
 	Object3d* shootObj_ = nullptr;

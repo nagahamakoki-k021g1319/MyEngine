@@ -169,11 +169,33 @@ void Player::Update(int winpArrivalTimer) {
 		//プレイヤーの行動一覧
 		PlayerAction();
 
-		if (winpArrivalTimer >= 650) {
-			isCameraBehavior = 1;
-			camera->wtf.rotation.y = 1.2f;
-			retlocalpos.x = 10.0f;
+		if (winpArrivalTimer >= 850 && winpArrivalTimer < 1250) {
+			camera->wtf.rotation.y += 0.01f;
+
+			if (camera->wtf.rotation.y >= 1.2f) {
+				camera->wtf.rotation.y = 1.2f;
+				retlocalpos.x = 10.0f;
+				isCameraBehavior = 1;
+			}
 		}
+		else if (winpArrivalTimer >= 1250) {
+			camera->wtf.rotation.y -= 0.01f;
+			if (camera->wtf.rotation.y <= 0.0f) {
+				camera->wtf.rotation.y = 0.0f;
+				retResetTimer++;
+				retlocalpos.z = 10.0f;
+				isCameraBehavior = 0;
+			}
+			if (retResetTimer >= 1 && retResetTimer <= 2) {
+				retlocalpos.x = 0.0f;
+			}
+			else if (retResetTimer >= 3){
+				retResetTimer = 3;
+			}
+
+		}
+
+
 
 
 		if (input_->PushKey(DIK_1)) {
@@ -381,7 +403,7 @@ void Player::UIInitialize()
 	//被弾エフェクト
 	spriteCommon->LoadTexture(14, "blood.png");
 	BloodUI->SetTextureIndex(14);
-	
+
 
 
 }
@@ -489,18 +511,18 @@ void Player::PlayerAction()
 	//	fbxObject3d_->wtf.position.y = -playerLimitY2;
 	//}
 
-	//if (retObj_->wtf.position.x >= retLimitX) {
-	//	retObj_->wtf.position.x = retLimitX;
-	//}
-	//if (retObj_->wtf.position.x <= -retLimitX) {
-	//	retObj_->wtf.position.x = -retLimitX;
-	//}
-	//if (retObj_->wtf.position.y >= retLimitY) {
-	//	retObj_->wtf.position.y = retLimitY;
-	//}
-	//if (retObj_->wtf.position.y <= -retLimitY) {
-	//	retObj_->wtf.position.y = -retLimitY;
-	//}
+	/*if (retObj_->wtf.position.x >= retLimitX) {
+		retObj_->wtf.position.x = retLimitX;
+	}
+	if (retObj_->wtf.position.x <= -retLimitX) {
+		retObj_->wtf.position.x = -retLimitX;
+	}
+	if (retObj_->wtf.position.y >= retLimitY) {
+		retObj_->wtf.position.y = retLimitY;
+	}
+	if (retObj_->wtf.position.y <= -retLimitY) {
+		retObj_->wtf.position.y = -retLimitY;
+	}*/
 
 	//弾の制限
 	if (bulletMax > bulletMax + 1) {
