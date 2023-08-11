@@ -10,7 +10,7 @@ Enemy::~Enemy()
 	//FBXオブジェクト解放
 	delete fbxObject3d_;
 	delete fbxModel_;
-	for (int i = 0; i < 10; i++) { delete fbxWinpObject3d_[i]; }
+	for (int i = 0; i < 13; i++) { delete fbxWinpObject3d_[i]; }
 	delete fbxWinpModel_;
 	delete shootModel_;
 	delete shootObj_;
@@ -49,7 +49,7 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 	fbxObject3d_->PlayAnimation(0.5f, false);
 
 	//雑魚敵
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 13; i++) {
 		fbxWinpObject3d_[i] = new FBXObject3d;
 		fbxWinpObject3d_[i]->Initialize();
 		fbxWinpObject3d_[i]->SetModel(fbxWinpModel_);
@@ -108,7 +108,7 @@ void Enemy::WinpUpdate()
 		if (enemyWinplocalpos2.x >= -3.0f) { enemyWinplocalpos2.x = -3.0f; }
 		if (enemyWinplocalpos3.x >= 0.0f) { enemyWinplocalpos3.x = 0.0f; }
 	}
-	if (winpArrivalTimer >= 250) {
+	else if (winpArrivalTimer >= 250) {
 		//去る
 		enemyWinplocalpos0.x += WinpSpeedX;
 		enemyWinplocalpos1.x += WinpSpeedX;
@@ -143,7 +143,7 @@ void Enemy::WinpUpdate()
 		if (enemyWinplocalpos6.x <= 2.0f) { enemyWinplocalpos6.x = 2.0f; }
 		if (enemyWinplocalpos7.x >= -2.0f) { enemyWinplocalpos7.x = -2.0f; }
 	}
-	if (winpArrivalTimer >= 550) {
+	else if (winpArrivalTimer >= 550) {
 		//去る
 		enemyWinplocalpos4.x += WinpSpeedX;
 		enemyWinplocalpos5.x -= WinpSpeedX;
@@ -162,13 +162,29 @@ void Enemy::WinpUpdate()
 	fbxWinpObject3d_[8]->wtf.position = fbxWinpObject3d_[8]->wtf.position + enemyWinplocalpos8;
 	//{ -2.0f,0.0f,50.0f };//{ -2.0f,0.0f,10.0f }
 	fbxWinpObject3d_[9]->wtf.position = fbxWinpObject3d_[9]->wtf.position + enemyWinplocalpos9;
-	if (winpArrivalTimer >= 550) {
+	
+	if (winpArrivalTimer == 550) {isWinpAliveFlag_[8] = 0;isWinpAliveFlag_[9] = 0;}
+	if (winpArrivalTimer < 550) {isWinpAliveFlag_[8] = 1;isWinpAliveFlag_[9] = 1;}
+	else if (winpArrivalTimer >= 550 && winpArrivalTimer < 880) {
 		enemyWinplocalpos8.z -= WinpSpeedZ;
 		enemyWinplocalpos9.z -= WinpSpeedZ;
 
 		if (enemyWinplocalpos8.z <= 10.0f) { enemyWinplocalpos8.z = 10.0f; }
 		if (enemyWinplocalpos9.z <= 10.0f) { enemyWinplocalpos9.z = 10.0f; }
 	}
+	else if (winpArrivalTimer >= 880) {
+		isWinpAliveFlag_[8] = 1;
+		isWinpAliveFlag_[9] = 1;
+	}
+
+	//雑魚敵の初期位置(第四ウェーブ)
+	// 左が初期値                  右が最終到達点
+	//{ 12.0f, 2.0f, 10.0f };{  2.0f, 2.0f,10.0f };
+	fbxWinpObject3d_[10]->wtf.position = fbxWinpObject3d_[10]->wtf.position + enemyWinplocalpos10;
+	//{ -12.0f, 2.0f, 10.0f };{  -2.0f, 2.0f,10.0f };
+	fbxWinpObject3d_[11]->wtf.position = fbxWinpObject3d_[11]->wtf.position + enemyWinplocalpos11;
+	//{ 12.0f, 2.0f, 10.0f };{  2.0f, -2.0f,10.0f };
+	fbxWinpObject3d_[12]->wtf.position = fbxWinpObject3d_[12]->wtf.position + enemyWinplocalpos12;
 
 
 }
@@ -187,7 +203,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 	if (bossGostMove == 1) { fbxObject3d_->wtf.position.z += 0.08f; }
 	if (fbxObject3d_->wtf.position.z >= 6.0f) { bossGostAt = true; }
 	if (fbxObject3d_->wtf.position.z >= 12.0f) { fbxObject3d_->wtf.position.z = 10000.0f; }
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 13; i++) {
 		fbxWinpObject3d_[i]->Update();
 	}
 	EffUpdate();
@@ -201,7 +217,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 		float speed = 0.0f;
 		splinePosition_->Update(speed);
 		camera->wtf.position = splinePosition_->NowPos;
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 13; i++) {
 			fbxWinpObject3d_[i]->wtf.position = splinePosition_->NowPos;
 		}
 
@@ -248,7 +264,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 
 
 	//当たり判定(自機弾(弱)と雑魚敵)
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 13; i++) {
 		if (isWinpAliveFlag_[i] == 0) {
 			if (coll.CircleCollision(player_->GetBulletWorldPosition(), fbxWinpObject3d_[i]->wtf.position, 1.0f, 0.2f)) {
 				isEffFlag_[i] = 1;
@@ -259,7 +275,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 	}
 	
 	//当たり判定(自機弾(強)と雑魚敵)
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 13; i++) {
 		if (isWinpAliveFlag_[i] == 0) {
 			if (coll.CircleCollision(player_->GetBulletStWorldPosition(), fbxWinpObject3d_[i]->wtf.position, 1.0f, 0.2f)) {
 				isEffFlag_[i] = 1;
@@ -299,7 +315,7 @@ void Enemy::FbxDraw()
 
 
 	if (bossGostAt == true) {
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 13; i++) {
 			if (isWinpAliveFlag_[i] == 0) {
 				fbxWinpObject3d_[i]->Draw(dxCommon->GetCommandList());
 			}
@@ -312,7 +328,7 @@ void Enemy::FbxDraw()
 
 void Enemy::EffUpdate()
 {
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 13; i++) {
 		if (isEffFlag_[i] == 1) {
 			EffTimer_[i]++;
 		}
@@ -395,7 +411,7 @@ void Enemy::EffSimpleSummary()
 
 void Enemy::EffDraw()
 {
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 13; i++) {
 		if (isEffFlag_[i] == 1) {
 			// 3Dオブクジェクトの描画
 			DamageParticle->Draw();
