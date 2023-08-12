@@ -174,7 +174,7 @@ void Player::Update(int winpArrivalTimer) {
 
 			if (camera->wtf.rotation.y >= 1.2f) {
 				camera->wtf.rotation.y = 1.2f;
-				retlocalpos.x = 13.0f;
+				retlocalpos.x = 8.5f;
 				isCameraBehavior = 1;
 			}
 		}
