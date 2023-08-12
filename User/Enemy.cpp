@@ -172,19 +172,37 @@ void Enemy::WinpUpdate()
 		if (enemyWinplocalpos8.z <= 10.0f) { enemyWinplocalpos8.z = 10.0f; }
 		if (enemyWinplocalpos9.z <= 10.0f) { enemyWinplocalpos9.z = 10.0f; }
 	}
-	else if (winpArrivalTimer >= 880) {
-		isWinpAliveFlag_[8] = 1;
-		isWinpAliveFlag_[9] = 1;
-	}
+	else if (winpArrivalTimer >= 880) {isWinpAliveFlag_[8] = 1;isWinpAliveFlag_[9] = 1;}
 
 	//雑魚敵の初期位置(第四ウェーブ)
 	// 左が初期値                  右が最終到達点
-	//{ 12.0f, 2.0f, 10.0f };{  2.0f, 2.0f,10.0f };
+	//{ 8.0f, 2.0f,-7.0f };   { 8.0f, 2.0f,7.0f };
 	fbxWinpObject3d_[10]->wtf.position = fbxWinpObject3d_[10]->wtf.position + enemyWinplocalpos10;
-	//{ -12.0f, 2.0f, 10.0f };{  -2.0f, 2.0f,10.0f };
+	//{ 8.0f, 0.0f,-7.0f };   { 8.0f, 2.0f,5.0f };
 	fbxWinpObject3d_[11]->wtf.position = fbxWinpObject3d_[11]->wtf.position + enemyWinplocalpos11;
-	//{ 12.0f, 2.0f, 10.0f };{  2.0f, -2.0f,10.0f };
+	//{ 8.0f, -2.0f,-7.0f };  { 8.0f, 2.0f,3.0f };
 	fbxWinpObject3d_[12]->wtf.position = fbxWinpObject3d_[12]->wtf.position + enemyWinplocalpos12;
+	if (winpArrivalTimer >= 850 && winpArrivalTimer < 1250) {
+		//登場
+		enemyWinplocalpos10.z += WinpSpeedX;
+		enemyWinplocalpos11.z += WinpSpeedX;
+		enemyWinplocalpos12.z += WinpSpeedX;
+
+		if (enemyWinplocalpos10.z >= 7.0f) { enemyWinplocalpos10.z = 7.0f; }
+		if (enemyWinplocalpos11.z >= 5.0f) { enemyWinplocalpos11.z = 5.0f; }
+		if (enemyWinplocalpos12.z >= 3.0f) { enemyWinplocalpos12.z = 3.0f; }
+	}
+	else if (winpArrivalTimer >= 1250) {
+		//去る
+		enemyWinplocalpos10.y += WinpSpeedX;
+		enemyWinplocalpos11.y += WinpSpeedX;
+		enemyWinplocalpos12.y -= WinpSpeedX;
+
+		if (enemyWinplocalpos10.y >=  7.0f) { isWinpAliveFlag_[10] = 1; }
+		if (enemyWinplocalpos11.y >=  7.0f) { isWinpAliveFlag_[11] = 1; }
+		if (enemyWinplocalpos12.y <= -7.0f) { isWinpAliveFlag_[12] = 1; }
+	}
+
 
 
 }
@@ -204,7 +222,9 @@ void Enemy::Update(SplinePosition* spPosition_)
 	if (fbxObject3d_->wtf.position.z >= 6.0f) { bossGostAt = true; }
 	if (fbxObject3d_->wtf.position.z >= 12.0f) { fbxObject3d_->wtf.position.z = 10000.0f; }
 	for (int i = 0; i < 13; i++) {
-		fbxWinpObject3d_[i]->Update();
+		if (isWinpAliveFlag_[i] == 0) {
+			fbxWinpObject3d_[i]->Update();
+		}
 	}
 	EffUpdate();
 
