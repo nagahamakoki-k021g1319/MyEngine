@@ -82,9 +82,14 @@ private:
 	//生きているかどうか(0生きる,1死亡)
 	int isWinpAliveFlag_[13] = { 0 };
 
-	
+	//Bossのファンネル
+	Object3d* enearchObj_ = nullptr;
+	Model* enearchModel_ = nullptr;
+	Vector3 enearchlocalpos0 = { 0.0f,2.0f,10.0f };
+	Vector3 playerlen;
+	Vector3 len;
 
-	//ローカル移動座標
+	//ローカル移動座標(雑魚敵)
 	//雑魚敵の初期位置(第1ウェーブ)
 	Vector3 enemyWinplocalpos0 = { 10.0f,-1.0f,10.0f };//{ 0.0f,-1.0f,10.0f };
 	Vector3 enemyWinplocalpos1 = { 10.0f,0.0f,10.0f };//{ 3.0f,0.0f,10.0f }

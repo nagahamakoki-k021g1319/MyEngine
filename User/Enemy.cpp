@@ -18,6 +18,9 @@ Enemy::~Enemy()
 	delete shootModel2_;
 	delete shootObj2_;
 
+	delete enearchModel_;
+	delete enearchObj_;
+
 }
 
 void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
@@ -57,6 +60,12 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 		fbxWinpObject3d_[i]->wtf.position.z = 30.0f;
 		fbxWinpObject3d_[i]->PlayAnimation(1.0f, true);
 	}
+
+	//Boss‚Ìƒtƒ@ƒ“ƒlƒ‹
+	enearchModel_ = Model::LoadFromOBJ("enearch");
+	enearchObj_ = Object3d::Create();
+	enearchObj_->SetModel(enearchModel_);
+	
 
 	//ŽG‹›“G‚ÌUŒ‚
 	shootModel_ = Model::LoadFromOBJ("eneboll");
@@ -226,6 +235,8 @@ void Enemy::Update(SplinePosition* spPosition_)
 			fbxWinpObject3d_[i]->Update();
 		}
 	}
+	enearchObj_->Update();
+	
 	EffUpdate();
 
 	//ŽG‹›“G‚ª“®‚«Žn‚ß‚é
@@ -240,7 +251,8 @@ void Enemy::Update(SplinePosition* spPosition_)
 		for (int i = 0; i < 13; i++) {
 			fbxWinpObject3d_[i]->wtf.position = splinePosition_->NowPos;
 		}
-
+		enearchObj_->wtf.position = splinePosition_->NowPos;
+		enearchObj_->wtf.position = enearchObj_->wtf.position + enearchlocalpos0;
 		//ŽG‹›“G‚Ì”­¶‚ÆˆÚ“®
 		WinpUpdate();
 
@@ -315,6 +327,10 @@ void Enemy::Update(SplinePosition* spPosition_)
 
 void Enemy::Draw()
 {
+	if (bossGostAt == true) {
+		enearchObj_->Draw();
+	}
+
 	if (isWinpAliveFlag_[8] == 0) {
 		if (isShootFlag_[0] == 1 && isOffsetFlag_ == 0) {
 			shootObj_->Draw();
