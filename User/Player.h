@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "DirectXCommon.h"
+#include "Transform.h"
 #include "Object3d.h"
 #include "Input.h"
 #include "Camera.h"
@@ -67,6 +68,7 @@ public:
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
 	SplinePosition* splinePosition_ = nullptr;
 	
+
 	//弾の弾数表示
 	int bulletRest = 0;
 	int bulletMax = 6;
@@ -75,6 +77,7 @@ public:
 	//カメラの向きによって自機の動きをかえるフラグ
 	int isCameraBehavior = 0;
 
+
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
@@ -82,7 +85,7 @@ private:
 	Audio* audio = nullptr;
 	Enemy* enemy_ = nullptr;
 	SpriteCommon* spriteCommon = nullptr;
-
+	
 	//待機
 	FBXModel* fbxModel_ = nullptr;
 	FBXObject3d* fbxObject3d_ = nullptr;
