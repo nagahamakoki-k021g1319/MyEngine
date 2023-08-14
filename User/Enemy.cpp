@@ -327,9 +327,9 @@ void Enemy::Update(SplinePosition* spPosition_)
 
 void Enemy::Draw()
 {
-	if (bossGostAt == true) {
+	/*if (bossGostAt == true) {
 		enearchObj_->Draw();
-	}
+	}*/
 
 	if (isWinpAliveFlag_[8] == 0) {
 		if (isShootFlag_[0] == 1 && isOffsetFlag_ == 0) {
