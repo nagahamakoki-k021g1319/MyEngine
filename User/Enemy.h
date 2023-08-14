@@ -82,12 +82,7 @@ private:
 	//生きているかどうか(0生きる,1死亡)
 	int isWinpAliveFlag_[13] = { 0 };
 
-	//Bossのファンネル
-	Object3d* enearchObj_ = nullptr;
-	Model* enearchModel_ = nullptr;
-	Vector3 enearchlocalpos0 = { 0.0f,2.0f,10.0f };
-	Vector3 playerlen;
-	Vector3 len;
+	
 
 	//ローカル移動座標(雑魚敵)
 	//雑魚敵の初期位置(第1ウェーブ)
@@ -122,6 +117,17 @@ private:
 	int isOffsetFlag_ = 0;
 	int isShootexistTimer_[2] = {0};
 	int isShootCoolTimer_[2] = { 0 };
+
+	//Bossのファンネル
+	Object3d* enearchObj_ = nullptr;
+	Model* enearchModel_ = nullptr;
+	Vector3 enearchlocalpos0 = { 0.0f,2.0f,10.0f };
+	Vector3 playerlen;
+	Vector3 len;
+
+
+
+
 
 	//パーティクル
 	std::unique_ptr<ParticleManager> DamageParticle;
