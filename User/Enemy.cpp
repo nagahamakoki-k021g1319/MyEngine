@@ -65,7 +65,6 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 	enearchModel_ = Model::LoadFromOBJ("enearch");
 	enearchObj_ = Object3d::Create();
 	enearchObj_->SetModel(enearchModel_);
-	
 
 	//G‹›“G‚ÌUŒ‚
 	shootModel_ = Model::LoadFromOBJ("eneboll");
