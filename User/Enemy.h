@@ -125,7 +125,11 @@ private:
 	Vector3 playerlen;
 	Vector3 len;
 
-
+	//’e”­ŽË(—U“±)
+	Object3d* retObj_ = nullptr;
+	Model* retModel_ = nullptr;
+	Object3d* inductionObj_ = nullptr;
+	Model* inductionModel_ = nullptr;
 
 
 
