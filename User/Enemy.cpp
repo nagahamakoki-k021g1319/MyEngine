@@ -72,13 +72,23 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 	shootObj_ = Object3d::Create();
 	shootObj_->SetModel(shootModel_);
 	shootObj_->wtf.position = { fbxWinpObject3d_[8]->wtf.position.x,fbxWinpObject3d_[8]->wtf.position.y, fbxWinpObject3d_[8]->wtf.position.z };
-	shootObj_->wtf.scale = { 0.4f,0.4f,0.4f };
 
 	shootModel2_ = Model::LoadFromOBJ("eneboll");
 	shootObj2_ = Object3d::Create();
 	shootObj2_->SetModel(shootModel2_);
 	shootObj2_->wtf.position = { fbxWinpObject3d_[9]->wtf.position.x,fbxWinpObject3d_[9]->wtf.position.y, fbxWinpObject3d_[9]->wtf.position.z };
 	shootObj2_->wtf.scale = { 0.4f,0.4f,0.4f };
+
+	//誘導弾
+	inductionModel_ = Model::LoadFromOBJ("boll");
+	inductionObj_ = Object3d::Create();
+	inductionObj_->SetModel(inductionModel_);
+	inductionObj_->wtf.position = { enearchObj_->wtf.position.x,enearchObj_->wtf.position.y, enearchObj_->wtf.position.z };
+
+	//レティクル
+	retModel_ = Model::LoadFromOBJ("boll");
+	retObj_ = Object3d::Create();
+	retObj_->SetModel(retModel_);
 
 	//パーティクル生成
 	DamageParticle = std::make_unique<ParticleManager>();
@@ -327,9 +337,9 @@ void Enemy::Update(SplinePosition* spPosition_)
 
 void Enemy::Draw()
 {
-	/*if (bossGostAt == true) {
+	if (bossGostAt == true) {
 		enearchObj_->Draw();
-	}*/
+	}
 
 	if (isWinpAliveFlag_[8] == 0) {
 		if (isShootFlag_[0] == 1 && isOffsetFlag_ == 0) {
