@@ -104,7 +104,7 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	shootStObj_ = Object3d::Create();
 	shootStObj_->SetModel(shootStModel_);
 	shootStObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z };
-	shootStObj_->wtf.scale = { 0.5f,0.5f,0.5f };
+	shootStObj_->wtf.scale = { 0.2f,0.2f,0.2f };
 
 	//ヒットボックス可視化
 	hitboxModel_ = Model::LoadFromOBJ("hit");
@@ -250,6 +250,7 @@ void Player::Draw() {
 	if (isShootStFlag == true) {
 		shootStObj_->Draw();
 	}
+	/*shootStObj_->Draw();*/
 
 	if (isSlashFlag == true) {
 		hitboxObj_->Draw();
@@ -567,7 +568,7 @@ void Player::PlayerAction()
 
 	}
 	else {
-		shootStObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y - 1.5f, fbxObject3d_->wtf.position.z + 1.0f };
+		shootStObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y - 0.2f, fbxObject3d_->wtf.position.z};
 	}
 	if (StBulletCoolTime >= 10.0f) {
 		bulletRest += 2;

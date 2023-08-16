@@ -109,9 +109,10 @@ private:
 	Model* shootStModel_ = nullptr;
 	bool isShootStFlag = false;
 	int StBulletCoolTime = 0;
+	int storeStBulletTime = 0;
 	Vector3 enemylen2;
 	Vector3 len2;
-	int storeStBulletTime = 0;
+
 	
 	//被弾時エフェクト
 	Sprite* BloodUI = nullptr;
