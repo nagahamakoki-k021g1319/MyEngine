@@ -130,8 +130,10 @@ private:
 	Model* retModel_ = nullptr;
 	Object3d* inductionObj_ = nullptr;
 	Model* inductionModel_ = nullptr;
-
-
+	Vector3 retlocalpos = { 0.0f,-2.0f,-5.0f };
+	bool isShootStFlag = false;
+	int StBulletCoolTime = 0;
+	int storeStBulletTime = 0;
 
 	//パーティクル
 	std::unique_ptr<ParticleManager> DamageParticle;

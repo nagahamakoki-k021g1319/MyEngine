@@ -21,6 +21,11 @@ Enemy::~Enemy()
 	delete enearchModel_;
 	delete enearchObj_;
 
+	delete inductionModel_;
+	delete inductionObj_;
+
+	delete retModel_;
+	delete retObj_;
 }
 
 void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
@@ -82,12 +87,14 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 	inductionModel_ = Model::LoadFromOBJ("boll");
 	inductionObj_ = Object3d::Create();
 	inductionObj_->SetModel(inductionModel_);
-	inductionObj_->wtf.position = { enearchObj_->wtf.position.x,enearchObj_->wtf.position.y, enearchObj_->wtf.position.z };
+	
+	inductionObj_->wtf.scale = { 0.3f,0.3f,0.3f };
 
 	//レティクル
 	retModel_ = Model::LoadFromOBJ("boll");
 	retObj_ = Object3d::Create();
 	retObj_->SetModel(retModel_);
+	retObj_->wtf.scale = { 0.05f,0.05f,0.05f };
 
 	//パーティクル生成
 	DamageParticle = std::make_unique<ParticleManager>();
@@ -245,6 +252,9 @@ void Enemy::Update(SplinePosition* spPosition_)
 		}
 	}
 	enearchObj_->Update();
+	inductionObj_->Update();
+	
+	retObj_->Update();
 	
 	EffUpdate();
 
@@ -256,12 +266,14 @@ void Enemy::Update(SplinePosition* spPosition_)
 		//スプライン曲線の更新
 		float speed = 0.0f;
 		splinePosition_->Update(speed);
+		retObj_->wtf.position = splinePosition_->NowPos;
 		camera->wtf.position = splinePosition_->NowPos;
 		for (int i = 0; i < 13; i++) {
 			fbxWinpObject3d_[i]->wtf.position = splinePosition_->NowPos;
 		}
 		enearchObj_->wtf.position = splinePosition_->NowPos;
 		enearchObj_->wtf.position = enearchObj_->wtf.position + enearchlocalpos0;
+		retObj_->wtf.position = retObj_->wtf.position + retlocalpos;
 		//雑魚敵の発生と移動
 		WinpUpdate();
 
@@ -297,6 +309,33 @@ void Enemy::Update(SplinePosition* spPosition_)
 			isShootFlag_[1] = 0;
 			isShootCoolTimer_[1] = 0;
 			isShootexistTimer_[1] = 0;
+		}
+
+		//弾発射(強)
+		float ShortStSpeed = 0.001f;
+		storeStBulletTime++;
+		if (storeStBulletTime <= 30) {
+			playerlen = retObj_->wtf.position - inductionObj_->wtf.position;
+			playerlen.nomalize();
+		}
+		if (storeStBulletTime >= 30) {
+			if (isShootStFlag == false) {
+				isShootStFlag = true;
+			}
+		}
+		if (isShootStFlag == true) {
+			StBulletCoolTime++;
+			inductionObj_->wtf.position += playerlen;
+			len = playerlen;
+			len *= ShortStSpeed;
+		}
+		else {
+			inductionObj_->wtf.position = { enearchObj_->wtf.position.x,enearchObj_->wtf.position.y + 5.0f, enearchObj_->wtf.position.z + 30.0f };
+		}
+		if (StBulletCoolTime >= 40.0f) {
+			storeStBulletTime = 0;
+			StBulletCoolTime = 0;
+			isShootStFlag = false;
 		}
 
 
@@ -338,6 +377,8 @@ void Enemy::Draw()
 {
 	if (bossGostAt == true) {
 		enearchObj_->Draw();
+		inductionObj_->Draw();
+		retObj_->Draw();
 	}
 
 	if (isWinpAliveFlag_[8] == 0) {
