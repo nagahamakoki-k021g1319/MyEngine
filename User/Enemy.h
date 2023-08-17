@@ -13,6 +13,8 @@
 #include "FbxLoader.h"
 #include "FBXObject3d.h"
 #include "SplinePosition.h"
+#include "ImGuiManager.h"
+
 
 class Player;
 
@@ -119,21 +121,29 @@ private:
 	int isShootCoolTimer_[2] = { 0 };
 
 	//Bossのファンネル
-	Object3d* enearchObj_ = nullptr;
+	Object3d* enearchObj_[2] = {0};
 	Model* enearchModel_ = nullptr;
-	Vector3 enearchlocalpos0 = { 0.0f,2.0f,10.0f };
-	Vector3 playerlen;
+	Vector3 enearchlocalpos0 = { 2.0f,2.0f,10.0f };
+	Vector3 enearchlocalpos1 = { -2.0f,2.0f,10.0f };
+	/*Vector3 enearchlocalpos2 = { 2.0f,2.0f,10.0f };
+	Vector3 enearchlocalpos3 = { -2.0f,-2.0f,10.0f };*/
+	Vector3 playerlen0;
 	Vector3 len;
+	Vector3 playerlen1;
+	Vector3 len1;
+	/*Vector3 playerlen2;
+	Vector3 playerlen3;*/
+	
 
 	//弾発射(誘導)
 	Object3d* retObj_ = nullptr;
 	Model* retModel_ = nullptr;
-	Object3d* inductionObj_ = nullptr;
-	Model* inductionModel_ = nullptr;
-	Vector3 retlocalpos = { 0.0f,-2.0f,-5.0f };
-	bool isShootStFlag = false;
-	int StBulletCoolTime = 0;
-	int storeStBulletTime = 0;
+	Object3d* inductionObj_[2] = { 0 };
+	Model* inductionModel_ = nullptr ;
+	Vector3 retlocalpos = { -1.0f,-2.0f,-5.0f };
+	bool isShootStFlag_[4] = {false};
+	int StBulletCoolTime_[4] = {0};
+	int storeStBulletTime_[4] = { 0 };
 
 	//パーティクル
 	std::unique_ptr<ParticleManager> DamageParticle;
