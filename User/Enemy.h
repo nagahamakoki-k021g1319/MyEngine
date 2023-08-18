@@ -27,6 +27,7 @@ public:
 	void Initialize(DirectXCommon* dxCommon, Input* input);
 	void Update(SplinePosition* spPosition_);
 	void WinpUpdate();
+	void BossWinpUpdate();
 	void Draw();
 	void FbxDraw();
 
@@ -136,11 +137,12 @@ private:
 	
 
 	//’e”­ŽË(—U“±)
-	Object3d* retObj_ = nullptr;
+	Object3d* retObj_[2] = { 0 };
 	Model* retModel_ = nullptr;
 	Object3d* inductionObj_[2] = { 0 };
 	Model* inductionModel_ = nullptr ;
-	Vector3 retlocalpos = { -1.0f,-2.0f,-5.0f };
+	Vector3 retlocalpos0 = { -1.0f,-2.0f,-5.0f };
+	Vector3 retlocalpos1 = {  1.0f,-2.0f,-5.0f };
 	bool isShootStFlag_[4] = {false};
 	int StBulletCoolTime_[4] = {0};
 	int storeStBulletTime_[4] = { 0 };
