@@ -43,7 +43,7 @@ public:
 	Vector3 GetWorldPosition();
 
 	////ワールド座標を取得(雑魚敵)
-	Vector3 GetWinpWorldPosition();
+	Vector3 GetWinpWorldPosition(int num);
 
 	void OnColision();
 
@@ -84,7 +84,9 @@ private:
 	bool isAliveFlag = true;
 	//生きているかどうか(0生きる,1死亡)
 	int isWinpAliveFlag_[13] = { 0 };
-
+	//雑魚敵の動き(0右,1左)
+	int enemyWinpAction8 = 0;
+	int enemyWinpAction9 = 1;
 	
 
 	//ローカル移動座標(雑魚敵)
@@ -99,8 +101,8 @@ private:
 	Vector3 enemyWinplocalpos6 = {  12.0f,-2.0f,10.0f };//{  2.0f,-2.0f,10.0f };
 	Vector3 enemyWinplocalpos7 = { -12.0f,-2.0f,10.0f };//{ -2.0f,-2.0f,10.0f };
 	//雑魚敵の初期位置(第3ウェーブ)
-	Vector3 enemyWinplocalpos8 = { 2.0f,0.0f,150.0f };//{ 2.0f,0.0f,10.0f }
-	Vector3 enemyWinplocalpos9 = { -2.0f,0.0f,150.0f };//{ -2.0f,0.0f,10.0f }
+	Vector3 enemyWinplocalpos8 = { 2.0f,-1.0f,150.0f };//{ 2.0f,0.0f,10.0f }
+	Vector3 enemyWinplocalpos9 = { -2.0f,1.0f,150.0f };//{ -2.0f,0.0f,10.0f }
 	//雑魚敵の初期位置(第4ウェーブ)
 	Vector3 enemyWinplocalpos10 = { 8.0f, 2.0f,-10.0f };//{ 8.0f, 2.0f,7.0f };
 	Vector3 enemyWinplocalpos11 = { 8.0f, 0.0f,-10.0f };//{ 8.0f,0.0f,5.0f  };
