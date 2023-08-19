@@ -205,6 +205,31 @@ void Enemy::WinpUpdate()
 
 		if (enemyWinplocalpos8.z <= 10.0f) { enemyWinplocalpos8.z = 10.0f; }
 		if (enemyWinplocalpos9.z <= 10.0f) { enemyWinplocalpos9.z = 10.0f; }
+
+		if (enemyWinplocalpos8.x >= 5.0f) { enemyWinpAction8 = 1; }
+		else if (enemyWinplocalpos8.x <= -5.0f) { enemyWinpAction8 = 0; }
+
+		if (enemyWinplocalpos9.x >= 5.0f) { enemyWinpAction9 = 1; }
+		else if (enemyWinplocalpos9.x <= -5.0f) { enemyWinpAction9 = 0; }
+
+		if (enemyWinplocalpos8.z == 10.0f) { 
+			if (enemyWinpAction8 == 0) {
+				enemyWinplocalpos8.x += 0.02f;
+			}
+			else if (enemyWinpAction8 == 1) {
+				enemyWinplocalpos8.x -= 0.02f;
+			}
+		}
+
+		if (enemyWinplocalpos9.z == 10.0f) {
+			if (enemyWinpAction9 == 0) {
+				enemyWinplocalpos9.x += 0.02f;
+			}
+			else if (enemyWinpAction9 == 1) {
+				enemyWinplocalpos9.x -= 0.02f;
+			}
+		}
+
 	}
 	else if (winpArrivalTimer >= 880) { isWinpAliveFlag_[8] = 1; isWinpAliveFlag_[9] = 1; }
 
@@ -242,7 +267,12 @@ void Enemy::WinpUpdate()
 }
 
 void Enemy::BossWinpUpdate()
-{
+{	//レティクルの速度
+	float eneRetSpeedY = 0.02f;
+	float eneRetSpeedX = 0.02f;
+
+	
+
 	enearchObj_[0]->wtf.position = enearchObj_[0]->wtf.position + enearchlocalpos0;
 	enearchObj_[1]->wtf.position = enearchObj_[1]->wtf.position + enearchlocalpos1;
 	retObj_[0]->wtf.position = retObj_[0]->wtf.position + retlocalpos0;
@@ -255,17 +285,19 @@ void Enemy::BossWinpUpdate()
 	//ボスのファンネルの誘導弾
 	for (int i = 0; i < 2; i++) {
 		storeStBulletTime_[i]++;
-		if (storeStBulletTime_[i] >= 30 + i * 10) {
+		if (storeStBulletTime_[i] >= 40 + i * 20) {
 			if (isShootStFlag_[i] == false) {
 				isShootStFlag_[i] = true;
 			}
 		}
-		if (StBulletCoolTime_[i] >= 50.0f) {
+		if (StBulletCoolTime_[i] >= 60.0f) {
 			storeStBulletTime_[i] = 0;
 			StBulletCoolTime_[i] = 0;
 			isShootStFlag_[i] = false;
 		}
 	}
+
+
 	float ShortStSpeed = 0.001f;
 	if (isShootStFlag_[0] == true) {
 		StBulletCoolTime_[0]++;
@@ -273,7 +305,7 @@ void Enemy::BossWinpUpdate()
 		len = playerlen0;
 		len *= ShortStSpeed;
 	}
-	else { inductionObj_[0]->wtf.position = { enearchObj_[0]->wtf.position.x + 5.0f,enearchObj_[0]->wtf.position.y + 7.0f, enearchObj_[0]->wtf.position.z + 30.0f }; }
+	else { inductionObj_[0]->wtf.position = { enearchObj_[0]->wtf.position.x + 6.0f,enearchObj_[0]->wtf.position.y + 7.0f, enearchObj_[0]->wtf.position.z + 30.0f }; }
 
 	if (isShootStFlag_[1] == true) {
 		StBulletCoolTime_[1]++;
@@ -286,7 +318,23 @@ void Enemy::BossWinpUpdate()
 
 
 
-
+	//移動(レティクル)
+	if (input_->PushKey(DIK_W) || input_->StickInput(L_UP)) {
+		retlocalpos0.y += eneRetSpeedY;
+		retlocalpos1.y += eneRetSpeedY;
+	}
+	if (input_->PushKey(DIK_S) || input_->StickInput(L_DOWN)) {
+		retlocalpos0.y -= eneRetSpeedY;
+		retlocalpos1.y -= eneRetSpeedY;
+	}
+	if (input_->PushKey(DIK_A) || input_->StickInput(L_LEFT)) {
+		retlocalpos0.x -= eneRetSpeedX;
+		retlocalpos1.x -= eneRetSpeedX;
+	}
+	if (input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT)) {
+		retlocalpos0.x += eneRetSpeedX;
+		retlocalpos1.x += eneRetSpeedX;
+	}
 }
 
 void Enemy::Update(SplinePosition* spPosition_)
@@ -310,13 +358,17 @@ void Enemy::Update(SplinePosition* spPosition_)
 		enearchObj_[i]->Update();
 		inductionObj_[i]->Update();
 	}
-	//ボスのファンネルのベクトル正規化
-	playerlen0 = retObj_[0]->wtf.position - inductionObj_[0]->wtf.position;
-	playerlen0.nomalize();
-	playerlen1 = retObj_[1]->wtf.position - inductionObj_[1]->wtf.position;
-	playerlen1.nomalize();
+	
 	for (int i = 0; i < 2; i++) {retObj_[i]->Update();}
-
+	//ボスのファンネルのベクトル正規化
+	if (storeStBulletTime_[0] < 40) {
+		playerlen0 = retObj_[0]->wtf.position - inductionObj_[0]->wtf.position;
+		playerlen0.nomalize();
+	}
+	if (storeStBulletTime_[1] < 40) {
+		playerlen1 = retObj_[1]->wtf.position - inductionObj_[1]->wtf.position;
+		playerlen1.nomalize();
+	}
 	EffUpdate();
 
 	//雑魚敵が動き始める
@@ -332,7 +384,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 		//ボスのファンネルをまとめて更新(スプライン曲線)
 		for (int i = 0; i < 2; i++) {enearchObj_[i]->wtf.position = splinePosition_->NowPos;}
 
-		
+	
 		
 		//雑魚敵の発生と移動
 		WinpUpdate();
@@ -350,7 +402,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 		else {
 			shootObj_->wtf.position = { fbxWinpObject3d_[8]->wtf.position.x,fbxWinpObject3d_[8]->wtf.position.y, fbxWinpObject3d_[8]->wtf.position.z };
 		}
-		if (isShootexistTimer_[0] >= 50) {
+		if (isShootexistTimer_[0] >= 70) {
 			isShootFlag_[0] = 0;
 			isShootCoolTimer_[0] = 0;
 			isShootexistTimer_[0] = 0;
@@ -367,7 +419,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 		else {
 			shootObj2_->wtf.position = { fbxWinpObject3d_[9]->wtf.position.x,fbxWinpObject3d_[9]->wtf.position.y, fbxWinpObject3d_[9]->wtf.position.z };
 		}
-		if (isShootexistTimer_[1] >= 50) {
+		if (isShootexistTimer_[1] >= 70) {
 			isShootFlag_[1] = 0;
 			isShootCoolTimer_[1] = 0;
 			isShootexistTimer_[1] = 0;
@@ -375,26 +427,8 @@ void Enemy::Update(SplinePosition* spPosition_)
 
 		
 
-		//レティクルの速度
-		float eneRetSpeedY = 0.02f;
-		float eneRetSpeedX = 0.02f;
-		//移動(レティクル)
-		if (input_->PushKey(DIK_W) || input_->StickInput(L_UP)) {
-			retlocalpos0.y += eneRetSpeedY;
-			retlocalpos1.y += eneRetSpeedY;
-		}
-		if (input_->PushKey(DIK_S) || input_->StickInput(L_DOWN)) {
-			retlocalpos0.y -= eneRetSpeedY;
-			retlocalpos1.y -= eneRetSpeedY;
-		}
-		if (input_->PushKey(DIK_A) || input_->StickInput(L_LEFT)) {
-			retlocalpos0.x -= eneRetSpeedX;
-			retlocalpos1.x -= eneRetSpeedX;
-		}
-		if (input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT)) {
-			retlocalpos0.x += eneRetSpeedX;
-			retlocalpos1.x += eneRetSpeedX;
-		}
+		
+		
 
 	}
 
@@ -429,6 +463,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 
 	ImGui::Begin("Enemy");
 
+	ImGui::Text("winpArrivalTimer:%d", winpArrivalTimer);
 	ImGui::Text("retPosition0:%f,%f,%f", retObj_[0]->wtf.position.x, retObj_[0]->wtf.position.y, retObj_[0]->wtf.position.z);
 	ImGui::Text("retPosition1:%f,%f,%f", retObj_[1]->wtf.position.x, retObj_[1]->wtf.position.y, retObj_[1]->wtf.position.z);
 
@@ -444,8 +479,10 @@ void Enemy::Draw()
 {
 	if (bossGostAt == true) {
 		for (int i = 0; i < 2; i++) {
-			enearchObj_[i]->Draw();
-			inductionObj_[i]->Draw();
+			/*if (winpArrivalTimer >= 1950) {*/
+				enearchObj_[i]->Draw();
+				inductionObj_[i]->Draw();
+			
 			retObj_[i]->Draw();
 		}
 		
@@ -588,15 +625,15 @@ Vector3 Enemy::GetWorldPosition()
 	return worldPos;
 }
 
-Vector3 Enemy::GetWinpWorldPosition()
+Vector3 Enemy::GetWinpWorldPosition(int num)
 {
 	//ワールド座標を入れる変数
 	Vector3 WinpWorldPos;
 	fbxWinpObject3d_[1]->wtf.UpdateMat();
 	//ワールド行列の平行移動成分
-	WinpWorldPos.x = fbxWinpObject3d_[1]->wtf.matWorld.m[3][0];
-	WinpWorldPos.y = fbxWinpObject3d_[1]->wtf.matWorld.m[3][1];
-	WinpWorldPos.z = fbxWinpObject3d_[1]->wtf.matWorld.m[3][2];
+	WinpWorldPos.x = fbxWinpObject3d_[num]->wtf.matWorld.m[3][0];
+	WinpWorldPos.y = fbxWinpObject3d_[num]->wtf.matWorld.m[3][1];
+	WinpWorldPos.z = fbxWinpObject3d_[num]->wtf.matWorld.m[3][2];
 
 	return WinpWorldPos;
 }
