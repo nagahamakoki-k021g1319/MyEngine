@@ -20,13 +20,13 @@ Enemy::~Enemy()
 	delete shootObj2_;
 
 	delete enearchModel_;
-	for (int i = 0; i < 2; i++) {delete enearchObj_[i];}
+	for (int i = 0; i < 2; i++) { delete enearchObj_[i]; }
 
 	delete inductionModel_;
-	for (int i = 0; i < 2; i++) {delete inductionObj_[i];}
+	for (int i = 0; i < 2; i++) { delete inductionObj_[i]; }
 
 	delete retModel_;
-	for (int i = 0; i < 2; i++) {delete retObj_[i];}
+	for (int i = 0; i < 2; i++) { delete retObj_[i]; }
 
 
 }
@@ -69,7 +69,7 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 		fbxWinpObject3d_[i]->PlayAnimation(1.0f, true);
 	}
 
-	
+
 	//雑魚敵の攻撃
 	shootModel_ = Model::LoadFromOBJ("eneboll");
 	shootObj_ = Object3d::Create();
@@ -212,7 +212,7 @@ void Enemy::WinpUpdate()
 		if (enemyWinplocalpos9.x >= 5.0f) { enemyWinpAction9 = 1; }
 		else if (enemyWinplocalpos9.x <= -5.0f) { enemyWinpAction9 = 0; }
 
-		if (enemyWinplocalpos8.z == 10.0f) { 
+		if (enemyWinplocalpos8.z == 10.0f) {
 			if (enemyWinpAction8 == 0) {
 				enemyWinplocalpos8.x += 0.02f;
 			}
@@ -241,6 +241,9 @@ void Enemy::WinpUpdate()
 	fbxWinpObject3d_[11]->wtf.position = fbxWinpObject3d_[11]->wtf.position + enemyWinplocalpos11;
 	//{ 8.0f, -2.0f,-7.0f };  { 8.0f, 2.0f,3.0f };
 	fbxWinpObject3d_[12]->wtf.position = fbxWinpObject3d_[12]->wtf.position + enemyWinplocalpos12;
+
+	if (winpArrivalTimer < 850) { isWinpAliveFlag_[10] = 1; isWinpAliveFlag_[11] = 1; isWinpAliveFlag_[12] = 1; }
+	if (winpArrivalTimer == 850) { isWinpAliveFlag_[10] = 0; isWinpAliveFlag_[11] = 0; isWinpAliveFlag_[12] = 0; }
 	if (winpArrivalTimer >= 850 && winpArrivalTimer < 1250) {
 		//登場
 		enemyWinplocalpos10.z += WinpSpeedX;
@@ -271,20 +274,40 @@ void Enemy::BossWinpUpdate()
 	float eneRetSpeedY = 0.02f;
 	float eneRetSpeedX = 0.02f;
 
-	
+	if (isMoveAction == true) {
+		for (int i = 0; i < 2; i++) {
+			storeStBulletTime_[i]++;
+		}
+	}
 
+	// 左が初期値                  右が最終到達点
+	// { 0.0f,0.0f,15.0f };      { 2.0f, 2.0f, 10.0f };
 	enearchObj_[0]->wtf.position = enearchObj_[0]->wtf.position + enearchlocalpos0;
+	// { 0.0f,0.0f,15.0f };      { -2.0f, 2.0f, 10.0f };
 	enearchObj_[1]->wtf.position = enearchObj_[1]->wtf.position + enearchlocalpos1;
 	retObj_[0]->wtf.position = retObj_[0]->wtf.position + retlocalpos0;
 	retObj_[1]->wtf.position = retObj_[1]->wtf.position + retlocalpos1;
 
-	for (int i = 0; i < 2; i++) {
-		isShootCoolTimer_[i]++;
-	}
+
+	enearchlocalpos0.x += 0.01f;
+	enearchlocalpos0.y += 0.01f;
+	enearchlocalpos0.z -= 0.04f;
+
+	enearchlocalpos1.x -= 0.01f;
+	enearchlocalpos1.y += 0.01f;
+	enearchlocalpos1.z -= 0.04f;
+
+	if (enearchlocalpos0.x >= 2.0f) { enearchlocalpos0.x = 2.0f; }
+	if (enearchlocalpos0.y >= 2.0f) { enearchlocalpos0.y = 2.0f; }
+	if (enearchlocalpos0.z <= 10.0f) { enearchlocalpos0.z = 10.0f; isMoveAction = true; }
+
+	if (enearchlocalpos1.x <= -2.0f) { enearchlocalpos1.x = -2.0f; }
+	if (enearchlocalpos1.y >= 2.0f) { enearchlocalpos1.y = 2.0f; }
+	if (enearchlocalpos1.z <= 10.0f) { enearchlocalpos1.z = 10.0f; }
 
 	//ボスのファンネルの誘導弾
 	for (int i = 0; i < 2; i++) {
-		storeStBulletTime_[i]++;
+
 		if (storeStBulletTime_[i] >= 40 + i * 20) {
 			if (isShootStFlag_[i] == false) {
 				isShootStFlag_[i] = true;
@@ -352,14 +375,14 @@ void Enemy::Update(SplinePosition* spPosition_)
 	if (fbxObject3d_->wtf.position.z >= 6.0f) { bossGostAt = true; }
 	if (fbxObject3d_->wtf.position.z >= 12.0f) { fbxObject3d_->wtf.position.z = 10000.0f; }
 	//雑魚敵をまとめて更新
-	for (int i = 0; i < 13; i++) {if (isWinpAliveFlag_[i] == 0) {fbxWinpObject3d_[i]->Update();}}
+	for (int i = 0; i < 13; i++) { if (isWinpAliveFlag_[i] == 0) { fbxWinpObject3d_[i]->Update(); } }
 	//ボスのファンネルまとめて更新
 	for (int i = 0; i < 2; i++) {
 		enearchObj_[i]->Update();
 		inductionObj_[i]->Update();
 	}
-	
-	for (int i = 0; i < 2; i++) {retObj_[i]->Update();}
+
+	for (int i = 0; i < 2; i++) { retObj_[i]->Update(); }
 	//ボスのファンネルのベクトル正規化
 	if (storeStBulletTime_[0] < 40) {
 		playerlen0 = retObj_[0]->wtf.position - inductionObj_[0]->wtf.position;
@@ -373,19 +396,23 @@ void Enemy::Update(SplinePosition* spPosition_)
 
 	//雑魚敵が動き始める
 	if (bossGostAt == true) {
-	
+
+		for (int i = 0; i < 2; i++) {
+			isShootCoolTimer_[i]++;
+		}
+
 		//スプライン曲線の更新
 		float speed = 0.0f;
 		splinePosition_->Update(speed);
-		for (int i = 0; i < 2; i++) {retObj_[i]->wtf.position = splinePosition_->NowPos;}
+		for (int i = 0; i < 2; i++) { retObj_[i]->wtf.position = splinePosition_->NowPos; }
 		camera->wtf.position = splinePosition_->NowPos;
 		//雑魚敵をまとめて更新(スプライン曲線)
-		for (int i = 0; i < 13; i++) {fbxWinpObject3d_[i]->wtf.position = splinePosition_->NowPos;}
+		for (int i = 0; i < 13; i++) { fbxWinpObject3d_[i]->wtf.position = splinePosition_->NowPos; }
 		//ボスのファンネルをまとめて更新(スプライン曲線)
-		for (int i = 0; i < 2; i++) {enearchObj_[i]->wtf.position = splinePosition_->NowPos;}
+		for (int i = 0; i < 2; i++) { enearchObj_[i]->wtf.position = splinePosition_->NowPos; }
 
-	
-		
+
+
 		//雑魚敵の発生と移動
 		WinpUpdate();
 		//ボスのファンネルの挙動
@@ -425,10 +452,10 @@ void Enemy::Update(SplinePosition* spPosition_)
 			isShootexistTimer_[1] = 0;
 		}
 
-		
 
-		
-		
+
+
+
 
 	}
 
@@ -479,13 +506,13 @@ void Enemy::Draw()
 {
 	if (bossGostAt == true) {
 		for (int i = 0; i < 2; i++) {
-			/*if (winpArrivalTimer >= 1950) {*/
-				enearchObj_[i]->Draw();
-				inductionObj_[i]->Draw();
-			
+			enearchObj_[i]->Draw();
 			retObj_[i]->Draw();
+			if (isShootStFlag_[i] == true) {
+				inductionObj_[i]->Draw();
+			}
 		}
-		
+
 	}
 
 	if (isWinpAliveFlag_[8] == 0) {
@@ -629,13 +656,39 @@ Vector3 Enemy::GetWinpWorldPosition(int num)
 {
 	//ワールド座標を入れる変数
 	Vector3 WinpWorldPos;
-	fbxWinpObject3d_[1]->wtf.UpdateMat();
+	fbxWinpObject3d_[num]->wtf.UpdateMat();
 	//ワールド行列の平行移動成分
 	WinpWorldPos.x = fbxWinpObject3d_[num]->wtf.matWorld.m[3][0];
 	WinpWorldPos.y = fbxWinpObject3d_[num]->wtf.matWorld.m[3][1];
 	WinpWorldPos.z = fbxWinpObject3d_[num]->wtf.matWorld.m[3][2];
 
 	return WinpWorldPos;
+}
+
+Vector3 Enemy::GetEnearchWorldPosition(int num)
+{
+	//ワールド座標を入れる変数
+	Vector3 enearchWorldPos;
+	enearchObj_[num]->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	enearchWorldPos.x = enearchObj_[num]->wtf.matWorld.m[3][0];
+	enearchWorldPos.y = enearchObj_[num]->wtf.matWorld.m[3][1];
+	enearchWorldPos.z = enearchObj_[num]->wtf.matWorld.m[3][2];
+
+	return enearchWorldPos;
+}
+
+Vector3 Enemy::GetinductionWorldPosition(int num)
+{
+	//ワールド座標を入れる変数
+	Vector3 inductionWorldPos;
+	inductionObj_[num]->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	inductionWorldPos.x = inductionObj_[num]->wtf.matWorld.m[3][0];
+	inductionWorldPos.y = inductionObj_[num]->wtf.matWorld.m[3][1];
+	inductionWorldPos.z = inductionObj_[num]->wtf.matWorld.m[3][2];
+
+	return inductionWorldPos;
 }
 
 void Enemy::OnColision()

@@ -7,6 +7,7 @@
 #include "SpriteCommon.h"
 #include "Sprite.h"
 
+#include "Collision.h"
 #include "ParticleManager.h"
 #include "Audio.h"
 
@@ -25,7 +26,7 @@ public:
 
 	void Initialize(DirectXCommon* dxCommon, Input* input);
 	void UIInitialize();
-	void Update(int winpArrivalTimer);
+	void Update(int winpArrivalTimer,Vector3 pos,bool eneBulletFlag);
 
 	void Draw();
 	void FbxDraw();
@@ -85,11 +86,20 @@ private:
 	Audio* audio = nullptr;
 	Enemy* enemy_ = nullptr;
 	SpriteCommon* spriteCommon = nullptr;
-	
+	Collision coll;
+
 	//待機
 	FBXModel* fbxModel_ = nullptr;
 	FBXObject3d* fbxObject3d_ = nullptr;
 	bool isAliveFlag = true;
+	//自機のHP表示
+	int playerHP = 3;
+	//自機のHP表示(スプライト)
+	Sprite* hpgageUI = nullptr;
+	Sprite* hp3UI = nullptr;
+	Sprite* hp2UI = nullptr;
+	Sprite* hp1UI = nullptr;
+	Sprite* overUI = nullptr;
 
 	//レティクル
 	Object3d* retObj_ = nullptr;
@@ -189,36 +199,36 @@ private:
 	//スプライン曲線
 	int splineTimer = 0;
 	
-	////止めるとき
-	//Vector3 Start = { 0.0f,0.0f,0.0f };
-	//Vector3 end = { 0.0f,0.0f,0.0f };
-	//std::vector<Vector3> points{Start, Start,end, end};
-
-	//動かすとき
+	//止めるとき
 	Vector3 Start = { 0.0f,0.0f,0.0f };
-	Vector3 p1 = { 0.0f,-2.0f,5.0f };
-	Vector3 p2 = { 0.0f,2.0f,10.0f };
-	Vector3 p3 = { 3.0f,0.0f,20.0f };
-	Vector3 p4 = { -1.0f,2.0f,25.0f };
-	Vector3 p5 = { 1.0f,-2.0f,30.0f };
-	Vector3 p6 = { 0.0f,0.0f,35.0f };
-	Vector3 p7 = { 1.0f,2.0f,40.0f };
-	Vector3 p8 = { 3.0f,0.0f,45.0f };
-	Vector3 p9 = { 1.0f,-1.0f,50.0f };
-	Vector3 p10 = { 0.0f,0.0f,55.0f };
-	Vector3 p11 = { 2.0f,2.0f,60.0f };
-	Vector3 p12 = { 0.0f,0.0f,65.0f };
-	Vector3 p13 = { -1.0f,0.0f,70.0f };
-	Vector3 p14 = { 0.0f,0.0f,75.0f };
-	Vector3 p15 = { -2.0f,3.0f,80.0f };
-	Vector3 p16 = { -1.0f,0.0f,85.0f };
-	Vector3 p17 = { 1.0f,-2.0f,90.0f };
-	Vector3 p18 = { 0.0f,-1.0f,95.0f };
-	Vector3 end = { 0.0f,0.0f,100.0f };
-	std::vector<Vector3> points{ 
-		Start, Start, 
-		p1, p2, p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,
-		end, end 
-	};
+	Vector3 end = { 0.0f,0.0f,0.0f };
+	std::vector<Vector3> points{Start, Start,end, end};
+
+	////動かすとき
+	//Vector3 Start = { 0.0f,0.0f,0.0f };
+	//Vector3 p1 = { 0.0f,-2.0f,5.0f };
+	//Vector3 p2 = { 0.0f,2.0f,10.0f };
+	//Vector3 p3 = { 3.0f,0.0f,20.0f };
+	//Vector3 p4 = { -1.0f,2.0f,25.0f };
+	//Vector3 p5 = { 1.0f,-2.0f,30.0f };
+	//Vector3 p6 = { 0.0f,0.0f,35.0f };
+	//Vector3 p7 = { 1.0f,2.0f,40.0f };
+	//Vector3 p8 = { 3.0f,0.0f,45.0f };
+	//Vector3 p9 = { 1.0f,-1.0f,50.0f };
+	//Vector3 p10 = { 0.0f,0.0f,55.0f };
+	//Vector3 p11 = { 2.0f,2.0f,60.0f };
+	//Vector3 p12 = { 0.0f,0.0f,65.0f };
+	//Vector3 p13 = { -1.0f,0.0f,70.0f };
+	//Vector3 p14 = { 0.0f,0.0f,75.0f };
+	//Vector3 p15 = { -2.0f,3.0f,80.0f };
+	//Vector3 p16 = { 0.0f,0.0f,85.0f };
+	//Vector3 p17 = { -2.0f,1.0f,170.0f };
+	//Vector3 p18 = { 0.0f,-1.0f,175.0f };
+	//Vector3 end = { 0.0f,0.0f,180.0f };
+	//std::vector<Vector3> points{ 
+	//	Start, Start, 
+	//	p1, p2, p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,
+	//	end, end 
+	//};
 	
 };

@@ -68,7 +68,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	skydome->wtf.rotation = {0.0f,0.0f,0.0f};
 
 	//地面
-	floorMD = Model::LoadFromOBJ("stage");
+	floorMD = Model::LoadFromOBJ("stage2");
 	floor = Object3d::Create();
 	floor->SetModel(floorMD);
 	floor->wtf.position = (Vector3{ 0, -10, 0 });
@@ -120,7 +120,7 @@ void GameScene::Update() {
 
 	if (sceneNo_ == SceneNo::Game) {
 		
-		player_->Update(enemy_->winpArrivalTimer);
+		player_->Update(enemy_->winpArrivalTimer,enemy_->GetinductionWorldPosition(0),enemy_->isShootStFlag_[0]);
 		enemy_->Update(player_->splinePosition_);
 		enemyBoss_->Update();
 		obstacle_->Update();
