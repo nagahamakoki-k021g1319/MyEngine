@@ -120,7 +120,7 @@ void GameScene::Update() {
 
 	if (sceneNo_ == SceneNo::Game) {
 		
-		player_->Update(enemy_->winpArrivalTimer,enemy_->GetinductionWorldPosition(0),enemy_->isShootStFlag_[0]);
+		player_->Update(enemy_->winpArrivalTimer,enemy_->GetinductionWorldPosition(0),enemy_->isShootStFlag_[0],enemy_->GetinductionWorldPosition(1), enemy_->isShootStFlag_[1]);
 		enemy_->Update(player_->splinePosition_);
 		enemyBoss_->Update();
 		obstacle_->Update();
@@ -162,10 +162,10 @@ void GameScene::Draw() {
 	if (sceneNo_ == SceneNo::Game) {
 		//// パーティクル UI FBX スプライト描画
 		player_->FbxDraw();
-		player_->UIDraw();
 		enemy_->FbxDraw();
 		enemy_->EffDraw();
 		enemyBoss_->FbxDraw();
+		player_->UIDraw();
 	}
 }
 
