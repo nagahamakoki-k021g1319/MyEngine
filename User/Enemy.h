@@ -45,6 +45,12 @@ public:
 	////ワールド座標を取得(雑魚敵)
 	Vector3 GetWinpWorldPosition(int num);
 
+	////ワールド座標を取得(ボスのファンネル)
+	Vector3 GetEnearchWorldPosition(int num);
+
+	////ワールド座標を取得(ボスのファンネル誘導弾)
+	Vector3 GetinductionWorldPosition(int num);
+
 	void OnColision();
 
 	/// <summary>
@@ -62,6 +68,8 @@ public:
 	bool bossGostAt = false;
 	//雑魚敵出現タイマー
 	int winpArrivalTimer = 0;
+	//弾発射(誘導)
+	bool isShootStFlag_[2] = { false };
 
 private:
 	const float PI = 3.141592f;
@@ -126,8 +134,8 @@ private:
 	//Bossのファンネル
 	Object3d* enearchObj_[2] = {0};
 	Model* enearchModel_ = nullptr;
-	Vector3 enearchlocalpos0 = { 2.0f,2.0f,10.0f };
-	Vector3 enearchlocalpos1 = { -2.0f,2.0f,10.0f };
+	Vector3 enearchlocalpos0 = { 0.0f,0.0f,15.0f }; //{ 2.0f,2.0f,10.0f };
+	Vector3 enearchlocalpos1 = { 0.0f,0.0f,15.0f }; //{ -2.0f,2.0f,10.0f };
 	/*Vector3 enearchlocalpos2 = { 2.0f,2.0f,10.0f };
 	Vector3 enearchlocalpos3 = { -2.0f,-2.0f,10.0f };*/
 	Vector3 playerlen0;
@@ -138,6 +146,9 @@ private:
 	Vector3 playerlen3;*/
 	
 
+	//規定の位置まで来たら誘導弾のタイマーを開始
+	bool isMoveAction = false;
+
 	//弾発射(誘導)
 	Object3d* retObj_[2] = { 0 };
 	Model* retModel_ = nullptr;
@@ -145,9 +156,10 @@ private:
 	Model* inductionModel_ = nullptr ;
 	Vector3 retlocalpos0 = { -1.0f,-2.0f,-5.0f };
 	Vector3 retlocalpos1 = {  1.0f,-2.0f,-5.0f };
-	bool isShootStFlag_[4] = {false};
-	int StBulletCoolTime_[4] = {0};
-	int storeStBulletTime_[4] = { 0 };
+	int StBulletCoolTime_[2] = {0};
+	int storeStBulletTime_[2] = { 0 };
+
+
 
 	//パーティクル
 	std::unique_ptr<ParticleManager> DamageParticle;

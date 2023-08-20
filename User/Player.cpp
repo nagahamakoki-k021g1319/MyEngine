@@ -26,6 +26,12 @@ Player::~Player() {
 
 	delete BloodUI;
 
+	delete hpgageUI;
+	delete hp3UI;
+	delete hp2UI;
+	delete hp1UI;
+	delete overUI;
+
 	delete BulletFlameUI;
 
 	delete Bullet1dUI;
@@ -128,7 +134,7 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 
 
-void Player::Update(int winpArrivalTimer) {
+void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag) {
 	camera->Update();
 	fbxObject3d_->Update();
 	fbxSlashObject3d_->Update();
@@ -175,6 +181,7 @@ void Player::Update(int winpArrivalTimer) {
 			if (camera->wtf.rotation.y >= 1.2f) {
 				camera->wtf.rotation.y = 1.2f;
 				retlocalpos.x = 8.5f;
+				playerlocalpos.x = 0.1f;
 				isCameraBehavior = 1;
 			}
 		}
@@ -188,6 +195,7 @@ void Player::Update(int winpArrivalTimer) {
 			}
 			if (retResetTimer >= 1 && retResetTimer <= 2) {
 				retlocalpos.x = 0.0f;
+				playerlocalpos.z = 0.0f;
 			}
 			else if (retResetTimer >= 3){
 				retResetTimer = 3;
@@ -212,8 +220,9 @@ void Player::Update(int winpArrivalTimer) {
 
 
 		//自機の被弾エフェクト(敵の攻撃がないのでおいてる)
-		if (input_->PushKey(DIK_Q)) {
+		if (input_->TriggerKey(DIK_Q)) {
 			isEffFlag = 1;
+			playerHP--;
 		}
 		if (isEffFlag == 1) {
 			EffTimer++;
@@ -221,22 +230,27 @@ void Player::Update(int winpArrivalTimer) {
 		if (EffTimer >= 20) {
 			EffTimer = 0;
 			isEffFlag = 0;
+			playerHP--;
+		}
+
+		if (eneBulletFlag == true) {
+			if (coll.CircleCollision(GetWorldPosition(), pos, 0.5f, 1.0f)) {
+				isEffFlag = 1;
+			}
 		}
 
 
 
+
+
 	}
-
-
-
-
 
 	ImGui::Begin("Player");
 
 	ImGui::Text("position:%f,%f,%f", fbxObject3d_->wtf.position.x, fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z);
 	ImGui::Text("Cameraposition:%f,%f,%f", camera->wtf.rotation.x, camera->wtf.rotation.y, camera->wtf.rotation.z);
 	ImGui::Text("RetPosition:%f,%f,%f", retlocalpos.x, retlocalpos.y, retlocalpos.z);
-	ImGui::Text("RetRotation:%f,%f,%f", retObj_->wtf.rotation.x, retObj_->wtf.rotation.y, retObj_->wtf.rotation.z);
+	ImGui::Text("PlayerPosition:%f,%f,%f", playerlocalpos.x, playerlocalpos.y, playerlocalpos.z);
 
 	ImGui::End();
 
@@ -287,7 +301,7 @@ void Player::FbxDraw() {
 
 void Player::UIInitialize()
 {
-	//UI
+	//自機の弾のUI
 	BulletFlameUI = new Sprite();
 	BulletFlameUI->Initialize(spriteCommon);
 	BulletFlameUI->SetPozition({ 0,0 });
@@ -357,6 +371,37 @@ void Player::UIInitialize()
 	Bullet4mUI->SetPozition({ 0,0 });
 	Bullet4mUI->SetSize({ 1280.0f, 720.0f });
 
+
+	//自機のHPのUI
+	hpgageUI = new Sprite();
+	hpgageUI->Initialize(spriteCommon);
+	hpgageUI->SetPozition({ 0,0 });
+	hpgageUI->SetSize({ 1280.0f, 720.0f });
+
+	//自機のHP(ハート3)
+	hp3UI = new Sprite();
+	hp3UI->Initialize(spriteCommon);
+	hp3UI->SetPozition({ 0,0 });
+	hp3UI->SetSize({ 1280.0f, 720.0f });
+
+	//自機のHP(ハート2)
+	hp2UI = new Sprite();
+	hp2UI->Initialize(spriteCommon);
+	hp2UI->SetPozition({ 0,0 });
+	hp2UI->SetSize({ 1280.0f, 720.0f });
+
+	//自機のHP(ハート1)
+	hp1UI = new Sprite();
+	hp1UI->Initialize(spriteCommon);
+	hp1UI->SetPozition({ 0,0 });
+	hp1UI->SetSize({ 1280.0f, 720.0f });
+
+	//自機のHP(ハート0)
+	overUI = new Sprite();
+	overUI->Initialize(spriteCommon);
+	overUI->SetPozition({ 0,0 });
+	overUI->SetSize({ 1280.0f, 720.0f });
+
 	//被弾時エフェクト
 	BloodUI = new Sprite();
 	BloodUI->Initialize(spriteCommon);
@@ -405,6 +450,25 @@ void Player::UIInitialize()
 	spriteCommon->LoadTexture(14, "blood.png");
 	BloodUI->SetTextureIndex(14);
 
+	//自機のHPのUI
+	spriteCommon->LoadTexture(15, "hpgage.png");
+	hpgageUI->SetTextureIndex(15);
+
+	//自機のHP(ハート3)
+	spriteCommon->LoadTexture(16, "hp3.png");
+	hp3UI->SetTextureIndex(16);
+
+	//自機のHP(ハート2)
+	spriteCommon->LoadTexture(17, "hp2.png");
+	hp2UI->SetTextureIndex(17);
+	
+	//自機のHP(ハート1)
+	spriteCommon->LoadTexture(18, "hp1.png");
+	hp1UI->SetTextureIndex(18);
+
+	//自機のHP(ハート0)
+	spriteCommon->LoadTexture(19, "over.png");
+	overUI->SetTextureIndex(19);
 
 
 }
@@ -417,6 +481,12 @@ void Player::UIDraw()
 
 
 	//スプライト、UI
+	hpgageUI->Draw();
+	if (playerHP >= 3) { hp3UI->Draw(); }
+	else if (playerHP == 2) { hp2UI->Draw(); }
+	else if (playerHP == 1) { hp1UI->Draw(); }
+	else if (playerHP <= 0) { overUI->Draw(); }
+	
 	BulletFlameUI->Draw();
 	if (bulletRest == 0) { Bullet1mUI->Draw(); }
 	else if (bulletRest == 1) { Bullet1fUI->Draw(); }
@@ -463,10 +533,20 @@ void Player::PlayerAction()
 		playerlocalpos.y -= playerSpeed;
 	}
 	if (input_->PushKey(DIK_A) || input_->StickInput(L_LEFT)) {
-		playerlocalpos.x -= playerSpeed;
+		if (isCameraBehavior == 0) {
+			playerlocalpos.x -= playerSpeed;
+		}
+		else if (isCameraBehavior == 1) {
+			playerlocalpos.z += playerSpeed;
+		}
 	}
 	if (input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT)) {
-		playerlocalpos.x += playerSpeed;
+		if (isCameraBehavior == 0) {
+			playerlocalpos.x += playerSpeed;
+		}
+		else if (isCameraBehavior == 1) {
+			playerlocalpos.z -= playerSpeed;
+		}
 	}
 	if (input_->PushKey(DIK_R)) {
 		playerlocalpos.z += playerSpeed;

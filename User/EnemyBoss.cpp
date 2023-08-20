@@ -27,7 +27,7 @@ void EnemyBoss::Initialize(DirectXCommon* dxCommon, Input* input)
 	fbxObject3d_ = new FBXObject3d;
 	fbxObject3d_->Initialize();
 	fbxObject3d_->SetModel(fbxModel_);
-	fbxObject3d_->wtf.position = { 0.0f,-5.0f,120.0f };
+	fbxObject3d_->wtf.position = { 0.0f,-5.0f,200.0f };
 	fbxObject3d_->wtf.rotation = { 0.0f,2.7f,0.0f };
 	fbxObject3d_->PlayAnimation(1.0f, true);
 
