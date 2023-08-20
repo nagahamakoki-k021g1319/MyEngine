@@ -288,22 +288,31 @@ void Enemy::BossWinpUpdate()
 	retObj_[0]->wtf.position = retObj_[0]->wtf.position + retlocalpos0;
 	retObj_[1]->wtf.position = retObj_[1]->wtf.position + retlocalpos1;
 
+	if (winpArrivalTimer < 1900) {
+		isEnearchAliveFlag_[0] = 1;
+		isEnearchAliveFlag_[1] = 1;
+	}
+	if (winpArrivalTimer == 1900) {
+		isEnearchAliveFlag_[0] = 0;
+		isEnearchAliveFlag_[1] = 0;
+	}
+	if (winpArrivalTimer >= 1900) {
+		enearchlocalpos0.x += 0.01f;
+		enearchlocalpos0.y += 0.01f;
+		enearchlocalpos0.z -= 0.04f;
 
-	enearchlocalpos0.x += 0.01f;
-	enearchlocalpos0.y += 0.01f;
-	enearchlocalpos0.z -= 0.04f;
+		enearchlocalpos1.x -= 0.01f;
+		enearchlocalpos1.y += 0.01f;
+		enearchlocalpos1.z -= 0.04f;
 
-	enearchlocalpos1.x -= 0.01f;
-	enearchlocalpos1.y += 0.01f;
-	enearchlocalpos1.z -= 0.04f;
+		if (enearchlocalpos0.x >= 2.0f) { enearchlocalpos0.x = 2.0f; }
+		if (enearchlocalpos0.y >= 2.0f) { enearchlocalpos0.y = 2.0f; }
+		if (enearchlocalpos0.z <= 10.0f) { enearchlocalpos0.z = 10.0f; isMoveAction = true; }
 
-	if (enearchlocalpos0.x >= 2.0f) { enearchlocalpos0.x = 2.0f; }
-	if (enearchlocalpos0.y >= 2.0f) { enearchlocalpos0.y = 2.0f; }
-	if (enearchlocalpos0.z <= 10.0f) { enearchlocalpos0.z = 10.0f; isMoveAction = true; }
-
-	if (enearchlocalpos1.x <= -2.0f) { enearchlocalpos1.x = -2.0f; }
-	if (enearchlocalpos1.y >= 2.0f) { enearchlocalpos1.y = 2.0f; }
-	if (enearchlocalpos1.z <= 10.0f) { enearchlocalpos1.z = 10.0f; }
+		if (enearchlocalpos1.x <= -2.0f) { enearchlocalpos1.x = -2.0f; }
+		if (enearchlocalpos1.y >= 2.0f) { enearchlocalpos1.y = 2.0f; }
+		if (enearchlocalpos1.z <= 10.0f) { enearchlocalpos1.z = 10.0f; }
+	}
 
 	//ボスのファンネルの誘導弾
 	for (int i = 0; i < 2; i++) {
@@ -342,32 +351,37 @@ void Enemy::BossWinpUpdate()
 
 
 	//移動(レティクル)
-	if (input_->PushKey(DIK_W) || input_->StickInput(L_UP)) {
-		retlocalpos0.y += eneRetSpeedY;
-		retlocalpos1.y += eneRetSpeedY;
-	}
-	if (input_->PushKey(DIK_S) || input_->StickInput(L_DOWN)) {
-		retlocalpos0.y -= eneRetSpeedY;
-		retlocalpos1.y -= eneRetSpeedY;
-	}
-	if (input_->PushKey(DIK_A) || input_->StickInput(L_LEFT)) {
-		retlocalpos0.x -= eneRetSpeedX;
-		retlocalpos1.x -= eneRetSpeedX;
-	}
-	if (input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT)) {
-		retlocalpos0.x += eneRetSpeedX;
-		retlocalpos1.x += eneRetSpeedX;
+	if (splineTimer >= 100) {
+		if (input_->PushKey(DIK_W) || input_->StickInput(L_UP)) {
+			retlocalpos0.y += eneRetSpeedY;
+			retlocalpos1.y += eneRetSpeedY;
+			
+		}
+		if (input_->PushKey(DIK_S) || input_->StickInput(L_DOWN)) {
+			retlocalpos0.y -= eneRetSpeedY;
+			retlocalpos1.y -= eneRetSpeedY;
+		}
+		if (input_->PushKey(DIK_A) || input_->StickInput(L_LEFT)) {
+			retlocalpos0.x -= eneRetSpeedX;
+			retlocalpos1.x -= eneRetSpeedX;
+		}
+		if (input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT)) {
+			retlocalpos0.x += eneRetSpeedX;
+			retlocalpos1.x += eneRetSpeedX;
+		}
 	}
 }
 
 void Enemy::Update(SplinePosition* spPosition_)
 {
+	splineTimer++;
 	splinePosition_ = spPosition_;
 	camera->Update();
 	//最初のボスの消えて雑魚敵が出てくるまでの挙動
 	fbxObject3d_->Update();
 	shootObj_->Update();
 	shootObj2_->Update();
+
 
 	if (bossGostMove == 0) { fbxObject3d_->wtf.position.y -= 0.003f; }
 	if (fbxObject3d_->wtf.position.y <= -0.1f) { bossGostMove = 1; }
@@ -483,6 +497,18 @@ void Enemy::Update(SplinePosition* spPosition_)
 		}
 	}
 
+	//当たり判定(自機弾(弱)とボスのファンネル)
+	/*for (int i = 0; i < 2; i++) {
+		if (isEnearchAliveFlag_[i] == 0) {
+			if (coll.CircleCollision(player_->GetBulletWorldPosition(), enearchObj_[i]->wtf.position, 0.3f, 0.3f)) {
+				isEffFlag_[i] = 1;
+				isEnearchAliveFlag_[i] = 1;
+			};
+		}
+	}*/
+
+
+	//敵を一定数倒すとプレイヤーの弾が増える
 	if (player_->bulletUpCount == 2) {
 		player_->bulletMax++;
 		player_->bulletUpCount = 0;
@@ -506,10 +532,14 @@ void Enemy::Draw()
 {
 	if (bossGostAt == true) {
 		for (int i = 0; i < 2; i++) {
-			enearchObj_[i]->Draw();
+			if (isEnearchAliveFlag_[i] == 0) {
+				enearchObj_[i]->Draw();
+			}
 			retObj_[i]->Draw();
 			if (isShootStFlag_[i] == true) {
-				inductionObj_[i]->Draw();
+				if (isEnearchAliveFlag_[i] == 0) {
+					inductionObj_[i]->Draw();
+				}
 			}
 		}
 

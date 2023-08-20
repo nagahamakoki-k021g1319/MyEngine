@@ -50,6 +50,14 @@ Player::~Player() {
 	delete Bullet4fUI;
 	delete Bullet4mUI;
 
+	delete Bullet5dUI;
+	delete Bullet5fUI;
+	delete Bullet5mUI;
+
+	delete Bullet6dUI;
+	delete Bullet6fUI;
+	delete Bullet6mUI;
+
 }
 
 void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
@@ -134,7 +142,7 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 
 
-void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag) {
+void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vector3 pos2, bool eneBulletFlag2) {
 	camera->Update();
 	fbxObject3d_->Update();
 	fbxSlashObject3d_->Update();
@@ -195,6 +203,7 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag) {
 			}
 			if (retResetTimer >= 1 && retResetTimer <= 2) {
 				retlocalpos.x = 0.0f;
+				playerlocalpos.x = 0.0f;
 				playerlocalpos.z = 0.0f;
 			}
 			else if (retResetTimer >= 3){
@@ -227,18 +236,27 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag) {
 		if (isEffFlag == 1) {
 			EffTimer++;
 		}
+		if (EffTimer >= 1 && EffTimer < 2) {
+			playerHP--;
+		}
 		if (EffTimer >= 20) {
 			EffTimer = 0;
 			isEffFlag = 0;
-			playerHP--;
+			
 		}
 
+		//ボスのファンネルの当たり判定
 		if (eneBulletFlag == true) {
-			if (coll.CircleCollision(GetWorldPosition(), pos, 0.5f, 1.0f)) {
+			if (coll.CircleCollision(GetWorldPosition(), pos, 0.1f, 0.4f)) {
 				isEffFlag = 1;
 			}
 		}
-
+		//苦肉の策(あとで直す)
+		if (eneBulletFlag2 == true) {
+			if (coll.CircleCollision(GetWorldPosition(), pos2, 0.1f, 0.4f)) {
+				isEffFlag = 1;
+			}
+		}
 
 
 
@@ -371,6 +389,37 @@ void Player::UIInitialize()
 	Bullet4mUI->SetPozition({ 0,0 });
 	Bullet4mUI->SetSize({ 1280.0f, 720.0f });
 
+	//5発目
+	Bullet5dUI = new Sprite();
+	Bullet5dUI->Initialize(spriteCommon);
+	Bullet5dUI->SetPozition({ 0,0 });
+	Bullet5dUI->SetSize({ 1280.0f, 720.0f });
+		  
+	Bullet5fUI = new Sprite();
+	Bullet5fUI->Initialize(spriteCommon);
+	Bullet5fUI->SetPozition({ 0,0 });
+	Bullet5fUI->SetSize({ 1280.0f, 720.0f });
+		  
+	Bullet5mUI = new Sprite();
+	Bullet5mUI->Initialize(spriteCommon);
+	Bullet5mUI->SetPozition({ 0,0 });
+	Bullet5mUI->SetSize({ 1280.0f, 720.0f });
+
+	//6発目
+	Bullet6dUI = new Sprite();
+	Bullet6dUI->Initialize(spriteCommon);
+	Bullet6dUI->SetPozition({ 0,0 });
+	Bullet6dUI->SetSize({ 1280.0f, 720.0f });
+		  
+	Bullet6fUI = new Sprite();
+	Bullet6fUI->Initialize(spriteCommon);
+	Bullet6fUI->SetPozition({ 0,0 });
+	Bullet6fUI->SetSize({ 1280.0f, 720.0f });
+		  
+	Bullet6mUI = new Sprite();
+	Bullet6mUI->Initialize(spriteCommon);
+	Bullet6mUI->SetPozition({ 0,0 });
+	Bullet6mUI->SetSize({ 1280.0f, 720.0f });
 
 	//自機のHPのUI
 	hpgageUI = new Sprite();
@@ -446,6 +495,22 @@ void Player::UIInitialize()
 	spriteCommon->LoadTexture(13, "ff4m.png");
 	Bullet4mUI->SetTextureIndex(13);
 
+	//5発目
+	spriteCommon->LoadTexture(20, "ff5d.png");
+	Bullet5dUI->SetTextureIndex(20);
+	spriteCommon->LoadTexture(21, "ff5f.png");
+	Bullet5fUI->SetTextureIndex(21);
+	spriteCommon->LoadTexture(22, "ff5m.png");
+	Bullet5mUI->SetTextureIndex(22);
+
+	//6発目
+	spriteCommon->LoadTexture(23, "ff6d.png");
+	Bullet6dUI->SetTextureIndex(23);
+	spriteCommon->LoadTexture(24, "ff6f.png");
+	Bullet6fUI->SetTextureIndex(24);
+	spriteCommon->LoadTexture(25, "ff6m.png");
+	Bullet6mUI->SetTextureIndex(25);
+
 	//被弾エフェクト
 	spriteCommon->LoadTexture(14, "blood.png");
 	BloodUI->SetTextureIndex(14);
@@ -504,6 +569,18 @@ void Player::UIDraw()
 		if (bulletRest <= 6) { Bullet4mUI->Draw(); }
 		else if (bulletRest == 7) { Bullet4fUI->Draw(); }
 		else if (bulletRest >= 8) { Bullet4dUI->Draw(); }
+	}
+
+	if (bulletMax >= 9) {
+		if (bulletRest <= 8) { Bullet5mUI->Draw(); }
+		else if (bulletRest == 9) { Bullet5fUI->Draw(); }
+		else if (bulletRest >= 10) { Bullet5dUI->Draw(); }
+	}
+
+	if (bulletMax >= 11) {
+		if (bulletRest <= 10) { Bullet6mUI->Draw(); }
+		else if (bulletRest == 11) { Bullet6fUI->Draw(); }
+		else if (bulletRest >= 12) { Bullet6dUI->Draw(); }
 	}
 
 }

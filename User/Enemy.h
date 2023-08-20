@@ -120,6 +120,7 @@ private:
 	Vector3 Start = { 0.0f,0.0f,0.0f };
 	Vector3 end = { 0.0f,10.0f,10.0f };
 	std::vector<Vector3> points{ Start, Start,end, end };
+	int splineTimer = 0;
 
 	//’e”­Ë(’¼ü)
 	Object3d* shootObj_ = nullptr;
@@ -134,6 +135,8 @@ private:
 	//Boss‚Ìƒtƒ@ƒ“ƒlƒ‹
 	Object3d* enearchObj_[2] = {0};
 	Model* enearchModel_ = nullptr;
+	//¶‚«‚Ä‚¢‚é‚©‚Ç‚¤‚©(0¶‚«‚é,1€–S)
+	int isEnearchAliveFlag_[2] = { 0 };
 	Vector3 enearchlocalpos0 = { 0.0f,0.0f,15.0f }; //{ 2.0f,2.0f,10.0f };
 	Vector3 enearchlocalpos1 = { 0.0f,0.0f,15.0f }; //{ -2.0f,2.0f,10.0f };
 	/*Vector3 enearchlocalpos2 = { 2.0f,2.0f,10.0f };
@@ -158,6 +161,7 @@ private:
 	Vector3 retlocalpos1 = {  1.0f,-2.0f,-5.0f };
 	int StBulletCoolTime_[2] = {0};
 	int storeStBulletTime_[2] = { 0 };
+
 
 
 
