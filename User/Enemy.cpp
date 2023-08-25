@@ -76,6 +76,7 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 	shootObj_->SetModel(shootModel_);
 	shootObj_->wtf.position = { fbxWinpObject3d_[8]->wtf.position.x,fbxWinpObject3d_[8]->wtf.position.y, fbxWinpObject3d_[8]->wtf.position.z };
 
+
 	shootModel2_ = Model::LoadFromOBJ("eneboll");
 	shootObj2_ = Object3d::Create();
 	shootObj2_->SetModel(shootModel2_);
