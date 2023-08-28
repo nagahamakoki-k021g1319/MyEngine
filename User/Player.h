@@ -212,6 +212,7 @@ private:
 	//Vector3 end = { 0.0f,0.0f,0.0f };
 	//std::vector<Vector3> points{Start, Start,end, end};
 
+
 	//動かすとき
 	Vector3 Start = { 0.0f,0.0f,0.0f };
 	Vector3 p1 = { 0.0f,-2.0f,5.0f };
