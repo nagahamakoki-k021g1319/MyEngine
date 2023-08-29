@@ -58,6 +58,9 @@ Player::~Player() {
 	delete Bullet6fUI;
 	delete Bullet6mUI;
 
+	delete Obj_;
+	delete Model_;
+	delete Model1_;
 }
 
 void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
@@ -85,6 +88,11 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	// グラフィックスパイプライン生成
 	FBXObject3d::CreateGraphicsPipeline();
 
+	//自機
+	Model_ = Model::LoadFromOBJ("hito2");
+	Obj_ = Object3d::Create();
+	Obj_->SetModel(Model_);
+	Obj_->wtf.scale = { 0.03f,0.03f,0.03f };
 	//待機
 	fbxObject3d_ = new FBXObject3d;
 	fbxObject3d_->Initialize();
@@ -161,7 +169,7 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 	enemylen2 = retObj_->wtf.position - shootStObj_->wtf.position;
 	enemylen2.nomalize();
 	splineTimer++;
-
+	Obj_->Update();
 
 	if (splineTimer >= 100) {
 		//スプライン曲線の更新
@@ -290,7 +298,8 @@ void Player::Draw() {
 	if (splineTimer >= 100) {
 		retObj_->Draw();
 	}
-
+	
+	Obj_->Draw();
 }
 
 void Player::FbxDraw() {
@@ -684,7 +693,7 @@ void Player::PlayerAction()
 
 	//弾の制限
 	if (bulletMax > bulletMax + 1) {
-		bulletMax = bulletMax;
+		bulletMax = bulletMax - 1;
 	}
 
 	//弾発射(弱)
