@@ -60,7 +60,7 @@ Player::~Player() {
 
 	delete Obj_;
 	delete Model_;
-	delete Model1_;
+	delete Model2_;
 }
 
 void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
@@ -89,7 +89,8 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	FBXObject3d::CreateGraphicsPipeline();
 
 	//自機
-	Model_ = Model::LoadFromOBJ("hito2");
+	Model_ = Model::LoadFromOBJ("hito");
+	Model2_ = Model::LoadFromOBJ("hito2");
 	Obj_ = Object3d::Create();
 	Obj_->SetModel(Model_);
 	Obj_->wtf.scale = { 0.03f,0.03f,0.03f };
@@ -220,8 +221,12 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 
 		}
 
-
-
+		if (input_->PushKey(DIK_3)) {
+			Obj_->SetModel(Model2_);
+		}
+		else{
+			Obj_->SetModel(Model_);
+		}
 
 		if (input_->PushKey(DIK_1)) {
 			isCameraBehavior = 1;
