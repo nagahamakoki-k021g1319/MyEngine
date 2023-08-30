@@ -93,7 +93,7 @@ private:
 	FBXObject3d* fbxObject3d_ = nullptr;
 	Object3d* Obj_ = nullptr;
 	Model* Model_ = nullptr;
-	Model* Model1_ = nullptr;
+	Model* Model2_ = nullptr;
 	bool isAliveFlag = true;
 	//自機のHP表示
 	int playerHP = 3;
