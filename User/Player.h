@@ -94,6 +94,7 @@ private:
 	Object3d* Obj_ = nullptr;
 	Model* Model_ = nullptr;
 	Model* Model2_ = nullptr;
+	Model* Model3_ = nullptr;
 	bool isAliveFlag = true;
 	//自機のHP表示
 	int playerHP = 3;
