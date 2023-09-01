@@ -95,6 +95,7 @@ private:
 	Model* Model_ = nullptr;
 	Model* Model2_ = nullptr;
 	Model* Model3_ = nullptr;
+	Model* ModelAt_ = nullptr;
 	bool isAliveFlag = true;
 	//自機のHP表示
 	int playerHP = 3;

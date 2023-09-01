@@ -62,6 +62,8 @@ Player::~Player() {
 	delete Model_;
 	delete Model2_;
 	delete Model3_;
+	delete ModelAt_;
+
 
 }
 
@@ -94,6 +96,7 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	Model_ = Model::LoadFromOBJ("hito");
 	Model2_ = Model::LoadFromOBJ("hidarihito");
 	Model3_ = Model::LoadFromOBJ("migihito");
+	ModelAt_ = Model::LoadFromOBJ("hitoAt");
 	Obj_ = Object3d::Create();
 	Obj_->SetModel(Model_);
 	Obj_->wtf.scale = { 0.03f,0.03f,0.03f };
@@ -229,6 +232,9 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 		}
 		else if (input_->PushKey(DIK_4)) {
 			Obj_->SetModel(Model3_);
+		}
+		else if (input_->PushKey(DIK_5)) {
+			Obj_->SetModel(ModelAt_);
 		}
 		else{
 			Obj_->SetModel(Model_);
