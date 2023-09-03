@@ -9,18 +9,10 @@ Player::Player() {
 Player::~Player() {
 	delete spriteCommon;
 	//FBXオブジェクト解放
-	delete fbxObject3d_;
-	delete fbxModel_;
 	delete shootObj_;
 	delete shootModel_;
 	delete shootStObj_;
 	delete shootStModel_;
-	delete fbxSlashObject3d_;
-	delete fbxSlashModel_;
-	delete fbxGardObject3d_;
-	delete fbxGardModel_;
-	delete hitboxObj_;
-	delete hitboxModel_;
 	delete retObj_;
 	delete retModel_;
 
@@ -83,10 +75,6 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 	splinePosition_ = new SplinePosition(points);
 
-	fbxModel_ = FbxLoader::GetInstance()->LoadModelFromFile("stand");
-	fbxSlashModel_ = FbxLoader::GetInstance()->LoadModelFromFile("strongAttack");
-	fbxGardModel_ = FbxLoader::GetInstance()->LoadModelFromFile("mera");
-
 	// デバイスをセット
 	FBXObject3d::SetDevice(dxCommon->GetDevice());
 	// グラフィックスパイプライン生成
@@ -99,55 +87,27 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	ModelAt_ = Model::LoadFromOBJ("hitoAt");
 	Obj_ = Object3d::Create();
 	Obj_->SetModel(Model_);
-	Obj_->wtf.scale = { 0.03f,0.03f,0.03f };
-	//待機
-	fbxObject3d_ = new FBXObject3d;
-	fbxObject3d_->Initialize();
-	fbxObject3d_->SetModel(fbxModel_);
-	fbxObject3d_->wtf.position = { 0.0f,0.0f,-10.0f };
-	fbxObject3d_->wtf.scale = { 0.05f,0.05f,0.05f };
-	fbxObject3d_->PlayAnimation(1.0f, true);
-
-	//斬り払い
-	fbxSlashObject3d_ = new FBXObject3d;
-	fbxSlashObject3d_->Initialize();
-	fbxSlashObject3d_->SetModel(fbxSlashModel_);
-	fbxSlashObject3d_->wtf.position = { 0.0f,-0.3f,0.0f };
-	fbxSlashObject3d_->wtf.scale = { 0.05f,0.05f,0.05f };
-
-	//盾
-	fbxGardObject3d_ = new FBXObject3d;
-	fbxGardObject3d_->Initialize();
-	fbxGardObject3d_->SetModel(fbxGardModel_);
-	fbxGardObject3d_->wtf.position = { 0.0f,-0.3f,0.0f };
-	fbxGardObject3d_->wtf.scale = { 0.05f,0.05f,0.05f };
-
+	Obj_->wtf.scale = { 0.02f,0.02f,0.02f };
+	
 	//自機の弾(弱)
 	shootModel_ = Model::LoadFromOBJ("boll2");
 	shootObj_ = Object3d::Create();
 	shootObj_->SetModel(shootModel_);
-	shootObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z };
+	shootObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z };
 
 	//自機の弾(強)
 	shootStModel_ = Model::LoadFromOBJ("boll");
 	shootStObj_ = Object3d::Create();
 	shootStObj_->SetModel(shootStModel_);
-	shootStObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z };
+	shootStObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z };
 	shootStObj_->wtf.scale = { 0.2f,0.2f,0.2f };
-
-	//ヒットボックス可視化
-	hitboxModel_ = Model::LoadFromOBJ("hit");
-	hitboxObj_ = Object3d::Create();
-	hitboxObj_->SetModel(hitboxModel_);
-	hitboxObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z };
-	hitboxObj_->wtf.scale = { 0.06f,0.06f,0.06f };
 
 	//レティクル
 	retModel_ = Model::LoadFromOBJ("ster");
 	retObj_ = Object3d::Create();
 	retObj_->SetModel(retModel_);
 	retObj_->wtf.scale = { 0.5f,0.5f,0.5f };
-	retObj_->wtf.position = { fbxObject3d_->wtf.position.x - 1.5f,fbxObject3d_->wtf.position.y + 1.0f,fbxObject3d_->wtf.position.z + 10.0f };
+	retObj_->wtf.position = { Obj_->wtf.position.x - 1.5f,Obj_->wtf.position.y + 1.0f,Obj_->wtf.position.z + 10.0f };
 
 	//UIの初期化(枚数が多いため)
 	UIInitialize();
@@ -159,17 +119,8 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vector3 pos2, bool eneBulletFlag2) {
 	camera->Update();
-	fbxObject3d_->Update();
-	fbxSlashObject3d_->Update();
-	fbxSlashObject3d_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z };
-	fbxGardObject3d_->Update();
-	fbxGardObject3d_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z };
 	shootObj_->Update();
 	shootStObj_->Update();
-	if (isSlashFlag == true || isGardFlag == true) {
-		hitboxObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y + 0.07f, fbxObject3d_->wtf.position.z + 0.1f };
-		hitboxObj_->Update();
-	}
 	retObj_->Update();
 	enemylen = retObj_->wtf.position - shootObj_->wtf.position;
 	enemylen.nomalize();
@@ -182,14 +133,14 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 		//スプライン曲線の更新
 		float speed = 0.01f;
 		splinePosition_->Update(speed);
-		fbxObject3d_->wtf.position = splinePosition_->NowPos;
+		Obj_->wtf.position = splinePosition_->NowPos;
 		retObj_->wtf.position = splinePosition_->NowPos;
 		camera->wtf.position = splinePosition_->NowPos;
 
 		//移動
 		camera->wtf.rotation = camera->wtf.rotation + cameralocalpos;
 
-		fbxObject3d_->wtf.position = fbxObject3d_->wtf.position + playerlocalpos;
+		Obj_->wtf.position = Obj_->wtf.position + playerlocalpos;
 
 		retObj_->wtf.position = retObj_->wtf.position + retlocalpos;
 		retObj_->wtf.rotation = retObj_->wtf.rotation + retRotlocalpos;
@@ -227,13 +178,16 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 
 		}
 
-		if (input_->PushKey(DIK_3)) {
+		if (input_->PushKey(DIK_A) || input_->StickInput(R_LEFT)) {
 			Obj_->SetModel(Model2_);
 		}
-		else if (input_->PushKey(DIK_4)) {
+		else if (input_->PushKey(DIK_D) || input_->StickInput(R_RIGHT)) {
 			Obj_->SetModel(Model3_);
 		}
-		else if (input_->PushKey(DIK_5)) {
+		else if (input_->PushKey(DIK_SPACE) || input_->ButtonInput(RT)) {
+			Obj_->SetModel(ModelAt_);
+		}
+		else if (input_->PushKey(DIK_Z) || input_->ButtonInput(LT)) {
 			Obj_->SetModel(ModelAt_);
 		}
 		else{
@@ -288,18 +242,22 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 
 	}
 
-	ImGui::Begin("Player");
+	//ImGui::Begin("Player");
 
-	ImGui::Text("position:%f,%f,%f", fbxObject3d_->wtf.position.x, fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z);
-	ImGui::Text("Cameraposition:%f,%f,%f", camera->wtf.rotation.x, camera->wtf.rotation.y, camera->wtf.rotation.z);
-	ImGui::Text("RetPosition:%f,%f,%f", retlocalpos.x, retlocalpos.y, retlocalpos.z);
-	ImGui::Text("PlayerPosition:%f,%f,%f", playerlocalpos.x, playerlocalpos.y, playerlocalpos.z);
+	//ImGui::Text("position:%f,%f,%f", Obj_->wtf.position.x, Obj_->wtf.position.y, Obj_->wtf.position.z);
+	//ImGui::Text("Cameraposition:%f,%f,%f", camera->wtf.rotation.x, camera->wtf.rotation.y, camera->wtf.rotation.z);
+	//ImGui::Text("RetPosition:%f,%f,%f", retlocalpos.x, retlocalpos.y, retlocalpos.z);
+	//ImGui::Text("PlayerPosition:%f,%f,%f", playerlocalpos.x, playerlocalpos.y, playerlocalpos.z);
 
-	ImGui::End();
+	//ImGui::End();
 
 }
 
 void Player::Draw() {
+	if (splineTimer >= 100) {
+		Obj_->Draw();
+	}
+	
 	if (isShootFlag == true) {
 		shootObj_->Draw();
 	}
@@ -309,37 +267,13 @@ void Player::Draw() {
 	}
 	/*shootStObj_->Draw();*/
 
-	if (isSlashFlag == true) {
-		hitboxObj_->Draw();
-	}
 	if (splineTimer >= 100) {
 		retObj_->Draw();
 	}
 	
-	Obj_->Draw();
 }
 
 void Player::FbxDraw() {
-	//ここにスプライト関係も入れる
-
-	//FBX
-	if (isSlashFlag == true) {
-		fbxSlashObject3d_->Draw(dxCommon->GetCommandList());
-	}
-	else if (isGardFlag == true) {
-		fbxGardObject3d_->Draw(dxCommon->GetCommandList());
-	}
-	else
-	{
-		fbxObject3d_->Draw(dxCommon->GetCommandList());
-	}
-
-
-
-
-
-
-
 
 }
 
@@ -728,7 +662,7 @@ void Player::PlayerAction()
 		len *= ShortSpeed;
 	}
 	else {
-		shootObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y, fbxObject3d_->wtf.position.z };
+		shootObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z };
 	}
 	if (BulletCoolTime >= 10.0f) {
 		BulletCoolTime = 0;
@@ -751,7 +685,7 @@ void Player::PlayerAction()
 
 	}
 	else {
-		shootStObj_->wtf.position = { fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y - 0.2f, fbxObject3d_->wtf.position.z};
+		shootStObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y - 0.2f, Obj_->wtf.position.z};
 	}
 	if (StBulletCoolTime >= 10.0f) {
 		bulletRest += 2;
@@ -760,36 +694,11 @@ void Player::PlayerAction()
 		isShootStFlag = false;
 	}
 
-
-
-	//斬り払い
-	if (input_->TriggerKey(DIK_Q) || input_->PButtonTrigger(LB)) {
-		isSlashFlag = true;
-		fbxSlashObject3d_->PlayAnimation(1.5f, true);
-	}
-	if (isSlashFlag == true) {
-		isSlashTimer++;
-	}
-	if (isSlashTimer >= 15.0f) {
-		isSlashTimer = 0.0f;
-		isSlashFlag = false;
-	}
-
 	//盾
 	if (input_->TriggerKey(DIK_E) || input_->PButtonTrigger(RB)) {
-		isGardFlag = true;
-		fbxGardObject3d_->PlayAnimation(1.5f, true);
+		
 		bulletRest = 0;
 	}
-	if (isGardFlag == true) {
-		isGardTimer++;
-	}
-	if (isGardTimer >= 15.0f) {
-		isGardTimer = 0.0f;
-		isGardFlag = false;
-	}
-
-
 }
 
 Vector3 Player::bVelocity(Vector3& velocity, Transform& worldTransform)
@@ -816,11 +725,11 @@ Vector3 Player::GetWorldPosition() {
 	//ワールド座標を入れる変数
 	Vector3 worldPos;
 
-	fbxObject3d_->wtf.UpdateMat();
+	Obj_->wtf.UpdateMat();
 	//ワールド行列の平行移動成分
-	worldPos.x = fbxObject3d_->wtf.matWorld.m[3][0];
-	worldPos.y = fbxObject3d_->wtf.matWorld.m[3][1];
-	worldPos.z = fbxObject3d_->wtf.matWorld.m[3][2];
+	worldPos.x = Obj_->wtf.matWorld.m[3][0];
+	worldPos.y = Obj_->wtf.matWorld.m[3][1];
+	worldPos.z = Obj_->wtf.matWorld.m[3][2];
 
 	return worldPos;
 }
@@ -867,19 +776,6 @@ Vector3 Player::GetRetWorldPosition()
 	return RetWorldPos;
 }
 
-Vector3 Player::GetSwordWorldPosition()
-{
-	//ワールド座標を入れる変数
-	Vector3 SwordWorldPos;
-
-	hitboxObj_->wtf.UpdateMat();
-	//ワールド行列の平行移動成分
-	SwordWorldPos.x = hitboxObj_->wtf.matWorld.m[3][0];
-	SwordWorldPos.y = hitboxObj_->wtf.matWorld.m[3][1];
-	SwordWorldPos.z = hitboxObj_->wtf.matWorld.m[3][2];
-
-	return SwordWorldPos;
-}
 
 
 
