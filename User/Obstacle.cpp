@@ -48,13 +48,6 @@ void Obstacle::Update()
 
 	}
 
-	//“–‚½‚è”»’è(Ž©‹@’e‚ÆŽG‹›“G)
-	for (int i = 0; i < 4; i++) {
-		if (coll.CircleCollision(player_->GetWorldPosition(), obstacleObj_[i]->wtf.position, 1.0f, 1.0f)) {
-			isObsAliveFlag_[i] = 1;
-		};
-	}
-
 }
 
 void Obstacle::Draw()

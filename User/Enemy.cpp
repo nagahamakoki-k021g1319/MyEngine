@@ -509,17 +509,22 @@ void Enemy::Update(SplinePosition* spPosition_)
 
 	//“G‚ðˆê’è”“|‚·‚ÆƒvƒŒƒCƒ„[‚Ì’e‚ª‘‚¦‚é
 	if (player_->bulletUpCount == 2) {
-		player_->bulletMax++;
-		player_->bulletUpCount = 0;
+		player_->bulletMax = 7;
+	}
+	else if (player_->bulletUpCount == 4) {
+		player_->bulletMax = 9;
+	}
+	else if (player_->bulletUpCount == 6) {
+		player_->bulletMax = 11;
 	}
 
-	ImGui::Begin("Enemy");
+	//ImGui::Begin("Enemy");
 
-	ImGui::Text("winpArrivalTimer:%d", winpArrivalTimer);
-	ImGui::Text("retPosition0:%f,%f,%f", retObj_[0]->wtf.position.x, retObj_[0]->wtf.position.y, retObj_[0]->wtf.position.z);
-	ImGui::Text("retPosition1:%f,%f,%f", retObj_[1]->wtf.position.x, retObj_[1]->wtf.position.y, retObj_[1]->wtf.position.z);
+	//ImGui::Text("winpArrivalTimer:%d", winpArrivalTimer);
+	//ImGui::Text("retPosition0:%f,%f,%f", retObj_[0]->wtf.position.x, retObj_[0]->wtf.position.y, retObj_[0]->wtf.position.z);
+	//ImGui::Text("retPosition1:%f,%f,%f", retObj_[1]->wtf.position.x, retObj_[1]->wtf.position.y, retObj_[1]->wtf.position.z);
 
-	ImGui::End();
+	//ImGui::End();
 
 
 
