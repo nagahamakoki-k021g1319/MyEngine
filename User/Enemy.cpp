@@ -518,13 +518,13 @@ void Enemy::Update(SplinePosition* spPosition_)
 		player_->bulletMax = 11;
 	}
 
-	//ImGui::Begin("Enemy");
+	ImGui::Begin("Enemy");
 
-	//ImGui::Text("winpArrivalTimer:%d", winpArrivalTimer);
-	//ImGui::Text("retPosition0:%f,%f,%f", retObj_[0]->wtf.position.x, retObj_[0]->wtf.position.y, retObj_[0]->wtf.position.z);
-	//ImGui::Text("retPosition1:%f,%f,%f", retObj_[1]->wtf.position.x, retObj_[1]->wtf.position.y, retObj_[1]->wtf.position.z);
+	ImGui::Text("winpArrivalTimer:%d", winpArrivalTimer);
+	ImGui::Text("retPosition0:%f,%f,%f", retObj_[0]->wtf.position.x, retObj_[0]->wtf.position.y, retObj_[0]->wtf.position.z);
+	ImGui::Text("retPosition1:%f,%f,%f", retObj_[1]->wtf.position.x, retObj_[1]->wtf.position.y, retObj_[1]->wtf.position.z);
 
-	//ImGui::End();
+	ImGui::End();
 
 
 
