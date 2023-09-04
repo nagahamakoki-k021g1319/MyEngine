@@ -194,6 +194,7 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 			Obj_->SetModel(Model_);
 		}
 
+
 		if (input_->PushKey(DIK_1)) {
 			isCameraBehavior = 1;
 			camera->wtf.rotation.y = 1.2f;
@@ -242,14 +243,14 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 
 	}
 
-	//ImGui::Begin("Player");
+	ImGui::Begin("Player");
 
-	//ImGui::Text("position:%f,%f,%f", Obj_->wtf.position.x, Obj_->wtf.position.y, Obj_->wtf.position.z);
-	//ImGui::Text("Cameraposition:%f,%f,%f", camera->wtf.rotation.x, camera->wtf.rotation.y, camera->wtf.rotation.z);
-	//ImGui::Text("RetPosition:%f,%f,%f", retlocalpos.x, retlocalpos.y, retlocalpos.z);
-	//ImGui::Text("PlayerPosition:%f,%f,%f", playerlocalpos.x, playerlocalpos.y, playerlocalpos.z);
+	ImGui::Text("position:%f,%f,%f", Obj_->wtf.position.x, Obj_->wtf.position.y, Obj_->wtf.position.z);
+	ImGui::Text("Cameraposition:%f,%f,%f", camera->wtf.rotation.x, camera->wtf.rotation.y, camera->wtf.rotation.z);
+	ImGui::Text("RetPosition:%f,%f,%f", retlocalpos.x, retlocalpos.y, retlocalpos.z);
+	ImGui::Text("PlayerPosition:%f,%f,%f", playerlocalpos.x, playerlocalpos.y, playerlocalpos.z);
 
-	//ImGui::End();
+	ImGui::End();
 
 }
 
