@@ -88,7 +88,8 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	Obj_ = Object3d::Create();
 	Obj_->SetModel(Model_);
 	Obj_->wtf.scale = { 0.02f,0.02f,0.02f };
-	
+	Obj_->wtf.position = { 0.0f,0.0f,-10.0f };
+
 	//自機の弾(弱)
 	shootModel_ = Model::LoadFromOBJ("boll2");
 	shootObj_ = Object3d::Create();
