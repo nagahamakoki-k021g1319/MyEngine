@@ -180,10 +180,14 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 		}
 
 		if (input_->PushKey(DIK_A) || input_->StickInput(R_LEFT)) {
-			Obj_->SetModel(Model2_);
+			if (isCameraBehavior == 0) {
+				Obj_->SetModel(Model2_);
+			}
 		}
 		else if (input_->PushKey(DIK_D) || input_->StickInput(R_RIGHT)) {
-			Obj_->SetModel(Model3_);
+			if (isCameraBehavior == 0) {
+				Obj_->SetModel(Model3_);
+			}
 		}
 		else if (input_->PushKey(DIK_SPACE) || input_->ButtonInput(RT)) {
 			Obj_->SetModel(ModelAt_);
