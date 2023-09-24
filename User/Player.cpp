@@ -190,7 +190,6 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 			}
 		}
 
-
 		else if (input_->PushKey(DIK_SPACE) || input_->ButtonInput(RT)) {
 			Obj_->SetModel(ModelAt_);
 		}
