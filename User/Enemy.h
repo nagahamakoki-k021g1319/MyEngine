@@ -3,7 +3,8 @@
 #include "Object3d.h"
 #include "Input.h"
 #include "Camera.h"
-
+#include "SpriteCommon.h"
+#include "Sprite.h"
 
 #include "Collision.h"
 #include "ParticleManager.h"
@@ -75,6 +76,7 @@ private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
 	DirectXCommon* dxCommon = nullptr;
+	SpriteCommon* spriteCommon = nullptr;
 	Audio* audio = nullptr;
 	Player* player_ = nullptr;
 	Camera* camera = nullptr;

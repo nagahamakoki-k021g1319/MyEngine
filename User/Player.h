@@ -89,11 +89,15 @@ private:
 	Collision coll;
 
 	//待機
+	//maehito usirohito
 	Object3d* Obj_ = nullptr;
 	Model* Model_ = nullptr;
 	Model* Model2_ = nullptr;
 	Model* Model3_ = nullptr;
 	Model* ModelAt_ = nullptr;
+	Model* ModelBefo_ = nullptr;
+	Model* ModelBack_ = nullptr;
+
 	bool isAliveFlag = true;
 	//自機のHP表示
 	int playerHP = 3;
@@ -103,6 +107,8 @@ private:
 	Sprite* hp2UI = nullptr;
 	Sprite* hp1UI = nullptr;
 	Sprite* overUI = nullptr;
+
+
 
 	//レティクル
 	Object3d* retObj_ = nullptr;
