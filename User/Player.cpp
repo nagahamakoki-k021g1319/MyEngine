@@ -55,7 +55,8 @@ Player::~Player() {
 	delete Model2_;
 	delete Model3_;
 	delete ModelAt_;
-
+	delete ModelBefo_;
+	delete ModelBack_;
 
 }
 
@@ -81,10 +82,13 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	FBXObject3d::CreateGraphicsPipeline();
 
 	//自機
-	Model_ = Model::LoadFromOBJ("hito");
+	Model_ = Model::LoadFromOBJ("hito");//maehito usirohito
 	Model2_ = Model::LoadFromOBJ("hidarihito");
-	Model3_ = Model::LoadFromOBJ("migihito");
+	Model3_  = Model::LoadFromOBJ("migihito");
 	ModelAt_ = Model::LoadFromOBJ("hitoAt");
+	ModelBefo_ = Model::LoadFromOBJ("maehito");
+	ModelBack_ = Model::LoadFromOBJ("usirohito");
+
 	Obj_ = Object3d::Create();
 	Obj_->SetModel(Model_);
 	Obj_->wtf.scale = { 0.02f,0.02f,0.02f };
@@ -183,14 +187,18 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 			if (isCameraBehavior == 0) {
 				Obj_->SetModel(Model2_);
 			}
+			else if (isCameraBehavior == 1) {
+				Obj_->SetModel(ModelBefo_);
+			}
 		}
 		else if (input_->PushKey(DIK_D) || input_->StickInput(R_RIGHT)) {
 			if (isCameraBehavior == 0) {
 				Obj_->SetModel(Model3_);
 			}
+			else if (isCameraBehavior == 1) {
+				Obj_->SetModel(ModelBack_);
+			}
 		}
-
-
 		else if (input_->PushKey(DIK_SPACE) || input_->ButtonInput(RT)) {
 			Obj_->SetModel(ModelAt_);
 		}

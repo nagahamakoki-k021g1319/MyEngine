@@ -8,6 +8,7 @@ Enemy::Enemy()
 
 Enemy::~Enemy()
 {
+	delete spriteCommon;
 	//FBXオブジェクト解放
 	delete fbxObject3d_;
 	delete fbxModel_;
@@ -27,7 +28,7 @@ Enemy::~Enemy()
 
 	delete retModel_;
 	for (int i = 0; i < 2; i++) { delete retObj_[i]; }
-
+	
 
 }
 
@@ -40,6 +41,10 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	this->dxCommon = dxCommon;
 	input_ = input;
+
+	//スプライト共通部分の初期化
+	spriteCommon = new SpriteCommon;
+	spriteCommon->Initialize(dxCommon);
 
 	camera = new Camera(WinApp::window_width, WinApp::window_height);
 	splinePosition_ = new SplinePosition(points);
@@ -103,6 +108,11 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 		retObj_[i] = Object3d::Create();
 		retObj_[i]->SetModel(retModel_);
 	}
+
+	
+
+
+
 
 	//パーティクル生成
 	DamageParticle = std::make_unique<ParticleManager>();
@@ -561,6 +571,8 @@ void Enemy::Draw()
 			shootObj2_->Draw();
 		}
 	}
+
+	
 
 }
 
