@@ -111,9 +111,6 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	
 
-
-
-
 	//パーティクル生成
 	DamageParticle = std::make_unique<ParticleManager>();
 	DamageParticle.get()->Initialize();
