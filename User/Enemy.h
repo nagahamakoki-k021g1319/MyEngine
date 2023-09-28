@@ -26,11 +26,13 @@ public:
 	~Enemy();
 
 	void Initialize(DirectXCommon* dxCommon, Input* input);
+	void UIInitialize();
 	void Update(SplinePosition* spPosition_);
 	void WinpUpdate();
 	void BossWinpUpdate();
 	void Draw();
 	void FbxDraw();
+	void UIDraw();
 
 	//エフェクトの更新処理
 	void EffUpdate();
@@ -175,7 +177,12 @@ private:
 	const float moveSpeed_ = 0.1f;
 	const float rotaSpeed_ = 0.1f;
 
-	
+	//ボス前のwarningのUI
+	Sprite* warnUI = nullptr;
+	Sprite* warnani1UI = nullptr;
+	Vector2 warnani1Position;
+	Sprite* warnani2UI = nullptr;
+	Vector2 warnani2Position;
 
 	//ワールド座標を入れる変数
 	Vector3 worldPos;

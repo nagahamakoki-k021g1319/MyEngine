@@ -79,7 +79,7 @@ private:	//メンバ変数
 		Title, //タイトル
 		Game //射撃
 	};
-	SceneNo sceneNo_ = SceneNo::Game;
+	SceneNo sceneNo_ = SceneNo::Title;
 
 
 
@@ -110,7 +110,13 @@ private:	//メンバ変数
 
 	//タイトル
 	Sprite* TitleSprite = new Sprite();
+	Object3d* skydomeTit_ = nullptr;
+	Model* skydomeTitMD_ = nullptr;
+	Object3d* floorTit_ = nullptr;
+	Model* floorTitMD_ = nullptr;
 
-
+	//タイトルで座ってるプレイヤー
+	Object3d* standObj_ = nullptr;
+	Model* standModel_ = nullptr;
 
 };
