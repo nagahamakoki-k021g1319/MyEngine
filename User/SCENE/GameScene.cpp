@@ -25,6 +25,13 @@ GameScene::~GameScene() {
 	delete floor;
 	delete floorMD;
 	delete TitleSprite;
+	delete skydomeTit_;
+	delete skydomeTitMD_;
+	delete floorTit_;
+	delete floorTitMD_;
+	delete standObj_;
+	delete standModel_;
+
 }
 
 /// <summary>
@@ -51,15 +58,34 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 	// カメラ生成
 	mainCamera = new Camera(WinApp::window_width, WinApp::window_height);
-	camera1 = new Camera(WinApp::window_width, WinApp::window_height);
-	camera2 = new Camera(WinApp::window_width, WinApp::window_height);
-	camera3 = new Camera(WinApp::window_width, WinApp::window_height);
 
 	ParticleManager::SetCamera(mainCamera);
 	Object3d::SetCamera(mainCamera);
 	FBXObject3d::SetCamera(mainCamera);
 
-	//天球
+
+	//天球(タイトル)
+	skydomeTitMD_ = Model::LoadFromOBJ("skydome");
+	skydomeTit_ = Object3d::Create();
+	skydomeTit_->SetModel(skydomeTitMD_);
+	skydomeTit_->wtf.scale = { 100.0f,100.0f,100.0f };
+	skydomeTit_->wtf.position = { 0.0f,-20.0f,50.0f };
+	skydomeTit_->wtf.rotation = { 0.0f,0.0f,0.0f };
+
+	//タイトルの床
+	floorTitMD_ = Model::LoadFromOBJ("Ground");
+	floorTit_ = Object3d::Create();
+	floorTit_->SetModel(floorTitMD_);
+	floorTit_->wtf.position = (Vector3{ 0, -0.2f, 0 });
+	floorTit_->wtf.scale = (Vector3{ 0.5f, 0.5f, 0.5f });
+
+	standModel_ = Model::LoadFromOBJ("taikihito");
+	standObj_ = Object3d::Create();
+	standObj_->SetModel(standModel_);
+	standObj_->wtf.scale = { 0.02f,0.02f,0.02f };
+	standObj_->wtf.position = { 0.0f,0.0f,0.0f };
+
+	//天球(ゲームシーン)
 	skydomeMD = Model::LoadFromOBJ("skydome");
 	skydome = Object3d::Create();
 	skydome->SetModel(skydomeMD);
@@ -67,7 +93,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	skydome->wtf.position = { 0.0f,-20.0f,50.0f };
 	skydome->wtf.rotation = {0.0f,0.0f,0.0f};
 
-	//地面
+	//ステージ
 	floorMD = Model::LoadFromOBJ("stage2");
 	floor = Object3d::Create();
 	floor->SetModel(floorMD);
@@ -112,10 +138,16 @@ void GameScene::Reset() {
 /// 毎フレーム処理
 /// </summary>
 void GameScene::Update() {
+	mainCamera->Update();
+	
 	if (sceneNo_ == SceneNo::Title) {
 		if (input->TriggerKey(DIK_SPACE) || input->PButtonTrigger(B)) {
 			sceneNo_ = SceneNo::Game;
 		}
+		skydomeTit_->Update();
+		floorTit_->Update();
+		standObj_->Update();
+		mainCamera->wtf.rotation.y += 0.005f;
 	}
 
 	if (sceneNo_ == SceneNo::Game) {
@@ -138,8 +170,7 @@ void GameScene::Update() {
 void GameScene::Draw() {
 
 	if (sceneNo_ == SceneNo::Title) {
-		TitleSprite->Draw();
-		
+		/*TitleSprite->Draw();*/
 	}
 
 	/// <summary>
@@ -148,6 +179,12 @@ void GameScene::Draw() {
 	/// <summary>
 	//3Dオブジェクト描画前処理
 	Object3d::PreDraw(dxCommon->GetCommandList());
+	if (sceneNo_ == SceneNo::Title) {
+		skydomeTit_->Draw();
+		floorTit_->Draw();
+		standObj_->Draw();
+	}
+
 	if (sceneNo_ == SceneNo::Game) {
 		//// 3Dオブクジェクトの描画
 		player_->Draw();
@@ -164,6 +201,7 @@ void GameScene::Draw() {
 		player_->FbxDraw();
 		enemy_->FbxDraw();
 		enemy_->EffDraw();
+		enemy_->UIDraw();
 		enemyBoss_->FbxDraw();
 		player_->UIDraw();
 	}

@@ -29,7 +29,9 @@ Enemy::~Enemy()
 	delete retModel_;
 	for (int i = 0; i < 2; i++) { delete retObj_[i]; }
 	
-
+	delete warnUI;
+	delete warnani1UI;
+	delete warnani2UI;
 }
 
 void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
@@ -109,7 +111,7 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 		retObj_[i]->SetModel(retModel_);
 	}
 
-	
+	UIInitialize();
 
 	//パーティクル生成
 	DamageParticle = std::make_unique<ParticleManager>();
@@ -118,6 +120,7 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 	DamageParticle->Update();
 
 }
+
 
 void Enemy::WinpUpdate()
 {
@@ -414,6 +417,13 @@ void Enemy::Update(SplinePosition* spPosition_)
 	}
 	EffUpdate();
 
+	//下
+	warnani1Position.x += 2.5f;
+	warnani1UI->SetPozition(warnani1Position);
+	//上
+	warnani2Position.x -= 2.5f;
+	warnani2UI->SetPozition(warnani2Position);
+
 	//雑魚敵が動き始める
 	if (bossGostAt == true) {
 
@@ -589,6 +599,50 @@ void Enemy::FbxDraw()
 
 
 
+}
+
+void Enemy::UIInitialize()
+{
+	//ボス前のwarning
+	warnUI = new Sprite();
+	warnUI->Initialize(spriteCommon);
+	warnUI->SetPozition({ 0,0 });
+	warnUI->SetSize({ 1280.0f, 720.0f });
+
+	//ボス前のwarning(下のアニメーション)
+	warnani1UI = new Sprite();
+	warnani1UI->Initialize(spriteCommon);
+	warnani1Position = warnani1UI->GetPosition();
+	warnani1Position.x = -1280.0f;
+	warnani1UI->SetPozition(warnani1Position);
+	warnani1UI->SetSize({ 2560.0f, 720.0f });
+
+	//ボス前のwarning(上のアニメーション)
+	warnani2UI = new Sprite();
+	warnani2UI->Initialize(spriteCommon);
+	warnani2Position = warnani2UI->GetPosition();
+	warnani2UI->SetPozition(warnani2Position);
+	warnani2UI->SetSize({ 2560.0f, 720.0f });
+
+	//ボス前のwarning
+	spriteCommon->LoadTexture(20, "warn.png");
+	warnUI->SetTextureIndex(20);
+
+	//ボス前のwarning(下のアニメーション)
+	spriteCommon->LoadTexture(21, "warnani1.png");
+	warnani1UI->SetTextureIndex(21);
+
+	//ボス前のwarning(上のアニメーション)
+	spriteCommon->LoadTexture(22, "warnani2.png");
+	warnani2UI->SetTextureIndex(22);
+}
+
+
+void Enemy::UIDraw()
+{
+	/*warnUI->Draw();
+	warnani1UI->Draw();
+	warnani2UI->Draw();*/
 }
 
 void Enemy::EffUpdate()
