@@ -183,6 +183,8 @@ private:
 	Vector2 warnani1Position;
 	Sprite* warnani2UI = nullptr;
 	Vector2 warnani2Position;
+	int warnaniFlag = 0;
+
 
 	//ƒ[ƒ‹ƒhÀ•W‚ğ“ü‚ê‚é•Ï”
 	Vector3 worldPos;

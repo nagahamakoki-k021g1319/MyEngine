@@ -640,9 +640,11 @@ void Enemy::UIInitialize()
 
 void Enemy::UIDraw()
 {
-	/*warnUI->Draw();
-	warnani1UI->Draw();
-	warnani2UI->Draw();*/
+	if (warnaniFlag == 1) {
+		warnUI->Draw();
+		warnani1UI->Draw();
+		warnani2UI->Draw();
+	}
 }
 
 void Enemy::EffUpdate()
