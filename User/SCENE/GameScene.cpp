@@ -76,14 +76,14 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	floorTitMD_ = Model::LoadFromOBJ("Ground");
 	floorTit_ = Object3d::Create();
 	floorTit_->SetModel(floorTitMD_);
-	floorTit_->wtf.position = (Vector3{ 0, -0.2f, 0 });
+	floorTit_->wtf.position = (Vector3{ 0, -0.15f, 0 });
 	floorTit_->wtf.scale = (Vector3{ 0.5f, 0.5f, 0.5f });
 
 	standModel_ = Model::LoadFromOBJ("taikihito");
 	standObj_ = Object3d::Create();
 	standObj_->SetModel(standModel_);
 	standObj_->wtf.scale = { 0.02f,0.02f,0.02f };
-	standObj_->wtf.position = { 0.0f,0.0f,0.0f };
+	standObj_->wtf.position = { 0.0f,-0.15f,0.0f };
 
 	//天球(ゲームシーン)
 	skydomeMD = Model::LoadFromOBJ("skydome");
@@ -142,6 +142,7 @@ void GameScene::Update() {
 	
 	if (sceneNo_ == SceneNo::Title) {
 		if (input->TriggerKey(DIK_SPACE) || input->PButtonTrigger(B)) {
+			mainCamera->wtf.rotation.y = 0.0f;
 			sceneNo_ = SceneNo::Game;
 		}
 		skydomeTit_->Update();
@@ -169,9 +170,7 @@ void GameScene::Update() {
 /// </summary>
 void GameScene::Draw() {
 
-	if (sceneNo_ == SceneNo::Title) {
-		/*TitleSprite->Draw();*/
-	}
+	
 
 	/// <summary>
 	/// 3Dオブジェクトの描画
@@ -195,6 +194,9 @@ void GameScene::Draw() {
 	}
 	//3Dオブジェクト描画後処理
 	Object3d::PostDraw();
+	if (sceneNo_ == SceneNo::Title) {
+		TitleSprite->Draw();
+	}
 
 	if (sceneNo_ == SceneNo::Game) {
 		//// パーティクル UI FBX スプライト描画
