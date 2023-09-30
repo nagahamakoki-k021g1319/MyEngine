@@ -184,7 +184,7 @@ private:
 	Sprite* warnani2UI = nullptr;
 	Vector2 warnani2Position;
 	int warnaniFlag = 0;
-
+	int warnTimer = 0;
 
 	//ƒ[ƒ‹ƒhÀ•W‚ğ“ü‚ê‚é•Ï”
 	Vector3 worldPos;
