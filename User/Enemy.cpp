@@ -32,6 +32,11 @@ Enemy::~Enemy()
 	delete warnUI;
 	delete warnani1UI;
 	delete warnani2UI;
+
+	delete bosshpflameUI;
+	delete bosshpUI;
+
+
 }
 
 void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
@@ -417,13 +422,6 @@ void Enemy::Update(SplinePosition* spPosition_)
 	}
 	EffUpdate();
 
-	//下
-	warnani1Position.x += 2.5f;
-	warnani1UI->SetPozition(warnani1Position);
-	//上
-	warnani2Position.x -= 2.5f;
-	warnani2UI->SetPozition(warnani2Position);
-
 	//雑魚敵が動き始める
 	if (bossGostAt == true) {
 
@@ -489,7 +487,23 @@ void Enemy::Update(SplinePosition* spPosition_)
 
 	}
 
+	if (winpArrivalTimer >= 1470) {
+		warnaniFlag = 1;
+	}
+	if (warnaniFlag == 1) {
+		warnTimer++;
+		//下
+		warnani1Position.x += 2.5f;
+		warnani1UI->SetPozition(warnani1Position);
+		//上
+		warnani2Position.x -= 2.5f;
+		warnani2UI->SetPozition(warnani2Position);
+	}
 
+	if (warnTimer >= 130) {
+		warnaniFlag = 0;
+		warnTimer = 130;
+	}
 
 	//当たり判定(自機弾(弱)と雑魚敵)
 	for (int i = 0; i < 13; i++) {
@@ -624,6 +638,19 @@ void Enemy::UIInitialize()
 	warnani2UI->SetPozition(warnani2Position);
 	warnani2UI->SetSize({ 2560.0f, 720.0f });
 
+	//ボスのHPフレーム
+	bosshpflameUI = new Sprite();
+	bosshpflameUI->Initialize(spriteCommon);
+	bosshpflameUI->SetPozition({ 0,0 });
+	bosshpflameUI->SetSize({ 1280.0f, 720.0f });
+
+	//ボスのHPゲージ
+	bosshpUI = new Sprite();
+	bosshpUI->Initialize(spriteCommon);
+	bosshpPosition = bosshpUI->GetPosition();
+	bosshpUI->SetPozition(bosshpPosition);
+	bosshpUI->SetSize({ 1280.0f, 720.0f });
+
 	//ボス前のwarning
 	spriteCommon->LoadTexture(20, "warn.png");
 	warnUI->SetTextureIndex(20);
@@ -635,15 +662,32 @@ void Enemy::UIInitialize()
 	//ボス前のwarning(上のアニメーション)
 	spriteCommon->LoadTexture(22, "warnani2.png");
 	warnani2UI->SetTextureIndex(22);
+
+	//ボスのHPフレーム
+	spriteCommon->LoadTexture(23, "bosshpflame.png");
+	bosshpflameUI->SetTextureIndex(23);
+
+	//ボスのHPゲージ
+	spriteCommon->LoadTexture(24, "bosshp.png");
+	bosshpUI->SetTextureIndex(24);
+
+
 }
 
 
 void Enemy::UIDraw()
 {
+	if (winpArrivalTimer >= 1600) {
+		bosshpUI->Draw();
+		bosshpflameUI->Draw();
+	}
+
 	if (warnaniFlag == 1) {
-		warnUI->Draw();
-		warnani1UI->Draw();
-		warnani2UI->Draw();
+		if (warnTimer >= 1 && warnTimer < 130) {
+			warnUI->Draw();
+			warnani1UI->Draw();
+			warnani2UI->Draw();
+		}
 	}
 }
 
