@@ -186,6 +186,12 @@ private:
 	int warnaniFlag = 0;
 	int warnTimer = 0;
 
+	//ボスHPのUI
+	Sprite* bosshpflameUI = nullptr;
+	Sprite* bosshpUI = nullptr;
+	Vector2 bosshpPosition;
+
+
 	//ワールド座標を入れる変数
 	Vector3 worldPos;
 
