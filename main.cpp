@@ -114,7 +114,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 		
 		//// デモウィンドウの表示オン
-		/*ImGui::ShowDemoWindow();*/
+		ImGui::ShowDemoWindow();
 
 		// ゲームシーンの描画
 		gameScene->Draw();
@@ -122,8 +122,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 		// Imgui受付終了
 		imgui->End();
-		// Imgui描画
-		imgui->Draw();
+		//// Imgui描画
+		//imgui->Draw();
 
 		// 描画終了
 		dxCommon->PostDraw();
