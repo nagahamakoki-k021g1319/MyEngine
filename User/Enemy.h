@@ -103,22 +103,22 @@ private:
 
 	//ローカル移動座標(雑魚敵)
 	//雑魚敵の初期位置(第1ウェーブ)
-	Vector3 enemyWinplocalpos0 = { 10.0f,-1.0f,10.0f };//{ 0.0f,-1.0f,10.0f };
+	Vector3 enemyWinplocalpos0 = { 10.0f,-2.0f,10.0f };//{ 0.0f,-1.0f,10.0f };
 	Vector3 enemyWinplocalpos1 = { 10.0f,0.0f,10.0f };//{ 3.0f,0.0f,10.0f }
 	Vector3 enemyWinplocalpos2 = { -10.0f,0.0f,10.0f };//{ -3.0f,0.0f,10.0f }
-	Vector3 enemyWinplocalpos3 = { -10.0f,1.0f,10.0f };//{ 0.0f,1.0f,10.0f 
+	Vector3 enemyWinplocalpos3 = { -10.0f,2.0f,10.0f };//{ 0.0f,1.0f,10.0f 
 	//雑魚敵の初期位置(第2ウェーブ)
-	Vector3 enemyWinplocalpos4 = {  12.0f, 2.0f,10.0f };//{  2.0f, 2.0f,10.0f };
-	Vector3 enemyWinplocalpos5 = { -12.0f, 2.0f,10.0f };//{ -2.0f, 2.0f,10.0f };
-	Vector3 enemyWinplocalpos6 = {  12.0f,-2.0f,10.0f };//{  2.0f,-2.0f,10.0f };
-	Vector3 enemyWinplocalpos7 = { -12.0f,-2.0f,10.0f };//{ -2.0f,-2.0f,10.0f };
+	Vector3 enemyWinplocalpos4 = {  17.0f, 2.0f,10.0f };//{  2.0f, 2.0f,10.0f };
+	Vector3 enemyWinplocalpos5 = { -17.0f, 2.0f,10.0f };//{ -2.0f, 2.0f,10.0f };
+	Vector3 enemyWinplocalpos6 = {  17.0f,-2.0f,10.0f };//{  2.0f,-2.0f,10.0f };
+	Vector3 enemyWinplocalpos7 = { -17.0f,-2.0f,10.0f };//{ -2.0f,-2.0f,10.0f };
 	//雑魚敵の初期位置(第3ウェーブ)
 	Vector3 enemyWinplocalpos8 = { 2.0f,-1.0f,150.0f };//{ 2.0f,0.0f,10.0f }
 	Vector3 enemyWinplocalpos9 = { -2.0f,1.0f,150.0f };//{ -2.0f,0.0f,10.0f }
 	//雑魚敵の初期位置(第4ウェーブ)
-	Vector3 enemyWinplocalpos10 = { 8.0f, 2.0f,-10.0f };//{ 8.0f, 2.0f,7.0f };
+	Vector3 enemyWinplocalpos10 = { 8.0f, 4.0f,-10.0f };//{ 8.0f, 2.0f,7.0f };
 	Vector3 enemyWinplocalpos11 = { 8.0f, 0.0f,-10.0f };//{ 8.0f,0.0f,5.0f  };
-	Vector3 enemyWinplocalpos12 = { 8.0f,-2.0f,-10.0f };//{ 8.0f,-2.0f,3.0f };
+	Vector3 enemyWinplocalpos12 = { 8.0f,-4.0f,-10.0f };//{ 8.0f,-2.0f,3.0f };
 
 	//止めるとき
 	Vector3 Start = { 0.0f,0.0f,0.0f };

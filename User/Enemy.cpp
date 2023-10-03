@@ -67,8 +67,8 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 	fbxObject3d_ = new FBXObject3d;
 	fbxObject3d_->Initialize();
 	fbxObject3d_->SetModel(fbxModel_);
-	fbxObject3d_->wtf.position = { 0.0f,0.1f,0.0f };
-	fbxObject3d_->wtf.scale = { 0.04f,0.04f,0.04f };
+	fbxObject3d_->wtf.position = { 0.0f,0.5f,0.0f };
+	fbxObject3d_->wtf.scale = { 0.5f,0.5f,0.5f };
 	fbxObject3d_->PlayAnimation(0.5f, false);
 
 	//雑魚敵
@@ -76,7 +76,7 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 		fbxWinpObject3d_[i] = new FBXObject3d;
 		fbxWinpObject3d_[i]->Initialize();
 		fbxWinpObject3d_[i]->SetModel(fbxWinpModel_);
-		fbxWinpObject3d_[i]->wtf.scale = { 0.1f,0.1f,0.1f };
+		fbxWinpObject3d_[i]->wtf.scale = { 0.2f,0.2f,0.2f };
 		fbxWinpObject3d_[i]->wtf.position.z = 30.0f;
 		fbxWinpObject3d_[i]->PlayAnimation(1.0f, true);
 	}
@@ -397,11 +397,11 @@ void Enemy::Update(SplinePosition* spPosition_)
 	shootObj2_->Update();
 
 
-	if (bossGostMove == 0) { fbxObject3d_->wtf.position.y -= 0.003f; }
-	if (fbxObject3d_->wtf.position.y <= -0.1f) { bossGostMove = 1; }
-	if (bossGostMove == 1) { fbxObject3d_->wtf.position.z += 0.08f; }
+	if (bossGostMove == 0) { fbxObject3d_->wtf.position.y -= 0.03f; }
+	if (fbxObject3d_->wtf.position.y <= -0.5f) { bossGostMove = 1; }
+	if (bossGostMove == 1) { fbxObject3d_->wtf.position.z += 0.8f; }
 	if (fbxObject3d_->wtf.position.z >= 6.0f) { bossGostAt = true; }
-	if (fbxObject3d_->wtf.position.z >= 12.0f) { fbxObject3d_->wtf.position.z = 10000.0f; }
+	if (fbxObject3d_->wtf.position.z >= 40.0f) { fbxObject3d_->wtf.position.z = 10000.0f; }
 	//雑魚敵をまとめて更新
 	for (int i = 0; i < 13; i++) { if (isWinpAliveFlag_[i] == 0) { fbxWinpObject3d_[i]->Update(); } }
 	//ボスのファンネルまとめて更新
@@ -582,6 +582,7 @@ void Enemy::Draw()
 
 	}
 
+	//雑魚敵の射撃
 	if (isWinpAliveFlag_[8] == 0) {
 		if (isShootFlag_[0] == 1 && isOffsetFlag_ == 0) {
 			shootObj_->Draw();
@@ -652,24 +653,24 @@ void Enemy::UIInitialize()
 	bosshpUI->SetSize({ 1280.0f, 720.0f });
 
 	//ボス前のwarning
-	spriteCommon->LoadTexture(20, "warn.png");
-	warnUI->SetTextureIndex(20);
+	spriteCommon->LoadTexture(26, "warn.png");
+	warnUI->SetTextureIndex(26);
 
 	//ボス前のwarning(下のアニメーション)
-	spriteCommon->LoadTexture(21, "warnani1.png");
-	warnani1UI->SetTextureIndex(21);
+	spriteCommon->LoadTexture(27, "warnani1.png");
+	warnani1UI->SetTextureIndex(27);
 
 	//ボス前のwarning(上のアニメーション)
-	spriteCommon->LoadTexture(22, "warnani2.png");
-	warnani2UI->SetTextureIndex(22);
+	spriteCommon->LoadTexture(28, "warnani2.png");
+	warnani2UI->SetTextureIndex(28);
 
 	//ボスのHPフレーム
-	spriteCommon->LoadTexture(23, "bosshpflame.png");
-	bosshpflameUI->SetTextureIndex(23);
+	spriteCommon->LoadTexture(29, "bosshpflame.png");
+	bosshpflameUI->SetTextureIndex(29);
 
 	//ボスのHPゲージ
-	spriteCommon->LoadTexture(24, "bosshp.png");
-	bosshpUI->SetTextureIndex(24);
+	spriteCommon->LoadTexture(30, "bosshp.png");
+	bosshpUI->SetTextureIndex(30);
 
 
 }

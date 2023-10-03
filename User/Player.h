@@ -108,11 +108,18 @@ private:
 	Sprite* hp1UI = nullptr;
 	Sprite* overUI = nullptr;
 
+	//登場演出
+	Sprite* entryani1UI = nullptr;
+	Vector2 entryani1Position;
 
+	Sprite* entryani2UI = nullptr;
+	Vector2 entryani2Position;
 
 	//レティクル
 	Object3d* retObj_ = nullptr;
 	Model* retModel_ = nullptr;
+	Model* ret1Model_ = nullptr;
+	Model* ret2Model_ = nullptr;
 	int retResetTimer = 0;
 
 	//弾発射(弱)
@@ -188,7 +195,7 @@ private:
 	
 
 	//ローカル移動
-	Vector3 playerlocalpos = { 0.0f,-0.3f,0.0f };
+	Vector3 playerlocalpos = { 0.0f,-2.5f,0.0f };
 	Vector3 cameralocalpos = { 0.0f,0.0f,0.0f };
 	Vector3 retlocalpos = { 0.0f,0.0f,10.0f };
 	Vector3 retRotlocalpos = { 0.0f,0.0f,0.0f };

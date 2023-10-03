@@ -174,7 +174,7 @@ protected: // メンバ変数
 	// 射影行列ダーティフラグ
 	bool projectionDirty = false;
 	// 視点座標
-	Vector3 eye = { 0, 0, -1 };
+	Vector3 eye = { 0, 0, -10 };
 	// 注視点座標
 	Vector3 target = { 0, 0, 1 };
 	// 上方向ベクトル
