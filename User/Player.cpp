@@ -150,6 +150,22 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 		retObj_->SetModel(ret2Model_);
 	}*/
 
+	//自機の登場シーン
+	if (splineTimer >= 75 && splineTimer  <= 105) {
+		isEntryFlag = true;
+	}
+	else {
+		isEntryFlag = false;
+	}
+	if (isEntryFlag == true) {
+		//上の魔法陣
+		entryani1Position.y += 5.0f;
+		entryani1UI->SetPozition(entryani1Position);
+		//下の魔法陣
+		entryani2Position.y -= 5.0f;
+		entryani2UI->SetPozition(entryani2Position);
+	}
+
 
 	if (splineTimer >= 100) {
 		//スプライン曲線の更新
@@ -541,11 +557,13 @@ void Player::UIInitialize()
 	spriteCommon->LoadTexture(19, "over.png");
 	overUI->SetTextureIndex(19);
 
-	//最初の登場シーン
-	spriteCommon->LoadTexture(31, "entry.png");
+	//最初の登場シーン(上の魔法陣)
+	spriteCommon->LoadTexture(31, "entryani1.png");
 	entryani1UI->SetTextureIndex(31);
 
-
+	//最初の登場シーン(下の魔法陣)
+	spriteCommon->LoadTexture(32, "entryani2.png");
+	entryani2UI->SetTextureIndex(32);
 }
 
 void Player::UIDraw()
@@ -593,8 +611,11 @@ void Player::UIDraw()
 		else if (bulletRest >= 12) { Bullet6dUI->Draw(); }
 	}
 	
-	entryani1UI->Draw();
-	entryani2UI->Draw();
+	if (isEntryFlag == true) {
+		entryani1UI->Draw();
+		entryani2UI->Draw();
+	}
+
 }
 
 void Player::PlayerAction()

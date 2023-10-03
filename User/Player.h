@@ -111,9 +111,11 @@ private:
 	//登場演出
 	Sprite* entryani1UI = nullptr;
 	Vector2 entryani1Position;
-
 	Sprite* entryani2UI = nullptr;
 	Vector2 entryani2Position;
+	bool isEntryFlag = false;
+	int entryTimer = 0;
+
 
 	//レティクル
 	Object3d* retObj_ = nullptr;
