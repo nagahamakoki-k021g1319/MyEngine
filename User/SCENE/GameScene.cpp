@@ -76,14 +76,15 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	floorTitMD_ = Model::LoadFromOBJ("Ground");
 	floorTit_ = Object3d::Create();
 	floorTit_->SetModel(floorTitMD_);
-	floorTit_->wtf.position = (Vector3{ 0, -0.15f, 0 });
-	floorTit_->wtf.scale = (Vector3{ 0.5f, 0.5f, 0.5f });
+	floorTit_->wtf.position = (Vector3{ 0, -1.0f, 0 });
+	floorTit_->wtf.scale = (Vector3{ 5.0f, 5.0f, 5.0f });
 
+	//タイトルの自機
 	standModel_ = Model::LoadFromOBJ("taikihito");
 	standObj_ = Object3d::Create();
 	standObj_->SetModel(standModel_);
-	standObj_->wtf.scale = { 0.02f,0.02f,0.02f };
-	standObj_->wtf.position = { 0.0f,-0.15f,0.0f };
+	standObj_->wtf.scale = { 0.1f,0.1f,0.1f };
+	standObj_->wtf.position = { 0.0f,-1.0f,0.0f };
 
 	//天球(ゲームシーン)
 	skydomeMD = Model::LoadFromOBJ("skydome");

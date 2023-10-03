@@ -15,6 +15,8 @@ Player::~Player() {
 	delete shootStModel_;
 	delete retObj_;
 	delete retModel_;
+	delete ret1Model_;
+	delete ret2Model_;
 
 	delete BloodUI;
 
@@ -58,6 +60,9 @@ Player::~Player() {
 	delete ModelBefo_;
 	delete ModelBack_;
 
+	delete entryani1UI;
+	delete entryani2UI;
+
 }
 
 void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
@@ -91,7 +96,7 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 	Obj_ = Object3d::Create();
 	Obj_->SetModel(Model_);
-	Obj_->wtf.scale = { 0.02f,0.02f,0.02f };
+	Obj_->wtf.scale = { 0.2f,0.2f,0.2f };
 	Obj_->wtf.position = { 0.0f,0.0f,-10.0f };
 
 	//自機の弾(弱)
@@ -99,19 +104,22 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	shootObj_ = Object3d::Create();
 	shootObj_->SetModel(shootModel_);
 	shootObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z };
+	shootObj_->wtf.scale = { 3.0f,3.0f,3.0f };
 
 	//自機の弾(強)
 	shootStModel_ = Model::LoadFromOBJ("boll");
 	shootStObj_ = Object3d::Create();
 	shootStObj_->SetModel(shootStModel_);
 	shootStObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z };
-	shootStObj_->wtf.scale = { 0.2f,0.2f,0.2f };
+	shootStObj_->wtf.scale = { 0.8f,0.8f,0.8f };
 
 	//レティクル
 	retModel_ = Model::LoadFromOBJ("ster");
+	ret1Model_ = Model::LoadFromOBJ("ster1");
+	ret2Model_ = Model::LoadFromOBJ("ster2");
 	retObj_ = Object3d::Create();
 	retObj_->SetModel(retModel_);
-	retObj_->wtf.scale = { 0.5f,0.5f,0.5f };
+	retObj_->wtf.scale = { 0.2f,0.2f,0.2f };
 	retObj_->wtf.position = { Obj_->wtf.position.x - 1.5f,Obj_->wtf.position.y + 1.0f,Obj_->wtf.position.z + 10.0f };
 
 	//UIの初期化(枚数が多いため)
@@ -133,6 +141,15 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 	enemylen2.nomalize();
 	splineTimer++;
 	Obj_->Update();
+
+	//溜め攻撃のロックオン切り替え
+	/*if (input_->PushKey(DIK_4)) {
+		retObj_->SetModel(ret1Model_);
+	}
+	if (input_->PushKey(DIK_5)) {
+		retObj_->SetModel(ret2Model_);
+	}*/
+
 
 	if (splineTimer >= 100) {
 		//スプライン曲線の更新
@@ -270,7 +287,7 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 }
 
 void Player::Draw() {
-	if (splineTimer >= 100) {
+	if (splineTimer >= 110) {
 		Obj_->Draw();
 	}
 	
@@ -283,7 +300,7 @@ void Player::Draw() {
 	}
 	/*shootStObj_->Draw();*/
 
-	if (splineTimer >= 100) {
+	if (splineTimer >= 110) {
 		retObj_->Draw();
 	}
 	
@@ -433,6 +450,19 @@ void Player::UIInitialize()
 	BloodUI->SetPozition({ 0,0 });
 	BloodUI->SetSize({ 1280.0f, 720.0f });
 
+	//最初の登場アニメーション上
+	entryani1UI = new Sprite();
+	entryani1UI->Initialize(spriteCommon);
+	entryani1Position = entryani1UI->GetPosition();
+	entryani1UI->SetPozition(entryani1Position);
+	entryani1UI->SetSize({ 1280.0f, 720.0f });
+
+	//最初の登場アニメーション下
+	entryani2UI = new Sprite();
+	entryani2UI->Initialize(spriteCommon);
+	entryani2Position = entryani2UI->GetPosition();
+	entryani2UI->SetPozition(entryani2Position);
+	entryani2UI->SetSize({ 1280.0f, 720.0f });
 
 	//画像読み込み
 	//フレーム
@@ -511,6 +541,10 @@ void Player::UIInitialize()
 	spriteCommon->LoadTexture(19, "over.png");
 	overUI->SetTextureIndex(19);
 
+	//最初の登場シーン
+	spriteCommon->LoadTexture(31, "entry.png");
+	entryani1UI->SetTextureIndex(31);
+
 
 }
 
@@ -558,13 +592,15 @@ void Player::UIDraw()
 		else if (bulletRest == 11) { Bullet6fUI->Draw(); }
 		else if (bulletRest >= 12) { Bullet6dUI->Draw(); }
 	}
-
+	
+	entryani1UI->Draw();
+	entryani2UI->Draw();
 }
 
 void Player::PlayerAction()
 {
 	//自機とレティクルの速度
-	float playerSpeed = 0.01f;
+	float playerSpeed = 0.08f;
 	float retSpeed = 0.08f;
 
 	//自機とレティクルの画面制限
