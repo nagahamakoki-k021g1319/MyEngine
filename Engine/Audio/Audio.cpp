@@ -1,5 +1,8 @@
 #include "Audio.h"
+#pragma warning(push)
 #include <windows.h>
+#pragma warning(pop)
+
 #include <cassert>
 #pragma comment (lib,"xaudio2.lib")
 

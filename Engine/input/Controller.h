@@ -1,5 +1,7 @@
 #pragma once
+#pragma warning(push)
 #include <windows.h>
+#pragma warning(pop)
 #include "Vector2.h"
 #include <xinput.h>
 #pragma comment (lib, "xinput.lib")

@@ -4,12 +4,14 @@
 #include <vector>
 #include <DirectXTex.h>
 #include <Windows.h>
+
 #include <wrl.h>
 #include <d3d12.h>
 #include <d3dx12.h>
 #include <fbxsdk.h>
 
-
+#include "Vector3.h"
+#include "Matrix4.h"
 
 // ノード
 struct Node
@@ -17,15 +19,15 @@ struct Node
 	// 名前
 	std::string name;
 	// ローカルスケール
-	DirectX::XMVECTOR scaling = { 1,1,1,0 };
+	Vector3 scaling = { 1,1,1 };
 	// ローカル回転角
-	DirectX::XMVECTOR rotation = { 0,0,0,0 };
+	Vector3 rotation = { 0,0,0};
 	// ローカル移動
-	DirectX::XMVECTOR translation = { 0,0,0,1 };
+	Vector3 translation = { 0,0,0};
 	// ローカル変形行列
-	DirectX::XMMATRIX transform;
+	Matrix4 transform;
 	// グローバル変形行列
-	DirectX::XMMATRIX globalTransform;
+	Matrix4 globalTransform;
 	// 親ノード
 	Node* parent = nullptr;
 };
@@ -88,7 +90,7 @@ public:
 	// 描画
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 	// モデルの変形行列取得
-	const XMMATRIX& GetModelTransform() { return meshNode->globalTransform; }
+	const Matrix4& GetModelTransform() { return meshNode->globalTransform; }
 	//getter
 	FbxScene* GetFbxScene() { return fbxScene; }
 

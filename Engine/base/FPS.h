@@ -2,8 +2,11 @@
 
 #include <fstream>
 #include <sstream>
+#pragma warning(push)
 #include <windows.h>
+#pragma warning(pop)
 #include <timeapi.h>
+
 
 #pragma comment(lib, "winmm.lib")
 

@@ -38,14 +38,14 @@ Object3d::~Object3d() {
 	
 }
 
-void Object3d::StaticInitialize(ID3D12Device* device, int window_width, int window_height)
+void Object3d::StaticInitialize(ID3D12Device* device_)
 {
 	// nullptrチェック
-	assert(device);
+	assert(device_);
 
-	Object3d::device = device;
+	Object3d::device = device_;
 
-	Model::SetDevice(device);
+	Model::SetDevice(device_);
 
 	// パイプライン初期化
 	InitializeGraphicsPipeline();
@@ -54,20 +54,20 @@ void Object3d::StaticInitialize(ID3D12Device* device, int window_width, int wind
 
 }
 
-void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
+void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList_)
 {
 	// PreDrawとPostDrawがペアで呼ばれていなければエラー
-	assert(Object3d::cmdList == nullptr);
+	assert(Object3d::cmdList== nullptr);
 
 	// コマンドリストをセット
-	Object3d::cmdList = cmdList;
+	Object3d::cmdList = cmdList_;
 
 	// パイプラインステートの設定
-	cmdList->SetPipelineState(pipelinestate.Get());
+	cmdList_->SetPipelineState(pipelinestate.Get());
 	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(rootsignature.Get());
+	cmdList_->SetGraphicsRootSignature(rootsignature.Get());
 	// プリミティブ形状を設定
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	cmdList_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void Object3d::PostDraw()
@@ -94,7 +94,7 @@ Object3d* Object3d::Create()
 	return homeOBJ;
 }
 
-void Object3d::InitializeCamera(int window_width, int window_height)
+void Object3d::InitializeCamera()
 {
 	//ビュー行列の算出
 	matView.MakeLookL(eye, target, up, matView);

@@ -17,7 +17,7 @@ void Obstacle::Initialize(DirectXCommon* dxCommon, Input* input)
 	assert(dxCommon);
 	assert(input);
 
-	this->dxCommon = dxCommon;
+	this->dxCommon_ = dxCommon;
 	input_ = input;
 
 	//”ò‚ñ‚Å‚­‚éáŠQ•¨
@@ -27,10 +27,10 @@ void Obstacle::Initialize(DirectXCommon* dxCommon, Input* input)
 		obstacleObj_[i]->SetModel(obstacleModel_);
 		obstacleObj_[i]->wtf.scale = { 1.0f,1.0f,1.0f };
 	}
-	obstacleObj_[0]->wtf.position = { 0.5f,0.3f,20.0f };
-	obstacleObj_[1]->wtf.position = { -2.0f,-1.0f,28.0f };
-	obstacleObj_[2]->wtf.position = { 3.0f,0.4f,36.0f };
-	obstacleObj_[3]->wtf.position = { 0.3f,-0.1f,44.0f }; //27
+	obstacleObj_[0]->wtf.position = { 0.5f,0.3f,40.0f };
+	obstacleObj_[1]->wtf.position = { -2.0f,-1.0f,48.0f };
+	obstacleObj_[2]->wtf.position = { 3.0f,0.4f,56.0f };
+	obstacleObj_[3]->wtf.position = { 0.3f,-0.1f,64.0f }; //27
 
 }
 
@@ -43,7 +43,8 @@ void Obstacle::Update()
 	//áŠQ•¨‚ª“®‚«Žn‚ß‚é
 	if (enemy_->bossGostAt == true) {
 		for (int i = 0; i < 4; i++) {
-			obstacleObj_[i]->wtf.rotation.x -= 0.03f;
+			obstacleObj_[i]->wtf.rotation.z -= 0.03f;
+			obstacleObj_[i]->wtf.position.z -= 0.3f;
 		}
 
 	}

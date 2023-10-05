@@ -2,7 +2,9 @@
 #include <cassert>
 #include <fstream>
 #include <sstream>
+#pragma warning(push)
 #include <Windows.h>
+#pragma warning(pop)
 #include <DirectXTex.h>
 #include <d3dx12.h>
 
@@ -124,7 +126,7 @@ void Model::LoadTexture(const std::string& directoryPath, const std::string& fil
 
 	//ユニコード文字列に変換する
 	wchar_t wfilepath[128];
-	int iBufferSize = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), -1, wfilepath, _countof(wfilepath));
+	iBufferSize = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), -1, wfilepath, _countof(wfilepath));
 
 	//// WICテクスチャのロード
 	//result = LoadFromWICFile(L"Resources/tex1.png", WIC_FLAGS_NONE, &metadata, scratchImg);
@@ -197,7 +199,6 @@ void Model::LoadTexture(const std::string& directoryPath, const std::string& fil
 
 void Model::LoadFromOBJInternal(const std::string& modelname)
 {
-	HRESULT result = S_FALSE;
 
 	//ファイルストリーム
 	ifstream file;
@@ -227,10 +228,10 @@ void Model::LoadFromOBJInternal(const std::string& modelname)
 		//先頭文字列がmtllibならマテリアル
 		if (key == "mtllib") {
 			//マテリアルのファイル名読み込み
-			string filename;
-			line_stream >> filename;
+			string matfilename;
+			line_stream >> matfilename;
 			//マテリアル読み込み
-			LoadMaterial(directoryPath, filename);
+			LoadMaterial(directoryPath, matfilename);
 		}
 
 		//先頭文字列がvなら頂点座標

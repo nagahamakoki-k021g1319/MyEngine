@@ -61,7 +61,7 @@ public:
 	/// </summary>
 	/// <param name="pos"></param>
 	void SetPos(Vector3 pos) { fbxObject3d_->wtf.position = pos; };
-	void SetCamera(Camera* cam) { camera = cam; };
+	void SetCamera(Camera* cam) { camera_ = cam; };
 	void SetPlayer(Player* player) { player_ = player; };
 
 public:
@@ -77,11 +77,11 @@ public:
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
-	DirectXCommon* dxCommon = nullptr;
+	DirectXCommon* dxCommon_ = nullptr;
 	SpriteCommon* spriteCommon = nullptr;
 	Audio* audio = nullptr;
 	Player* player_ = nullptr;
-	Camera* camera = nullptr;
+	Camera* camera_ = nullptr;
 	SplinePosition* splinePosition_ = nullptr;
 
 	Collision coll;
@@ -190,10 +190,6 @@ private:
 	Sprite* bosshpflameUI = nullptr;
 	Sprite* bosshpUI = nullptr;
 	Vector2 bosshpPosition;
-
-
-	//ÉèÅ[ÉãÉhç¿ïWÇì¸ÇÍÇÈïœêî
-	Vector3 worldPos;
 
 };
 

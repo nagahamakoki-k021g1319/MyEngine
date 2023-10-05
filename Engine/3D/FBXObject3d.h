@@ -1,5 +1,8 @@
 #pragma once
+#pragma warning(push)
 #include <Windows.h>
+#pragma warning(pop)
+
 #include <wrl.h>
 #include <d3d12.h>
 #include <d3dx12.h>
@@ -55,8 +58,8 @@ public: // 静的メンバ関数
 	/// グラフィックパイプラインの生成
 	/// </summary>
 	// setter
-	static void SetDevice(ID3D12Device* device) { FBXObject3d::device = device; }
-	static void SetCamera(Camera* camera) { FBXObject3d::camera = camera; }
+	static void SetDevice(ID3D12Device* device_) { FBXObject3d::device = device_; }
+	static void SetCamera(Camera* camera_) { FBXObject3d::camera = camera_; }
 
 
 private: // 静的メンバ変数
@@ -86,12 +89,12 @@ public: // メンバ関数
 	/// </summary>
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-	void SetModel(FBXModel* fbxmodel) { this->fbxmodel = fbxmodel; }
+	void SetModel(FBXModel* fbxmodel_) { this->fbxmodel = fbxmodel_; }
 
 	/// <summary>
 	/// アニメーション開始
 	/// </summary>
-	void PlayAnimation(float speed = 1.0f, bool isLoop = true);
+	void PlayAnimation(float speed_ = 1.0f, bool isLoop_ = true);
 
 	void StopAnimation() { isPlay = false; };
 

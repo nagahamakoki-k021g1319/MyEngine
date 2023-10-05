@@ -46,14 +46,14 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 	assert(input);
 
 
-	this->dxCommon = dxCommon;
+	this->dxCommon_ = dxCommon;
 	input_ = input;
 
 	//スプライト共通部分の初期化
 	spriteCommon = new SpriteCommon;
 	spriteCommon->Initialize(dxCommon);
 
-	camera = new Camera(WinApp::window_width, WinApp::window_height);
+	camera_ = new Camera(WinApp::window_width, WinApp::window_height);
 	splinePosition_ = new SplinePosition(points);
 
 	fbxModel_ = FbxLoader::GetInstance()->LoadModelFromFile("kuma");
@@ -390,7 +390,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 {
 	splineTimer++;
 	splinePosition_ = spPosition_;
-	camera->Update();
+	camera_->Update();
 	//最初のボスの消えて雑魚敵が出てくるまでの挙動
 	fbxObject3d_->Update();
 	shootObj_->Update();
@@ -433,7 +433,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 		float speed = 0.0f;
 		splinePosition_->Update(speed);
 		for (int i = 0; i < 2; i++) { retObj_[i]->wtf.position = splinePosition_->NowPos; }
-		camera->wtf.position = splinePosition_->NowPos;
+		camera_->wtf.position = splinePosition_->NowPos;
 		//雑魚敵をまとめて更新(スプライン曲線)
 		for (int i = 0; i < 13; i++) { fbxWinpObject3d_[i]->wtf.position = splinePosition_->NowPos; }
 		//ボスのファンネルをまとめて更新(スプライン曲線)
@@ -601,13 +601,13 @@ void Enemy::Draw()
 void Enemy::FbxDraw()
 {
 
-	fbxObject3d_->Draw(dxCommon->GetCommandList());
+	fbxObject3d_->Draw(dxCommon_->GetCommandList());
 
 
 	if (bossGostAt == true) {
 		for (int i = 0; i < 13; i++) {
 			if (isWinpAliveFlag_[i] == 0) {
-				fbxWinpObject3d_[i]->Draw(dxCommon->GetCommandList());
+				fbxWinpObject3d_[i]->Draw(dxCommon_->GetCommandList());
 			}
 		}
 	}

@@ -33,8 +33,8 @@ private://プライベート関数
 	Vector3 SplinePositionUpdate(const std::vector<Vector3>& points, size_t& startIndex, float& t);
 
 public://Setter
-	void SetSplineMaxTime(const float& MaxTime) { this->MaxTime = MaxTime; }
-	size_t GetIndex() { return startIndex; }
+	void SetSplineMaxTime(const float& MaxTime_) { this->MaxTime = MaxTime_; }
+	size_t GetIndex() { return startIndex_; }
 
 public://公開変数
 	Vector3 NowPos;
@@ -42,9 +42,9 @@ public://公開変数
 private://プレイヤークラス変数
 
 	//スプライン曲線に必要なメンバ変数
-	size_t startIndex = 1;
+	size_t startIndex_ = 1;
 	float timeRate_ = 0.0f;
 	float MaxTime = 1.0f;
-	std::vector<Vector3> points{};
+	std::vector<Vector3> points_{};
 
 };

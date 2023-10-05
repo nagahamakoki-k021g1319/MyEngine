@@ -180,12 +180,12 @@ void Sprite::Draw()
 
 
 	// 定数バッファにデータ転送
-	HRESULT result = constBuffTransform->Map(0, nullptr, (void**)&constMapTransform);
-	if (SUCCEEDED(result)) {
+	HRESULT spriteResult = constBuffTransform->Map(0, nullptr, (void**)&constMapTransform);
+	if (SUCCEEDED(spriteResult)) {
 		constMapTransform->mat = matWorld * matProjection;	// 行列の合成	
 	}
-	result = constBuffMaterial->Map(0, nullptr, (void**)&constMapMaterial);
-	if (SUCCEEDED(result)) {
+	spriteResult = constBuffMaterial->Map(0, nullptr, (void**)&constMapMaterial);
+	if (SUCCEEDED(spriteResult)) {
 		constMapMaterial->color = color;
 	}
 
@@ -219,16 +219,16 @@ void Sprite::SetSize(Vector2 size)
 	Update();
 }
 
-void Sprite::SetIsFlipY(bool isFlipY)
+void Sprite::SetIsFlipY(bool isFlipY_)
 {
-	this->isFlipY = isFlipY;
+	this->isFlipY = isFlipY_;
 
 	Update();
 }
 
-void Sprite::SetIsFlipX(bool isFlipX)
+void Sprite::SetIsFlipX(bool isFlipX_)
 {
-	this->isFlipX = isFlipX;
+	this->isFlipX = isFlipX_;
 
 	Update();
 }

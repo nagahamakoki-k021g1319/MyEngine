@@ -70,7 +70,7 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	assert(dxCommon);
 	assert(input);
 
-	this->dxCommon = dxCommon;
+	this->dxCommon_ = dxCommon;
 	input_ = input;
 	//スプライト共通部分の初期化
 	spriteCommon = new SpriteCommon;
@@ -122,6 +122,12 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	retObj_->wtf.scale = { 0.2f,0.2f,0.2f };
 	retObj_->wtf.position = { Obj_->wtf.position.x - 1.5f,Obj_->wtf.position.y + 1.0f,Obj_->wtf.position.z + 10.0f };
 
+	//パーティクル生成
+	bulletParticle = std::make_unique<ParticleManager>();
+	bulletParticle.get()->Initialize();
+	bulletParticle->LoadTexture("bullet.png");
+	bulletParticle->Update();
+
 	//UIの初期化(枚数が多いため)
 	UIInitialize();
 
@@ -141,6 +147,7 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 	enemylen2.nomalize();
 	splineTimer++;
 	Obj_->Update();
+	EffUpdate();
 
 	//溜め攻撃のロックオン切り替え
 	/*if (input_->PushKey(DIK_4)) {
@@ -624,12 +631,12 @@ void Player::PlayerAction()
 	float playerSpeed = 0.08f;
 	float retSpeed = 0.08f;
 
-	//自機とレティクルの画面制限
-	float playerLimitX = 0.6f;
-	float playerLimitY = 0.19f;
-	float playerLimitY2 = 0.35f;
-	float retLimitX = 6.0f;
-	float retLimitY = 3.0f;
+	////自機とレティクルの画面制限
+	//float playerLimitX = 0.6f;
+	//float playerLimitY = 0.19f;
+	//float playerLimitY2 = 0.35f;
+	//float retLimitX = 6.0f;
+	//float retLimitY = 3.0f;
 
 	if (input_->PushKey(DIK_P)) {
 		retlocalpos.z = 10.0f;
@@ -729,6 +736,7 @@ void Player::PlayerAction()
 		}
 	}
 	if (isShootFlag == true) {
+		isbulletEffFlag_ = 1;
 		BulletCoolTime++;
 		shootObj_->wtf.position += enemylen;
 		len = enemylen;
@@ -771,6 +779,59 @@ void Player::PlayerAction()
 	if (input_->TriggerKey(DIK_E) || input_->PButtonTrigger(RB)) {
 		
 		bulletRest = 0;
+	}
+}
+
+void Player::EffUpdate()
+{
+	if (isbulletEffFlag_ == 1) {
+		bulletEffTimer_++;
+	}
+	if (bulletEffTimer_ <= 20 && bulletEffTimer_ >= 1) {
+		EffSummary(Vector3(shootObj_->wtf.position.x, shootObj_->wtf.position.y, shootObj_->wtf.position.z));
+	}
+	if (bulletEffTimer_ >= 20) {
+		isbulletEffFlag_ = 0;
+		bulletEffTimer_ = 0;
+	}
+}
+
+void Player::EffSummary(Vector3 bulletpos)
+{
+	//パーティクル範囲
+	for (int i = 0; i < 5; i++) {
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_pos = 5.0f;
+		Vector3 pos{};
+		pos.x += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.z += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos += bulletpos;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_vel = 0.1f;
+		Vector3 vel{};
+		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_acc = 0.00001f;
+		Vector3 acc{};
+		acc.x = (float)rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
+		acc.y = (float)rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
+
+		//追加
+		bulletParticle->Add(60, pos, vel, acc, 0.3f, 0.0f);
+
+		bulletParticle->Update();
+
+	}
+}
+
+void Player::EffDraw()
+{
+	if (isbulletEffFlag_ == 1) {
+		bulletParticle->Draw();
 	}
 }
 

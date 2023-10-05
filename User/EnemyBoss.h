@@ -39,7 +39,7 @@ public:
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
-	DirectXCommon* dxCommon = nullptr;
+	DirectXCommon* dxCommon_ = nullptr;
 	Audio* audio = nullptr;
 	Player* player_ = nullptr;
 	Enemy* enemy_ = nullptr;
@@ -53,11 +53,6 @@ private:
 
 	const float moveSpeed_ = 0.1f;
 	const float rotaSpeed_ = 0.1f;
-
-	
-
-	//ƒ[ƒ‹ƒhÀ•W‚ğ“ü‚ê‚é•Ï”
-	Vector3 worldPos;
 
 
 

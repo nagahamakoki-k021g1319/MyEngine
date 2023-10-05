@@ -17,13 +17,13 @@ FbxLoader* FbxLoader::GetInstance()
     return &instance;
 }
 
-void FbxLoader::Initialize(ID3D12Device* device)
+void FbxLoader::Initialize(ID3D12Device* device_)
 {
     // 再初期化チェック
     assert(fbxManager == nullptr);
 
     // 引数からメンバ変数に代入
-    this->device = device;
+    this->device = device_;
 
     // FBXマネージャの生成
     fbxManager = FbxManager::Create();
@@ -128,12 +128,12 @@ void FbxLoader::ParseSkin(FBXModel* fbxmodel, FbxMesh* fbxMesh)
         XMMATRIX initialPose;
         ConvertMatrixFromFbx(&initialPose, fbxMat);
 
-        bone.invInitialPose = XMMatrixInverse(nullptr, initialPose);
+        bone.invInitialPose = DirectX::XMMatrixInverse(nullptr, initialPose);
 
     }
 
     struct WeightSet {
-        UINT index;
+        uint32_t index;
         float weight;
     };
 
@@ -145,7 +145,7 @@ void FbxLoader::ParseSkin(FBXModel* fbxmodel, FbxMesh* fbxMesh)
 
         int controlPointIndicesCount = fbxCluster->GetControlPointIndicesCount();
 
-        int* controlPointIndices = fbxCluster->GetControlPointIndices();
+        int32_t* controlPointIndices = fbxCluster->GetControlPointIndices();
         double* controlPointWeights = fbxCluster->GetControlPointWeights();
 
         for (int j = 0; j < controlPointIndicesCount; j++) {
@@ -159,7 +159,7 @@ void FbxLoader::ParseSkin(FBXModel* fbxmodel, FbxMesh* fbxMesh)
 
     auto& vertices = fbxmodel->vertices;
 
-    for (int i = 0; i < vertices.size(); i++) {
+    for (int32_t i = 0; i < vertices.size(); i++) {
 
         auto& weightList = weightLists[i];
 
@@ -168,7 +168,7 @@ void FbxLoader::ParseSkin(FBXModel* fbxmodel, FbxMesh* fbxMesh)
             return lhs.weight > rhs.weight;
             });
 
-        int weightArrayIndex = 0;
+        int32_t weightArrayIndex = 0;
 
         for (auto& weightSet : weightList) {
 
@@ -178,7 +178,7 @@ void FbxLoader::ParseSkin(FBXModel* fbxmodel, FbxMesh* fbxMesh)
             if (++weightArrayIndex >= FBXModel::MAX_BONE_INDICES) {
                 float weight = 0.0f;
 
-                for (int j = 1; j < FBXModel::MAX_BONE_INDICES; j++) {
+                for (int32_t j = 1; j < FBXModel::MAX_BONE_INDICES; j++) {
                     weight += vertices[i].boneWeight[j];
                 }
                 vertices[i].boneWeight[0] = 1.0f - weight;
@@ -208,23 +208,23 @@ void FbxLoader::ParseNodeRecursive(FBXModel* fbxmodel, FbxNode* fbxNode, Node* p
     FbxDouble3 translation = fbxNode->LclTranslation.Get();
 
     // 形式変換して代入
-    node.rotation = { (float)rotation[0], (float)rotation[1], (float)rotation[2], 0.0f };
-    node.scaling = { (float)scaling[0], (float)scaling[1], (float)scaling[2], 0.0f };
-    node.translation = { (float)translation[0], (float)translation[1], (float)translation[2], 1.0f };
+    node.rotation = { (float)rotation[0], (float)rotation[1], (float)rotation[2] };
+    node.scaling = { (float)scaling[0], (float)scaling[1], (float)scaling[2]};
+    node.translation = { (float)translation[0], (float)translation[1], (float)translation[2]};
 
     //回転角をDegree(度)からラジアンに変換
-    node.rotation.m128_f32[0] = XMConvertToRadians(node.rotation.m128_f32[0]);
-    node.rotation.m128_f32[1] = XMConvertToRadians(node.rotation.m128_f32[1]);
-    node.rotation.m128_f32[2] = XMConvertToRadians(node.rotation.m128_f32[2]);
+    node.rotation.x = XMConvertToRadians(node.rotation.x);
+    node.rotation.y = XMConvertToRadians(node.rotation.y);
+    node.rotation.z = XMConvertToRadians(node.rotation.z);
 
     // スケール、回転、平行移動行列の計算
-    XMMATRIX matScaling, matRotation, matTranslation;
-    matScaling = XMMatrixScalingFromVector(node.scaling);
-    matRotation = XMMatrixRotationRollPitchYawFromVector(node.rotation);
-    matTranslation = XMMatrixTranslationFromVector(node.translation);
+    Matrix4 matScaling, matRotation, matTranslation;
+    matScaling = Affin::matScale(node.scaling);
+    matRotation = Affin::matRotation(node.rotation);
+    matTranslation = Affin::matTrans(node.translation);
 
     // ローカル変形行列の計算
-    node.transform = XMMatrixIdentity();
+    node.transform = Matrix4::MakeIdentity();
     node.transform *= matScaling; // ワールド行列にスケーリングを反映
     node.transform *= matRotation; // ワールド行列に回転を反映
     node.transform *= matTranslation; // ワールド行列に平行移動を反映
@@ -276,7 +276,7 @@ void FbxLoader::ParseMeshVertices(FBXModel* fbxmodel, FbxMesh* fbxMesh)
     auto& vertices = fbxmodel->vertices;
 
     // 頂点座標データの数
-    const int controlPointsCount = fbxMesh->GetControlPointsCount();
+    const int32_t controlPointsCount = fbxMesh->GetControlPointsCount();
     // 必要数だけ頂点データ配列を確保
     FBXModel::VertexPosNormalUv vert{};
     fbxmodel->vertices.resize(controlPointsCount, vert);
@@ -304,10 +304,10 @@ void FbxLoader::ParseMeshFaces(FBXModel* fbxmodel, FbxMesh* fbxMesh)
     assert(indices.size() == 0);
 
     // 面の数
-    const int polygonCount = fbxMesh->GetPolygonCount();
+    const int32_t polygonCount = fbxMesh->GetPolygonCount();
 
     // UVデータの数
-    const int textureUVCount = fbxMesh->GetTextureUVCount();
+    const int32_t textureUVCount = fbxMesh->GetTextureUVCount();
     // UV名リスト
     FbxStringList uvNames;
     fbxMesh->GetUVSetNames(uvNames);
@@ -321,7 +321,7 @@ void FbxLoader::ParseMeshFaces(FBXModel* fbxmodel, FbxMesh* fbxMesh)
         // 1頂点ずつ処理
         for (int j = 0; j < polygonSize; j++) {
             // FBX頂点配列のインデックス
-            int index = fbxMesh->GetPolygonVertex(i, j);
+            int32_t index = fbxMesh->GetPolygonVertex(i, j);
             assert(index >= 0);
 
             // 頂点法線読込
@@ -349,17 +349,17 @@ void FbxLoader::ParseMeshFaces(FBXModel* fbxmodel, FbxMesh* fbxMesh)
             // 3頂点目までなら
             if (j < 3) {
                 // 1点追加し、他の2点と三角形を構築する
-                indices.push_back(index);
+                indices.push_back(static_cast<unsigned short>(index));
             }
             // 4頂点目
             else {
                 // 3点追加し、四角形の0,1,2,3の内 2,3,0で三角形を構築する
-                int index2 = indices[indices.size() - 1];
-                int index3 = index;
-                int index0 = indices[indices.size() - 3];
-                indices.push_back(index2);
-                indices.push_back(index3);
-                indices.push_back(index0);
+                int32_t index2 = indices[indices.size() - 1];
+                int32_t index3 = index;
+                int32_t index0 = indices[indices.size() - 3];
+                indices.push_back(static_cast<uint16_t>(index2));
+                indices.push_back(static_cast<uint16_t>(index3));
+                indices.push_back(static_cast<uint16_t>(index0));
             }
 
 

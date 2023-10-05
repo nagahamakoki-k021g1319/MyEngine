@@ -60,7 +60,7 @@ public://静的メンバ関数
 	void LoadTexture(const std::string& directoryPath, const std::string& filename);
 
 	//setter
-	static void SetDevice(ID3D12Device* device) { Model::device = device; }
+	static void SetDevice(ID3D12Device* device_) { Model::device = device_; }
 
 	
 
@@ -107,6 +107,8 @@ private:
 	std::vector<VertexPosNormalUv> vertices;
 	// 頂点インデックス配列
 	std::vector<unsigned short> indices;
+
+	int iBufferSize;
 
 	//マテリアル
 	struct Material

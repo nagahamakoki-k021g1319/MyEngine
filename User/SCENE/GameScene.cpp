@@ -42,8 +42,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	assert(dxCommon);
 	assert(input);
 
-	this->dxCommon = dxCommon;
-	this->input = input;
+	this->dxCommon_ = dxCommon;
+	this->input_ = input;
 
 	//スプライト共通部分の初期化
 	spriteCommon = new SpriteCommon;
@@ -142,7 +142,7 @@ void GameScene::Update() {
 	mainCamera->Update();
 	
 	if (sceneNo_ == SceneNo::Title) {
-		if (input->TriggerKey(DIK_SPACE) || input->PButtonTrigger(B)) {
+		if (input_->TriggerKey(DIK_SPACE) || input_->PButtonTrigger(B)) {
 			mainCamera->wtf.rotation.y = 0.0f;
 			sceneNo_ = SceneNo::Game;
 		}
@@ -178,7 +178,7 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// <summary>
 	//3Dオブジェクト描画前処理
-	Object3d::PreDraw(dxCommon->GetCommandList());
+	Object3d::PreDraw(dxCommon_->GetCommandList());
 	if (sceneNo_ == SceneNo::Title) {
 		skydomeTit_->Draw();
 		floorTit_->Draw();
@@ -202,6 +202,7 @@ void GameScene::Draw() {
 	if (sceneNo_ == SceneNo::Game) {
 		//// パーティクル UI FBX スプライト描画
 		player_->FbxDraw();
+	/*	player_->EffDraw();*/
 		enemy_->FbxDraw();
 		enemy_->EffDraw();
 		enemy_->UIDraw();

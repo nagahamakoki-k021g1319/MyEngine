@@ -83,8 +83,8 @@ public: // メンバ関数
 	/// 視点座標の設定
 	/// </summary>
 	/// <param name="eye">座標</param>
-	inline void SetEye(Vector3 eye) {
-		this->eye = eye; viewDirty = true;
+	inline void SetEye(Vector3 eye_) {
+		this->eye = eye_; viewDirty = true;
 	}
 
 	/// <summary>
@@ -99,8 +99,8 @@ public: // メンバ関数
 	/// 注視点座標の設定
 	/// </summary>
 	/// <param name="target">座標</param>
-	inline void SetTarget(Vector3 target) {
-		this->target = target; viewDirty = true;
+	inline void SetTarget(Vector3 target_) {
+		this->target = target_; viewDirty = true;
 	}
 
 	/// <summary>
@@ -115,23 +115,23 @@ public: // メンバ関数
 	/// 上方向ベクトルの設定
 	/// </summary>
 	/// <param name="up">上方向ベクトル</param>
-	inline void SetUp(Vector3 up) {
-		this->up = up; viewDirty = true;
+	inline void SetUp(Vector3 up_) {
+		this->up = up_; viewDirty = true;
 	}
 
 	// sensor
 	inline const float& GetSensor() {
 		return sensor;
 	}
-	inline void SetSensor(float sensor) {
-		this->sensor = sensor; viewDirty = true;
+	inline void SetSensor(float sensor_) {
+		this->sensor = sensor_; viewDirty = true;
 	}
 	// FL
 	inline const float& GetForcalLengs() {
 		return focalLengs;
 	}
-	inline void SetFocalLengs(float focalLengs) {
-		this->focalLengs = focalLengs; viewDirty = true;
+	inline void SetFocalLengs(float focalLengs_) {
+		this->focalLengs = focalLengs_; viewDirty = true;
 	}
 
 
@@ -150,7 +150,7 @@ public: // メンバ関数
 	float FieldOfViewY();
 
 	//親子関係
-	void SetParent(Transform * parent) { this->parent = parent; hasParent = true; };
+	void SetParent(Transform * parent_) { this->parent = parent_; hasParent = true; };
 	void LiftParent() { hasParent = false; };
 
 	//親との回転同期
