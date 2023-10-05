@@ -1,6 +1,7 @@
 ﻿#pragma once
-
+#pragma warning(push)
 #include <Windows.h>
+#pragma warning(pop)
 #include <wrl.h>
 #include <d3d12.h>
 #include <d3dx12.h>
@@ -178,7 +179,7 @@ public: // メンバ関数
 	///	<param name="accel">加速度</param>
 	void Add(int life, Vector3 position, Vector3 velociy, Vector3 accel, float start_scale, float end_scale);
 
-	static void SetCamera(Camera* camera) { ParticleManager::camera = camera; }
+	static void SetCamera(Camera* camera_) { ParticleManager::camera = camera_; }
 
 	void SetTransform(Transform wtf) { wtf_ = wtf; };
 

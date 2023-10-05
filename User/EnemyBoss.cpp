@@ -19,7 +19,7 @@ void EnemyBoss::Initialize(DirectXCommon* dxCommon, Input* input)
 	assert(dxCommon);
 	assert(input);
 
-	this->dxCommon = dxCommon;
+	this->dxCommon_ = dxCommon;
 	input_ = input;
 
 	fbxModel_ = FbxLoader::GetInstance()->LoadModelFromFile("kuma");
@@ -50,7 +50,7 @@ void EnemyBoss::Draw()
 void EnemyBoss::FbxDraw()
 {
 	if (player_->splinePosition_->GetIndex() >= 18) {
-		fbxObject3d_->Draw(dxCommon->GetCommandList());
+		fbxObject3d_->Draw(dxCommon_->GetCommandList());
 	}
 }
 

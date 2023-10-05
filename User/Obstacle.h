@@ -39,7 +39,7 @@ public:
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
-	DirectXCommon* dxCommon = nullptr;
+	DirectXCommon* dxCommon_ = nullptr;
 	Audio* audio = nullptr;
 	Player* player_ = nullptr;
 	Enemy* enemy_ = nullptr;

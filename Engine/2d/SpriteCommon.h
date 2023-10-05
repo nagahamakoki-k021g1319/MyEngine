@@ -1,8 +1,10 @@
 #pragma once
 #include"DirectXCommon.h"
+
 #include <DirectXTex.h>
 #include <array>
 #include <string>
+
 
 #include "Vector2.h"
 #include "Vector3.h"

@@ -3,12 +3,12 @@
 SplinePosition::SplinePosition(Vector3& Start, Vector3& p1, Vector3& p2, Vector3& end)
 {
 	std::vector<Vector3> points{ Start, Start, p1, p2, end, end };
-	this->points = points;
+	this->points_ = points;
 }
 
 SplinePosition::SplinePosition(const std::vector<Vector3>& points)
 {
-	this->points = points;
+	this->points_ = points;
 }
 
 SplinePosition::~SplinePosition(){}
@@ -17,21 +17,21 @@ void SplinePosition::Update(float& time)
 {
 	timeRate_ += time;
 	if (timeRate_ >= MaxTime) {
-		if (startIndex < points.size() - 3) {
+		if (startIndex_ < points_.size() - 3) {
 
-			startIndex += 1;
+			startIndex_ += 1;
 			timeRate_ -= MaxTime;
 		}
 		else {
 			timeRate_ = MaxTime;
 		}
 	}
-	NowPos = SplinePositionUpdate(points, startIndex, timeRate_);
+	NowPos = SplinePositionUpdate(points_, startIndex_, timeRate_);
 }
 
 void SplinePosition::Reset()
 {
-	startIndex = 1;
+	startIndex_ = 1;
 	timeRate_ = 0.0f;
 }
 

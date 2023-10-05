@@ -1,5 +1,10 @@
 #pragma once
+
+#pragma warning(push)
 #include <Windows.h>
+#pragma warning(pop)
+
+
 
 //WindowsAPI
 class WinApp

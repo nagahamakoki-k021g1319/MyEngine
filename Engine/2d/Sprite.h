@@ -76,10 +76,10 @@ public:
 	void SetSize(Vector2 size);
 
 	/// 上下反転の設定
-	void SetIsFlipY(bool isFlipY);
+	void SetIsFlipY(bool isFlipY_);
 
 	/// 左右反転の設定
-	void SetIsFlipX(bool isFlipX);
+	void SetIsFlipX(bool isFlipX_);
 
 private:
 	//テクスチャサイズをイメージに合わせる

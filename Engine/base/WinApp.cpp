@@ -18,8 +18,6 @@ LRESULT WinApp::WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpara
 		return 0;
 	}
 	return DefWindowProc(hwnd, msg, wparam, lparam); //•W€‚Ìˆ—‚ğs‚¤
-
-	return false;
 }
 
 bool WinApp::ProcessMessage()

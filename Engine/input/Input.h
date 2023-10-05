@@ -1,5 +1,7 @@
 #pragma once
+#pragma warning(push)
 #include <windows.h>
+#pragma warning(pop)
 #include <wrl.h>
 #include <dinput.h>
 #include "WinApp.h"

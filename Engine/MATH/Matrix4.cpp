@@ -35,14 +35,14 @@ Matrix4::Matrix4(
 }
 
 
-Vector3 Matrix4::transform(const Vector3& v, const Matrix4& m) {
+Vector3 Matrix4::transform(const Vector3& v, const Matrix4& m1) {
 
-	float w = v.x * m.m[0][3] + v.y * m.m[1][3] + v.z * m.m[2][3] + m.m[3][3];
+	float w = v.x * m1.m[0][3] + v.y * m1.m[1][3] + v.z * m1.m[2][3] + m1.m[3][3];
 
 	Vector3 result{
-		(v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0] + m.m[3][0]) / w,
-		(v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1] + m.m[3][1]) / w,
-		(v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2] + m.m[3][2]) / w,
+		(v.x * m1.m[0][0] + v.y * m1.m[1][0] + v.z * m1.m[2][0] + m1.m[3][0]) / w,
+		(v.x * m1.m[0][1] + v.y * m1.m[1][1] + v.z * m1.m[2][1] + m1.m[3][1]) / w,
+		(v.x * m1.m[0][2] + v.y * m1.m[1][2] + v.z * m1.m[2][2] + m1.m[3][2]) / w,
 	};
 
 	return result;

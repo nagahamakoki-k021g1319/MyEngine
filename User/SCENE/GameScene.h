@@ -64,8 +64,8 @@ public:
 
 
 private: // メンバ変数 (固定)
-	DirectXCommon* dxCommon = nullptr;
-	Input* input = nullptr;
+	DirectXCommon* dxCommon_ = nullptr;
+	Input* input_ = nullptr;
 
 	SpriteCommon* spriteCommon = nullptr;
 	Audio* audio = nullptr;
@@ -79,7 +79,7 @@ private:	//メンバ変数
 		Title, //タイトル
 		Game //射撃
 	};
-	SceneNo sceneNo_ = SceneNo::Game;
+	SceneNo sceneNo_ = SceneNo::Title;
 
 
 

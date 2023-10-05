@@ -35,7 +35,12 @@ public:
 	//プレイヤーの行動一覧
 	void PlayerAction();
 
-
+	//エフェクトの更新処理
+	void EffUpdate();
+	//エフェクトの情報
+	void EffSummary(Vector3 bulletpos);
+	//エフェクトの描画
+	void EffDraw();
 
 	Vector3 bVelocity(Vector3& velocity, Transform& worldTransform);
 
@@ -82,7 +87,7 @@ public:
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
-	DirectXCommon* dxCommon = nullptr;
+	DirectXCommon* dxCommon_ = nullptr;
 	Audio* audio = nullptr;
 	Enemy* enemy_ = nullptr;
 	SpriteCommon* spriteCommon = nullptr;
@@ -146,6 +151,11 @@ private:
 	Sprite* BloodUI = nullptr;
 	int EffTimer = 0;
 	int isEffFlag = 0;
+
+	//パーティクル
+	std::unique_ptr<ParticleManager> bulletParticle;
+	int bulletEffTimer_ = 0;
+	int isbulletEffFlag_ = 0;
 
 	//弾の弾数表示(スプライト)
 	Sprite* BulletFlameUI = nullptr;

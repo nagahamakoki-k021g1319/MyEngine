@@ -279,9 +279,9 @@ void FBXObject3d::Draw(ID3D12GraphicsCommandList* cmdList)
 	fbxmodel->Draw(cmdList);
 }
 
-void FBXObject3d::PlayAnimation(float speed, bool isLoop) {
+void FBXObject3d::PlayAnimation(float speed_, bool isLoop_) {
 
-	animationTime = static_cast<FbxLongLong>(frameTime.Get() * speed);
+	animationTime = static_cast<FbxLongLong>(frameTime.Get() * speed_);
 	FbxScene* fbxScene = fbxmodel->GetFbxScene();
 	//0番のアニメーションを取得
 	FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(0);
@@ -300,7 +300,7 @@ void FBXObject3d::PlayAnimation(float speed, bool isLoop) {
 	isPlay = true;
 	isFin = false;
 	//ループ再生する
-	this->isLoop = isLoop;
+	this->isLoop = isLoop_;
 }
 
 void FBXObject3d::SetPozition(const Vector3& position_)
