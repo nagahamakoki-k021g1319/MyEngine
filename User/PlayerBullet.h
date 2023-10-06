@@ -14,22 +14,23 @@ class PlayerBullet
 public:
 	~PlayerBullet();
 
+
 	///< summary>
-	///‰Šú‰»
+	///åˆæœŸåŒ–
 	///</summary>
 	void Initialize(Model* Model_);
 	///< summary>
-	///XV
+	///æ›´æ–°
 	///</summary>
 	void CrystalBAttack();
 
 	///< summary>
-	///XV
+	///æ›´æ–°
 	///</summary>
 	void Update();
 
 	///< summary>
-	///•`‰æ
+	///æç”»
 	///</summary>
 	void Draw();
 

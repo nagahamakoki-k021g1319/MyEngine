@@ -1,4 +1,4 @@
-﻿#include "Camera.h"
+#include "Camera.h"
 
 using namespace DirectX;
 
@@ -36,6 +36,7 @@ void Camera::Update() {
 		///仮で高さを調整する
 		wtf.position.y += 2.5;
 	}
+
 
 
 	//座標更新

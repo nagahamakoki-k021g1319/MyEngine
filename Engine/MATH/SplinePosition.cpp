@@ -13,6 +13,7 @@ SplinePosition::SplinePosition(const std::vector<Vector3>& points)
 
 SplinePosition::~SplinePosition(){}
 
+
 void SplinePosition::Update(float& time)
 {
 	timeRate_ += time;
@@ -37,7 +38,7 @@ void SplinePosition::Reset()
 
 Vector3 SplinePosition::SplinePositionUpdate(const std::vector<Vector3>& points, size_t& startIndex, float& t)
 {
-	//•âŠÔ‚·‚×‚«“_‚Ì”
+	//è£œé–“ã™ã¹ãç‚¹ã®æ•°
 	size_t n = points.size() - 2;
 
 	if (startIndex > n)return points[n];

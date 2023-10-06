@@ -26,14 +26,14 @@ public:
 	void Draw();
 	void FbxDraw();
 
-	////ƒ[ƒ‹ƒhÀ•W‚ğæ“¾
+	////ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å–å¾—
 	Vector3 GetWorldPosition();
 
 	void SetPlayer(Player* player) { player_ = player; };
 	void SetEnemy(Enemy* enemy) { enemy_ = enemy; };
 
 public:
-	//‰¹‚ğ~‚ß‚éŠÖ”
+	//éŸ³ã‚’æ­¢ã‚ã‚‹é–¢æ•°
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
 
 private:
@@ -45,14 +45,15 @@ private:
 	Enemy* enemy_ = nullptr;
 	Collision coll;
 
-	//ƒ{ƒX
+	//ãƒœã‚¹
 	FBXModel* fbxModel_ = nullptr;
 	FBXObject3d* fbxObject3d_ = nullptr;
-	//¶‚«‚Ä‚¢‚é‚©‚Ç‚¤‚©(0¶‚«‚é,1€–S)
+	//ç”Ÿãã¦ã„ã‚‹ã‹ã©ã†ã‹(0ç”Ÿãã‚‹,1æ­»äº¡)
 	int isObsAliveFlag_ = 0;
 
 	const float moveSpeed_ = 0.1f;
 	const float rotaSpeed_ = 0.1f;
+
 
 
 

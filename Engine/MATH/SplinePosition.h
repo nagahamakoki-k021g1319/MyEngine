@@ -5,43 +5,44 @@
 
 class SplinePosition {
 
-public://Šî–{ŠÖ”
+public://åŸºæœ¬é–¢æ•°
 	/// <summary>
-	/// Vector3‚ğ4‚Â“ü‚ê‚éƒo[ƒWƒ‡ƒ“(vectorŒ^‚Å“n‚·•û‚à‚ ‚é)
+	/// Vector3ã‚’4ã¤å…¥ã‚Œã‚‹ãƒãƒ¼ã‚¸ãƒ§ãƒ³(vectorå‹ã§æ¸¡ã™æ–¹ã‚‚ã‚ã‚‹)
 	/// </summary>
-	/// <param name="Start">ƒXƒ^[ƒg’n“_</param>
-	/// <param name="p1">§Œä“_‚»‚Ì1</param>
-	/// <param name="p2">§Œä“_‚»‚Ì2</param>
-	/// <param name="end">ƒS[ƒ‹’n“_</param>
+	/// <param name="Start">ã‚¹ã‚¿ãƒ¼ãƒˆåœ°ç‚¹</param>
+	/// <param name="p1">åˆ¶å¾¡ç‚¹ãã®1</param>
+	/// <param name="p2">åˆ¶å¾¡ç‚¹ãã®2</param>
+	/// <param name="end">ã‚´ãƒ¼ãƒ«åœ°ç‚¹</param>
 	SplinePosition(Vector3& Start, Vector3& p1, Vector3& p2, Vector3& end);
 	/// <summary>
-	/// ƒXƒ^[ƒg’n“_,§Œä“_,ƒS[ƒ‹’n“_‚ğD‚«‚ÉŒˆ‚ß‚ç‚ê‚é•û
+	/// ã‚¹ã‚¿ãƒ¼ãƒˆåœ°ç‚¹,åˆ¶å¾¡ç‚¹,ã‚´ãƒ¼ãƒ«åœ°ç‚¹ã‚’å¥½ãã«æ±ºã‚ã‚‰ã‚Œã‚‹æ–¹
 	/// </summary>
-	/// <param name="points">points{ start, start, p1, p2, p3, end, end };‚İ‚½‚¢‚Ép3‚ğ’Ç‰Á‚µ‚½‚è</param>
+	/// <param name="points">points{ start, start, p1, p2, p3, end, end };ã¿ãŸã„ã«p3ã‚’è¿½åŠ ã—ãŸã‚Š</param>
 	SplinePosition(const std::vector<Vector3>& points);
 	~SplinePosition();
 
 	/// <summary>
-	/// ƒXƒvƒ‰ƒCƒ“‹ÈüƒAƒbƒvƒf[ƒg
+	/// ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³æ›²ç·šã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆ
 	/// </summary>
-	/// <param name="time">ƒfƒtƒHMaxTime=1‚Ì‚¤‚¿‚Ì‚Ç‚±‚©</param>
+	/// <param name="time">ãƒ‡ãƒ•ã‚©MaxTime=1ã®ã†ã¡ã®ã©ã“ã‹</param>
 	void Update(float& time);
 
 	void Reset();
 
-private://ƒvƒ‰ƒCƒx[ƒgŠÖ”
+private://ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆé–¢æ•°
 	Vector3 SplinePositionUpdate(const std::vector<Vector3>& points, size_t& startIndex, float& t);
 
 public://Setter
 	void SetSplineMaxTime(const float& MaxTime_) { this->MaxTime = MaxTime_; }
 	size_t GetIndex() { return startIndex_; }
 
-public://ŒöŠJ•Ï”
+
+public://å…¬é–‹å¤‰æ•°
 	Vector3 NowPos;
 
-private://ƒvƒŒƒCƒ„[ƒNƒ‰ƒX•Ï”
+private://ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¯ãƒ©ã‚¹å¤‰æ•°
 
-	//ƒXƒvƒ‰ƒCƒ“‹Èü‚É•K—v‚Èƒƒ“ƒo•Ï”
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³æ›²ç·šã«å¿…è¦ãªãƒ¡ãƒ³ãƒå¤‰æ•°
 	size_t startIndex_ = 1;
 	float timeRate_ = 0.0f;
 	float MaxTime = 1.0f;

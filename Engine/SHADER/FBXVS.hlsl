@@ -5,6 +5,7 @@ struct SkinOutput
 {
 	float4 pos;
 	float3 normal;
+
 };
 
 //スキニング計算

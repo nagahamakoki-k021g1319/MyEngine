@@ -1,4 +1,4 @@
-﻿#include "GameScene.h"
+#include "GameScene.h"
 
 
 /// <summary>
@@ -125,6 +125,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 
 	//--------------------//
+
 
 
 

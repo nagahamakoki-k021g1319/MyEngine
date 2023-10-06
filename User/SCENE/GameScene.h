@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "DirectXCommon.h"
 #include "Input.h"
@@ -61,6 +61,7 @@ public: // メンバ関数
 public:
 	//音を止める関数
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
+
 
 
 private: // メンバ変数 (固定)

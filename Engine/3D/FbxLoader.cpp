@@ -1,4 +1,4 @@
-﻿#include "FbxLoader.h"
+#include "FbxLoader.h"
 
 #include <cassert>
 
@@ -239,6 +239,7 @@ void FbxLoader::ParseNodeRecursive(FBXModel* fbxmodel, FbxNode* fbxNode, Node* p
 
     // FBXノードのメッシュ情報を解析
     FbxNodeAttribute* fbxNodeAttribute = fbxNode->GetNodeAttribute();
+
 
     if (fbxNodeAttribute) {
         if (fbxNodeAttribute->GetAttributeType() == FbxNodeAttribute::eMesh)

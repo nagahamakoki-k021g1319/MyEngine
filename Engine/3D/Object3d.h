@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #pragma warning(push)
 #include <Windows.h>
 #pragma warning(pop)
@@ -44,6 +44,7 @@ private: // 定数
 	static const float prizmHeight;			// 柱の高さ
 	static const int planeCount = division * 2 + division * 2;		// 面の数
 	static const int vertexCount = planeCount * 3;		// 頂点数
+
 
 public: // 静的メンバ関数
 	/// <summary>

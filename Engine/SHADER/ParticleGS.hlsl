@@ -1,5 +1,6 @@
 #include "Particle.hlsli"
 
+
 //[maxvertexcount(1)]
 //void main(
 //	point VSOutput input[1]:SV_POSITION,

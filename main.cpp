@@ -13,10 +13,10 @@
 
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
-#pragma region WindowsAPI‰Šú‰»ˆ—
+#pragma region WindowsAPIåˆæœŸåŒ–å‡¦ç†
 
 
-	//ƒ|ƒCƒ“ƒ^
+	//ãƒã‚¤ãƒ³ã‚¿
 	WinApp* winApp = nullptr;
 	DirectXCommon* dxCommon = nullptr;
 	FPS* fps = new FPS;
@@ -25,18 +25,18 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	ImGuiManager* imgui = nullptr;
 
-	//windowsAPI‚Ì‰Šú‰»
+	//windowsAPIã®åˆæœŸåŒ–
 	winApp = new WinApp();
 	winApp->Initialize();
 
 	dxCommon = new DirectXCommon();
 	dxCommon->Initialize(winApp);
 
-	//“ü—Í‚Ì‰Šú‰»@
+	//å…¥åŠ›ã®åˆæœŸåŒ–ã€€
 	input = new Input();
 	input->Initialize(winApp);
 
-	// ImGui‚Ì‰Šú‰»
+	// ImGuiã®åˆæœŸåŒ–
 	imgui = new ImGuiManager();
 	imgui->Initialize(winApp,dxCommon);
 
@@ -44,37 +44,38 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 
 
+
 #pragma endregion
 
-#pragma region DirectX‰Šú‰»ˆ—
-	// 3DƒIƒuƒWƒFƒNƒgÃ“I‰Šú‰»
+#pragma region DirectXåˆæœŸåŒ–å‡¦ç†
+	// 3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆé™çš„åˆæœŸåŒ–
 	Object3d::StaticInitialize(dxCommon->GetDevice());
-	//ƒp[ƒeƒBƒNƒ‹Ã“I‰Šú‰»
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«é™çš„åˆæœŸåŒ–
 	ParticleManager::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList());
-	// FBXŠÖ˜AÃ“I‰Šú‰»
+	// FBXé–¢é€£é™çš„åˆæœŸåŒ–
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
 
 #pragma endregion
 
-#pragma region •`‰æ‰Šú‰»ˆ—
+#pragma region æç”»åˆæœŸåŒ–å‡¦ç†
 
 	////////////////////////////
-	//------‰¹º“Ç‚Ýž‚Ý--------//
+	//------éŸ³å£°èª­ã¿è¾¼ã¿--------//
 	///////////////////////////
 
-	// ƒQ[ƒ€ƒV[ƒ“‚Ì‰Šú‰»
+	// ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã®åˆæœŸåŒ–
 	gameScene = new GameScene();
 	gameScene->Initialize(dxCommon, input);
 
-	//FPS•Ï‚¦‚½‚¢‚Æ‚«
+	//FPSå¤‰ãˆãŸã„ã¨ã
 	fps->SetFrameRate(60);
 
 #pragma endregion
-	//ƒQ[ƒ€ƒ‹[ƒv
+	//ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—
 	while (true) {
-#pragma region ƒEƒBƒ“ƒhƒEƒƒbƒZ[ƒWˆ—
+#pragma region ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†
 
-		//ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ªI‚í‚éŽž‚Émessage‚ªWM_QUIT‚É‚È‚é
+		//ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãŒçµ‚ã‚ã‚‹æ™‚ã«messageãŒWM_QUITã«ãªã‚‹
 		if (winApp->ProcessMessage()) {
 			break;
 		}
@@ -87,59 +88,59 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 #pragma endregion
 
-#pragma region DirectX–ˆƒtƒŒ[ƒ€ˆ—
+#pragma region DirectXæ¯Žãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†
 		/////////////////////////////////////////////////////
-		//----------DireceX–ˆƒtƒŒ[ƒ€ˆ—@‚±‚±‚©‚ç------------//
+		//----------DireceXæ¯Žãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†ã€€ã“ã“ã‹ã‚‰------------//
 		///////////////////////////////////////////////////
 
-		//“ü—Í‚ÌXV
+		//å…¥åŠ›ã®æ›´æ–°
 		input->Update();	
 
-		// ImguiŽó•tŠJŽn
+		// Imguiå—ä»˜é–‹å§‹
 		imgui->Begin();
 
-		// ƒQ[ƒ€ƒV[ƒ“‚Ì–ˆƒtƒŒ[ƒ€ˆ—
+		// ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã®æ¯Žãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†
 		gameScene->Update();		
 
 		//////////////////////////////////////////////
-		//-------DireceX–ˆƒtƒŒ[ƒ€ˆ—@‚±‚±‚Ü‚Å--------//
+		//-------DireceXæ¯Žãƒ•ãƒ¬ãƒ¼ãƒ å‡¦ç†ã€€ã“ã“ã¾ã§--------//
 		////////////////////////////////////////////
 
 #pragma endregion
 
-#pragma region ƒOƒ‰ƒtƒBƒbƒNƒXƒRƒ}ƒ“ƒh
+#pragma region ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ã‚³ãƒžãƒ³ãƒ‰
 
-		//4.•`‰æƒRƒ}ƒ“ƒh‚±‚±‚©‚ç
+		//4.æç”»ã‚³ãƒžãƒ³ãƒ‰ã“ã“ã‹ã‚‰
 		dxCommon->PreDraw();
 
 		
-		//// ƒfƒ‚ƒEƒBƒ“ƒhƒE‚Ì•\Ž¦ƒIƒ“
+		//// ãƒ‡ãƒ¢ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®è¡¨ç¤ºã‚ªãƒ³
 		ImGui::ShowDemoWindow();
 
-		// ƒQ[ƒ€ƒV[ƒ“‚Ì•`‰æ
+		// ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã®æç”»
 		gameScene->Draw();
 
 
-		// ImguiŽó•tI—¹
+		// Imguiå—ä»˜çµ‚äº†
 		imgui->End();
-		//// Imgui•`‰æ
+		//// Imguiæç”»
 		//imgui->Draw();
 
-		// •`‰æI—¹
+		// æç”»çµ‚äº†
 		dxCommon->PostDraw();
 
 		fps->FpsControlEnd();
-		//4.•`‰æƒRƒ}ƒ“ƒh‚±‚±‚Ü‚Å
+		//4.æç”»ã‚³ãƒžãƒ³ãƒ‰ã“ã“ã¾ã§
 
 	
 
 #pragma endregion
 
-#pragma region ‰æ–Ê“ü‚ê‘Ö‚¦
+#pragma region ç”»é¢å…¥ã‚Œæ›¿ãˆ
 
 #pragma endregion
 	}
-#pragma region  WindowsAPIŒãŽn––
+#pragma region  WindowsAPIå¾Œå§‹æœ«
 
 	/*ID3D12DebugDevice* debugInterface;
 	if (SUCCEEDED(dxCommon->GetDevice()->QueryInterface(&debugInterface))) {
@@ -150,13 +151,13 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	delete gameScene;
 
 	imgui->Finalize();
-	//WindowsAPI‚ÌI—¹ˆ—
+	//WindowsAPIã®çµ‚äº†å‡¦ç†
 	winApp->Finalize();
 	delete imgui;
 
-	//“ü—ÍŠJ•ú
+	//å…¥åŠ›é–‹æ”¾
 	delete input;
-	//WindowsAPIŠJ•ú
+	//WindowsAPIé–‹æ”¾
 	delete winApp;
 	delete dxCommon;
 

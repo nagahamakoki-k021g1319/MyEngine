@@ -1,4 +1,4 @@
-﻿#include"Player.h"
+#include"Player.h"
 #include"Enemy.h"
 #include <imgui.h>
 
@@ -157,8 +157,9 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 		retObj_->SetModel(ret2Model_);
 	}*/
 
+
 	//自機の登場シーン
-	if (splineTimer >= 75 && splineTimer  <= 105) {
+	if (splineTimer >= 75 && splineTimer  <= 115) {
 		isEntryFlag = true;
 	}
 	else {
@@ -753,7 +754,8 @@ void Player::PlayerAction()
 	//弾発射(強)
 	float ShortStSpeed = 0.02f;
 	if (input_->PushKey(DIK_Z) || input_->ButtonInput(LT)) { storeStBulletTime++; }
-	if (storeStBulletTime >= 30) {
+	else{storeStBulletTime = 0;}
+	if (storeStBulletTime >= 50) {
 		if (isShootStFlag == false && bulletRest < bulletMax) {
 			isShootStFlag = true;
 		}
@@ -773,6 +775,20 @@ void Player::PlayerAction()
 		storeStBulletTime = 0;
 		StBulletCoolTime = 0;
 		isShootStFlag = false;
+	}
+
+
+	if ( storeStBulletTime >= 1 && storeStBulletTime < 25 )
+	{
+		retObj_->SetModel(ret1Model_);
+	}
+	else if ( storeStBulletTime >= 25 && storeStBulletTime < 60 )
+	{
+		retObj_->SetModel(ret2Model_);
+	}
+	else
+	{
+		retObj_->SetModel(retModel_);
 	}
 
 	//盾

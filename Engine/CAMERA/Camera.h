@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Vector3.h"
 #include "Matrix4.h"
@@ -152,6 +152,7 @@ public: // メンバ関数
 	//親子関係
 	void SetParent(Transform * parent_) { this->parent = parent_; hasParent = true; };
 	void LiftParent() { hasParent = false; };
+
 
 	//親との回転同期
 	bool isSyncRota;
