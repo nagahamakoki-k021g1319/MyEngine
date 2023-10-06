@@ -26,15 +26,16 @@ public:
 	void Draw();
 	void FbxDraw();
 
-	////ƒ[ƒ‹ƒhÀ•W‚ğæ“¾
+	////ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å–å¾—
 	Vector3 GetWorldPosition();
 
 	void SetPlayer(Player* player) { player_ = player; };
 	void SetEnemy(Enemy* enemy) { enemy_ = enemy; };
 
 public:
-	//‰¹‚ğ~‚ß‚éŠÖ”
+	//éŸ³ã‚’æ­¢ã‚ã‚‹é–¢æ•°
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
+
 
 private:
 	const float PI = 3.141592f;
@@ -45,11 +46,11 @@ private:
 	Enemy* enemy_ = nullptr;
 	Collision coll;
 	
-	//áŠQ•¨
+	//éšœå®³ç‰©
 	Object3d* obstacleObj_[4] = { 0 };
 	Model* obstacleModel_ = nullptr;
 	int obstacleTimer = 0;
-	//¶‚«‚Ä‚¢‚é‚©‚Ç‚¤‚©(0¶‚«‚é,1€–S)
+	//ç”Ÿãã¦ã„ã‚‹ã‹ã©ã†ã‹(0ç”Ÿãã‚‹,1æ­»äº¡)
 	int isObsAliveFlag_[4] = { 0 };
 
 	const float moveSpeed_ = 0.1f;
@@ -57,7 +58,7 @@ private:
 
 
 
-	//ƒ[ƒ‹ƒhÀ•W‚ğ“ü‚ê‚é•Ï”
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å…¥ã‚Œã‚‹å¤‰æ•°
 	Vector3 worldPos;
 
 };

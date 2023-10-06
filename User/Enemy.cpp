@@ -9,7 +9,7 @@ Enemy::Enemy()
 Enemy::~Enemy()
 {
 	delete spriteCommon;
-	//FBXƒIƒuƒWƒFƒNƒg‰ğ•ú
+	//FBXã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆè§£æ”¾
 	delete fbxObject3d_;
 	delete fbxModel_;
 	for (int i = 0; i < 13; i++) { delete fbxWinpObject3d_[i]; }
@@ -41,7 +41,7 @@ Enemy::~Enemy()
 
 void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 {
-	// nullptrƒ`ƒFƒbƒN
+	// nullptrãƒã‚§ãƒƒã‚¯
 	assert(dxCommon);
 	assert(input);
 
@@ -49,7 +49,7 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 	this->dxCommon_ = dxCommon;
 	input_ = input;
 
-	//ƒXƒvƒ‰ƒCƒg‹¤’Ê•”•ª‚Ì‰Šú‰»
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆå…±é€šéƒ¨åˆ†ã®åˆæœŸåŒ–
 	spriteCommon = new SpriteCommon;
 	spriteCommon->Initialize(dxCommon);
 
@@ -58,12 +58,12 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	fbxModel_ = FbxLoader::GetInstance()->LoadModelFromFile("kuma");
 	fbxWinpModel_ = FbxLoader::GetInstance()->LoadModelFromFile("enemyfanneru");
-	// ƒfƒoƒCƒX‚ğƒZƒbƒg
+	// ãƒ‡ãƒã‚¤ã‚¹ã‚’ã‚»ãƒƒãƒˆ
 	FBXObject3d::SetDevice(dxCommon->GetDevice());
-	// ƒOƒ‰ƒtƒBƒbƒNƒXƒpƒCƒvƒ‰ƒCƒ“¶¬
+	// ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ç”Ÿæˆ
 	FBXObject3d::CreateGraphicsPipeline();
 
-	//‘Ò‹@(Boss)
+	//å¾…æ©Ÿ(Boss)
 	fbxObject3d_ = new FBXObject3d;
 	fbxObject3d_->Initialize();
 	fbxObject3d_->SetModel(fbxModel_);
@@ -71,7 +71,7 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 	fbxObject3d_->wtf.scale = { 0.5f,0.5f,0.5f };
 	fbxObject3d_->PlayAnimation(0.5f, false);
 
-	//G‹›“G
+	//é›‘é­šæ•µ
 	for (int i = 0; i < 13; i++) {
 		fbxWinpObject3d_[i] = new FBXObject3d;
 		fbxWinpObject3d_[i]->Initialize();
@@ -82,7 +82,7 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 	}
 
 
-	//G‹›“G‚ÌUŒ‚
+	//é›‘é­šæ•µã®æ”»æ’ƒ
 	shootModel_ = Model::LoadFromOBJ("eneboll");
 	shootObj_ = Object3d::Create();
 	shootObj_->SetModel(shootModel_);
@@ -94,14 +94,14 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 	shootObj2_->wtf.position = { fbxWinpObject3d_[9]->wtf.position.x,fbxWinpObject3d_[9]->wtf.position.y, fbxWinpObject3d_[9]->wtf.position.z };
 	shootObj2_->wtf.scale = { 0.4f,0.4f,0.4f };
 
-	//Boss‚Ìƒtƒ@ƒ“ƒlƒ‹
+	//Bossã®ãƒ•ã‚¡ãƒ³ãƒãƒ«
 	enearchModel_ = Model::LoadFromOBJ("enearch");
 	for (int i = 0; i < 2; i++) {
 		enearchObj_[i] = Object3d::Create();
 		enearchObj_[i]->SetModel(enearchModel_);
 	}
 
-	//—U“±’e
+	//èª˜å°å¼¾
 	inductionModel_ = Model::LoadFromOBJ("boll");
 	for (int i = 0; i < 2; i++) {
 		inductionObj_[i] = Object3d::Create();
@@ -109,7 +109,7 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 		inductionObj_[i]->wtf.scale = { 0.2f,0.2f,0.2f };
 	}
 
-	//ƒŒƒeƒBƒNƒ‹
+	//ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«
 	retModel_ = Model::LoadFromOBJ("retboll");
 	for (int i = 0; i < 2; i++) {
 		retObj_[i] = Object3d::Create();
@@ -118,7 +118,7 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	UIInitialize();
 
-	//ƒp[ƒeƒBƒNƒ‹¶¬
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç”Ÿæˆ
 	DamageParticle = std::make_unique<ParticleManager>();
 	DamageParticle.get()->Initialize();
 	DamageParticle->LoadTexture("doge.png");
@@ -130,12 +130,12 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 void Enemy::WinpUpdate()
 {
 	winpArrivalTimer++;
-	//G‹›“G‚ÌoŒ»‘¬“x
+	//é›‘é­šæ•µã®å‡ºç¾é€Ÿåº¦
 	float WinpSpeedX = 0.1f;
 	float WinpSpeedZ = 1.0f;
 
-	//G‹›“G‚Ì‰ŠúˆÊ’u(‘æˆêƒEƒF[ƒu)
-	// ¶‚ª‰Šú’l                  ‰E‚ªÅI“’B“_
+	//é›‘é­šæ•µã®åˆæœŸä½ç½®(ç¬¬ä¸€ã‚¦ã‚§ãƒ¼ãƒ–)
+	// å·¦ãŒåˆæœŸå€¤                  å³ãŒæœ€çµ‚åˆ°é”ç‚¹
 	//{ 10.0f, -1.0f, 10.0f };{ 0.0f,-1.0f,10.0f };
 	fbxWinpObject3d_[0]->wtf.position = fbxWinpObject3d_[0]->wtf.position + enemyWinplocalpos0;
 	//{ 10.0f, 0.0f, 10.0f };{ 3.0f,0.0f,10.0f }
@@ -146,7 +146,7 @@ void Enemy::WinpUpdate()
 	fbxWinpObject3d_[3]->wtf.position = fbxWinpObject3d_[3]->wtf.position + enemyWinplocalpos3;
 
 	if (winpArrivalTimer >= 0 && winpArrivalTimer < 250) {
-		//“oê
+		//ç™»å ´
 		enemyWinplocalpos0.x -= WinpSpeedX;
 		enemyWinplocalpos1.x -= WinpSpeedX;
 		enemyWinplocalpos2.x += WinpSpeedX;
@@ -157,7 +157,7 @@ void Enemy::WinpUpdate()
 		if (enemyWinplocalpos3.x >= 0.0f) { enemyWinplocalpos3.x = 0.0f; }
 	}
 	else if (winpArrivalTimer >= 250) {
-		//‹‚é
+		//å»ã‚‹
 		enemyWinplocalpos0.x += WinpSpeedX;
 		enemyWinplocalpos1.x += WinpSpeedX;
 		enemyWinplocalpos2.x -= WinpSpeedX;
@@ -168,8 +168,8 @@ void Enemy::WinpUpdate()
 		if (enemyWinplocalpos3.x <= -15.0f) { isWinpAliveFlag_[3] = 1; }
 	}
 
-	//G‹›“G‚Ì‰ŠúˆÊ’u(‘æ“ñƒEƒF[ƒu)
-	// ¶‚ª‰Šú’l                  ‰E‚ªÅI“’B“_
+	//é›‘é­šæ•µã®åˆæœŸä½ç½®(ç¬¬äºŒã‚¦ã‚§ãƒ¼ãƒ–)
+	// å·¦ãŒåˆæœŸå€¤                  å³ãŒæœ€çµ‚åˆ°é”ç‚¹
 	//{ 12.0f, 2.0f, 10.0f };{  2.0f, 2.0f,10.0f };
 	fbxWinpObject3d_[4]->wtf.position = fbxWinpObject3d_[4]->wtf.position + enemyWinplocalpos4;
 	//{ -12.0f, 2.0f, 10.0f };{  -2.0f, 2.0f,10.0f };
@@ -180,7 +180,7 @@ void Enemy::WinpUpdate()
 	fbxWinpObject3d_[7]->wtf.position = fbxWinpObject3d_[7]->wtf.position + enemyWinplocalpos7;
 
 	if (winpArrivalTimer >= 300 && winpArrivalTimer < 550) {
-		//“oê
+		//ç™»å ´
 		enemyWinplocalpos4.x -= WinpSpeedX;
 		enemyWinplocalpos5.x += WinpSpeedX;
 		enemyWinplocalpos6.x -= WinpSpeedX;
@@ -192,7 +192,7 @@ void Enemy::WinpUpdate()
 		if (enemyWinplocalpos7.x >= -2.0f) { enemyWinplocalpos7.x = -2.0f; }
 	}
 	else if (winpArrivalTimer >= 550) {
-		//‹‚é
+		//å»ã‚‹
 		enemyWinplocalpos4.x += WinpSpeedX;
 		enemyWinplocalpos5.x -= WinpSpeedX;
 		enemyWinplocalpos6.x += WinpSpeedX;
@@ -204,8 +204,8 @@ void Enemy::WinpUpdate()
 		if (enemyWinplocalpos7.x <= -15.0f) { isWinpAliveFlag_[7] = 1; }
 	}
 
-	//G‹›“G‚Ì‰ŠúˆÊ’u(‘æOƒEƒF[ƒu)
-	// ¶‚ª‰Šú’l                  ‰E‚ªÅI“’B“_
+	//é›‘é­šæ•µã®åˆæœŸä½ç½®(ç¬¬ä¸‰ã‚¦ã‚§ãƒ¼ãƒ–)
+	// å·¦ãŒåˆæœŸå€¤                  å³ãŒæœ€çµ‚åˆ°é”ç‚¹
 	//{ 2.0f,0.0f,50.0f };//{ 2.0f,0.0f,10.0f }
 	fbxWinpObject3d_[8]->wtf.position = fbxWinpObject3d_[8]->wtf.position + enemyWinplocalpos8;
 	//{ -2.0f,0.0f,50.0f };//{ -2.0f,0.0f,10.0f }
@@ -247,8 +247,8 @@ void Enemy::WinpUpdate()
 	}
 	else if (winpArrivalTimer >= 880) { isWinpAliveFlag_[8] = 1; isWinpAliveFlag_[9] = 1; }
 
-	//G‹›“G‚Ì‰ŠúˆÊ’u(‘ælƒEƒF[ƒu)
-	// ¶‚ª‰Šú’l                  ‰E‚ªÅI“’B“_
+	//é›‘é­šæ•µã®åˆæœŸä½ç½®(ç¬¬å››ã‚¦ã‚§ãƒ¼ãƒ–)
+	// å·¦ãŒåˆæœŸå€¤                  å³ãŒæœ€çµ‚åˆ°é”ç‚¹
 	//{ 8.0f, 2.0f,-7.0f };   { 8.0f, 2.0f,7.0f };
 	fbxWinpObject3d_[10]->wtf.position = fbxWinpObject3d_[10]->wtf.position + enemyWinplocalpos10;
 	//{ 8.0f, 0.0f,-7.0f };   { 8.0f, 2.0f,5.0f };
@@ -259,7 +259,7 @@ void Enemy::WinpUpdate()
 	if (winpArrivalTimer < 850) { isWinpAliveFlag_[10] = 1; isWinpAliveFlag_[11] = 1; isWinpAliveFlag_[12] = 1; }
 	if (winpArrivalTimer == 850) { isWinpAliveFlag_[10] = 0; isWinpAliveFlag_[11] = 0; isWinpAliveFlag_[12] = 0; }
 	if (winpArrivalTimer >= 850 && winpArrivalTimer < 1250) {
-		//“oê
+		//ç™»å ´
 		enemyWinplocalpos10.z += WinpSpeedX;
 		enemyWinplocalpos11.z += WinpSpeedX;
 		enemyWinplocalpos12.z += WinpSpeedX;
@@ -269,7 +269,7 @@ void Enemy::WinpUpdate()
 		if (enemyWinplocalpos12.z >= 3.0f) { enemyWinplocalpos12.z = 3.0f; }
 	}
 	else if (winpArrivalTimer >= 1250) {
-		//‹‚é
+		//å»ã‚‹
 		enemyWinplocalpos10.y += WinpSpeedX;
 		enemyWinplocalpos11.y += WinpSpeedX;
 		enemyWinplocalpos12.y -= WinpSpeedX;
@@ -284,7 +284,7 @@ void Enemy::WinpUpdate()
 }
 
 void Enemy::BossWinpUpdate()
-{	//ƒŒƒeƒBƒNƒ‹‚Ì‘¬“x
+{	//ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«ã®é€Ÿåº¦
 	float eneRetSpeedY = 0.02f;
 	float eneRetSpeedX = 0.02f;
 
@@ -294,7 +294,7 @@ void Enemy::BossWinpUpdate()
 		}
 	}
 
-	// ¶‚ª‰Šú’l                  ‰E‚ªÅI“’B“_
+	// å·¦ãŒåˆæœŸå€¤                  å³ãŒæœ€çµ‚åˆ°é”ç‚¹
 	// { 0.0f,0.0f,15.0f };      { 2.0f, 2.0f, 10.0f };
 	enearchObj_[0]->wtf.position = enearchObj_[0]->wtf.position + enearchlocalpos0;
 	// { 0.0f,0.0f,15.0f };      { -2.0f, 2.0f, 10.0f };
@@ -328,7 +328,7 @@ void Enemy::BossWinpUpdate()
 		if (enearchlocalpos1.z <= 10.0f) { enearchlocalpos1.z = 10.0f; }
 	}
 
-	//ƒ{ƒX‚Ìƒtƒ@ƒ“ƒlƒ‹‚Ì—U“±’e
+	//ãƒœã‚¹ã®ãƒ•ã‚¡ãƒ³ãƒãƒ«ã®èª˜å°å¼¾
 	for (int i = 0; i < 2; i++) {
 
 		if (storeStBulletTime_[i] >= 40 + i * 20) {
@@ -364,7 +364,7 @@ void Enemy::BossWinpUpdate()
 
 
 
-	//ˆÚ“®(ƒŒƒeƒBƒNƒ‹)
+	//ç§»å‹•(ãƒ¬ãƒ†ã‚£ã‚¯ãƒ«)
 	if (splineTimer >= 100) {
 		if (input_->PushKey(DIK_W) || input_->StickInput(L_UP)) {
 			retlocalpos0.y += eneRetSpeedY;
@@ -391,7 +391,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 	splineTimer++;
 	splinePosition_ = spPosition_;
 	camera_->Update();
-	//Å‰‚Ìƒ{ƒX‚ÌÁ‚¦‚ÄG‹›“G‚ªo‚Ä‚­‚é‚Ü‚Å‚Ì‹““®
+	//æœ€åˆã®ãƒœã‚¹ã®æ¶ˆãˆã¦é›‘é­šæ•µãŒå‡ºã¦ãã‚‹ã¾ã§ã®æŒ™å‹•
 	fbxObject3d_->Update();
 	shootObj_->Update();
 	shootObj2_->Update();
@@ -402,16 +402,16 @@ void Enemy::Update(SplinePosition* spPosition_)
 	if (bossGostMove == 1) { fbxObject3d_->wtf.position.z += 0.8f; }
 	if (fbxObject3d_->wtf.position.z >= 6.0f) { bossGostAt = true; }
 	if (fbxObject3d_->wtf.position.z >= 40.0f) { fbxObject3d_->wtf.position.z = 10000.0f; }
-	//G‹›“G‚ğ‚Ü‚Æ‚ß‚ÄXV
+	//é›‘é­šæ•µã‚’ã¾ã¨ã‚ã¦æ›´æ–°
 	for (int i = 0; i < 13; i++) { if (isWinpAliveFlag_[i] == 0) { fbxWinpObject3d_[i]->Update(); } }
-	//ƒ{ƒX‚Ìƒtƒ@ƒ“ƒlƒ‹‚Ü‚Æ‚ß‚ÄXV
+	//ãƒœã‚¹ã®ãƒ•ã‚¡ãƒ³ãƒãƒ«ã¾ã¨ã‚ã¦æ›´æ–°
 	for (int i = 0; i < 2; i++) {
 		enearchObj_[i]->Update();
 		inductionObj_[i]->Update();
 	}
 
 	for (int i = 0; i < 2; i++) { retObj_[i]->Update(); }
-	//ƒ{ƒX‚Ìƒtƒ@ƒ“ƒlƒ‹‚ÌƒxƒNƒgƒ‹³‹K‰»
+	//ãƒœã‚¹ã®ãƒ•ã‚¡ãƒ³ãƒãƒ«ã®ãƒ™ã‚¯ãƒˆãƒ«æ­£è¦åŒ–
 	if (storeStBulletTime_[0] < 40) {
 		playerlen0 = retObj_[0]->wtf.position - inductionObj_[0]->wtf.position;
 		playerlen0.nomalize();
@@ -422,31 +422,31 @@ void Enemy::Update(SplinePosition* spPosition_)
 	}
 	EffUpdate();
 
-	//G‹›“G‚ª“®‚«n‚ß‚é
+	//é›‘é­šæ•µãŒå‹•ãå§‹ã‚ã‚‹
 	if (bossGostAt == true) {
 
 		for (int i = 0; i < 2; i++) {
 			isShootCoolTimer_[i]++;
 		}
 
-		//ƒXƒvƒ‰ƒCƒ“‹Èü‚ÌXV
+		//ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³æ›²ç·šã®æ›´æ–°
 		float speed = 0.0f;
 		splinePosition_->Update(speed);
 		for (int i = 0; i < 2; i++) { retObj_[i]->wtf.position = splinePosition_->NowPos; }
 		camera_->wtf.position = splinePosition_->NowPos;
-		//G‹›“G‚ğ‚Ü‚Æ‚ß‚ÄXV(ƒXƒvƒ‰ƒCƒ“‹Èü)
+		//é›‘é­šæ•µã‚’ã¾ã¨ã‚ã¦æ›´æ–°(ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³æ›²ç·š)
 		for (int i = 0; i < 13; i++) { fbxWinpObject3d_[i]->wtf.position = splinePosition_->NowPos; }
-		//ƒ{ƒX‚Ìƒtƒ@ƒ“ƒlƒ‹‚ğ‚Ü‚Æ‚ß‚ÄXV(ƒXƒvƒ‰ƒCƒ“‹Èü)
+		//ãƒœã‚¹ã®ãƒ•ã‚¡ãƒ³ãƒãƒ«ã‚’ã¾ã¨ã‚ã¦æ›´æ–°(ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³æ›²ç·š)
 		for (int i = 0; i < 2; i++) { enearchObj_[i]->wtf.position = splinePosition_->NowPos; }
 
 
 
-		//G‹›“G‚Ì”­¶‚ÆˆÚ“®
+		//é›‘é­šæ•µã®ç™ºç”Ÿã¨ç§»å‹•
 		WinpUpdate();
-		//ƒ{ƒX‚Ìƒtƒ@ƒ“ƒlƒ‹‚Ì‹““®
+		//ãƒœã‚¹ã®ãƒ•ã‚¡ãƒ³ãƒãƒ«ã®æŒ™å‹•
 		BossWinpUpdate();
 
-		//G‹›“G‚ÌUŒ‚
+		//é›‘é­šæ•µã®æ”»æ’ƒ
 		if (isShootCoolTimer_[0] >= 30) {
 			isShootFlag_[0] = 1;
 		}
@@ -463,7 +463,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 			isShootexistTimer_[0] = 0;
 		}
 
-		//‹ê“÷‚Ìô‚ ‚Æ‚Å‚¿‚á‚ñ‚Æ’¼‚·
+		//è‹¦è‚‰ã®ç­–ã‚ã¨ã§ã¡ã‚ƒã‚“ã¨ç›´ã™
 		if (isShootCoolTimer_[1] >= 30) {
 			isShootFlag_[1] = 1;
 		}
@@ -492,10 +492,10 @@ void Enemy::Update(SplinePosition* spPosition_)
 	}
 	if (warnaniFlag == 1) {
 		warnTimer++;
-		//‰º
+		//ä¸‹
 		warnani1Position.x += 2.5f;
 		warnani1UI->SetPozition(warnani1Position);
-		//ã
+		//ä¸Š
 		warnani2Position.x -= 2.5f;
 		warnani2UI->SetPozition(warnani2Position);
 	}
@@ -505,7 +505,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 		warnTimer = 130;
 	}
 
-	//“–‚½‚è”»’è(©‹@’e(ã)‚ÆG‹›“G)
+	//å½“ãŸã‚Šåˆ¤å®š(è‡ªæ©Ÿå¼¾(å¼±)ã¨é›‘é­šæ•µ)
 	for (int i = 0; i < 13; i++) {
 		if (isWinpAliveFlag_[i] == 0) {
 			if (coll.CircleCollision(player_->GetBulletWorldPosition(), fbxWinpObject3d_[i]->wtf.position, 1.0f, 0.2f)) {
@@ -516,7 +516,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 		}
 	}
 
-	//“–‚½‚è”»’è(©‹@’e(‹­)‚ÆG‹›“G)
+	//å½“ãŸã‚Šåˆ¤å®š(è‡ªæ©Ÿå¼¾(å¼·)ã¨é›‘é­šæ•µ)
 	for (int i = 0; i < 13; i++) {
 		if (isWinpAliveFlag_[i] == 0) {
 			if (coll.CircleCollision(player_->GetBulletStWorldPosition(), fbxWinpObject3d_[i]->wtf.position, 1.0f, 0.2f)) {
@@ -527,7 +527,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 		}
 	}
 
-	//“–‚½‚è”»’è(©‹@’e(ã)‚Æƒ{ƒX‚Ìƒtƒ@ƒ“ƒlƒ‹)
+	//å½“ãŸã‚Šåˆ¤å®š(è‡ªæ©Ÿå¼¾(å¼±)ã¨ãƒœã‚¹ã®ãƒ•ã‚¡ãƒ³ãƒãƒ«)
 	/*for (int i = 0; i < 2; i++) {
 		if (isEnearchAliveFlag_[i] == 0) {
 			if (coll.CircleCollision(player_->GetBulletWorldPosition(), enearchObj_[i]->wtf.position, 0.3f, 0.3f)) {
@@ -538,7 +538,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 	}*/
 
 
-	//“G‚ğˆê’è”“|‚·‚ÆƒvƒŒƒCƒ„[‚Ì’e‚ª‘‚¦‚é
+	//æ•µã‚’ä¸€å®šæ•°å€’ã™ã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¼¾ãŒå¢—ãˆã‚‹
 	if (player_->bulletUpCount == 2) {
 		player_->bulletMax = 7;
 	}
@@ -582,7 +582,7 @@ void Enemy::Draw()
 
 	}
 
-	//G‹›“G‚ÌËŒ‚
+	//é›‘é­šæ•µã®å°„æ’ƒ
 	if (isWinpAliveFlag_[8] == 0) {
 		if (isShootFlag_[0] == 1 && isOffsetFlag_ == 0) {
 			shootObj_->Draw();
@@ -618,13 +618,13 @@ void Enemy::FbxDraw()
 
 void Enemy::UIInitialize()
 {
-	//ƒ{ƒX‘O‚Ìwarning
+	//ãƒœã‚¹å‰ã®warning
 	warnUI = new Sprite();
 	warnUI->Initialize(spriteCommon);
 	warnUI->SetPozition({ 0,0 });
 	warnUI->SetSize({ 1280.0f, 720.0f });
 
-	//ƒ{ƒX‘O‚Ìwarning(‰º‚ÌƒAƒjƒ[ƒVƒ‡ƒ“)
+	//ãƒœã‚¹å‰ã®warning(ä¸‹ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³)
 	warnani1UI = new Sprite();
 	warnani1UI->Initialize(spriteCommon);
 	warnani1Position = warnani1UI->GetPosition();
@@ -632,43 +632,43 @@ void Enemy::UIInitialize()
 	warnani1UI->SetPozition(warnani1Position);
 	warnani1UI->SetSize({ 2560.0f, 720.0f });
 
-	//ƒ{ƒX‘O‚Ìwarning(ã‚ÌƒAƒjƒ[ƒVƒ‡ƒ“)
+	//ãƒœã‚¹å‰ã®warning(ä¸Šã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³)
 	warnani2UI = new Sprite();
 	warnani2UI->Initialize(spriteCommon);
 	warnani2Position = warnani2UI->GetPosition();
 	warnani2UI->SetPozition(warnani2Position);
 	warnani2UI->SetSize({ 2560.0f, 720.0f });
 
-	//ƒ{ƒX‚ÌHPƒtƒŒ[ƒ€
+	//ãƒœã‚¹ã®HPãƒ•ãƒ¬ãƒ¼ãƒ 
 	bosshpflameUI = new Sprite();
 	bosshpflameUI->Initialize(spriteCommon);
 	bosshpflameUI->SetPozition({ 0,0 });
 	bosshpflameUI->SetSize({ 1280.0f, 720.0f });
 
-	//ƒ{ƒX‚ÌHPƒQ[ƒW
+	//ãƒœã‚¹ã®HPã‚²ãƒ¼ã‚¸
 	bosshpUI = new Sprite();
 	bosshpUI->Initialize(spriteCommon);
 	bosshpPosition = bosshpUI->GetPosition();
 	bosshpUI->SetPozition(bosshpPosition);
 	bosshpUI->SetSize({ 1280.0f, 720.0f });
 
-	//ƒ{ƒX‘O‚Ìwarning
+	//ãƒœã‚¹å‰ã®warning
 	spriteCommon->LoadTexture(26, "warn.png");
 	warnUI->SetTextureIndex(26);
 
-	//ƒ{ƒX‘O‚Ìwarning(‰º‚ÌƒAƒjƒ[ƒVƒ‡ƒ“)
+	//ãƒœã‚¹å‰ã®warning(ä¸‹ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³)
 	spriteCommon->LoadTexture(27, "warnani1.png");
 	warnani1UI->SetTextureIndex(27);
 
-	//ƒ{ƒX‘O‚Ìwarning(ã‚ÌƒAƒjƒ[ƒVƒ‡ƒ“)
+	//ãƒœã‚¹å‰ã®warning(ä¸Šã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³)
 	spriteCommon->LoadTexture(28, "warnani2.png");
 	warnani2UI->SetTextureIndex(28);
 
-	//ƒ{ƒX‚ÌHPƒtƒŒ[ƒ€
+	//ãƒœã‚¹ã®HPãƒ•ãƒ¬ãƒ¼ãƒ 
 	spriteCommon->LoadTexture(29, "bosshpflame.png");
 	bosshpflameUI->SetTextureIndex(29);
 
-	//ƒ{ƒX‚ÌHPƒQ[ƒW
+	//ãƒœã‚¹ã®HPã‚²ãƒ¼ã‚¸
 	spriteCommon->LoadTexture(30, "bosshp.png");
 	bosshpUI->SetTextureIndex(30);
 
@@ -711,29 +711,29 @@ void Enemy::EffUpdate()
 
 void Enemy::EffSummary(Vector3 enemyPos)
 {
-	//ƒp[ƒeƒBƒNƒ‹”ÍˆÍ
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç¯„å›²
 	for (int i = 0; i < 5; i++) {
-		//X,Y,Z‘S‚Ä[-5.0f,+5.0f]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		//X,Y,Zå…¨ã¦[-5.0f,+5.0f]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		const float rnd_pos = 5.0f;
 		Vector3 pos{};
 		pos.x += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 		pos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 		pos.z += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 		pos += enemyPos;
-		//‘¬“x
-		//X,Y,Z‘S‚Ä[-0.05f,+0.05f]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		//é€Ÿåº¦
+		//X,Y,Zå…¨ã¦[-0.05f,+0.05f]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		const float rnd_vel = 0.1f;
 		Vector3 vel{};
 		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
 		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
 		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		//d—Í‚ÉŒ©—§‚Ä‚ÄY‚Ì‚İ[-0.001f,0]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		//é‡åŠ›ã«è¦‹ç«‹ã¦ã¦Yã®ã¿[-0.001f,0]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		const float rnd_acc = 0.00001f;
 		Vector3 acc{};
 		acc.x = (float)rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
 		acc.y = (float)rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
 
-		//’Ç‰Á
+		//è¿½åŠ 
 		DamageParticle->Add(60, pos, vel, acc, 0.3f, 0.0f);
 
 		DamageParticle->Update();
@@ -744,29 +744,29 @@ void Enemy::EffSummary(Vector3 enemyPos)
 
 void Enemy::EffSimpleSummary()
 {
-	//ƒp[ƒeƒBƒNƒ‹”ÍˆÍ
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç¯„å›²
 	for (int i = 0; i < 5; i++) {
-		//X,Y,Z‘S‚Ä[-5.0f,+5.0f]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		//X,Y,Zå…¨ã¦[-5.0f,+5.0f]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		const float rnd_pos = 5.0f;
 		Vector3 pos{};
 		pos.x += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 		pos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 		pos.z += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 
-		//‘¬“x
-		//X,Y,Z‘S‚Ä[-0.05f,+0.05f]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		//é€Ÿåº¦
+		//X,Y,Zå…¨ã¦[-0.05f,+0.05f]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		const float rnd_vel = 0.1f;
 		Vector3 vel{};
 		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
 		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
 		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		//d—Í‚ÉŒ©—§‚Ä‚ÄY‚Ì‚İ[-0.001f,0]‚Åƒ‰ƒ“ƒ_ƒ€‚É•ª•z
+		//é‡åŠ›ã«è¦‹ç«‹ã¦ã¦Yã®ã¿[-0.001f,0]ã§ãƒ©ãƒ³ãƒ€ãƒ ã«åˆ†å¸ƒ
 		const float rnd_acc = 0.00001f;
 		Vector3 acc{};
 		acc.x = (float)rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
 		acc.y = (float)rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
 
-		//’Ç‰Á
+		//è¿½åŠ 
 		DamageParticle->Add(60, pos, vel, acc, 1.0f, 0.0f);
 
 		DamageParticle->Update();
@@ -779,7 +779,7 @@ void Enemy::EffDraw()
 {
 	for (int i = 0; i < 13; i++) {
 		if (isEffFlag_[i] == 1) {
-			// 3DƒIƒuƒNƒWƒFƒNƒg‚Ì•`‰æ
+			// 3Dã‚ªãƒ–ã‚¯ã‚¸ã‚§ã‚¯ãƒˆã®æç”»
 			DamageParticle->Draw();
 		}
 	}
@@ -787,10 +787,10 @@ void Enemy::EffDraw()
 
 Vector3 Enemy::GetWorldPosition()
 {
-	//ƒ[ƒ‹ƒhÀ•W‚ğ“ü‚ê‚é•Ï”
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å…¥ã‚Œã‚‹å¤‰æ•°
 	Vector3 worldPos;
 	fbxObject3d_->wtf.UpdateMat();
-	//ƒ[ƒ‹ƒhs—ñ‚Ì•½sˆÚ“®¬•ª
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®å¹³è¡Œç§»å‹•æˆåˆ†
 	worldPos.x = fbxObject3d_->wtf.matWorld.m[3][0];
 	worldPos.y = fbxObject3d_->wtf.matWorld.m[3][1];
 	worldPos.z = fbxObject3d_->wtf.matWorld.m[3][2];
@@ -798,12 +798,13 @@ Vector3 Enemy::GetWorldPosition()
 	return worldPos;
 }
 
+
 Vector3 Enemy::GetWinpWorldPosition(int num)
 {
-	//ƒ[ƒ‹ƒhÀ•W‚ğ“ü‚ê‚é•Ï”
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å…¥ã‚Œã‚‹å¤‰æ•°
 	Vector3 WinpWorldPos;
 	fbxWinpObject3d_[num]->wtf.UpdateMat();
-	//ƒ[ƒ‹ƒhs—ñ‚Ì•½sˆÚ“®¬•ª
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®å¹³è¡Œç§»å‹•æˆåˆ†
 	WinpWorldPos.x = fbxWinpObject3d_[num]->wtf.matWorld.m[3][0];
 	WinpWorldPos.y = fbxWinpObject3d_[num]->wtf.matWorld.m[3][1];
 	WinpWorldPos.z = fbxWinpObject3d_[num]->wtf.matWorld.m[3][2];
@@ -813,10 +814,10 @@ Vector3 Enemy::GetWinpWorldPosition(int num)
 
 Vector3 Enemy::GetEnearchWorldPosition(int num)
 {
-	//ƒ[ƒ‹ƒhÀ•W‚ğ“ü‚ê‚é•Ï”
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å…¥ã‚Œã‚‹å¤‰æ•°
 	Vector3 enearchWorldPos;
 	enearchObj_[num]->wtf.UpdateMat();
-	//ƒ[ƒ‹ƒhs—ñ‚Ì•½sˆÚ“®¬•ª
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®å¹³è¡Œç§»å‹•æˆåˆ†
 	enearchWorldPos.x = enearchObj_[num]->wtf.matWorld.m[3][0];
 	enearchWorldPos.y = enearchObj_[num]->wtf.matWorld.m[3][1];
 	enearchWorldPos.z = enearchObj_[num]->wtf.matWorld.m[3][2];
@@ -826,10 +827,10 @@ Vector3 Enemy::GetEnearchWorldPosition(int num)
 
 Vector3 Enemy::GetinductionWorldPosition(int num)
 {
-	//ƒ[ƒ‹ƒhÀ•W‚ğ“ü‚ê‚é•Ï”
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å…¥ã‚Œã‚‹å¤‰æ•°
 	Vector3 inductionWorldPos;
 	inductionObj_[num]->wtf.UpdateMat();
-	//ƒ[ƒ‹ƒhs—ñ‚Ì•½sˆÚ“®¬•ª
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®å¹³è¡Œç§»å‹•æˆåˆ†
 	inductionWorldPos.x = inductionObj_[num]->wtf.matWorld.m[3][0];
 	inductionWorldPos.y = inductionObj_[num]->wtf.matWorld.m[3][1];
 	inductionWorldPos.z = inductionObj_[num]->wtf.matWorld.m[3][2];

@@ -15,7 +15,7 @@ EnemyBoss::~EnemyBoss()
 
 void EnemyBoss::Initialize(DirectXCommon* dxCommon, Input* input)
 {
-	// nullptrƒ`ƒFƒbƒN
+	// nullptrãƒã‚§ãƒƒã‚¯
 	assert(dxCommon);
 	assert(input);
 
@@ -56,11 +56,12 @@ void EnemyBoss::FbxDraw()
 
 Vector3 EnemyBoss::GetWorldPosition()
 {
-	//ƒ[ƒ‹ƒhÀ•W‚ð“ü‚ê‚é•Ï”
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å…¥ã‚Œã‚‹å¤‰æ•°
 	Vector3 worldPos;
 
+
 	fbxObject3d_->wtf.UpdateMat();
-	//ƒ[ƒ‹ƒhs—ñ‚Ì•½sˆÚ“®¬•ª
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®å¹³è¡Œç§»å‹•æˆåˆ†
 	worldPos.x = fbxObject3d_->wtf.matWorld.m[3][0];
 	worldPos.y = fbxObject3d_->wtf.matWorld.m[3][1];
 	worldPos.z = fbxObject3d_->wtf.matWorld.m[3][2];

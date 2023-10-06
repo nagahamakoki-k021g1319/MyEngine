@@ -13,14 +13,14 @@ Obstacle::~Obstacle()
 
 void Obstacle::Initialize(DirectXCommon* dxCommon, Input* input)
 {
-	// nullptrƒ`ƒFƒbƒN
+	// nullptrãƒã‚§ãƒƒã‚¯
 	assert(dxCommon);
 	assert(input);
 
 	this->dxCommon_ = dxCommon;
 	input_ = input;
 
-	//”ò‚ñ‚Å‚­‚éáŠQ•¨
+	//é£›ã‚“ã§ãã‚‹éšœå®³ç‰©
 	obstacleModel_ = Model::LoadFromOBJ("rock");
 	for (int i = 0; i < 4; i++) {
 		obstacleObj_[i] = Object3d::Create();
@@ -32,6 +32,7 @@ void Obstacle::Initialize(DirectXCommon* dxCommon, Input* input)
 	obstacleObj_[2]->wtf.position = { 3.0f,0.4f,56.0f };
 	obstacleObj_[3]->wtf.position = { 0.3f,-0.1f,64.0f }; //27
 
+
 }
 
 void Obstacle::Update()
@@ -40,7 +41,7 @@ void Obstacle::Update()
 		obstacleObj_[i]->Update();
 	}
 
-	//áŠQ•¨‚ª“®‚«n‚ß‚é
+	//éšœå®³ç‰©ãŒå‹•ãå§‹ã‚ã‚‹
 	if (enemy_->bossGostAt == true) {
 		for (int i = 0; i < 4; i++) {
 			obstacleObj_[i]->wtf.rotation.z -= 0.03f;

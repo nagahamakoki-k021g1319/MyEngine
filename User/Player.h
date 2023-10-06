@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "DirectXCommon.h"
 #include "Transform.h"
 #include "Object3d.h"
@@ -82,6 +82,7 @@ public:
 
 	//カメラの向きによって自機の動きをかえるフラグ
 	int isCameraBehavior = 0;
+
 
 
 private:

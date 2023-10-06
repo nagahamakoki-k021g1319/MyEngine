@@ -12,25 +12,25 @@ void Input::Initialize(WinApp* winApp)
 
 	HRESULT result;
 
-	// DirectInput‚ÌƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	// DirectInputã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	/*ComPtr<IDirectInput8> directInput = nullptr;*/
 	result = DirectInput8Create(winApp->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
 	assert(SUCCEEDED(result));
 
-	// ƒL[ƒ{[ƒhƒfƒoƒCƒX‚Ì¶¬
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ‡ãƒã‚¤ã‚¹ã®ç”Ÿæˆ
 	//ComPtr<IDirectInputDevice8> keyboard = nullptr;
 	result = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
 	assert(SUCCEEDED(result));
 
-	// “ü—Íƒf[ƒ^Œ`®‚ÌƒZƒbƒg
-	result = keyboard->SetDataFormat(&c_dfDIKeyboard); // •W€Œ`®
+	// å…¥åŠ›ãƒ‡ãƒ¼ã‚¿å½¢å¼ã®ã‚»ãƒƒãƒˆ
+	result = keyboard->SetDataFormat(&c_dfDIKeyboard); // æ¨™æº–å½¢å¼
 	assert(SUCCEEDED(result));
 
-	// ”r‘¼§ŒäƒŒƒxƒ‹‚ÌƒZƒbƒg
+	// æ’ä»–åˆ¶å¾¡ãƒ¬ãƒ™ãƒ«ã®ã‚»ãƒƒãƒˆ
 	result = keyboard->SetCooperativeLevel(winApp->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(result));
 
-	//ƒRƒ“ƒgƒ[ƒ‰[‚Ì‰Šú‰»
+	//ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã®åˆæœŸåŒ–
 	controller = new Controller;
 }
 
@@ -38,27 +38,27 @@ void Input::Update()
 {
 	HRESULT result;
 
-	// ‘O‰ñ‚ÌƒL[“ü—Í‚ğ•Û
+	// å‰å›ã®ã‚­ãƒ¼å…¥åŠ›ã‚’ä¿æŒ
 	memcpy(keyPre, key, sizeof(key));
 
-	// ƒL[ƒ{[ƒhî•ñ‚Ìæ“¾ŠJn
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æƒ…å ±ã®å–å¾—é–‹å§‹
 	result = keyboard->Acquire();
 
-	// ‘SƒL[‚Ì“ü—Íó‘Ô‚ğæ“¾‚·‚é
+	// å…¨ã‚­ãƒ¼ã®å…¥åŠ›çŠ¶æ…‹ã‚’å–å¾—ã™ã‚‹
 	/*BYTE key[256] = {};*/
 	result = keyboard->GetDeviceState(sizeof(key), key);
 
-	//ƒRƒ“ƒgƒ[ƒ‰[ƒfƒoƒCƒX‚ÌXV
+	//ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ãƒ‡ãƒã‚¤ã‚¹ã®æ›´æ–°
 	controller->Update();
 }
 
 bool Input::PushKey(BYTE keyNumber)
 {
-	// w’èƒL[‚ğ‰Ÿ‚µ‚Ä‚¢‚ê‚Îtrue‚ğ•Ô‚·
+	// æŒ‡å®šã‚­ãƒ¼ã‚’æŠ¼ã—ã¦ã„ã‚Œã°trueã‚’è¿”ã™
 	if (key[keyNumber]) {
 		return true;
 	}
-	// ‚»‚¤‚Å‚Í‚È‚¯‚ê‚Îfalse‚ğ•Ô‚·
+	// ãã†ã§ã¯ãªã‘ã‚Œã°falseã‚’è¿”ã™
 	return false;
 }
 
@@ -76,10 +76,10 @@ bool Input::TriggerKey(BYTE keyNumber)
 }
 
 /// <summary>
-/// ƒL[‚ÌƒgƒŠƒK[‚ğƒ`ƒFƒbƒN
+/// ã‚­ãƒ¼ã®ãƒˆãƒªã‚¬ãƒ¼ã‚’ãƒã‚§ãƒƒã‚¯
 /// </summary>
-/// </param name="keyNumber">ƒL[”Ô†( DIK_0 “™)</param>
-/// <reutrns>—£‚³‚ê‚½‚©</params>
+/// </param name="keyNumber">ã‚­ãƒ¼ç•ªå·( DIK_0 ç­‰)</param>
+/// <reutrns>é›¢ã•ã‚ŒãŸã‹</params>
 bool Input::ReleaseKey(BYTE keyNumber) {
 	if (keyPre[keyNumber])
 	{
@@ -115,6 +115,7 @@ bool Input::StickInput(ControllerStick stickInput, const float& deadRange, const
 bool Input::LeftStickInput(const float& deadRange) {
 	return controller->LeftStickInput(deadRange);
 }
+
 
 bool Input::ButtonOffTrigger(ControllerButton button)
 {

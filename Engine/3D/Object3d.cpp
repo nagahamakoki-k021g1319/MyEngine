@@ -1,4 +1,4 @@
-﻿#include "Object3d.h"
+#include "Object3d.h"
 
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
@@ -111,6 +111,7 @@ void Object3d::InitializeGraphicsPipeline()
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
 	ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
 	ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
+
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(

@@ -1,4 +1,4 @@
-﻿#include "ParticleManager.h"
+#include "ParticleManager.h"
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
 #include "Affin.h"
@@ -359,6 +359,7 @@ void ParticleManager::LoadTexture()
 std::string kDefaultTextureDirectoryPath = "Resources/";
 void ParticleManager::LoadTexture(const std::string& fileName)
 {
+
 	HRESULT result = S_FALSE;
 
 	TexMetadata metadata{};

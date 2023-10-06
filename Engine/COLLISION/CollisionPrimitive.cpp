@@ -11,4 +11,5 @@ void Triangle::ComputeNormal()
 	normal = p0_p1.cross(p0_p2);
 	normal = normal.nomalize();
 
+
 }

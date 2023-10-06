@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <fbxsdk.h>
 #include "FBXModel.h"
@@ -9,6 +9,7 @@
 
 class FbxLoader
 {
+
 private: // エイリアス
 	// std::を省略
 	using string = std::string;

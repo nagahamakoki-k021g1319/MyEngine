@@ -34,30 +34,30 @@ public:
 	void FbxDraw();
 	void UIDraw();
 
-	//ƒGƒtƒFƒNƒg‚ÌXVˆ—
+	//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®æ›´æ–°å‡¦ç†
 	void EffUpdate();
-	//ƒGƒtƒFƒNƒg‚Ìî•ñ
+	//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®æƒ…å ±
 	void EffSummary(Vector3 enemyPos);
 	void EffSimpleSummary();
-	//ƒGƒtƒFƒNƒg‚Ì•`‰æ
+	//ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®æç”»
 	void EffDraw();
 
-	////ƒ[ƒ‹ƒhÀ•W‚ğæ“¾
+	////ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å–å¾—
 	Vector3 GetWorldPosition();
 
-	////ƒ[ƒ‹ƒhÀ•W‚ğæ“¾(G‹›“G)
+	////ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å–å¾—(é›‘é­šæ•µ)
 	Vector3 GetWinpWorldPosition(int num);
 
-	////ƒ[ƒ‹ƒhÀ•W‚ğæ“¾(ƒ{ƒX‚Ìƒtƒ@ƒ“ƒlƒ‹)
+	////ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å–å¾—(ãƒœã‚¹ã®ãƒ•ã‚¡ãƒ³ãƒãƒ«)
 	Vector3 GetEnearchWorldPosition(int num);
 
-	////ƒ[ƒ‹ƒhÀ•W‚ğæ“¾(ƒ{ƒX‚Ìƒtƒ@ƒ“ƒlƒ‹—U“±’e)
+	////ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’å–å¾—(ãƒœã‚¹ã®ãƒ•ã‚¡ãƒ³ãƒãƒ«èª˜å°å¼¾)
 	Vector3 GetinductionWorldPosition(int num);
 
 	void OnColision();
 
 	/// <summary>
-	/// ƒ|ƒWƒVƒ‡ƒ“
+	/// ãƒã‚¸ã‚·ãƒ§ãƒ³
 	/// </summary>
 	/// <param name="pos"></param>
 	void SetPos(Vector3 pos) { fbxObject3d_->wtf.position = pos; };
@@ -65,13 +65,13 @@ public:
 	void SetPlayer(Player* player) { player_ = player; };
 
 public:
-	//‰¹‚ğ~‚ß‚éŠÖ”
+	//éŸ³ã‚’æ­¢ã‚ã‚‹é–¢æ•°
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
-	//G‹›“G‚ª“®‚«n‚ß‚é
+	//é›‘é­šæ•µãŒå‹•ãå§‹ã‚ã‚‹
 	bool bossGostAt = false;
-	//G‹›“GoŒ»ƒ^ƒCƒ}[
+	//é›‘é­šæ•µå‡ºç¾ã‚¿ã‚¤ãƒãƒ¼
 	int winpArrivalTimer = 0;
-	//’e”­Ë(—U“±)
+	//å¼¾ç™ºå°„(èª˜å°)
 	bool isShootStFlag_[2] = { false };
 
 private:
@@ -85,48 +85,48 @@ private:
 	SplinePosition* splinePosition_ = nullptr;
 
 	Collision coll;
-	//‘Ò‹@(Á‚¦‚éBoss)
+	//å¾…æ©Ÿ(æ¶ˆãˆã‚‹Boss)
 	FBXModel* fbxModel_ = nullptr;
 	FBXObject3d* fbxObject3d_ = nullptr;
 	bool bossGostMove = false;
 
-	//G‹›“G
+	//é›‘é­šæ•µ
 	FBXModel* fbxWinpModel_ = nullptr;
 	FBXObject3d* fbxWinpObject3d_[13] = {0};
 	bool isAliveFlag = true;
-	//¶‚«‚Ä‚¢‚é‚©‚Ç‚¤‚©(0¶‚«‚é,1€–S)
+	//ç”Ÿãã¦ã„ã‚‹ã‹ã©ã†ã‹(0ç”Ÿãã‚‹,1æ­»äº¡)
 	int isWinpAliveFlag_[13] = { 0 };
-	//G‹›“G‚Ì“®‚«(0‰E,1¶)
+	//é›‘é­šæ•µã®å‹•ã(0å³,1å·¦)
 	int enemyWinpAction8 = 0;
 	int enemyWinpAction9 = 1;
 	
 
-	//ƒ[ƒJƒ‹ˆÚ“®À•W(G‹›“G)
-	//G‹›“G‚Ì‰ŠúˆÊ’u(‘æ1ƒEƒF[ƒu)
+	//ãƒ­ãƒ¼ã‚«ãƒ«ç§»å‹•åº§æ¨™(é›‘é­šæ•µ)
+	//é›‘é­šæ•µã®åˆæœŸä½ç½®(ç¬¬1ã‚¦ã‚§ãƒ¼ãƒ–)
 	Vector3 enemyWinplocalpos0 = { 10.0f,-2.0f,10.0f };//{ 0.0f,-1.0f,10.0f };
 	Vector3 enemyWinplocalpos1 = { 10.0f,0.0f,10.0f };//{ 3.0f,0.0f,10.0f }
 	Vector3 enemyWinplocalpos2 = { -10.0f,0.0f,10.0f };//{ -3.0f,0.0f,10.0f }
 	Vector3 enemyWinplocalpos3 = { -10.0f,2.0f,10.0f };//{ 0.0f,1.0f,10.0f 
-	//G‹›“G‚Ì‰ŠúˆÊ’u(‘æ2ƒEƒF[ƒu)
+	//é›‘é­šæ•µã®åˆæœŸä½ç½®(ç¬¬2ã‚¦ã‚§ãƒ¼ãƒ–)
 	Vector3 enemyWinplocalpos4 = {  17.0f, 2.0f,10.0f };//{  2.0f, 2.0f,10.0f };
 	Vector3 enemyWinplocalpos5 = { -17.0f, 2.0f,10.0f };//{ -2.0f, 2.0f,10.0f };
 	Vector3 enemyWinplocalpos6 = {  17.0f,-2.0f,10.0f };//{  2.0f,-2.0f,10.0f };
 	Vector3 enemyWinplocalpos7 = { -17.0f,-2.0f,10.0f };//{ -2.0f,-2.0f,10.0f };
-	//G‹›“G‚Ì‰ŠúˆÊ’u(‘æ3ƒEƒF[ƒu)
+	//é›‘é­šæ•µã®åˆæœŸä½ç½®(ç¬¬3ã‚¦ã‚§ãƒ¼ãƒ–)
 	Vector3 enemyWinplocalpos8 = { 2.0f,-1.0f,150.0f };//{ 2.0f,0.0f,10.0f }
 	Vector3 enemyWinplocalpos9 = { -2.0f,1.0f,150.0f };//{ -2.0f,0.0f,10.0f }
-	//G‹›“G‚Ì‰ŠúˆÊ’u(‘æ4ƒEƒF[ƒu)
+	//é›‘é­šæ•µã®åˆæœŸä½ç½®(ç¬¬4ã‚¦ã‚§ãƒ¼ãƒ–)
 	Vector3 enemyWinplocalpos10 = { 8.0f, 4.0f,-10.0f };//{ 8.0f, 2.0f,7.0f };
 	Vector3 enemyWinplocalpos11 = { 8.0f, 0.0f,-10.0f };//{ 8.0f,0.0f,5.0f  };
 	Vector3 enemyWinplocalpos12 = { 8.0f,-4.0f,-10.0f };//{ 8.0f,-2.0f,3.0f };
 
-	//~‚ß‚é‚Æ‚«
+	//æ­¢ã‚ã‚‹ã¨ã
 	Vector3 Start = { 0.0f,0.0f,0.0f };
 	Vector3 end = { 0.0f,10.0f,10.0f };
 	std::vector<Vector3> points{ Start, Start,end, end };
 	int splineTimer = 0;
 
-	//’e”­Ë(’¼ü)
+	//å¼¾ç™ºå°„(ç›´ç·š)
 	Object3d* shootObj_ = nullptr;
 	Model* shootModel_ = nullptr;
 	Object3d* shootObj2_ = nullptr;
@@ -136,10 +136,10 @@ private:
 	int isShootexistTimer_[2] = {0};
 	int isShootCoolTimer_[2] = { 0 };
 
-	//Boss‚Ìƒtƒ@ƒ“ƒlƒ‹
+	//Bossã®ãƒ•ã‚¡ãƒ³ãƒãƒ«
 	Object3d* enearchObj_[2] = {0};
 	Model* enearchModel_ = nullptr;
-	//¶‚«‚Ä‚¢‚é‚©‚Ç‚¤‚©(0¶‚«‚é,1€–S)
+	//ç”Ÿãã¦ã„ã‚‹ã‹ã©ã†ã‹(0ç”Ÿãã‚‹,1æ­»äº¡)
 	int isEnearchAliveFlag_[2] = { 0 };
 	Vector3 enearchlocalpos0 = { 0.0f,0.0f,15.0f }; //{ 2.0f,2.0f,10.0f };
 	Vector3 enearchlocalpos1 = { 0.0f,0.0f,15.0f }; //{ -2.0f,2.0f,10.0f };
@@ -153,10 +153,10 @@ private:
 	Vector3 playerlen3;*/
 	
 
-	//‹K’è‚ÌˆÊ’u‚Ü‚Å—ˆ‚½‚ç—U“±’e‚Ìƒ^ƒCƒ}[‚ğŠJn
+	//è¦å®šã®ä½ç½®ã¾ã§æ¥ãŸã‚‰èª˜å°å¼¾ã®ã‚¿ã‚¤ãƒãƒ¼ã‚’é–‹å§‹
 	bool isMoveAction = false;
 
-	//’e”­Ë(—U“±)
+	//å¼¾ç™ºå°„(èª˜å°)
 	Object3d* retObj_[2] = { 0 };
 	Model* retModel_ = nullptr;
 	Object3d* inductionObj_[2] = { 0 };
@@ -169,7 +169,7 @@ private:
 
 
 
-	//ƒp[ƒeƒBƒNƒ‹
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	std::unique_ptr<ParticleManager> DamageParticle;
 	int EffTimer_[13] = {0};
 	int isEffFlag_[13] = {0};
@@ -177,7 +177,7 @@ private:
 	const float moveSpeed_ = 0.1f;
 	const float rotaSpeed_ = 0.1f;
 
-	//ƒ{ƒX‘O‚Ìwarning‚ÌUI
+	//ãƒœã‚¹å‰ã®warningã®UI
 	Sprite* warnUI = nullptr;
 	Sprite* warnani1UI = nullptr;
 	Vector2 warnani1Position;
@@ -186,10 +186,11 @@ private:
 	int warnaniFlag = 0;
 	int warnTimer = 0;
 
-	//ƒ{ƒXHP‚ÌUI
+	//ãƒœã‚¹HPã®UI
 	Sprite* bosshpflameUI = nullptr;
 	Sprite* bosshpUI = nullptr;
 	Vector2 bosshpPosition;
+
 
 };
 

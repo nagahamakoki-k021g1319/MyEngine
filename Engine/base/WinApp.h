@@ -19,25 +19,26 @@ public:
 
 	bool ProcessMessage();
 
-	// ƒEƒBƒ“ƒhƒE‰¡•
+
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦æ¨ªå¹…
 	static const int window_width = 1280;
-	// ƒEƒBƒ“ƒhƒEc•
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ç¸¦å¹…
 	static const int window_height = 720;
 
-public: //ƒƒ“ƒoŠÖ”
-	//‰Šú‰»
+public: //ãƒ¡ãƒ³ãƒé–¢æ•°
+	//åˆæœŸåŒ–
 	void Initialize();
 
-	//XV
+	//æ›´æ–°
 	void Update();
 
-	//I—¹
+	//çµ‚äº†
 	void Finalize();
 private:
-	//ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
+	//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
 	HWND hwnd = nullptr;
 
-	//ƒEƒBƒ“ƒhƒEƒNƒ‰ƒX‚Ìİ’è
+	//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ã®è¨­å®š
 	WNDCLASSEX w{};
 
 };

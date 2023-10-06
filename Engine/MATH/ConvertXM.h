@@ -13,6 +13,7 @@ public:
 
 	static Vector3 ConvertXMFlo3toVec3(XMFLOAT3 XMFlo3);
 	static XMFLOAT3 ConvertVec3toXMFlo3(Vector3 vec3);
+
 private:
 	
 	XMMATRIX xmMat;

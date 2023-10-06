@@ -204,9 +204,6 @@
     <ClInclude Include="User\SCENE\GameScene.h">
       <Filter>user\シーン</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\INPUT\Input.h">
-      <Filter>Engine\ヘッダーファイル\INPUT</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\BASE\DirectXCommon.h">
       <Filter>Engine\ヘッダーファイル\BASE</Filter>
     </ClInclude>
@@ -296,6 +293,9 @@
     </ClInclude>
     <ClInclude Include="User\PlayerBullet.h">
       <Filter>user\ヘッダー</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\INPUT\Input.h">
+      <Filter>Engine\ヘッダーファイル\INPUT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
