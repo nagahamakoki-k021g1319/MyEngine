@@ -3,6 +3,8 @@
 #include "Object3d.h"
 #include "Input.h"
 #include "Camera.h"
+#include "SpriteCommon.h"
+#include "Sprite.h"
 
 class Player;
 #include "Collision.h"
