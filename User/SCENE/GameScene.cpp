@@ -190,6 +190,7 @@ void GameScene::Draw() {
 		//// 3Dオブクジェクトの描画
 		player_->Draw();
 		enemy_->Draw();
+		enemyBoss_->Draw();
 		obstacle_->Draw();
 		floor->Draw();
 		skydome->Draw();
@@ -208,6 +209,7 @@ void GameScene::Draw() {
 		enemy_->EffDraw();
 		enemy_->UIDraw();
 		enemyBoss_->FbxDraw();
+		enemyBoss_->UIDraw();
 		player_->UIDraw();
 	}
 }

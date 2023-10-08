@@ -129,7 +129,7 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 
 void Enemy::WinpUpdate()
 {
-	winpArrivalTimer++;
+	/*winpArrivalTimer++;*/
 	//雑魚敵の出現速度
 	float WinpSpeedX = 0.1f;
 	float WinpSpeedZ = 1.0f;
@@ -145,7 +145,7 @@ void Enemy::WinpUpdate()
 	//{ -10.0f, 1.0f, 10.0f };{ 0.0f,1.0f,10.0f 
 	fbxWinpObject3d_[3]->wtf.position = fbxWinpObject3d_[3]->wtf.position + enemyWinplocalpos3;
 
-	if (winpArrivalTimer >= 0 && winpArrivalTimer < 250) {
+	if (winpArrivalTimer >= 10 && winpArrivalTimer < 250) {
 		//登場
 		enemyWinplocalpos0.x -= WinpSpeedX;
 		enemyWinplocalpos1.x -= WinpSpeedX;

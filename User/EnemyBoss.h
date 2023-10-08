@@ -27,6 +27,7 @@ public:
 
 	void Draw();
 	void FbxDraw();
+	void UIDraw();
 
 	////ワールド座標を取得
 	Vector3 GetWorldPosition();
@@ -42,6 +43,7 @@ private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
 	DirectXCommon* dxCommon_ = nullptr;
+	SpriteCommon* spriteCommon = nullptr;
 	Audio* audio = nullptr;
 	Player* player_ = nullptr;
 	Enemy* enemy_ = nullptr;
@@ -50,6 +52,15 @@ private:
 	//ボス
 	FBXModel* fbxModel_ = nullptr;
 	FBXObject3d* fbxObject3d_ = nullptr;
+
+	//ボスの当たり判定
+	Object3d* Obj_ = nullptr;
+	Model* Model_ = nullptr;
+
+	//ボスHPのUI
+	Sprite* bosshpUI = nullptr;
+	Vector2 bosshpPosition;
+
 	//生きているかどうか(0生きる,1死亡)
 	int isObsAliveFlag_ = 0;
 
