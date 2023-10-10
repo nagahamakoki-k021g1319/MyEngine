@@ -1,5 +1,6 @@
 #include"Player.h"
 #include"Enemy.h"
+#include "EnemyBoss.h"
 #include <imgui.h>
 
 Player::Player() {
@@ -87,11 +88,11 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	FBXObject3d::CreateGraphicsPipeline();
 
 	//自機
-	Model_ = Model::LoadFromOBJ("hito");//maehito usirohito
+	Model_ = Model::LoadFromOBJ("maehito");
 	Model2_ = Model::LoadFromOBJ("hidarihito");
 	Model3_  = Model::LoadFromOBJ("migihito");
-	ModelAt_ = Model::LoadFromOBJ("hitoAt");
-	ModelBefo_ = Model::LoadFromOBJ("maehito");
+	ModelAt_ = Model::LoadFromOBJ("maehitoAt");
+	ModelBefo_ = Model::LoadFromOBJ("fullsphito");
 	ModelBack_ = Model::LoadFromOBJ("usirohito");
 
 	Obj_ = Object3d::Create();
@@ -746,7 +747,7 @@ void Player::PlayerAction()
 	else {
 		shootObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z };
 	}
-	if (BulletCoolTime >= 10.0f) {
+	if (BulletCoolTime >= 15.0f) {
 		BulletCoolTime = 0;
 		isShootFlag = false;
 	}

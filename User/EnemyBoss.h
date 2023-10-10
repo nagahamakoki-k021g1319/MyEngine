@@ -29,6 +29,13 @@ public:
 	void FbxDraw();
 	void UIDraw();
 
+	//エフェクトの更新処理
+	void EffUpdate();
+	//エフェクトの情報
+	void EffSummary(Vector3 Bosspos);
+	//エフェクトの描画
+	void EffDraw();
+
 	////ワールド座標を取得
 	Vector3 GetWorldPosition();
 
@@ -38,6 +45,9 @@ public:
 public:
 	//音を止める関数
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
+
+	//撃破演出のタイマー(これが終わるとゲームクリア)
+	int clushingTimer = 0;
 
 private:
 	const float PI = 3.141592f;
@@ -56,13 +66,19 @@ private:
 	//ボスの当たり判定
 	Object3d* Obj_ = nullptr;
 	Model* Model_ = nullptr;
+	bool isCollFlag = false;
+	
 
 	//ボスHPのUI
+	Sprite* bosshpflameUI = nullptr;
+	Sprite* bosshpRedUI = nullptr;
 	Sprite* bosshpUI = nullptr;
 	Vector2 bosshpPosition;
 
-	//生きているかどうか(0生きる,1死亡)
-	int isObsAliveFlag_ = 0;
+	//パーティクル
+	std::unique_ptr<ParticleManager> DamageParticle;
+	int EffTimer_ = 0;
+	int isEffFlag_ = 0;
 
 	const float moveSpeed_ = 0.1f;
 	const float rotaSpeed_ = 0.1f;
