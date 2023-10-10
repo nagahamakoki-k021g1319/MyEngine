@@ -186,10 +186,7 @@ private:
 	int warnaniFlag = 0;
 	int warnTimer = 0;
 
-	//ボスHPのUI
-	Sprite* bosshpflameUI = nullptr;
-	Sprite* bosshpUI = nullptr;
-	Vector2 bosshpPosition;
+	
 
 
 };

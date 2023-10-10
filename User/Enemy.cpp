@@ -33,10 +33,6 @@ Enemy::~Enemy()
 	delete warnani1UI;
 	delete warnani2UI;
 
-	delete bosshpflameUI;
-	delete bosshpUI;
-
-
 }
 
 void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
@@ -129,7 +125,7 @@ void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
 
 void Enemy::WinpUpdate()
 {
-	/*winpArrivalTimer++;*/
+	winpArrivalTimer++;
 	//雑魚敵の出現速度
 	float WinpSpeedX = 0.1f;
 	float WinpSpeedZ = 1.0f;
@@ -145,7 +141,7 @@ void Enemy::WinpUpdate()
 	//{ -10.0f, 1.0f, 10.0f };{ 0.0f,1.0f,10.0f 
 	fbxWinpObject3d_[3]->wtf.position = fbxWinpObject3d_[3]->wtf.position + enemyWinplocalpos3;
 
-	if (winpArrivalTimer >= 10 && winpArrivalTimer < 250) {
+	if (winpArrivalTimer >= 0 && winpArrivalTimer < 250) {
 		//登場
 		enemyWinplocalpos0.x -= WinpSpeedX;
 		enemyWinplocalpos1.x -= WinpSpeedX;
@@ -572,7 +568,7 @@ void Enemy::Draw()
 			if (isEnearchAliveFlag_[i] == 0) {
 				enearchObj_[i]->Draw();
 			}
-			retObj_[i]->Draw();
+			/*retObj_[i]->Draw();*/
 			if (isShootStFlag_[i] == true) {
 				if (isEnearchAliveFlag_[i] == 0) {
 					inductionObj_[i]->Draw();
@@ -639,18 +635,7 @@ void Enemy::UIInitialize()
 	warnani2UI->SetPozition(warnani2Position);
 	warnani2UI->SetSize({ 2560.0f, 720.0f });
 
-	//ボスのHPフレーム
-	bosshpflameUI = new Sprite();
-	bosshpflameUI->Initialize(spriteCommon);
-	bosshpflameUI->SetPozition({ 0,0 });
-	bosshpflameUI->SetSize({ 1280.0f, 720.0f });
-
-	//ボスのHPゲージ
-	bosshpUI = new Sprite();
-	bosshpUI->Initialize(spriteCommon);
-	bosshpPosition = bosshpUI->GetPosition();
-	bosshpUI->SetPozition(bosshpPosition);
-	bosshpUI->SetSize({ 1280.0f, 720.0f });
+	
 
 	//ボス前のwarning
 	spriteCommon->LoadTexture(26, "warn.png");
@@ -664,13 +649,7 @@ void Enemy::UIInitialize()
 	spriteCommon->LoadTexture(28, "warnani2.png");
 	warnani2UI->SetTextureIndex(28);
 
-	//ボスのHPフレーム
-	spriteCommon->LoadTexture(29, "bosshpflame.png");
-	bosshpflameUI->SetTextureIndex(29);
-
-	//ボスのHPゲージ
-	spriteCommon->LoadTexture(30, "bosshp.png");
-	bosshpUI->SetTextureIndex(30);
+	
 
 
 }
@@ -678,10 +657,7 @@ void Enemy::UIInitialize()
 
 void Enemy::UIDraw()
 {
-	if (winpArrivalTimer >= 1600) {
-		bosshpUI->Draw();
-		bosshpflameUI->Draw();
-	}
+	
 
 	if (warnaniFlag == 1) {
 		if (warnTimer >= 1 && warnTimer < 130) {

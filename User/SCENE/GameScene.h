@@ -78,9 +78,11 @@ private:	//メンバ変数
 	//シーン切り替え
 	enum class SceneNo {
 		Title, //タイトル
-		Game //射撃
+		Game, //射撃
+		Clear //ゲームクリア
+
 	};
-	SceneNo sceneNo_ = SceneNo::Game;
+	SceneNo sceneNo_ = SceneNo::Title;
 
 
 
@@ -119,5 +121,9 @@ private:	//メンバ変数
 	//タイトルで座ってるプレイヤー
 	Object3d* standObj_ = nullptr;
 	Model* standModel_ = nullptr;
+
+	//ゲームクリア
+	Sprite* ClearSprite = nullptr;
+
 
 };

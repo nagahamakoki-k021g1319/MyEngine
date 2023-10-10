@@ -18,6 +18,7 @@
 #include "ImGuiManager.h"
 
 class Enemy;
+class EnemyBoss;
 
 class Player {
 public:
@@ -48,12 +49,11 @@ public:
 	Vector3 GetWorldPosition();
 	//ワールド座標を取得(弾)
 	Vector3 GetBulletWorldPosition();
-	//ワールド座標を取得(弾)
+	//ワールド座標を取得(強弾)
 	Vector3 GetBulletStWorldPosition();
 	//ワールド座標を取得(レティクル)
 	Vector3 GetRetWorldPosition();
-	//ワールド座標を取得(抜刀)
-	Vector3 GetSwordWorldPosition();
+	
 
 
 
@@ -68,6 +68,8 @@ public:
 	void SetCamera(Camera* cam) { camera = cam; };
 
 	void SetEnemy(Enemy* enemy) { enemy_ = enemy; };
+	void SetEnemyBoss(EnemyBoss* eneenemyBoss) {enemyBoss_ = eneenemyBoss;};
+
 
 public:
 	//音を止める関数
@@ -91,6 +93,7 @@ private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Audio* audio = nullptr;
 	Enemy* enemy_ = nullptr;
+	EnemyBoss* enemyBoss_ = nullptr;
 	SpriteCommon* spriteCommon = nullptr;
 	Collision coll;
 
@@ -219,37 +222,37 @@ private:
 	//スプライン曲線
 	int splineTimer = 0;
 	
-	//止めるとき
-	Vector3 Start = { 0.0f,0.0f,0.0f };
-	Vector3 end = { 0.0f,0.0f,0.0f };
-	std::vector<Vector3> points{Start, Start,end, end};
-
-
-	////動かすとき
+	////止めるとき
 	//Vector3 Start = { 0.0f,0.0f,0.0f };
-	//Vector3 p1 = { 0.0f,-2.0f,5.0f };
-	//Vector3 p2 = { 0.0f,2.0f,10.0f };
-	//Vector3 p3 = { 3.0f,0.0f,20.0f };
-	//Vector3 p4 = { -1.0f,2.0f,25.0f };
-	//Vector3 p5 = { 1.0f,-2.0f,30.0f };
-	//Vector3 p6 = { 0.0f,0.0f,35.0f };
-	//Vector3 p7 = { 1.0f,2.0f,40.0f };
-	//Vector3 p8 = { 3.0f,0.0f,45.0f };
-	//Vector3 p9 = { 1.0f,-1.0f,50.0f };
-	//Vector3 p10 = { 0.0f,0.0f,55.0f };
-	//Vector3 p11 = { 2.0f,2.0f,60.0f };
-	//Vector3 p12 = { 0.0f,0.0f,65.0f };
-	//Vector3 p13 = { -1.0f,0.0f,70.0f };
-	//Vector3 p14 = { 0.0f,0.0f,75.0f };
-	//Vector3 p15 = { -2.0f,3.0f,80.0f };
-	//Vector3 p16 = { 0.0f,0.0f,85.0f };
-	//Vector3 p17 = { -2.0f,1.0f,170.0f };
-	//Vector3 p18 = { 0.0f,-1.0f,175.0f };
-	//Vector3 end = { 0.0f,0.0f,180.0f };
-	//std::vector<Vector3> points{ 
-	//	Start, Start, 
-	//	p1, p2, p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,
-	//	end, end 
-	//};
+	//Vector3 end = { 0.0f,0.0f,0.0f };
+	//std::vector<Vector3> points{Start, Start,end, end};
+
+
+	//動かすとき
+	Vector3 Start = { 0.0f,0.0f,0.0f };
+	Vector3 p1 = { 0.0f,-2.0f,5.0f };
+	Vector3 p2 = { 0.0f,2.0f,10.0f };
+	Vector3 p3 = { 3.0f,0.0f,20.0f };
+	Vector3 p4 = { -1.0f,2.0f,25.0f };
+	Vector3 p5 = { 1.0f,-2.0f,30.0f };
+	Vector3 p6 = { 0.0f,0.0f,35.0f };
+	Vector3 p7 = { 1.0f,2.0f,40.0f };
+	Vector3 p8 = { 3.0f,0.0f,45.0f };
+	Vector3 p9 = { 1.0f,-1.0f,50.0f };
+	Vector3 p10 = { 0.0f,0.0f,55.0f };
+	Vector3 p11 = { 2.0f,2.0f,60.0f };
+	Vector3 p12 = { 0.0f,0.0f,65.0f };
+	Vector3 p13 = { -1.0f,0.0f,70.0f };
+	Vector3 p14 = { 0.0f,0.0f,75.0f };
+	Vector3 p15 = { -2.0f,3.0f,80.0f };
+	Vector3 p16 = { 0.0f,0.0f,85.0f };
+	Vector3 p17 = { -2.0f,1.0f,170.0f };
+	Vector3 p18 = { 0.0f,-1.0f,175.0f };
+	Vector3 end = { 0.0f,0.0f,180.0f };
+	std::vector<Vector3> points{ 
+		Start, Start, 
+		p1, p2, p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,
+		end, end 
+	};
 	
 };

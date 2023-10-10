@@ -25,6 +25,7 @@ GameScene::~GameScene() {
 	delete floor;
 	delete floorMD;
 	delete TitleSprite;
+	delete ClearSprite;
 	delete skydomeTit_;
 	delete skydomeTitMD_;
 	delete floorTit_;
@@ -53,8 +54,20 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	TitleSprite->Initialize(spriteCommon);
 	TitleSprite->SetPozition({0,0});
 	TitleSprite->SetSize({ 1280.0f, 720.0f });
-	spriteCommon->LoadTexture(0, "tt.png");
+	
+
+	//ゲームクリア
+	ClearSprite = new Sprite();
+	ClearSprite->Initialize(spriteCommon);
+	ClearSprite->SetPozition({ 0,0 });
+	ClearSprite->SetSize({ 1280.0f, 720.0f });
+
+
+	spriteCommon->LoadTexture(0,"tt.png");
 	TitleSprite->SetTextureIndex(0);
+
+	spriteCommon->LoadTexture(32,"clear.png");
+	ClearSprite->SetTextureIndex(32);
 
 	// カメラ生成
 	mainCamera = new Camera(WinApp::window_width, WinApp::window_height);
@@ -106,6 +119,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	player_->Initialize(dxCommon,input);
 	player_->SetCamera(mainCamera);
 	player_->SetEnemy(enemy_);
+	player_->SetEnemyBoss(enemyBoss_);
 
 	//-------敵関連--------//
 	//雑魚敵
@@ -154,7 +168,9 @@ void GameScene::Update() {
 	}
 
 	if (sceneNo_ == SceneNo::Game) {
-		
+		if (enemyBoss_->clushingTimer >= 30){
+			sceneNo_ = SceneNo::Clear;
+		}
 		player_->Update(enemy_->winpArrivalTimer,enemy_->GetinductionWorldPosition(0),enemy_->isShootStFlag_[0],enemy_->GetinductionWorldPosition(1), enemy_->isShootStFlag_[1]);
 		enemy_->Update(player_->splinePosition_);
 		enemyBoss_->Update();
@@ -210,8 +226,15 @@ void GameScene::Draw() {
 		enemy_->UIDraw();
 		enemyBoss_->FbxDraw();
 		enemyBoss_->UIDraw();
+		enemyBoss_->EffDraw();
 		player_->UIDraw();
 	}
+
+	if ( sceneNo_ == SceneNo::Clear)
+	{
+		ClearSprite->Draw();
+	}
+
 }
 
 Vector3 GameScene::bVelocity(Vector3& velocity, Transform& worldTransform)
