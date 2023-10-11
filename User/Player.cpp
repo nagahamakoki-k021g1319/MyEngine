@@ -1,6 +1,6 @@
 #include"Player.h"
 #include"Enemy.h"
-#include "EnemyBoss.h"
+#include"EnemyBoss.h"
 #include <imgui.h>
 
 Player::Player() {
@@ -137,7 +137,7 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 
 
-void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vector3 pos2, bool eneBulletFlag2) {
+void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vector3 pos2, bool eneBulletFlag2,int clushingTimer) {
 	camera->Update();
 	shootObj_->Update();
 	shootStObj_->Update();
@@ -295,9 +295,16 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 			}
 		}
 
-
-
-
+		//ボスがやられると前進する
+		if ( clushingTimer > 10 )
+		{
+			playerlocalpos.z += 1.0f;
+		}
+		//ボスがやられるとレティクルが消える
+		if ( clushingTimer > 1 )
+		{
+			retdisplay = false;
+		}
 	}
 
 	ImGui::Begin("Player");
@@ -325,7 +332,7 @@ void Player::Draw() {
 	}
 	/*shootStObj_->Draw();*/
 
-	if (splineTimer >= 110) {
+	if (splineTimer >= 110 && retdisplay == true) {
 		retObj_->Draw();
 	}
 	
@@ -667,6 +674,8 @@ void Player::PlayerAction()
 			playerlocalpos.z -= playerSpeed;
 		}
 	}
+	
+
 	if (input_->PushKey(DIK_R)) {
 		playerlocalpos.z += playerSpeed;
 	}

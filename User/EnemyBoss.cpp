@@ -1,7 +1,7 @@
 #include "EnemyBoss.h"
 #include "Enemy.h"
 #include "Player.h"
-
+#include <imgui.h>
 
 EnemyBoss::EnemyBoss()
 {
@@ -90,7 +90,7 @@ void EnemyBoss::Initialize(DirectXCommon* dxCommon, Input* input)
 void EnemyBoss::Update()
 {
 	if (input_->PushKey(DIK_4)){
-		isCollFlag = true;
+		isEffFlag_ = 1;
 	}
 	if ( player_->splinePosition_->GetIndex() >= 18 )
 	{
@@ -107,7 +107,7 @@ void EnemyBoss::Update()
 	{
 		if ( coll.CircleCollision(player_->GetBulletWorldPosition(),Obj_->wtf.position,1.0f,2.0f) )
 		{
-			bosshpPosition.x -= 5.0f;
+			bosshpPosition.x -= 5.0f;//数値の9倍
 			bosshpUI->SetPozition(bosshpPosition);
 		};
 	}
@@ -115,20 +115,27 @@ void EnemyBoss::Update()
 	{
 		if ( coll.CircleCollision(player_->GetBulletStWorldPosition(),Obj_->wtf.position,1.0f,1.0f) )
 		{
-			bosshpPosition.x -= 50.0f;
+			bosshpPosition.x -= 200.0f;//数値の3倍
 			bosshpUI->SetPozition(bosshpPosition);
 		};
 	}
 
-	if ( bosshpPosition.x <= -50 )
+	if ( bosshpPosition.x <= -925 )
 	{
 		clushingTimer++;
 	}
 
-	if (clushingTimer>= 1 && clushingTimer <= 20)
+	if (clushingTimer>= 1 && clushingTimer <= 10)
 	{
 		isEffFlag_ = 1;
 	}
+
+	ImGui::Begin("EnemyBoss");
+
+	ImGui::Text("clushingTimer:%d",clushingTimer);
+	ImGui::Text("bossHPposition:%f,%f",bosshpPosition.x,bosshpPosition.y);
+
+	ImGui::End();
 
 }
 
@@ -140,7 +147,7 @@ void EnemyBoss::Draw()
 void EnemyBoss::FbxDraw()
 {
 	if (player_->splinePosition_->GetIndex() >= 18) {
-		if ( clushingTimer <= 20 ){
+		if ( clushingTimer <= 1 ){
 			fbxObject3d_->Draw(dxCommon_->GetCommandList());
 		}
 	}
@@ -163,7 +170,7 @@ void EnemyBoss::EffUpdate()
 	{
 		EffTimer_++;
 	}
-	if ( EffTimer_ <= 20 && EffTimer_ >= 1 )
+	if ( EffTimer_ <= 10 && EffTimer_ >= 1 )
 	{
 		EffSummary(Vector3(fbxObject3d_->wtf.position.x,fbxObject3d_->wtf.position.y,fbxObject3d_->wtf.position.z));
 	}
@@ -177,15 +184,16 @@ void EnemyBoss::EffUpdate()
 void EnemyBoss::EffSummary(Vector3 Bosspos)
 {
 	//パーティクル範囲
-	for ( int i = 0; i < 5; i++ )
+	for ( int i = 0; i < 20; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_pos = 5.0f;
+		const float rnd_pos = 10.0f;
 		Vector3 pos{};
 		pos.x += ( float ) rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 		pos.y += ( float ) rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 		pos.z += ( float ) rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 		pos += Bosspos;
+		pos.y += 5.0f;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 		const float rnd_vel = 0.1f;

@@ -32,6 +32,9 @@ GameScene::~GameScene() {
 	delete floorTitMD_;
 	delete standObj_;
 	delete standModel_;
+	delete bbout1;
+	delete bbout2;
+	delete bbout3;
 
 }
 
@@ -62,12 +65,37 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	ClearSprite->SetPozition({ 0,0 });
 	ClearSprite->SetSize({ 1280.0f, 720.0f });
 
+	//タイトルからゲームシーンへの暗転
+	bbout1 = new Sprite();
+	bbout1->Initialize(spriteCommon);
+	bbout1->SetPozition({ 0,0 });
+	bbout1->SetSize({ 1280.0f, 720.0f });
+
+	bbout2 = new Sprite();
+	bbout2->Initialize(spriteCommon);
+	bbout2->SetPozition({ 0,0 });
+	bbout2->SetSize({ 1280.0f, 720.0f });
+
+	bbout3 = new Sprite();
+	bbout3->Initialize(spriteCommon);
+	bbout3->SetPozition({ 0,0 });
+	bbout3->SetSize({ 1280.0f, 720.0f });
+
 
 	spriteCommon->LoadTexture(0,"tt.png");
 	TitleSprite->SetTextureIndex(0);
 
 	spriteCommon->LoadTexture(32,"clear.png");
 	ClearSprite->SetTextureIndex(32);
+
+	spriteCommon->LoadTexture(33,"bbout1.png");
+	bbout1->SetTextureIndex(33);
+
+	spriteCommon->LoadTexture(34,"bbout2.png");
+	bbout2->SetTextureIndex(34);
+
+	spriteCommon->LoadTexture(35,"bbout3.png");
+	bbout3->SetTextureIndex(35);
 
 	// カメラ生成
 	mainCamera = new Camera(WinApp::window_width, WinApp::window_height);
@@ -158,9 +186,18 @@ void GameScene::Update() {
 	
 	if (sceneNo_ == SceneNo::Title) {
 		if (input_->TriggerKey(DIK_SPACE) || input_->PButtonTrigger(B)) {
+			isbboutFlag = true;
+		}
+		if ( isbboutFlag == true )
+		{
+			bboutTimer++;
+		}
+		if ( bboutTimer >= 30 )
+		{
 			mainCamera->wtf.rotation.y = 0.0f;
 			sceneNo_ = SceneNo::Game;
 		}
+
 		skydomeTit_->Update();
 		floorTit_->Update();
 		standObj_->Update();
@@ -168,10 +205,10 @@ void GameScene::Update() {
 	}
 
 	if (sceneNo_ == SceneNo::Game) {
-		if (enemyBoss_->clushingTimer >= 30){
+		if (enemyBoss_->clushingTimer >= 120){
 			sceneNo_ = SceneNo::Clear;
 		}
-		player_->Update(enemy_->winpArrivalTimer,enemy_->GetinductionWorldPosition(0),enemy_->isShootStFlag_[0],enemy_->GetinductionWorldPosition(1), enemy_->isShootStFlag_[1]);
+		player_->Update(enemy_->winpArrivalTimer,enemy_->GetinductionWorldPosition(0),enemy_->isShootStFlag_[0],enemy_->GetinductionWorldPosition(1), enemy_->isShootStFlag_[1],enemyBoss_->clushingTimer);
 		enemy_->Update(player_->splinePosition_);
 		enemyBoss_->Update();
 		obstacle_->Update();
@@ -205,7 +242,7 @@ void GameScene::Draw() {
 	if (sceneNo_ == SceneNo::Game) {
 		//// 3Dオブクジェクトの描画
 		player_->Draw();
-		enemy_->Draw();
+		enemy_->Draw(enemyBoss_->clushingTimer);
 		enemyBoss_->Draw();
 		obstacle_->Draw();
 		floor->Draw();
@@ -215,6 +252,19 @@ void GameScene::Draw() {
 	Object3d::PostDraw();
 	if (sceneNo_ == SceneNo::Title) {
 		TitleSprite->Draw();
+		if ( bboutTimer >= 1 && bboutTimer <= 10)
+		{
+			bbout1->Draw();
+		}
+		else if ( bboutTimer >= 11 && bboutTimer <= 20 )
+		{
+			bbout2->Draw();
+		}
+		else if ( bboutTimer >= 21)
+		{
+			bbout3->Draw();
+		}
+
 	}
 
 	if (sceneNo_ == SceneNo::Game) {

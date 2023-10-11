@@ -14,6 +14,8 @@ class Player;
 #include "FBXModel.h"
 #include "FbxLoader.h"
 #include "FBXObject3d.h"
+
+#include "ImGuiManager.h"
 class Enemy;
 
 class EnemyBoss
