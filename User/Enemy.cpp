@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "Player.h"
+#include "EnemyBoss.h"
 #include <imgui.h>
 
 Enemy::Enemy()
@@ -347,7 +348,7 @@ void Enemy::BossWinpUpdate()
 		len = playerlen0;
 		len *= ShortStSpeed;
 	}
-	else { inductionObj_[0]->wtf.position = { enearchObj_[0]->wtf.position.x + 6.0f,enearchObj_[0]->wtf.position.y + 7.0f, enearchObj_[0]->wtf.position.z + 30.0f }; }
+	else { inductionObj_[0]->wtf.position = { enearchObj_[0]->wtf.position.x + 3.0f,enearchObj_[0]->wtf.position.y + 4.0f, enearchObj_[0]->wtf.position.z + 30.0f }; }
 
 	if (isShootStFlag_[1] == true) {
 		StBulletCoolTime_[1]++;
@@ -355,7 +356,7 @@ void Enemy::BossWinpUpdate()
 		len1 = playerlen1;
 		len1 *= ShortStSpeed;
 	}
-	else { inductionObj_[1]->wtf.position = { enearchObj_[1]->wtf.position.x - 5.0f,enearchObj_[1]->wtf.position.y + 7.0f, enearchObj_[1]->wtf.position.z + 30.0f }; }
+	else { inductionObj_[1]->wtf.position = { enearchObj_[1]->wtf.position.x - 3.0f,enearchObj_[1]->wtf.position.y + 4.0f, enearchObj_[1]->wtf.position.z + 30.0f}; }
 
 
 
@@ -561,17 +562,22 @@ void Enemy::Update(SplinePosition* spPosition_)
 
 
 
-void Enemy::Draw()
+void Enemy::Draw(int clushingTimer)
 {
 	if (bossGostAt == true) {
 		for (int i = 0; i < 2; i++) {
 			if (isEnearchAliveFlag_[i] == 0) {
-				enearchObj_[i]->Draw();
+				if ( clushingTimer <= 1){
+					enearchObj_[ i ]->Draw();
+				}
 			}
 			/*retObj_[i]->Draw();*/
 			if (isShootStFlag_[i] == true) {
 				if (isEnearchAliveFlag_[i] == 0) {
-					inductionObj_[i]->Draw();
+					if ( clushingTimer <= 1 )
+					{
+						inductionObj_[ i ]->Draw();
+					}
 				}
 			}
 		}

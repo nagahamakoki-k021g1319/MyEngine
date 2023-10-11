@@ -122,6 +122,13 @@ private:	//メンバ変数
 	Object3d* standObj_ = nullptr;
 	Model* standModel_ = nullptr;
 
+	//タイトルからゲームシーンへの暗転
+	Sprite* bbout1 = nullptr;
+	Sprite* bbout2 = nullptr;
+	Sprite* bbout3 = nullptr;
+	int bboutTimer = 0;
+	bool isbboutFlag = false;
+
 	//ゲームクリア
 	Sprite* ClearSprite = nullptr;
 

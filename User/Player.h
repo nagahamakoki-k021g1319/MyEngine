@@ -27,7 +27,7 @@ public:
 
 	void Initialize(DirectXCommon* dxCommon, Input* input);
 	void UIInitialize();
-	void Update(int winpArrivalTimer,Vector3 pos,bool eneBulletFlag, Vector3 pos2, bool eneBulletFlag2);
+	void Update(int winpArrivalTimer,Vector3 pos,bool eneBulletFlag, Vector3 pos2, bool eneBulletFlag2,int clushingTimer);
 
 	void Draw();
 	void FbxDraw();
@@ -132,6 +132,8 @@ private:
 	Model* ret1Model_ = nullptr;
 	Model* ret2Model_ = nullptr;
 	int retResetTimer = 0;
+	bool retdisplay = true;
+
 
 	//弾発射(弱)
 	Object3d* shootObj_ = nullptr;

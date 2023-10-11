@@ -124,7 +124,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		// Imgui受付終了
 		imgui->End();
 		//// Imgui描画
-		//imgui->Draw();
+		/*imgui->Draw();*/
 
 		// 描画終了
 		dxCommon->PostDraw();

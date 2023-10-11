@@ -18,6 +18,7 @@
 
 
 class Player;
+class EnemyBoss;
 
 class Enemy
 {
@@ -30,7 +31,7 @@ public:
 	void Update(SplinePosition* spPosition_);
 	void WinpUpdate();
 	void BossWinpUpdate();
-	void Draw();
+	void Draw(int clushingTimer);
 	void FbxDraw();
 	void UIDraw();
 
