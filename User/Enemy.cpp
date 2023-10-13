@@ -34,6 +34,8 @@ Enemy::~Enemy()
 	delete warnani1UI;
 	delete warnani2UI;
 
+	delete blackline1UI;
+	delete blackline2UI;
 }
 
 void Enemy::Initialize(DirectXCommon* dxCommon, Input* input)
@@ -484,7 +486,7 @@ void Enemy::Update(SplinePosition* spPosition_)
 
 	}
 
-	if (winpArrivalTimer >= 1470) {
+	if (winpArrivalTimer >= 1430) {
 		warnaniFlag = 1;
 	}
 	if (warnaniFlag == 1) {
@@ -641,7 +643,17 @@ void Enemy::UIInitialize()
 	warnani2UI->SetPozition(warnani2Position);
 	warnani2UI->SetSize({ 2560.0f, 720.0f });
 
-	
+	//ボス前のwarning(上の黒線)
+	blackline1UI = new Sprite();
+	blackline1UI->Initialize(spriteCommon);
+	blackline1UI->SetPozition({ 0,0 });
+	blackline1UI->SetSize({ 1280.0f, 720.0f });
+
+	//ボス前のwarning(下の黒線)
+	blackline2UI = new Sprite();
+	blackline2UI->Initialize(spriteCommon);
+	blackline2UI->SetPozition({ 0,0 });
+	blackline2UI->SetSize({ 1280.0f, 720.0f });
 
 	//ボス前のwarning
 	spriteCommon->LoadTexture(26, "warn.png");
@@ -655,8 +667,13 @@ void Enemy::UIInitialize()
 	spriteCommon->LoadTexture(28, "warnani2.png");
 	warnani2UI->SetTextureIndex(28);
 
-	
+	//ボス前のwarning(上の黒線)
+	spriteCommon->LoadTexture(36,"blackline1.png");
+	blackline1UI->SetTextureIndex(36);
 
+	//ボス前のwarning(下の黒線)
+	spriteCommon->LoadTexture(37,"blackline2.png");
+	blackline2UI->SetTextureIndex(37);
 
 }
 
@@ -666,10 +683,18 @@ void Enemy::UIDraw()
 	
 
 	if (warnaniFlag == 1) {
-		if (warnTimer >= 1 && warnTimer < 130) {
+		if ( warnTimer >= 1 && warnTimer < 170 )
+		{
+			blackline1UI->Draw();
+			blackline2UI->Draw();
+		}
+
+		if (warnTimer >= 40 && warnTimer < 170) {
 			warnUI->Draw();
 			warnani1UI->Draw();
 			warnani2UI->Draw();
+			blackline1UI->Draw();
+			blackline2UI->Draw();
 		}
 	}
 }
@@ -716,7 +741,7 @@ void Enemy::EffSummary(Vector3 enemyPos)
 		acc.y = (float)rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
 
 		//追加
-		DamageParticle->Add(60, pos, vel, acc, 0.3f, 0.0f);
+		DamageParticle->Add(60, pos, vel, acc, 0.5f, 0.0f);
 
 		DamageParticle->Update();
 

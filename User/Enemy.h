@@ -72,6 +72,8 @@ public:
 	bool bossGostAt = false;
 	//雑魚敵出現タイマー
 	int winpArrivalTimer = 0;
+	
+
 	//弾発射(誘導)
 	bool isShootStFlag_[2] = { false };
 
@@ -184,11 +186,14 @@ private:
 	Vector2 warnani1Position;
 	Sprite* warnani2UI = nullptr;
 	Vector2 warnani2Position;
+	Sprite* blackline1UI = nullptr;
+	Vector2 blackline1Position;
+	Sprite* blackline2UI = nullptr;
+	Vector2 blackline2Position;
 	int warnaniFlag = 0;
 	int warnTimer = 0;
 
 	
-
 
 };
 

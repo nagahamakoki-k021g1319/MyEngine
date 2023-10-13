@@ -30,6 +30,8 @@ GameScene::~GameScene() {
 	delete skydomeTitMD_;
 	delete floorTit_;
 	delete floorTitMD_;
+	delete cloudfloor_;
+	delete cloudfloorMD_;
 	delete standObj_;
 	delete standModel_;
 	delete bbout1;
@@ -142,6 +144,13 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	floor->wtf.position = (Vector3{ 0, -10, 0 });
 	floor->wtf.scale = (Vector3{ 0.5f, 0.5f, 0.5f });
 
+	//雲海ステージ
+	cloudfloorMD_ = Model::LoadFromOBJ("CloudGround");
+	cloudfloor_ = Object3d::Create();
+	cloudfloor_->SetModel(cloudfloorMD_);
+	cloudfloor_->wtf.position = ( Vector3{ 0, -5.0f, 0 } );
+	cloudfloor_->wtf.scale = ( Vector3{ 500.0f, 500.0f, 10000.0f } );
+
 	//プレイヤー
 	player_ = new Player();
 	player_->Initialize(dxCommon,input);
@@ -215,8 +224,11 @@ void GameScene::Update() {
 
 		floor->Update();
 		skydome->Update();
-		skydome->wtf.position.z += 0.02f;
+		skydome->wtf.position.z -= 0.02f;
 		skydome->wtf.rotation.y += 0.0008f;
+
+		cloudfloor_->Update();
+		cloudfloor_->wtf.position.z -= 2.0f;
 	}
 }
 
@@ -247,6 +259,7 @@ void GameScene::Draw() {
 		obstacle_->Draw();
 		floor->Draw();
 		skydome->Draw();
+		cloudfloor_->Draw();
 	}
 	//3Dオブジェクト描画後処理
 	Object3d::PostDraw();

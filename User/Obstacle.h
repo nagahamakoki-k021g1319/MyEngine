@@ -47,7 +47,7 @@ private:
 	Collision coll;
 	
 	//障害物
-	Object3d* obstacleObj_[4] = { 0 };
+	Object3d* obstacleObj_[8] = { 0 };
 	Model* obstacleModel_ = nullptr;
 	int obstacleTimer = 0;
 	//生きているかどうか(0生きる,1死亡)

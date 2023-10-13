@@ -105,11 +105,14 @@ private:	//メンバ変数
 
 	//--------------------//
 
-	//背景や床
+	//ゲームシーンの背景や床
 	Object3d* skydome = nullptr;
 	Model* skydomeMD = nullptr;
 	Object3d* floor = nullptr;
 	Model* floorMD = nullptr;
+	Object3d* cloudfloor_ = nullptr;
+	Model* cloudfloorMD_ = nullptr;
+
 
 	//タイトル
 	Sprite* TitleSprite = new Sprite();

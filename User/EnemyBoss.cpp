@@ -143,7 +143,7 @@ void EnemyBoss::Draw()
 {
 	/*Obj_->Draw();*/
 }
-
+                                           
 void EnemyBoss::FbxDraw()
 {
 	if (player_->splinePosition_->GetIndex() >= 18) {
