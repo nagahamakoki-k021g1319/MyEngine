@@ -88,7 +88,7 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	FBXObject3d::CreateGraphicsPipeline();
 
 	//自機
-	Model_ = Model::LoadFromOBJ("maehito");
+	Model_ = Model::LoadFromOBJ("jet");
 	Model2_ = Model::LoadFromOBJ("hidarihito");
 	Model3_  = Model::LoadFromOBJ("migihito");
 	ModelAt_ = Model::LoadFromOBJ("maehitoAt");
@@ -150,14 +150,7 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 	Obj_->Update();
 	EffUpdate();
 
-	//溜め攻撃のロックオン切り替え
-	/*if (input_->PushKey(DIK_4)) {
-		retObj_->SetModel(ret1Model_);
-	}
-	if (input_->PushKey(DIK_5)) {
-		retObj_->SetModel(ret2Model_);
-	}*/
-
+	
 
 	//自機の登場シーン
 	if (splineTimer >= 75 && splineTimer  <= 115) {
@@ -225,32 +218,7 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 
 		}
 
-		if (input_->PushKey(DIK_A) || input_->StickInput(R_LEFT)) {
-			if (isCameraBehavior == 0) {
-				Obj_->SetModel(Model2_);
-			}
-			else if (isCameraBehavior == 1) {
-				Obj_->SetModel(ModelBefo_);
-			}
-		}
-		else if (input_->PushKey(DIK_D) || input_->StickInput(R_RIGHT)) {
-			if (isCameraBehavior == 0) {
-				Obj_->SetModel(Model3_);
-			}
-			else if (isCameraBehavior == 1) {
-				Obj_->SetModel(ModelBack_);
-			}
-		}
-		else if (input_->PushKey(DIK_SPACE) || input_->ButtonInput(RT)) {
-			Obj_->SetModel(ModelAt_);
-		}
-		else if (input_->PushKey(DIK_Z) || input_->ButtonInput(LT)) {
-			Obj_->SetModel(ModelAt_);
-		}
-		else{
-			Obj_->SetModel(Model_);
-		}
-
+		
 
 		if (input_->PushKey(DIK_1)) {
 			isCameraBehavior = 1;
@@ -814,7 +782,7 @@ void Player::EffUpdate()
 		bulletEffTimer_++;
 	}
 	if (bulletEffTimer_ <= 20 && bulletEffTimer_ >= 1) {
-		EffSummary(Vector3(shootObj_->wtf.position.x, shootObj_->wtf.position.y, shootObj_->wtf.position.z));
+		EffSummary(Vector3(Obj_->wtf.position.x, Obj_->wtf.position.y, Obj_->wtf.position.z));
 	}
 	if (bulletEffTimer_ >= 20) {
 		isbulletEffFlag_ = 0;
