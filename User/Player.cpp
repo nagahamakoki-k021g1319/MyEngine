@@ -97,7 +97,7 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 	Obj_ = Object3d::Create();
 	Obj_->SetModel(Model_);
-	Obj_->wtf.scale = { 0.2f,0.2f,0.2f };
+	Obj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	Obj_->wtf.position = { 0.0f,0.0f,-10.0f };
 
 	//自機の弾(弱)
@@ -188,6 +188,8 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 
 		//プレイヤーの行動一覧
 		PlayerAction();
+		isbulletEffFlag_ = 1;
+
 
 		if (winpArrivalTimer >= 850 && winpArrivalTimer < 1250) {
 			camera->wtf.rotation.y += 0.01f;
@@ -622,13 +624,16 @@ void Player::PlayerAction()
 	//移動(自機)
 	if (input_->PushKey(DIK_W) || input_->StickInput(L_UP)) {
 		playerlocalpos.y += playerSpeed;
+		Obj_->wtf.rotation.x = -0.3f;
 	}
 	if (input_->PushKey(DIK_S) || input_->StickInput(L_DOWN)) {
 		playerlocalpos.y -= playerSpeed;
+		Obj_->wtf.rotation.x = 0.3f;
 	}
 	if (input_->PushKey(DIK_A) || input_->StickInput(L_LEFT)) {
 		if (isCameraBehavior == 0) {
 			playerlocalpos.x -= playerSpeed;
+			Obj_->wtf.rotation.z = 0.5f;
 		}
 		else if (isCameraBehavior == 1) {
 			playerlocalpos.z += playerSpeed;
@@ -637,6 +642,7 @@ void Player::PlayerAction()
 	if (input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT)) {
 		if (isCameraBehavior == 0) {
 			playerlocalpos.x += playerSpeed;
+			Obj_->wtf.rotation.z = -0.5f;
 		}
 		else if (isCameraBehavior == 1) {
 			playerlocalpos.z -= playerSpeed;
@@ -715,7 +721,7 @@ void Player::PlayerAction()
 		}
 	}
 	if (isShootFlag == true) {
-		isbulletEffFlag_ = 1;
+	
 		BulletCoolTime++;
 		shootObj_->wtf.position += enemylen;
 		len = enemylen;
@@ -782,7 +788,7 @@ void Player::EffUpdate()
 		bulletEffTimer_++;
 	}
 	if (bulletEffTimer_ <= 20 && bulletEffTimer_ >= 1) {
-		EffSummary(Vector3(Obj_->wtf.position.x, Obj_->wtf.position.y, Obj_->wtf.position.z));
+		EffSummary(Vector3(Obj_->wtf.position.x- 0.1f, Obj_->wtf.position.y + 0.5f, Obj_->wtf.position.z - 2.0f));
 	}
 	if (bulletEffTimer_ >= 20) {
 		isbulletEffFlag_ = 0;
@@ -795,27 +801,31 @@ void Player::EffSummary(Vector3 bulletpos)
 	//パーティクル範囲
 	for (int i = 0; i < 5; i++) {
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_pos = 5.0f;
+		const float rnd_pos = 0.0f;
+		const float rnd_posy = 0.0f;
+		const float rnd_posz = 0.0f;
 		Vector3 pos{};
 		pos.x += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		pos.y += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		pos.z += (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y += (float)rand() / RAND_MAX * rnd_posy - rnd_posy / 2.0f;
+		pos.z += (float)rand() / RAND_MAX * rnd_posz - rnd_posz / 2.0f;
 		pos += bulletpos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_vel = 0.1f;
+		const float rnd_vel = 0.0f;
+		const float rnd_vely = 0.0f;
+		const float rnd_velz = 0.1f;
 		Vector3 vel{};
 		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * rnd_vely - rnd_vely / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * rnd_velz - rnd_velz / 2.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_acc = 0.00001f;
+		const float rnd_acc = 0.000001f;
 		Vector3 acc{};
 		acc.x = (float)rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
 		acc.y = (float)rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
 
 		//追加
-		bulletParticle->Add(60, pos, vel, acc, 0.3f, 0.0f);
+		bulletParticle->Add(60, pos, vel, acc, 0.1f, 0.0f);
 
 		bulletParticle->Update();
 
