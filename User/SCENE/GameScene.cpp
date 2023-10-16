@@ -138,17 +138,17 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	skydome->wtf.rotation = {0.0f,0.0f,0.0f};
 
 	//ステージ
-	floorMD = Model::LoadFromOBJ("stage2");
+	floorMD = Model::LoadFromOBJ("tunnel");
 	floor = Object3d::Create();
 	floor->SetModel(floorMD);
-	floor->wtf.position = (Vector3{ 0, -10, 0 });
-	floor->wtf.scale = (Vector3{ 0.5f, 0.5f, 0.5f });
+	floor->wtf.position = (Vector3{ 0, 0, 0 });
+	floor->wtf.scale = (Vector3{ 5.5f, 5.5f, 5.5f });
 
 	//雲海ステージ
 	cloudfloorMD_ = Model::LoadFromOBJ("CloudGround");
 	cloudfloor_ = Object3d::Create();
 	cloudfloor_->SetModel(cloudfloorMD_);
-	cloudfloor_->wtf.position = ( Vector3{ 0, -5.0f, 0 } );
+	cloudfloor_->wtf.position = ( Vector3{ -10, -5.0f, 0 } );
 	cloudfloor_->wtf.scale = ( Vector3{ 500.0f, 500.0f, 10000.0f } );
 
 	//プレイヤー

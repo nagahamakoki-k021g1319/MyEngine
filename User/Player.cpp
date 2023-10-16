@@ -88,10 +88,10 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	FBXObject3d::CreateGraphicsPipeline();
 
 	//自機
-	Model_ = Model::LoadFromOBJ("jet");
-	Model2_ = Model::LoadFromOBJ("hidarihito");
-	Model3_  = Model::LoadFromOBJ("migihito");
-	ModelAt_ = Model::LoadFromOBJ("maehitoAt");
+	Model_ = Model::LoadFromOBJ("bik");
+	Model2_ = Model::LoadFromOBJ("bikmid");
+	Model3_  = Model::LoadFromOBJ("bikslid");
+	ModelAt_ = Model::LoadFromOBJ("bikAt");
 	ModelBefo_ = Model::LoadFromOBJ("fullsphito");
 	ModelBack_ = Model::LoadFromOBJ("usirohito");
 
@@ -264,6 +264,43 @@ void Player::Update(int winpArrivalTimer, Vector3 pos, bool eneBulletFlag, Vecto
 				isEffFlag = 1;
 			}
 		}
+
+		if ( input_->TriggerKey(DIK_5) )
+		{
+			Obj_->SetModel(ModelAt_);
+		}
+		else if ( input_->TriggerKey(DIK_4) )
+		{
+			Obj_->SetModel(Model2_);
+		}
+		else if ( input_->TriggerKey(DIK_6) )
+		{
+			Obj_->SetModel(Model_);
+		}
+
+
+		if ( input_->PushKey(DIK_D) )
+		{
+			Obj_->wtf.rotation.z = -0.4f;
+		}
+		else if ( input_->PushKey(DIK_A) )
+		{
+			Obj_->wtf.rotation.z = 0.4f;
+		}
+		else if ( input_->PushKey(DIK_W) )
+		{
+			Obj_->wtf.rotation.x = -0.3f;
+		}
+		else if ( input_->PushKey(DIK_7) )
+		{
+			Obj_->SetModel(Model3_);
+		}
+		else {
+			/*Obj_->SetModel(Model_);*/
+			Obj_->wtf.rotation.x = 0.0f;
+			Obj_->wtf.rotation.z = 0.0f;
+		}
+
 
 		//ボスがやられると前進する
 		if ( clushingTimer > 10 )
@@ -624,16 +661,16 @@ void Player::PlayerAction()
 	//移動(自機)
 	if (input_->PushKey(DIK_W) || input_->StickInput(L_UP)) {
 		playerlocalpos.y += playerSpeed;
-		Obj_->wtf.rotation.x = -0.3f;
+		
 	}
 	if (input_->PushKey(DIK_S) || input_->StickInput(L_DOWN)) {
 		playerlocalpos.y -= playerSpeed;
-		Obj_->wtf.rotation.x = 0.3f;
+		
 	}
 	if (input_->PushKey(DIK_A) || input_->StickInput(L_LEFT)) {
 		if (isCameraBehavior == 0) {
 			playerlocalpos.x -= playerSpeed;
-			Obj_->wtf.rotation.z = 0.5f;
+	
 		}
 		else if (isCameraBehavior == 1) {
 			playerlocalpos.z += playerSpeed;
@@ -642,7 +679,7 @@ void Player::PlayerAction()
 	if (input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT)) {
 		if (isCameraBehavior == 0) {
 			playerlocalpos.x += playerSpeed;
-			Obj_->wtf.rotation.z = -0.5f;
+			
 		}
 		else if (isCameraBehavior == 1) {
 			playerlocalpos.z -= playerSpeed;
@@ -721,7 +758,6 @@ void Player::PlayerAction()
 		}
 	}
 	if (isShootFlag == true) {
-	
 		BulletCoolTime++;
 		shootObj_->wtf.position += enemylen;
 		len = enemylen;
