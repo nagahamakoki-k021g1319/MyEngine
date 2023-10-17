@@ -17,7 +17,6 @@ GameScene::~GameScene() {
 	delete camera2;
 	delete camera3;
 	delete player_;
-	delete enemy_;
 	delete obstacle_;
 	delete enemyBoss_;
 	delete skydome;
@@ -32,6 +31,8 @@ GameScene::~GameScene() {
 	delete floorTitMD_;
 	delete cloudfloor_;
 	delete cloudfloorMD_;
+	delete cloudfloor2_;
+	delete cloudfloorMD2_;
 	delete standObj_;
 	delete standModel_;
 	delete bbout1;
@@ -141,33 +142,40 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	floorMD = Model::LoadFromOBJ("tunnel");
 	floor = Object3d::Create();
 	floor->SetModel(floorMD);
-	floor->wtf.position = (Vector3{ 0, 0, 0 });
-	floor->wtf.scale = (Vector3{ 5.5f, 5.5f, 5.5f });
+	floor->wtf.position = (Vector3{ 0, 0, 70 });
+	floor->wtf.rotation.z = 10.0f;
+	floor->wtf.scale = (Vector3{ 20.0f, 20.0f, 20.0f });
 
-	//雲海ステージ
+	//道路のステージ
 	cloudfloorMD_ = Model::LoadFromOBJ("CloudGround");
 	cloudfloor_ = Object3d::Create();
 	cloudfloor_->SetModel(cloudfloorMD_);
-	cloudfloor_->wtf.position = ( Vector3{ -10, -5.0f, 0 } );
-	cloudfloor_->wtf.scale = ( Vector3{ 500.0f, 500.0f, 10000.0f } );
+	cloudfloor_->wtf.position = ( Vector3{ 30, -5.0f, 0 } );
+	cloudfloor_->wtf.scale = ( Vector3{ 100.0f, 500.0f, 10000.0f } );
+
+	//道路のステージ(繋ぎ)
+	cloudfloorMD2_ = Model::LoadFromOBJ("CloudGround");
+	cloudfloor2_ = Object3d::Create();
+	cloudfloor2_->SetModel(cloudfloorMD2_);
+	cloudfloor2_->wtf.position = ( Vector3{ 30, -5.0f, 20000 } );
+	cloudfloor2_->wtf.scale = ( Vector3{ 100.0f, 500.0f, 10000.0f } );
 
 	//プレイヤー
 	player_ = new Player();
 	player_->Initialize(dxCommon,input);
 	player_->SetCamera(mainCamera);
-	player_->SetEnemy(enemy_);
 	player_->SetEnemyBoss(enemyBoss_);
 
 	//-------敵関連--------//
-	//雑魚敵
-	enemy_ = new Enemy();
-	enemy_->Initialize(dxCommon, input);
-	enemy_->SetPlayer(player_);
+	////雑魚敵
+	//enemy_ = new Enemy();
+	//enemy_->Initialize(dxCommon, input);
+	//enemy_->SetPlayer(player_);
 	//障害物
 	obstacle_ = new Obstacle();
 	obstacle_->Initialize(dxCommon, input);
 	obstacle_->SetPlayer(player_);
-	obstacle_->SetEnemy(enemy_);
+	//obstacle_->SetEnemy(enemy_);
 	//敵Boss
 	enemyBoss_ = new EnemyBoss();
 	enemyBoss_->Initialize(dxCommon, input);
@@ -217,18 +225,20 @@ void GameScene::Update() {
 		if (enemyBoss_->clushingTimer >= 120){
 			sceneNo_ = SceneNo::Clear;
 		}
-		player_->Update(enemy_->winpArrivalTimer,enemy_->GetinductionWorldPosition(0),enemy_->isShootStFlag_[0],enemy_->GetinductionWorldPosition(1), enemy_->isShootStFlag_[1],enemyBoss_->clushingTimer);
-		enemy_->Update(player_->splinePosition_);
+		player_->Update();
 		enemyBoss_->Update();
 		obstacle_->Update();
-
-		floor->Update();
+		
 		skydome->Update();
 		skydome->wtf.position.z -= 0.02f;
 		skydome->wtf.rotation.y += 0.0008f;
 
+		floor->Update();
+		floor->wtf.position.z -= 0.1f;
 		cloudfloor_->Update();
-		cloudfloor_->wtf.position.z -= 2.0f;
+		cloudfloor_->wtf.position.z -= 10.0f;
+		cloudfloor2_->Update();
+		cloudfloor2_->wtf.position.z -= 10.0f;
 	}
 }
 
@@ -254,12 +264,12 @@ void GameScene::Draw() {
 	if (sceneNo_ == SceneNo::Game) {
 		//// 3Dオブクジェクトの描画
 		player_->Draw();
-		enemy_->Draw(enemyBoss_->clushingTimer);
 		enemyBoss_->Draw();
 		obstacle_->Draw();
 		floor->Draw();
 		skydome->Draw();
 		cloudfloor_->Draw();
+		cloudfloor2_->Draw();
 	}
 	//3Dオブジェクト描画後処理
 	Object3d::PostDraw();
@@ -284,9 +294,6 @@ void GameScene::Draw() {
 		//// パーティクル UI FBX スプライト描画
 		player_->FbxDraw();
 		player_->EffDraw();
-		enemy_->FbxDraw();
-		enemy_->EffDraw();
-		enemy_->UIDraw();
 		enemyBoss_->FbxDraw();
 		enemyBoss_->UIDraw();
 		enemyBoss_->EffDraw();

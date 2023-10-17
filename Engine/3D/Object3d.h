@@ -34,9 +34,22 @@ private: // エイリアス
 	{
 		//XMFLOAT4 color;	// 色 (RGBA)
 		Matrix4 mat;	// ３Ｄ変換行列
+		Matrix4 viewproj;	// ３Ｄ変換行列
+		Matrix4 world;
+		Vector3 cameraPos;
+		float shininess;//光沢度
+		float alpha; //透明度
+		Vector3 color;
 	};
 
-	
+	// 定数バッファ用データ構造体
+	struct ConstBufferPolygonExplosion
+	{
+		float _Destruction = 0.0f;
+		float _ScaleFactor = 1.0f;
+		float _RotationFactor = 0.0f;
+		float _PositionFactor = 0.0f;
+	};
 
 private: // 定数
 	static const int division = 50;					// 分割数
@@ -151,19 +164,52 @@ public: // メンバ関数
 	//setter
 	void SetModel(Model* model_) { this->model = model_; }
 
+	const ConstBufferPolygonExplosion GetPolygonExplosion() {
+		return ConstMapPolygon_;
+	}
+
+	void SetPolygonExplosion(const ConstBufferPolygonExplosion& polygonExplosion) {
+		ConstMapPolygon_ = polygonExplosion;
+	}
+
+	/// <summary>
+	/// ポリゴン爆散の進行具合
+	/// </summary>
+	void SetDestruction(float Destruction) {
+		ConstMapPolygon_._Destruction = Destruction;
+	}
+
+	Matrix4 GetMatWorld() {return wtf.matWorld;}
+
+	void SetShininess(float shininess) {shininess_ = shininess;}
+
+	void Setalpha(float alpha) {alpha_ = alpha;}
+
+	void SetColor(Vector3 color_) {color_ = color;}
+
+
+
 	Vector3 GetWorldPosition();
 
 private: // メンバ変数
-	public:
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
+	ComPtr<ID3D12Resource> constBuffB1; // 定数バッファ
+	ComPtr<ID3D12Resource> constBuffB2; // 定数バッファ
 
 	bool isDead_ = false;
 
+	//光沢度
+	float shininess_ = 10;
+
+	float alpha_ = 1.0f;
 	// 色
-	Vector4 color ={ 1,1,1,1 };	
+	Vector3 color ={ 1,1,1};	
 
 	// 親オブジェクト
 	Object3d* parent = nullptr;
+
+	ConstBufferPolygonExplosion ConstMapPolygon_;
+
 	//モデル
 	Model* model = nullptr;
 	static Camera* camera;

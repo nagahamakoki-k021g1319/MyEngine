@@ -30,7 +30,7 @@ public:
 	Vector3 GetWorldPosition();
 
 	void SetPlayer(Player* player) { player_ = player; };
-	void SetEnemy(Enemy* enemy) { enemy_ = enemy; };
+	/*void SetEnemy(Enemy* enemy) { enemy_ = enemy; };*/
 
 public:
 	//音を止める関数
@@ -43,7 +43,7 @@ private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Audio* audio = nullptr;
 	Player* player_ = nullptr;
-	Enemy* enemy_ = nullptr;
+	//Enemy* enemy_ = nullptr;
 	Collision coll;
 	
 	//障害物

@@ -298,6 +298,20 @@ bool Object3d::Initialize()
 		IID_PPV_ARGS(&constBuffB0));
 	assert(SUCCEEDED(result));
 
+	{
+		// リソース設定
+		CD3DX12_RESOURCE_DESC resourceDesc2 =
+			CD3DX12_RESOURCE_DESC::Buffer(( sizeof(ConstBufferPolygonExplosion) + 0xff ) & ~0xff);
+
+		// 定数バッファの生成
+		result = device->CreateCommittedResource(
+			&heapProps, // アップロード可能
+			D3D12_HEAP_FLAG_NONE,&resourceDesc2,D3D12_RESOURCE_STATE_GENERIC_READ,nullptr,
+			IID_PPV_ARGS(&constBuffB2));
+		assert(SUCCEEDED(result));
+	}
+	ConstMapPolygon_ = { 0.0f,1.0f,0.0f,0.0f };
+
 	return true;
 }
 
@@ -320,6 +334,9 @@ void Object3d::UpdateMat () {
 		// 親オブジェクトのワールド行列を掛ける
 		wtf.matWorld *= parent->wtf.matWorld;
 	}
+
+	
+
 }
 
 void Object3d::Update(){
@@ -334,9 +351,23 @@ void Object3d::Update(){
 	ConstBufferDataB0* constMap = nullptr;
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap);
 	resultMat = wtf.matWorld * camera->GetViewProjectionMatrix();	// 行列の合成
-
 	constMap->mat = resultMat;
+	constMap->viewproj = matView * matProjection;	// 行列の合成
+	constMap->world = wtf.matWorld;
+	constMap->cameraPos = eye;
+	constMap->shininess = shininess_;
+	constMap->alpha = alpha_;
+	constMap->color = color;
 	constBuffB0->Unmap(0, nullptr);
+
+	ConstBufferPolygonExplosion* constMap2 = nullptr;
+
+	result = constBuffB2->Map(0,nullptr,( void** ) &constMap2);
+	constMap2->_Destruction = ConstMapPolygon_._Destruction;	// 行列の合成
+	constMap2->_PositionFactor = ConstMapPolygon_._PositionFactor;
+	constMap2->_RotationFactor = ConstMapPolygon_._RotationFactor;
+	constMap2->_ScaleFactor = ConstMapPolygon_._ScaleFactor;
+	constBuffB2->Unmap(0,nullptr);
 
 }
 
@@ -371,6 +402,9 @@ void Object3d::Draw()
 
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+
+	//// 定数バッファビューをセット
+	//cmdList->SetGraphicsRootConstantBufferView(3,constBuffB2->GetGPUVirtualAddress());
 
 	//モデルを描画
 	model->Draw(cmdList.Get(), 1);

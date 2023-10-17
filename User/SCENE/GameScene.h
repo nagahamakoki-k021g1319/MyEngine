@@ -82,7 +82,7 @@ private:	//メンバ変数
 		Clear //ゲームクリア
 
 	};
-	SceneNo sceneNo_ = SceneNo::Title;
+	SceneNo sceneNo_ = SceneNo::Game;
 
 
 
@@ -112,7 +112,8 @@ private:	//メンバ変数
 	Model* floorMD = nullptr;
 	Object3d* cloudfloor_ = nullptr;
 	Model* cloudfloorMD_ = nullptr;
-
+	Object3d* cloudfloor2_ = nullptr;
+	Model* cloudfloorMD2_ = nullptr;
 
 	//タイトル
 	Sprite* TitleSprite = new Sprite();
