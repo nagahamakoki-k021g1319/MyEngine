@@ -92,11 +92,6 @@ void EnemyBoss::Update()
 	if (input_->PushKey(DIK_4)){
 		isEffFlag_ = 1;
 	}
-	if ( player_->splinePosition_->GetIndex() >= 18 )
-	{
-		isCollFlag = true;
-	}
-
 
 	fbxObject3d_->Update();
 	Obj_->Update();
@@ -146,21 +141,21 @@ void EnemyBoss::Draw()
                                            
 void EnemyBoss::FbxDraw()
 {
-	if (player_->splinePosition_->GetIndex() >= 18) {
-		if ( clushingTimer <= 1 ){
-			fbxObject3d_->Draw(dxCommon_->GetCommandList());
-		}
-	}
+	
+	/*if ( clushingTimer <= 1 ){
+		fbxObject3d_->Draw(dxCommon_->GetCommandList());
+	}*/
+	
 }
 
 void EnemyBoss::UIDraw()
 {
-	if ( enemy_->winpArrivalTimer >= 1600 )
+	/*if ( enemy_->winpArrivalTimer >= 1600 )
 	{
 		bosshpRedUI->Draw();
 		bosshpUI->Draw();
 		bosshpflameUI->Draw();
-	}
+	}*/
 
 }
 

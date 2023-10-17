@@ -44,26 +44,26 @@ void Obstacle::Update()
 		obstacleObj_[i]->Update();
 	}
 
-	//障害物が動き始める
-	if (enemy_->bossGostAt == true) {
-		for (int i = 0; i < 8; i++) {
-			obstacleObj_[i]->wtf.rotation.z -= 0.03f;
-			obstacleObj_[i]->wtf.position.z -= 0.3f;
-		}
+	////障害物が動き始める
+	//if (enemy_->bossGostAt == true) {
+	//	for (int i = 0; i < 8; i++) {
+	//		obstacleObj_[i]->wtf.rotation.z -= 0.03f;
+	//		obstacleObj_[i]->wtf.position.z -= 0.3f;
+	//	}
 
-	}
+	//}
 
 }
 
 void Obstacle::Draw()
 {
-	if (enemy_->bossGostAt == true) {
+	/*if (enemy_->bossGostAt == true) {
 		for (int i = 0; i < 8; i++) {
 			if (isObsAliveFlag_[i] == 0) {
 				obstacleObj_[i]->Draw();
 			}
 		}
-	}
+	}*/
 }
 
 void Obstacle::FbxDraw()
