@@ -406,6 +406,8 @@ void Object3d::Draw()
 	//// 定数バッファビューをセット
 	//cmdList->SetGraphicsRootConstantBufferView(3,constBuffB2->GetGPUVirtualAddress());
 
+
+
 	//モデルを描画
 	model->Draw(cmdList.Get(), 1);
 }
