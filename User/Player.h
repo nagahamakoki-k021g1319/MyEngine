@@ -61,6 +61,13 @@ public:
 	Vector3 GetPos() { return Obj_->wtf.position; };
 	Vector3 GetCamShake() { return camShakeVec; };
 
+
+	//ゲームが始まるときのムービー
+	void GameStartMovie();
+
+	//被弾時のカメラシェイク
+	void DamageCamShake();
+
 	/// <summary>
 	/// ポジション
 	/// </summary>
@@ -94,6 +101,13 @@ private:
 	SpriteCommon* spriteCommon = nullptr;
 	Collision coll;
 
+	//ゲームが始まるフラグ
+	bool isGameStartFlag = false;
+	int isGameStartTimer = 0;
+	bool acflag = false;
+	bool rotaflag = false;
+	bool camerasetFlag = false;
+
 	//待機
 	//maehito usirohito
 	Object3d* Obj_ = nullptr;
@@ -103,6 +117,8 @@ private:
 	Model* ModelAt_ = nullptr;
 	Model* ModelBefo_ = nullptr;
 	Model* ModelBack_ = nullptr;
+
+	
 
 	//自機のジャンプフラグ
 	bool isJumpFlag = false;
@@ -143,8 +159,9 @@ private:
 	Model* ret1Model_ = nullptr;
 	Model* ret2Model_ = nullptr;
 	int retResetTimer = 0;
-	bool retdisplay = true;
-
+	bool retdisplay = false;
+	Object3d* retVisualObj_ = nullptr;
+	Model* retVisualModel_ = nullptr;
 
 	//弾発射(弱)
 	Object3d* shootObj_ = nullptr;
@@ -224,9 +241,6 @@ private:
 	Vector3 moveBack;
 
 
-	bool isExplosionFlag = false;
-	float ExplosionFrame = 0;
-	const float ExplosionMaxFrame = 60;
 	
 	
 };

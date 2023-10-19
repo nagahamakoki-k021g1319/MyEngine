@@ -18,6 +18,7 @@
 #include "Enemy.h"
 #include "Obstacle.h"
 #include "EnemyBoss.h"
+#include "Enemy/ArmorEnemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -82,7 +83,7 @@ private:	//メンバ変数
 		Clear //ゲームクリア
 
 	};
-	SceneNo sceneNo_ = SceneNo::Game;
+	SceneNo sceneNo_ = SceneNo::Title;
 
 
 
@@ -98,6 +99,8 @@ private:	//メンバ変数
 	//-------敵関連--------//
 	//雑魚敵
 	Enemy* enemy_ = nullptr;
+	ArmorEnemy* armorEnemy_ = nullptr;
+
 	//障害物
 	Obstacle* obstacle_ = nullptr;
 	//敵Boss

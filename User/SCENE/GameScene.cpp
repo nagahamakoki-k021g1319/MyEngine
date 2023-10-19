@@ -17,6 +17,7 @@ GameScene::~GameScene() {
 	delete camera2;
 	delete camera3;
 	delete player_;
+	delete armorEnemy_;
 	delete obstacle_;
 	delete enemyBoss_;
 	delete skydome;
@@ -144,7 +145,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	floor->SetModel(floorMD);
 	floor->wtf.position = (Vector3{ 0, 0, 70 });
 	floor->wtf.rotation.z = 10.0f;
-	floor->wtf.scale = (Vector3{ 20.0f, 20.0f, 20.0f });
+	floor->wtf.scale = (Vector3{ 20.0f, 20.0f, 1000.0f });
 
 	//道路のステージ
 	cloudfloorMD_ = Model::LoadFromOBJ("CloudGround");
@@ -171,6 +172,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	//enemy_ = new Enemy();
 	//enemy_->Initialize(dxCommon, input);
 	//enemy_->SetPlayer(player_);
+	armorEnemy_ = new ArmorEnemy();
+	armorEnemy_->Initialize(dxCommon,input);
+
 	//障害物
 	obstacle_ = new Obstacle();
 	obstacle_->Initialize(dxCommon, input);
@@ -211,7 +215,7 @@ void GameScene::Update() {
 		}
 		if ( bboutTimer >= 30 )
 		{
-			mainCamera->wtf.rotation.y = 0.0f;
+			mainCamera->wtf.rotation.y = 2.5f;
 			sceneNo_ = SceneNo::Game;
 		}
 
@@ -225,10 +229,12 @@ void GameScene::Update() {
 		if (enemyBoss_->clushingTimer >= 120){
 			sceneNo_ = SceneNo::Clear;
 		}
+		
 		player_->Update();
 		enemyBoss_->Update();
 		obstacle_->Update();
-		
+		armorEnemy_->Update();
+
 		skydome->Update();
 		skydome->wtf.position.z -= 0.02f;
 		skydome->wtf.rotation.y += 0.0008f;
@@ -239,6 +245,9 @@ void GameScene::Update() {
 		cloudfloor_->wtf.position.z -= 10.0f;
 		cloudfloor2_->Update();
 		cloudfloor2_->wtf.position.z -= 10.0f;
+
+		
+
 	}
 }
 
@@ -266,6 +275,7 @@ void GameScene::Draw() {
 		player_->Draw();
 		enemyBoss_->Draw();
 		obstacle_->Draw();
+		armorEnemy_->Draw();
 		floor->Draw();
 		skydome->Draw();
 		cloudfloor_->Draw();

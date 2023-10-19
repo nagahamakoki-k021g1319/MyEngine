@@ -124,6 +124,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="User\Enemy.cpp" />
     <ClCompile Include="User\EnemyBoss.cpp" />
+    <ClCompile Include="User\Enemy\ArmorEnemy.cpp" />
     <ClCompile Include="User\Obstacle.cpp" />
     <ClCompile Include="User\Player.cpp" />
     <ClCompile Include="User\PlayerBullet.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Engine\MATH\Vector4.h" />
     <ClInclude Include="User\Enemy.h" />
     <ClInclude Include="User\EnemyBoss.h" />
+    <ClInclude Include="User\Enemy\ArmorEnemy.h" />
     <ClInclude Include="User\Obstacle.h" />
     <ClInclude Include="User\Player.h" />
     <ClInclude Include="User\PlayerBullet.h" />
@@ -190,6 +192,12 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Engine\SHADER\OBJGeometryShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Engine\SHADER\OBJPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

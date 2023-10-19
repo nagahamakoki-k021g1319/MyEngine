@@ -19,6 +19,9 @@ Player::~Player() {
 	delete ret1Model_;
 	delete ret2Model_;
 
+	delete retVisualObj_;
+	delete retVisualModel_;
+
 	delete BloodUI;
 
 	delete hpgageUI;
@@ -80,23 +83,24 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	camTransForm = new Transform();
 	camera = new Camera(WinApp::window_width,WinApp::window_height);
 
+
 	// デバイスをセット
 	FBXObject3d::SetDevice(dxCommon->GetDevice());
 	// グラフィックスパイプライン生成
 	FBXObject3d::CreateGraphicsPipeline();
 
 	//自機
-	Model_ = Model::LoadFromOBJ("bik");
+	Model_ = Model::LoadFromOBJ("bikst");
+	ModelBefo_ = Model::LoadFromOBJ("bikst2");
 	Model2_ = Model::LoadFromOBJ("bikmid");
 	Model3_ = Model::LoadFromOBJ("bikslid");
 	ModelAt_ = Model::LoadFromOBJ("bikAt");
-	ModelBefo_ = Model::LoadFromOBJ("bik2");
 	ModelBack_ = Model::LoadFromOBJ("usirohito");
 
 	Obj_ = Object3d::Create();
 	Obj_->SetModel(Model_);
 	Obj_->wtf.scale = { 0.4f,0.4f,0.4f };
-	Obj_->wtf.position = { 0.0f,-2.0f,0.0f };
+	Obj_->wtf.position = { 0.0f,-2.0f,-20.0f };
 
 	//自機の弾(弱)
 	shootModel_ = Model::LoadFromOBJ("boll2");
@@ -112,14 +116,21 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	shootStObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z };
 	shootStObj_->wtf.scale = { 0.8f,0.8f,0.8f };
 
-	//レティクル
+	//レティクル(見えないレティクル)
 	retModel_ = Model::LoadFromOBJ("ster");
 	ret1Model_ = Model::LoadFromOBJ("ster1");
 	ret2Model_ = Model::LoadFromOBJ("ster2");
 	retObj_ = Object3d::Create();
 	retObj_->SetModel(retModel_);
 	retObj_->wtf.scale = { 0.2f,0.2f,0.2f };
-	retObj_->wtf.position = { Obj_->wtf.position.x - 1.5f,Obj_->wtf.position.y + 1.0f,Obj_->wtf.position.z + 10.0f };
+	retObj_->wtf.position = { 0.0f,0.0f,15.0f };
+
+	//レティクル(可視化)
+	retVisualModel_ = Model::LoadFromOBJ("ret");
+	retVisualObj_ = Object3d::Create();
+	retVisualObj_->SetModel(retVisualModel_);
+	retVisualObj_->wtf.scale = { 0.2f,0.2f,0.2f };
+	retVisualObj_->wtf.position = { 0.0f,0.0f,8.0f };
 
 	//パーティクル生成
 	bulletParticle = std::make_unique<ParticleManager>();
@@ -149,8 +160,13 @@ void Player::Update() {
 	enemylen.nomalize();
 	enemylen2 = retObj_->wtf.position - shootStObj_->wtf.position;
 	enemylen2.nomalize();
+	retVisualObj_->Update();
 	Obj_->Update();
 	EffUpdate();
+	isGameStartFlag = true;
+
+	//ゲームが始まる
+	GameStartMovie();
 
 
 	//プレイヤーの行動一覧
@@ -180,26 +196,18 @@ void Player::Update() {
 	}
 	//自機の被弾エフェクト(敵の攻撃がないのでおいてる)
 	if ( input_->TriggerKey(DIK_Q) ){
-		isExplosionFlag = true;
+		isCamShake = true;
+		camShakeTimer = camShakeLimit;
 	}
-
-	if ( isExplosionFlag == true){
-		ExplosionFrame++;
-
-		float a = ExplosionFrame / ExplosionMaxFrame;
-
-		Obj_->SetDestruction(a);
-		Obj_->Setalpha(static_cast< float >( ( ExplosionMaxFrame - ExplosionFrame ) / ExplosionMaxFrame ));
-		if ( ExplosionFrame >= ExplosionMaxFrame )
-		{
-			isAliveFlag = false;
-		}
+	if ( isCamShake == true ){
+		DamageCamShake();
 	}
+	
 
 
 	ImGui::Begin("Player");
 
-	ImGui::Text("position:%f,%f,%f",Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z);
+	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
 	ImGui::Text("Cameraposition:%f,%f,%f",camera->wtf.rotation.x,camera->wtf.rotation.y,camera->wtf.rotation.z);
 
 	ImGui::End();
@@ -223,9 +231,10 @@ void Player::Draw() {
 	}
 	/*shootStObj_->Draw();*/
 
-
-	retObj_->Draw();
-
+	if ( retdisplay == true ){
+		/*retObj_->Draw();*/
+		retVisualObj_->Draw();
+	}
 
 }
 
@@ -600,8 +609,9 @@ void Player::PlayerAction()
 {
 	//自機とレティクルの速度
 	float playerSpeed = 0.08f;
+	float playerSpeed2 = 0.03f;
 	float retSpeed = 0.08f;
-
+	float retSpeed2 = 0.13f;
 	////自機とレティクルの画面制限
 	//float playerLimitX = 0.6f;
 	//float playerLimitY = 0.19f;
@@ -704,29 +714,34 @@ void Player::PlayerAction()
 	if ( input_->PushKey(DIK_A) || input_->StickInput(L_LEFT) )
 	{
 		Obj_->wtf.position.x -= playerSpeed;
+		retObj_->wtf.position.x += playerSpeed2;
 	}
 	if ( input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT) )
 	{
 		Obj_->wtf.position.x += playerSpeed;
+		retObj_->wtf.position.x -= playerSpeed2;
 	}
 
 	//移動(レティクル)
 	if ( input_->PushKey(DIK_UP) || input_->StickInput(R_UP) )
 	{
-		retObj_->wtf.position.y += retSpeed;
+		retObj_->wtf.position.y += retSpeed2;
+		retVisualObj_->wtf.position.y += retSpeed;
 	}
 	if ( input_->PushKey(DIK_DOWN) || input_->StickInput(R_DOWN) )
 	{
-		retObj_->wtf.position.y -= retSpeed;
+		retObj_->wtf.position.y -= retSpeed2;
+		retVisualObj_->wtf.position.y -= retSpeed;
 	}
 	if ( input_->PushKey(DIK_LEFT) || input_->StickInput(R_LEFT) )
 	{
-		retObj_->wtf.position.x -= retSpeed;
-
+		retObj_->wtf.position.x -= retSpeed2;
+		retVisualObj_->wtf.position.x -= retSpeed;
 	}
 	if ( input_->PushKey(DIK_RIGHT) || input_->StickInput(R_RIGHT) )
 	{
-		retObj_->wtf.position.x += retSpeed;
+		retObj_->wtf.position.x += retSpeed2;
+		retVisualObj_->wtf.position.x += retSpeed;
 	}
 	////移動制限(自機とレティクル)
 	//if (fbxObject3d_->wtf.position.x >= playerLimitX) {
@@ -781,7 +796,7 @@ void Player::PlayerAction()
 	{
 		shootObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z };
 	}
-	if ( BulletCoolTime >= 15.0f )
+	if ( BulletCoolTime >= 20.0f )
 	{
 		BulletCoolTime = 0;
 		isShootFlag = false;
@@ -1023,6 +1038,85 @@ Vector3 Player::GetRetWorldPosition()
 	RetWorldPos.z = retObj_->wtf.matWorld.m[ 3 ][ 2 ];
 
 	return RetWorldPos;
+}
+
+void Player::GameStartMovie()
+{
+	if ( isGameStartFlag == true )
+	{
+		acflag = true;
+		camerasetFlag = true;
+		isGameStartTimer++;
+	}
+
+	if ( camerasetFlag == true )
+	{
+		camerasetFlag = false;
+	}
+
+	if ( acflag == true )
+	{
+		Obj_->wtf.position.z += 0.3f;
+	}
+
+	if ( isGameStartTimer >= 60 )
+	{
+		rotaflag = true;
+	}
+
+	if ( rotaflag == true )
+	{
+		camera->wtf.rotation.y -= 0.05f;
+	}
+
+	if ( camera->wtf.rotation.y <= 0.2f )
+	{
+		camera->wtf.rotation.y = 0.2f;
+	}
+
+	if ( isGameStartTimer >= 180 )
+	{
+		isGameStartTimer = 180;
+		acflag = false;
+		Obj_->wtf.position.z = 0.0f;
+		retdisplay = true;
+		camera->wtf.rotation.y = 0.0f;
+	}
+
+}
+
+void Player::DamageCamShake()
+{
+	//  ʃV F C N
+	if ( isCamShake == true )
+	{
+		camShakeTimer--;
+		if ( camShakeTimer <= camShakeLimit && camShakeTimer > camShakeLimit * 3 / 4 )
+		{
+			camera->wtf.position.y += 0.1f;
+			camera->wtf.position.z += 0.1f;
+		}
+		else if ( camShakeTimer <= camShakeLimit * 3 / 4 && camShakeTimer > camShakeLimit * 2 / 4 )
+		{
+			camera->wtf.position.y -= 0.1f;
+			camera->wtf.position.z -= 0.1f;
+		}
+		else if ( camShakeTimer <= camShakeLimit * 2 / 4 && camShakeTimer > camShakeLimit * 1 / 4 )
+		{
+			camera->wtf.position.y += 0.1f;
+			camera->wtf.position.z += 0.1f;
+		}
+		else if ( camShakeTimer <= camShakeLimit * 1 / 4 && camShakeTimer > 0 )
+		{
+			camera->wtf.position.y -= 0.1f;
+			camera->wtf.position.z -= 0.1f;
+		}
+		else if ( camShakeTimer <= 0 )
+		{
+			isCamShake = false;
+			camera->wtf.position = { 0,0,0 };
+		}
+	}
 }
 
 

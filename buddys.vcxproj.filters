@@ -94,6 +94,12 @@
     <Filter Include="Engine\ソースファイル\COLLISION">
       <UniqueIdentifier>{bbf9d956-63f5-4183-95fa-d75876ef7ae8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="user\ソース\Enemy">
+      <UniqueIdentifier>{b76b2615-ab29-4645-bc76-cb80b2e05e40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="user\ヘッダー\Enemy">
+      <UniqueIdentifier>{bf5f017b-2b4e-4f58-bbb4-c745124b0f79}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -196,6 +202,9 @@
     <ClCompile Include="User\PlayerBullet.cpp">
       <Filter>user\ソース</Filter>
     </ClCompile>
+    <ClCompile Include="User\Enemy\ArmorEnemy.cpp">
+      <Filter>user\ソース\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BASE\FPS.h">
@@ -297,6 +306,9 @@
     <ClInclude Include="Engine\INPUT\Input.h">
       <Filter>Engine\ヘッダーファイル\INPUT</Filter>
     </ClInclude>
+    <ClInclude Include="User\Enemy\ArmorEnemy.h">
+      <Filter>user\ヘッダー\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\SHADER\Sprite.hlsli">
@@ -338,6 +350,9 @@
       <Filter>Engine\シェーダーファイル</Filter>
     </FxCompile>
     <FxCompile Include="Engine\SHADER\FBXVS.hlsl">
+      <Filter>Engine\シェーダーファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\SHADER\OBJGeometryShader.hlsl">
       <Filter>Engine\シェーダーファイル</Filter>
     </FxCompile>
   </ItemGroup>
