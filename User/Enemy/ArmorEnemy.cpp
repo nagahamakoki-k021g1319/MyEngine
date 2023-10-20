@@ -32,14 +32,29 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	Modelst_ = Model::LoadFromOBJ("armorenemyst");
 	Obj_ = Object3d::Create();
 	Obj_->SetModel(Modelst_);
-	Obj_->wtf.scale = { 0.3f,0.3f,0.3f };
-	Obj_->wtf.position = { 0.0f,-2.0f,10.0f };
+	Obj_->wtf.scale = { 0.4f,0.4f,0.4f };
+	Obj_->wtf.position = { 3.0f,-2.0f,10.0f };
+
+
+	//パーティクル生成
+	gasParticle = std::make_unique<ParticleManager>();
+	gasParticle.get()->Initialize();
+	gasParticle->LoadTexture("gas.png");
+	gasParticle->Update();
+
+	gasParticle2 = std::make_unique<ParticleManager>();
+	gasParticle2.get()->Initialize();
+	gasParticle2->LoadTexture("gas.png");
+	gasParticle2->Update();
+
 }
 
 void ArmorEnemy::Update()
 {
 	Obj_->Update();
+	EffUpdate();
 	isGameStartTimer++;
+	isbulletEffFlag_ = 1;
 
 	//攻撃時モデルが変わる
 	if ( input_->PushKey(DIK_6) ){
@@ -79,6 +94,109 @@ void ArmorEnemy::Draw()
 			Obj_->Draw();
 		}
 	}
+}
+
+void ArmorEnemy::EffUpdate()
+{
+	if ( isbulletEffFlag_ == 1 )
+	{
+		bulletEffTimer_++;
+	}
+	if ( bulletEffTimer_ <= 20 && bulletEffTimer_ >= 1 )
+	{
+		EffSummary(Vector3(Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y - 1.5f,Obj_->wtf.position.z ));
+		EffSummary2(Vector3(Obj_->wtf.position.x - 1.0f,Obj_->wtf.position.y - 1.5f,Obj_->wtf.position.z ));
+	}
+	if ( bulletEffTimer_ >= 20 )
+	{
+		isbulletEffFlag_ = 0;
+		bulletEffTimer_ = 0;
+	}
+}
+
+void ArmorEnemy::EffSummary(Vector3 bulletpos)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 5; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_posG = 0.0f;
+		const float rnd_posGy = 0.0f;
+		const float rnd_posGz = 0.0f;
+		Vector3 posG{};
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG += bulletpos;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_velG = 0.0f;
+		const float rnd_velGy = 0.0f;
+		const float rnd_velGz = 0.5f;
+		Vector3 velG{};
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 1.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_accG = 0.000001f;
+		Vector3 accG{};
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+
+		//追加
+		gasParticle->Add(60,posG,velG,accG,0.5f,0.0f);
+
+		gasParticle->Update();
+
+	}
+}
+
+void ArmorEnemy::EffSummary2(Vector3 bulletpos2)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 5; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_pos2 = 0.0f;
+		const float rnd_posy2 = 0.0f;
+		const float rnd_posz2 = 0.0f;
+		Vector3 pos2{};
+		pos2.x += ( float ) rand() / RAND_MAX * rnd_pos2 - rnd_pos2 / 2.0f;
+		pos2.y += ( float ) rand() / RAND_MAX * rnd_posy2 - rnd_posy2 / 2.0f;
+		pos2.z += ( float ) rand() / RAND_MAX * rnd_posz2 - rnd_posz2 / 2.0f;
+		pos2 += bulletpos2;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_vel2 = 0.0f;
+		const float rnd_vely2 = 0.0f;
+		const float rnd_velz2 = 0.5f;
+		Vector3 vel2{};
+		vel2.x = ( float ) rand() / RAND_MAX * rnd_vel2 - rnd_vel2 / 2.0f;
+		vel2.y = ( float ) rand() / RAND_MAX * rnd_vely2 - rnd_vely2 / 2.0f;
+		vel2.z = ( float ) rand() / RAND_MAX * rnd_velz2 - rnd_velz2 / 1.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_acc2 = 0.000001f;
+		Vector3 acc2{};
+		acc2.x = ( float ) rand() / RAND_MAX * rnd_acc2 - rnd_acc2 / 2.0f;
+		acc2.y = ( float ) rand() / RAND_MAX * rnd_acc2 - rnd_acc2 / 2.0f;
+
+		//追加
+		gasParticle2->Add(60,pos2,vel2,acc2,0.5f,0.0f);
+
+		gasParticle2->Update();
+
+	}
+
+}
+
+void ArmorEnemy::EffDraw()
+{
+	if ( isbulletEffFlag_ == 1 )
+	{
+		gasParticle->Draw();
+		gasParticle2->Draw();
+	}
+
 }
 
 Vector3 ArmorEnemy::GetWorldPosition()

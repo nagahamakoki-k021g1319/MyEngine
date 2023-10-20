@@ -187,8 +187,8 @@ private:
 	int isEffFlag = 0;
 
 	//パーティクル
-	std::unique_ptr<ParticleManager> bulletParticle;
-	std::unique_ptr<ParticleManager> bulletParticle2;
+	std::unique_ptr<ParticleManager> gasParticle;
+	std::unique_ptr<ParticleManager> gasParticle2;
 	int bulletEffTimer_ = 0;
 	int isbulletEffFlag_ = 0;
 

@@ -16,10 +16,11 @@
 #include "FBXObject3d.h"
 #include "ImGuiManager.h"
 
-class ArmorEnemy{
+class BikeEnemy
+{
 public:
-	ArmorEnemy();
-	~ArmorEnemy();
+	BikeEnemy();
+	~BikeEnemy();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
 	void Update();
@@ -51,29 +52,11 @@ private:
 	//maehito usirohito
 	Object3d* Obj_ = nullptr;
 	Model* Model_ = nullptr;
-	Model* Modelst_ = nullptr;
-
-	
 
 	//パーティクル
 	std::unique_ptr<ParticleManager> gasParticle;
-	std::unique_ptr<ParticleManager> gasParticle2;
 	int bulletEffTimer_ = 0;
 	int isbulletEffFlag_ = 0;
 
-	//ポリゴン爆さん
-	bool isExpolFlag = false;
-	float ExpolTimer = 0;
-	float ExpolMT = 100;
-	bool isAliveFlag = true;
-
 };
-
-
-
-
-
-
-
-
 

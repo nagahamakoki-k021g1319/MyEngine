@@ -122,26 +122,26 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	ret2Model_ = Model::LoadFromOBJ("ster2");
 	retObj_ = Object3d::Create();
 	retObj_->SetModel(retModel_);
-	retObj_->wtf.scale = { 0.2f,0.2f,0.2f };
-	retObj_->wtf.position = { 0.0f,0.0f,15.0f };
+	retObj_->wtf.scale = { 0.6f,0.6f,0.6f };
+	retObj_->wtf.position = { 0.0f,0.0f,30.0f };
 
 	//レティクル(可視化)
 	retVisualModel_ = Model::LoadFromOBJ("ret");
 	retVisualObj_ = Object3d::Create();
 	retVisualObj_->SetModel(retVisualModel_);
-	retVisualObj_->wtf.scale = { 0.2f,0.2f,0.2f };
-	retVisualObj_->wtf.position = { 0.0f,0.0f,8.0f };
+	retVisualObj_->wtf.scale = { 0.3f,0.3f,0.3f };
+	retVisualObj_->wtf.position = { 0.0f,-0.3f,15.0f };
 
 	//パーティクル生成
-	bulletParticle = std::make_unique<ParticleManager>();
-	bulletParticle.get()->Initialize();
-	bulletParticle->LoadTexture("bullet.png");
-	bulletParticle->Update();
+	gasParticle = std::make_unique<ParticleManager>();
+	gasParticle.get()->Initialize();
+	gasParticle->LoadTexture("gas.png");
+	gasParticle->Update();
 
-	bulletParticle2 = std::make_unique<ParticleManager>();
-	bulletParticle2.get()->Initialize();
-	bulletParticle2->LoadTexture("bullet.png");
-	bulletParticle2->Update();
+	gasParticle2 = std::make_unique<ParticleManager>();
+	gasParticle2.get()->Initialize();
+	gasParticle2->LoadTexture("gas.png");
+	gasParticle2->Update();
 
 	//UIの初期化(枚数が多いため)
 	UIInitialize();
@@ -232,7 +232,7 @@ void Player::Draw() {
 	/*shootStObj_->Draw();*/
 
 	if ( retdisplay == true ){
-		/*retObj_->Draw();*/
+		retObj_->Draw();
 		retVisualObj_->Draw();
 	}
 
@@ -609,9 +609,9 @@ void Player::PlayerAction()
 {
 	//自機とレティクルの速度
 	float playerSpeed = 0.08f;
-	float playerSpeed2 = 0.03f;
+	float playerSpeed2 = 0.06f;
 	float retSpeed = 0.08f;
-	float retSpeed2 = 0.13f;
+	float retSpeed2 = 0.16f;
 	////自機とレティクルの画面制限
 	//float playerLimitX = 0.6f;
 	//float playerLimitY = 0.19f;
@@ -715,11 +715,13 @@ void Player::PlayerAction()
 	{
 		Obj_->wtf.position.x -= playerSpeed;
 		retObj_->wtf.position.x += playerSpeed2;
+		camera->wtf.position.x -= 0.01f;
 	}
 	if ( input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT) )
 	{
 		Obj_->wtf.position.x += playerSpeed;
 		retObj_->wtf.position.x -= playerSpeed2;
+		camera->wtf.position.x += 0.01f;
 	}
 
 	//移動(レティクル)
@@ -796,7 +798,7 @@ void Player::PlayerAction()
 	{
 		shootObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z };
 	}
-	if ( BulletCoolTime >= 20.0f )
+	if ( BulletCoolTime >= 40.0f )
 	{
 		BulletCoolTime = 0;
 		isShootFlag = false;
@@ -869,8 +871,8 @@ void Player::EffUpdate()
 	}
 	if ( bulletEffTimer_ <= 20 && bulletEffTimer_ >= 1 )
 	{
-		EffSummary(Vector3(Obj_->wtf.position.x - 0.15f,Obj_->wtf.position.y + 0.15f,Obj_->wtf.position.z - 2.0f));
-		EffSummary2(Vector3(Obj_->wtf.position.x + 0.13f,Obj_->wtf.position.y + 0.15f,Obj_->wtf.position.z - 2.0f));
+		EffSummary(Vector3(Obj_->wtf.position.x - 0.15f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 1.5f));
+		EffSummary2(Vector3(Obj_->wtf.position.x + 0.13f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 1.5f));
 	}
 	if ( bulletEffTimer_ >= 20 )
 	{
@@ -885,36 +887,35 @@ void Player::EffSummary(Vector3 bulletpos)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_pos = 0.0f;
-		const float rnd_posy = 0.0f;
-		const float rnd_posz = 0.0f;
-		Vector3 pos{};
-		pos.x += ( float ) rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		pos.y += ( float ) rand() / RAND_MAX * rnd_posy - rnd_posy / 2.0f;
-		pos.z += ( float ) rand() / RAND_MAX * rnd_posz - rnd_posz / 2.0f;
-		pos += bulletpos;
+		const float rnd_posG = 0.0f;
+		const float rnd_posGy = 0.0f;
+		const float rnd_posGz = 0.0f;
+		Vector3 posG{};
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG += bulletpos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_vel = 0.0f;
-		const float rnd_vely = 0.0f;
-		const float rnd_velz = 0.05f;
-		Vector3 vel{};
-		vel.x = ( float ) rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		vel.y = ( float ) rand() / RAND_MAX * rnd_vely - rnd_vely / 2.0f;
-		vel.z = ( float ) rand() / RAND_MAX * rnd_velz - rnd_velz / 2.0f;
+		const float rnd_velG = 0.0f;
+		const float rnd_velGy = 0.0f;
+		const float rnd_velGz = 0.05f;
+		Vector3 velG{};
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 0.2f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_acc = 0.000001f;
-		Vector3 acc{};
-		acc.x = ( float ) rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
-		acc.y = ( float ) rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
+		const float rnd_accG = 0.000001f;
+		Vector3 accG{};
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 
 		//追加
-		bulletParticle->Add(60,pos,vel,acc,0.05f,0.0f);
+		gasParticle->Add(60,posG,velG,accG,0.05f,0.0f);
 
-		bulletParticle->Update();
+		gasParticle->Update();
 
 	}
-
 
 }
 
@@ -940,7 +941,7 @@ void Player::EffSummary2(Vector3 bulletpos2)
 		Vector3 vel2{};
 		vel2.x = ( float ) rand() / RAND_MAX * rnd_vel2 - rnd_vel2 / 2.0f;
 		vel2.y = ( float ) rand() / RAND_MAX * rnd_vely2 - rnd_vely2 / 2.0f;
-		vel2.z = ( float ) rand() / RAND_MAX * rnd_velz2 - rnd_velz2 / 2.0f;
+		vel2.z = ( float ) rand() / RAND_MAX * rnd_velz2 - rnd_velz2 / 0.2f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
 		const float rnd_acc2 = 0.000001f;
 		Vector3 acc2{};
@@ -948,9 +949,9 @@ void Player::EffSummary2(Vector3 bulletpos2)
 		acc2.y = ( float ) rand() / RAND_MAX * rnd_acc2 - rnd_acc2 / 2.0f;
 
 		//追加
-		bulletParticle2->Add(60,pos2,vel2,acc2,0.05f,0.0f);
+		gasParticle2->Add(60,pos2,vel2,acc2,0.05f,0.0f);
 
-		bulletParticle2->Update();
+		gasParticle2->Update();
 
 	}
 
@@ -960,8 +961,8 @@ void Player::EffDraw()
 {
 	if ( isbulletEffFlag_ == 1 )
 	{
-		bulletParticle->Draw();
-		bulletParticle2->Draw();
+		gasParticle->Draw();
+		gasParticle2->Draw();
 	}
 }
 
