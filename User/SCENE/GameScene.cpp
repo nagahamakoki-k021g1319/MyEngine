@@ -304,6 +304,7 @@ void GameScene::Draw() {
 		//// パーティクル UI FBX スプライト描画
 		player_->FbxDraw();
 		player_->EffDraw();
+		armorEnemy_->EffDraw();
 		enemyBoss_->FbxDraw();
 		enemyBoss_->UIDraw();
 		enemyBoss_->EffDraw();
