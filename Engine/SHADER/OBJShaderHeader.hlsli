@@ -18,7 +18,7 @@ cbuffer cbuff1 : register(b1) {
 }
 
 
-cbuffer cbuff3 : register(b3) {
+cbuffer cbuff2 : register(b2) {
     float _Destruction : packoffset(c0);
     float _ScaleFactor : packoffset(c0.y);
     float _RotationFactor : packoffset(c0.z);

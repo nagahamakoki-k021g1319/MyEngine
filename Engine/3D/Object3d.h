@@ -185,7 +185,7 @@ public: // メンバ関数
 
 	void Setalpha(float alpha) {alpha_ = alpha;}
 
-	void SetColor(Vector3 color_) {color_ = color;}
+	void SetColor(Vector3 color_) {color = color_;}
 
 
 

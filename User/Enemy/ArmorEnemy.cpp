@@ -34,7 +34,8 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	Obj_->SetModel(Modelst_);
 	Obj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	Obj_->wtf.position = { 3.0f,-2.0f,10.0f };
-
+	//                               大きさ 回転  飛ぶ量 
+	Obj_->SetPolygonExplosion({ 0.0f,-1.0f,6.28f,20.0f });
 
 	//パーティクル生成
 	gasParticle = std::make_unique<ParticleManager>();
@@ -72,7 +73,7 @@ void ArmorEnemy::Update()
 		float polygon = ExpolTimer / ExpolMT;
 
 		Obj_->SetDestruction(polygon);
-		Obj_->Setalpha(static_cast< float >( ( ExpolMT - ExpolTimer ) / ExpolMT ));
+		/*Obj_->Setalpha(static_cast< float >( ( ExpolMT - ExpolTimer ) / ExpolMT ));*/
 		if ( ExpolTimer >= ExpolMT )
 		{
 			isAliveFlag = false;
@@ -82,7 +83,7 @@ void ArmorEnemy::Update()
 	ImGui::Begin("ArmorEnemy");
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
-	
+
 	ImGui::End();
 
 }
