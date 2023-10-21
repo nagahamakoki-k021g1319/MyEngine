@@ -64,7 +64,7 @@ private:
 	//ポリゴン爆さん
 	bool isExpolFlag = false;
 	float ExpolTimer = 0;
-	float ExpolMT = 100;
+	float ExpolMT = 40;
 	bool isAliveFlag = true;
 
 };

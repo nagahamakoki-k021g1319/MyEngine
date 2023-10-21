@@ -45,7 +45,7 @@ void Model::Draw(ID3D12GraphicsCommandList* cmdList, UINT rootParamIndexMaterial
 	cmdList->SetGraphicsRootConstantBufferView(rootParamIndexMaterial, constBuffB1->GetGPUVirtualAddress());
 
 	// シェーダリソースビューをセット
-	cmdList->SetGraphicsRootDescriptorTable(2, gpuDescHandleSRV);
+	cmdList->SetGraphicsRootDescriptorTable(3, gpuDescHandleSRV);
 	
 	// 描画コマンド
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);

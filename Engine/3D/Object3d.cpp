@@ -109,7 +109,7 @@ void Object3d::InitializeGraphicsPipeline()
 {
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
-	//ComPtr<ID3DBlob> gsBlob;	// ジオメトリシェーダオブジェクト
+	ComPtr<ID3DBlob> gsBlob;	// ジオメトリシェーダオブジェクト
 	ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
 	ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
 
@@ -160,28 +160,28 @@ void Object3d::InitializeGraphicsPipeline()
 		exit(1);
 	}
 
-	//// ジオメトリシェーダの読み込みとコンパイル
-	//result = D3DCompileFromFile(
-	//	L"Engine/SHADER/OBJGeometryShader.hlsl",	// シェーダファイル名
-	//	nullptr,
-	//	D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-	//	"main","gs_5_0",	// エントリーポイント名、シェーダーモデル指定
-	//	D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-	//	0,
-	//	&gsBlob,&errorBlob);
-	//if ( FAILED(result) ){
-	//	// errorBlobからエラー内容をstring型にコピー
-	//	std::string errstr;
-	//	errstr.resize(errorBlob->GetBufferSize());
+	// ジオメトリシェーダの読み込みとコンパイル
+	result = D3DCompileFromFile(
+		L"Engine/SHADER/OBJGeometryShader.hlsl",	// シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main","gs_5_0",	// エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&gsBlob,&errorBlob);
+	if ( FAILED(result) ){
+		// errorBlobからエラー内容をstring型にコピー
+		std::string errstr;
+		errstr.resize(errorBlob->GetBufferSize());
 
-	//	std::copy_n(( char* ) errorBlob->GetBufferPointer(),
-	//		errorBlob->GetBufferSize(),
-	//		errstr.begin());
-	//	errstr += "\n";
-	//	// エラー内容を出力ウィンドウに表示
-	//	OutputDebugStringA(errstr.c_str());
-	//	exit(1);
-	//}
+		std::copy_n(( char* ) errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			errstr.begin());
+		errstr += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(errstr.c_str());
+		exit(1);
+	}
 
 
 	// 頂点レイアウト
@@ -206,7 +206,7 @@ void Object3d::InitializeGraphicsPipeline()
 	// グラフィックスパイプラインの流れを設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
 	gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
-	/*gpipeline.GS = CD3DX12_SHADER_BYTECODE(gsBlob.Get());*/
+	gpipeline.GS = CD3DX12_SHADER_BYTECODE(gsBlob.Get());
 	gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
 
 	// サンプルマスク
@@ -255,10 +255,11 @@ void Object3d::InitializeGraphicsPipeline()
 	/*CD3DX12_ROOT_PARAMETER rootparams[2];
 	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[1].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);*/
-	CD3DX12_ROOT_PARAMETER rootparams[ 3 ];
+	CD3DX12_ROOT_PARAMETER rootparams[ 4 ];
 	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
-	rootparams[2].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[2].InitAsConstantBufferView(2, 0 ,D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[3].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
@@ -378,7 +379,7 @@ void Object3d::Update(){
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap);
 	resultMat = wtf.matWorld * camera->GetViewProjectionMatrix();	// 行列の合成
 	constMap->mat = resultMat;
-	constMap->viewproj = matView * matProjection;	// 行列の合成
+	constMap->viewproj = camera->GetViewProjectionMatrix();	// 行列の合成
 	constMap->world = wtf.matWorld;
 	constMap->cameraPos = eye;
 	constMap->shininess = shininess_;
@@ -430,7 +431,7 @@ void Object3d::Draw()
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 
 	//// 定数バッファビューをセット
-	//cmdList->SetGraphicsRootConstantBufferView(3,constBuffB2->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(2,constBuffB2->GetGPUVirtualAddress());
 
 
 
