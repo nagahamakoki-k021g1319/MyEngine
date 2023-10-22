@@ -18,6 +18,7 @@ GameScene::~GameScene() {
 	delete camera3;
 	delete player_;
 	delete armorEnemy_;
+	delete bikeEnemy_;
 	delete obstacle_;
 	delete enemyBoss_;
 	delete skydome;
@@ -174,6 +175,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	//enemy_->SetPlayer(player_);
 	armorEnemy_ = new ArmorEnemy();
 	armorEnemy_->Initialize(dxCommon,input);
+	bikeEnemy_ = new BikeEnemy();
+	bikeEnemy_->Initialize(dxCommon,input);
 
 	//障害物
 	obstacle_ = new Obstacle();
@@ -234,6 +237,7 @@ void GameScene::Update() {
 		enemyBoss_->Update();
 		obstacle_->Update();
 		armorEnemy_->Update();
+		bikeEnemy_->Update();
 
 		skydome->Update();
 		skydome->wtf.position.z -= 0.02f;
@@ -276,6 +280,7 @@ void GameScene::Draw() {
 		enemyBoss_->Draw();
 		obstacle_->Draw();
 		armorEnemy_->Draw();
+		bikeEnemy_->Draw();
 		floor->Draw();
 		skydome->Draw();
 		cloudfloor_->Draw();
@@ -305,6 +310,7 @@ void GameScene::Draw() {
 		player_->FbxDraw();
 		player_->EffDraw();
 		armorEnemy_->EffDraw();
+		bikeEnemy_->EffDraw();
 		enemyBoss_->FbxDraw();
 		enemyBoss_->UIDraw();
 		enemyBoss_->EffDraw();

@@ -92,9 +92,12 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	//自機
 	Model_ = Model::LoadFromOBJ("bikst");
 	ModelBefo_ = Model::LoadFromOBJ("bikst2");
-	Model2_ = Model::LoadFromOBJ("bikmid");
+
 	Model3_ = Model::LoadFromOBJ("bikslid");
+	//攻撃
+	Model2_ = Model::LoadFromOBJ("bikmid");
 	ModelAt_ = Model::LoadFromOBJ("bikAt");
+
 	ModelBack_ = Model::LoadFromOBJ("usirohito");
 
 	Obj_ = Object3d::Create();
@@ -780,27 +783,22 @@ void Player::PlayerAction()
 
 	//弾発射(弱)
 	float ShortSpeed = 0.01f;
-	if ( input_->TriggerKey(DIK_SPACE) || input_->ButtonInput(RT) )
-	{
-		if ( isShootFlag == false)
-		{
-			isShootFlag = true;
-		}
+	if ( input_->TriggerKey(DIK_SPACE) || input_->ButtonInput(RT) ){
+		if ( isShootFlag == false){isShootFlag = true;}
 	}
 	if ( isShootFlag == true )
 	{
 		BulletCoolTime++;
+		shootObj_->wtf.rotation.z += 0.03f;
 		shootObj_->wtf.position += enemylen;
 		len = enemylen;
 		len *= ShortSpeed;
 	}
-	else
-	{
-		shootObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z };
-	}
+	else{shootObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z };}
 	if ( BulletCoolTime >= 40.0f )
 	{
 		BulletCoolTime = 0;
+		shootObj_->wtf.rotation.z = 0.0f;
 		isShootFlag = false;
 	}
 
@@ -1088,7 +1086,7 @@ void Player::GameStartMovie()
 
 void Player::DamageCamShake()
 {
-	//  ʃV F C N
+	//画面シェイク
 	if ( isCamShake == true )
 	{
 		camShakeTimer--;

@@ -53,6 +53,17 @@ private:
 	Object3d* Obj_ = nullptr;
 	Model* Model_ = nullptr;
 
+	//死んだときのバイクがスピンするモデル
+	Object3d* bikclushObj_ = nullptr;
+	Model* bikclushModel_ = nullptr;
+	//死んだときの敵が吹っ飛ぶするモデル
+	Object3d* blowenemyObj_ = nullptr;
+	Model* blowenemyModel_ = nullptr;
+	bool isBikclushFlag = false;
+	bool isBikSpinFlag = false;
+
+
+
 	//パーティクル
 	std::unique_ptr<ParticleManager> gasParticle;
 	int bulletEffTimer_ = 0;
