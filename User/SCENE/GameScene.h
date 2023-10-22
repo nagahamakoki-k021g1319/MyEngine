@@ -101,7 +101,7 @@ private:	//メンバ変数
 	//雑魚敵
 	Enemy* enemy_ = nullptr;
 	ArmorEnemy* armorEnemy_ = nullptr;
-
+	BikeEnemy* bikeEnemy_ = nullptr;
 
 	//障害物
 	Obstacle* obstacle_ = nullptr;

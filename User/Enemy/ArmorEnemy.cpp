@@ -33,7 +33,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	Obj_ = Object3d::Create();
 	Obj_->SetModel(Modelst_);
 	Obj_->wtf.scale = { 0.4f,0.4f,0.4f };
-	Obj_->wtf.position = { 3.0f,-2.0f,10.0f };
+	Obj_->wtf.position = { 3.0f,-2.0f,25.0f };
 	//                               大きさ 回転  飛ぶ量 
 	Obj_->SetPolygonExplosion({ 0.0f,-1.0f,6.28f,20.0f });
 
