@@ -1,5 +1,6 @@
 #include "ArmorEnemy.h"
 #include <imgui.h>
+#include "Player.h"
 
 ArmorEnemy::ArmorEnemy()
 {
@@ -11,6 +12,10 @@ ArmorEnemy::~ArmorEnemy()
 	delete Obj_;
 	delete Model_;
 	delete Modelst_;
+
+	delete bulletObj_;
+	delete bulletModel_;
+
 }
 
 void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
@@ -34,8 +39,15 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	Obj_->SetModel(Modelst_);
 	Obj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	Obj_->wtf.position = { 3.0f,-2.0f,25.0f };
-	//                               大きさ 回転  飛ぶ量 
+	//ポリゴン爆散の情報                 大きさ 回転  飛ぶ量 
 	Obj_->SetPolygonExplosion({ 0.0f,-1.0f,6.28f,20.0f });
+
+	//大砲の弾
+	bulletModel_ = Model::LoadFromOBJ("boll");
+	bulletObj_ = Object3d::Create();
+	bulletObj_->SetModel(bulletModel_);
+	bulletObj_->wtf.scale = { 0.4f,0.4f,0.4f };
+	bulletObj_->wtf.position = { 3.0f,0.5f,23.0f };
 
 	//パーティクル生成
 	gasParticle = std::make_unique<ParticleManager>();
@@ -50,20 +62,46 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 }
 
-void ArmorEnemy::Update()
+void ArmorEnemy::Update(Vector3 playerPos)
 {
 	Obj_->Update();
+	bulletObj_->Update();
 	EffUpdate();
 	isGameStartTimer++;
 	isbulletEffFlag_ = 1;
 
+	if ( isGameStartTimer >= 200 && isShootFlag == false){
+		BulletCoolTime++;
+	}
 	//攻撃時モデルが変わる
-	if ( input_->PushKey(DIK_6) ){
+	if ( BulletCoolTime >= 60 ){
+		BulletCoolTime = 60;
 		Obj_->SetModel(Model_);
+		isShootFlag = true;
+		playerlen = playerPos - bulletObj_->wtf.position;
+		playerlen.nomalize();
 	}
-	else{
-		Obj_->SetModel(Modelst_);
+	else{Obj_->SetModel(Modelst_);}
+
+	if ( isShootFlag == true ){
+		BulletdurationTime++;
+		
+		bulletObj_->wtf.position += playerlen;
+		bitweenlen = playerlen;
+		bitweenlen *= 0.1f;
 	}
+	else
+	{
+		bulletObj_->wtf.position = { 3.0f,0.5f,23.0f };
+	}
+	if ( BulletdurationTime >= 40.0f )
+	{
+		BulletdurationTime = 0;
+		isShootFlag = false;
+		BulletCoolTime = 0;
+	}
+
+
 
 	//ポリゴン爆散
 	if ( input_->TriggerKey(DIK_5) ){isExpolFlag = true;}
@@ -73,7 +111,6 @@ void ArmorEnemy::Update()
 		float polygon = ExpolTimer / ExpolMT;
 
 		Obj_->SetDestruction(polygon);
-		/*Obj_->Setalpha(static_cast< float >( ( ExpolMT - ExpolTimer ) / ExpolMT ));*/
 		if ( ExpolTimer >= ExpolMT )
 		{
 			isAliveFlag = false;
@@ -93,6 +130,7 @@ void ArmorEnemy::Draw()
 	if ( isGameStartTimer >= 200){
 		if ( isAliveFlag == true ){
 			Obj_->Draw();
+			bulletObj_->Draw();
 		}
 	}
 }

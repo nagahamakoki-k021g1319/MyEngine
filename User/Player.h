@@ -82,6 +82,10 @@ public:
 	//音を止める関数
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
 
+	//自機の当たり判定のモデル
+	Object3d* collObj_ = nullptr;
+	Model* collModel_ = nullptr;
+
 	//弾の弾数表示
 	int bulletRest = 0;
 	int bulletMax = 6;
@@ -118,8 +122,6 @@ private:
 	Model* ModelBefo_ = nullptr;
 	Model* ModelBack_ = nullptr;
 
-	
-
 	//自機のジャンプフラグ
 	bool isJumpFlag = false;
 	bool isVertFlag = false;
@@ -133,6 +135,9 @@ private:
 	int bikslidTimer = 0;
 	//バイクの車輪動かす
 	int bikSpinTimer = 0;
+
+	
+
 
 	bool isAliveFlag = true;
 	//自機のHP表示
