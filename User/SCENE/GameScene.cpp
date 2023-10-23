@@ -175,6 +175,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	//enemy_->SetPlayer(player_);
 	armorEnemy_ = new ArmorEnemy();
 	armorEnemy_->Initialize(dxCommon,input);
+	armorEnemy_->SetPlayer(player_);
+
 	bikeEnemy_ = new BikeEnemy();
 	bikeEnemy_->Initialize(dxCommon,input);
 
@@ -236,7 +238,7 @@ void GameScene::Update() {
 		player_->Update();
 		enemyBoss_->Update();
 		obstacle_->Update();
-		armorEnemy_->Update();
+		armorEnemy_->Update(player_->collObj_->wtf.position);
 		bikeEnemy_->Update();
 
 		skydome->Update();

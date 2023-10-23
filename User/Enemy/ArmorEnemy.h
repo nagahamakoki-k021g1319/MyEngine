@@ -16,13 +16,16 @@
 #include "FBXObject3d.h"
 #include "ImGuiManager.h"
 
+class Player;
+
+
 class ArmorEnemy{
 public:
 	ArmorEnemy();
 	~ArmorEnemy();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
-	void Update();
+	void Update(Vector3 playerPos);
 
 	void Draw();
 
@@ -37,11 +40,17 @@ public:
 
 	////ワールド座標を取得
 	Vector3 GetWorldPosition();
+
+
+	void SetPlayer(Player* player) {player_ = player;};
+
+
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
 	DirectXCommon* dxCommon_ = nullptr;
 	Audio* audio = nullptr;
+	Player* player_ = nullptr;
 	SpriteCommon* spriteCommon = nullptr;
 	Collision coll;
 
@@ -53,7 +62,14 @@ private:
 	Model* Model_ = nullptr;
 	Model* Modelst_ = nullptr;
 
-	
+	//大砲の弾
+	Object3d* bulletObj_ = nullptr;
+	Model* bulletModel_ = nullptr;
+	bool isShootFlag = false;
+	int BulletdurationTime = 0;
+	int BulletCoolTime = 0;
+	Vector3 playerlen;
+	Vector3 bitweenlen;
 
 	//パーティクル
 	std::unique_ptr<ParticleManager> gasParticle;

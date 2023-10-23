@@ -64,6 +64,9 @@ Player::~Player() {
 	delete ModelBefo_;
 	delete ModelBack_;
 
+	delete collObj_;
+	delete collModel_;
+
 	delete entryani1UI;
 	delete entryani2UI;
 
@@ -104,6 +107,13 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	Obj_->SetModel(Model_);
 	Obj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	Obj_->wtf.position = { 0.0f,-2.0f,-20.0f };
+
+	//自機の当たり判定のモデル
+	collModel_ = Model::LoadFromOBJ("boll");
+	collObj_ = Object3d::Create();
+	collObj_->SetModel(collModel_);
+	collObj_->wtf.scale = { 0.6f,0.6f,0.6f };
+	collObj_->wtf.position = { 0.0f,-2.0f,-1.0f };
 
 	//自機の弾(弱)
 	shootModel_ = Model::LoadFromOBJ("boll2");
@@ -166,6 +176,10 @@ void Player::Update() {
 	retVisualObj_->Update();
 	Obj_->Update();
 	EffUpdate();
+	collObj_->Update();
+
+
+
 	isGameStartFlag = true;
 
 	//ゲームが始まる
@@ -174,7 +188,6 @@ void Player::Update() {
 
 	//プレイヤーの行動一覧
 	PlayerAction();
-	/*isbulletEffFlag_ = 1;*/
 	if ( isbikslidFlag == true ){
 		isbulletEffFlag_ = 0;
 		bulletEffTimer_ = 0;
@@ -221,6 +234,10 @@ void Player::Draw() {
 
 	if ( isAliveFlag == true ){
 		Obj_->Draw();
+	}
+
+	if ( isGameStartTimer >= 180 ){
+		collObj_->Draw();
 	}
 
 	if ( isShootFlag == true )
@@ -717,12 +734,14 @@ void Player::PlayerAction()
 	if ( input_->PushKey(DIK_A) || input_->StickInput(L_LEFT) )
 	{
 		Obj_->wtf.position.x -= playerSpeed;
+		collObj_->wtf.position.x -= playerSpeed;
 		retObj_->wtf.position.x += playerSpeed2;
 		camera->wtf.position.x -= 0.01f;
 	}
 	if ( input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT) )
 	{
 		Obj_->wtf.position.x += playerSpeed;
+		collObj_->wtf.position.x += playerSpeed;
 		retObj_->wtf.position.x -= playerSpeed2;
 		camera->wtf.position.x += 0.01f;
 	}
@@ -988,11 +1007,11 @@ Vector3 Player::GetWorldPosition() {
 	//ワールド座標を入れる変数
 	Vector3 worldPos;
 
-	Obj_->wtf.UpdateMat();
+	collObj_->wtf.UpdateMat();
 	//ワールド行列の平行移動成分
-	worldPos.x = Obj_->wtf.matWorld.m[ 3 ][ 0 ];
-	worldPos.y = Obj_->wtf.matWorld.m[ 3 ][ 1 ];
-	worldPos.z = Obj_->wtf.matWorld.m[ 3 ][ 2 ];
+	worldPos.x = collObj_->wtf.matWorld.m[ 3 ][ 0 ];
+	worldPos.y = collObj_->wtf.matWorld.m[ 3 ][ 1 ];
+	worldPos.z = collObj_->wtf.matWorld.m[ 3 ][ 2 ];
 
 	return worldPos;
 }
