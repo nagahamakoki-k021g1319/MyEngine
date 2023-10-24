@@ -30,6 +30,8 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	spriteCommon = new SpriteCommon;
 	spriteCommon->Initialize(dxCommon);
 
+	camTransForm = new Transform();
+	camera = new Camera(WinApp::window_width,WinApp::window_height);
 
 	//雑魚敵(攻撃状態)
 	Model_ = Model::LoadFromOBJ("armorenemy");
@@ -43,10 +45,9 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	Obj_->SetPolygonExplosion({ 0.0f,-1.0f,6.28f,20.0f });
 
 	//大砲の弾
-	bulletModel_ = Model::LoadFromOBJ("boll");
+	bulletModel_ = Model::LoadFromOBJ("eneboll");
 	bulletObj_ = Object3d::Create();
 	bulletObj_->SetModel(bulletModel_);
-	bulletObj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	bulletObj_->wtf.position = { 3.0f,0.5f,23.0f };
 
 	//パーティクル生成
@@ -64,28 +65,38 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 void ArmorEnemy::Update(Vector3 playerPos)
 {
+	camera->Update();
 	Obj_->Update();
 	bulletObj_->Update();
 	EffUpdate();
 	isGameStartTimer++;
 	isbulletEffFlag_ = 1;
 
-	if ( isGameStartTimer >= 200 && isShootFlag == false){
+	if ( isGameStartTimer >= 200 && isShootFlag == false )
+	{
 		BulletCoolTime++;
 	}
-	//攻撃時モデルが変わる
-	if ( BulletCoolTime >= 60 ){
-		BulletCoolTime = 60;
-		Obj_->SetModel(Model_);
-		isShootFlag = true;
+	if ( BulletCoolTime == 59 )
+	{
 		playerlen = playerPos - bulletObj_->wtf.position;
 		playerlen.nomalize();
 	}
-	else{Obj_->SetModel(Modelst_);}
+	//攻撃時モデルが変わる
+	if ( BulletCoolTime >= 60 )
+	{
+		BulletCoolTime = 60;
+		Obj_->SetModel(Model_);
+		isShootFlag = true;
+	}
+	else
+	{
+		Obj_->SetModel(Modelst_);
+	}
 
-	if ( isShootFlag == true ){
+	if ( isShootFlag == true )
+	{
 		BulletdurationTime++;
-		
+
 		bulletObj_->wtf.position += playerlen;
 		bitweenlen = playerlen;
 		bitweenlen *= 0.1f;
@@ -101,11 +112,23 @@ void ArmorEnemy::Update(Vector3 playerPos)
 		BulletCoolTime = 0;
 	}
 
+	if ( isCamShake == 1){
+		DamageCamShake();
+	}
 
+	if ( coll.CircleCollision(GetWorldBulletPosition(),player_->GetWorldPosition(),0.5f,0.5f) )
+	{
+		isCamShake = 1;
+		camShakeTimer = camShakeLimit;
+	};
 
-	//ポリゴン爆散
-	if ( input_->TriggerKey(DIK_5) ){isExpolFlag = true;}
-	if ( isExpolFlag == true){
+//ポリゴン爆散
+	if ( input_->TriggerKey(DIK_5) )
+	{
+		isExpolFlag = true;
+	}
+	if ( isExpolFlag == true )
+	{
 		ExpolTimer++;
 
 		float polygon = ExpolTimer / ExpolMT;
@@ -120,6 +143,7 @@ void ArmorEnemy::Update(Vector3 playerPos)
 	ImGui::Begin("ArmorEnemy");
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
+	ImGui::Text("isCamShake:%d",isCamShake);
 
 	ImGui::End();
 
@@ -127,8 +151,10 @@ void ArmorEnemy::Update(Vector3 playerPos)
 
 void ArmorEnemy::Draw()
 {
-	if ( isGameStartTimer >= 200){
-		if ( isAliveFlag == true ){
+	if ( isGameStartTimer >= 200 )
+	{
+		if ( isAliveFlag == true )
+		{
 			Obj_->Draw();
 			bulletObj_->Draw();
 		}
@@ -143,8 +169,8 @@ void ArmorEnemy::EffUpdate()
 	}
 	if ( bulletEffTimer_ <= 20 && bulletEffTimer_ >= 1 )
 	{
-		EffSummary(Vector3(Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y - 1.5f,Obj_->wtf.position.z ));
-		EffSummary2(Vector3(Obj_->wtf.position.x - 1.0f,Obj_->wtf.position.y - 1.5f,Obj_->wtf.position.z ));
+		EffSummary(Vector3(Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y - 1.5f,Obj_->wtf.position.z));
+		EffSummary2(Vector3(Obj_->wtf.position.x - 1.0f,Obj_->wtf.position.y - 1.5f,Obj_->wtf.position.z));
 	}
 	if ( bulletEffTimer_ >= 20 )
 	{
@@ -240,5 +266,63 @@ void ArmorEnemy::EffDraw()
 
 Vector3 ArmorEnemy::GetWorldPosition()
 {
-	return Vector3();
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+
+	bulletObj_->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	worldPos.x = bulletObj_->wtf.matWorld.m[ 3 ][ 0 ];
+	worldPos.y = bulletObj_->wtf.matWorld.m[ 3 ][ 1 ];
+	worldPos.z = bulletObj_->wtf.matWorld.m[ 3 ][ 2 ];
+
+	return worldPos;
 }
+
+Vector3 ArmorEnemy::GetWorldBulletPosition()
+{
+	//ワールド座標を入れる変数
+	Vector3 worldbulletPos;
+
+	bulletObj_->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	worldbulletPos.x = bulletObj_->wtf.matWorld.m[ 3 ][ 0 ];
+	worldbulletPos.y = bulletObj_->wtf.matWorld.m[ 3 ][ 1 ];
+	worldbulletPos.z = bulletObj_->wtf.matWorld.m[ 3 ][ 2 ];
+
+	return worldbulletPos;
+}
+
+void ArmorEnemy::DamageCamShake()
+{
+	//画面シェイク
+	if ( isCamShake == 1 )
+	{
+		camShakeTimer--;
+		if ( camShakeTimer <= camShakeLimit && camShakeTimer > camShakeLimit * 3 / 4 )
+		{
+			camera->wtf.position.y += 0.1f;
+			camera->wtf.position.z += 0.1f;
+		}
+		else if ( camShakeTimer <= camShakeLimit * 3 / 4 && camShakeTimer > camShakeLimit * 2 / 4 )
+		{
+			camera->wtf.position.y -= 0.1f;
+			camera->wtf.position.z -= 0.1f;
+		}
+		else if ( camShakeTimer <= camShakeLimit * 2 / 4 && camShakeTimer > camShakeLimit * 1 / 4 )
+		{
+			camera->wtf.position.y += 0.1f;
+			camera->wtf.position.z += 0.1f;
+		}
+		else if ( camShakeTimer <= camShakeLimit * 1 / 4 && camShakeTimer > 0 )
+		{
+			camera->wtf.position.y -= 0.1f;
+			camera->wtf.position.z -= 0.1f;
+		}
+		else if ( camShakeTimer <= 0 )
+		{
+			isCamShake = 0;
+			camera->wtf.position = { 0,0,0 };
+		}
+	}
+}
+
