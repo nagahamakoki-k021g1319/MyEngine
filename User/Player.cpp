@@ -109,11 +109,10 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	Obj_->wtf.position = { 0.0f,-2.0f,-20.0f };
 
 	//自機の当たり判定のモデル
-	collModel_ = Model::LoadFromOBJ("boll");
+	collModel_ = Model::LoadFromOBJ("collboll");
 	collObj_ = Object3d::Create();
 	collObj_->SetModel(collModel_);
-	collObj_->wtf.scale = { 0.6f,0.6f,0.6f };
-	collObj_->wtf.position = { 0.0f,-2.0f,-1.0f };
+	collObj_->wtf.position = { 0.0f,-1.5f,-1.0f };
 
 	//自機の弾(弱)
 	shootModel_ = Model::LoadFromOBJ("boll2");
