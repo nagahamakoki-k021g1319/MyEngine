@@ -18,6 +18,7 @@
 
 class Enemy;
 class EnemyBoss;
+class ArmorEnemy;
 
 class Player {
 public:
@@ -26,7 +27,7 @@ public:
 
 	void Initialize(DirectXCommon* dxCommon, Input* input);
 	void UIInitialize();
-	void Update();
+	void Update(Vector3 ARbuPos);
 
 	void Draw();
 	void FbxDraw();
@@ -54,8 +55,6 @@ public:
 	Vector3 GetBulletStWorldPosition();
 	//ワールド座標を取得(レティクル)
 	Vector3 GetRetWorldPosition();
-	
-
 
 
 	Vector3 GetPos() { return Obj_->wtf.position; };
@@ -85,6 +84,7 @@ public:
 	//自機の当たり判定のモデル
 	Object3d* collObj_ = nullptr;
 	Model* collModel_ = nullptr;
+	float collpos = 0.0f;
 
 	//弾の弾数表示
 	int bulletRest = 0;
@@ -121,7 +121,13 @@ private:
 	Model* ModelAt_ = nullptr;
 	Model* ModelBefo_ = nullptr;
 	Model* ModelBack_ = nullptr;
-
+	Model* Modelst_ = nullptr;
+	Model* Modelst2_ = nullptr;
+	Model* ModelBikswordsty_ = nullptr;
+	Model* ModelBikswordsty2_ = nullptr;
+	//自機の納刀モデルから抜刀モデルに切り替え
+	int isBikswordstyFlag = 0;
+	int BikswordstyTimer = 0;
 	//自機のジャンプフラグ
 	bool isJumpFlag = false;
 	bool isVertFlag = false;
@@ -133,9 +139,10 @@ private:
 	//自機のスライディング時のモデル変更
 	bool isbikslidFlag = false;
 	int bikslidTimer = 0;
-	//バイクの車輪動かす
+	//バイクの車輪動かす(抜刀後)
 	int bikSpinTimer = 0;
-
+	//バイクの車輪動かす(納刀時)
+	int bikstSpinTimer = 0;
 	
 
 
@@ -239,7 +246,7 @@ private:
 	Vector2 camRotaSpeed = { PI / 1800, PI / 1800};
 
 	//画面シェイク
-	bool isCamShake;
+	int isCamShake = 0;
 	const int camShakeLimit = 20;
 	int camShakeTimer = camShakeLimit;
 	Vector3 camShakeVec;

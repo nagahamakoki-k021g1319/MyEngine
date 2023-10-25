@@ -168,6 +168,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	player_->SetCamera(mainCamera);
 	player_->SetEnemyBoss(enemyBoss_);
 
+
 	//-------敵関連--------//
 	////雑魚敵
 	//enemy_ = new Enemy();
@@ -235,7 +236,7 @@ void GameScene::Update() {
 			sceneNo_ = SceneNo::Clear;
 		}
 		
-		player_->Update();
+		player_->Update(armorEnemy_->GetWorldBulletPosition());
 		enemyBoss_->Update();
 		obstacle_->Update();
 		armorEnemy_->Update(player_->collObj_->wtf.position);
