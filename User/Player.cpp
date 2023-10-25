@@ -2,6 +2,7 @@
 #include"Enemy.h"
 #include"EnemyBoss.h"
 #include <imgui.h>
+#include "Enemy/ArmorEnemy.h"
 
 Player::Player() {
 
@@ -63,6 +64,10 @@ Player::~Player() {
 	delete ModelAt_;
 	delete ModelBefo_;
 	delete ModelBack_;
+	delete Modelst_;
+	delete Modelst2_;
+	delete ModelBikswordsty_;
+	delete ModelBikswordsty2_;
 
 	delete collObj_;
 	delete collModel_;
@@ -93,18 +98,21 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	FBXObject3d::CreateGraphicsPipeline();
 
 	//自機
-	Model_ = Model::LoadFromOBJ("bikst");
-	ModelBefo_ = Model::LoadFromOBJ("bikst2");
+	Model_ = Model::LoadFromOBJ("bik");
+	ModelBefo_ = Model::LoadFromOBJ("bik2");
 
-	Model3_ = Model::LoadFromOBJ("bikslid");
 	//攻撃
 	Model2_ = Model::LoadFromOBJ("bikmid");
 	ModelAt_ = Model::LoadFromOBJ("bikAt");
 
-	ModelBack_ = Model::LoadFromOBJ("usirohito");
+	//自機納刀
+	Modelst_ = Model::LoadFromOBJ("bikst");
+	Modelst2_ = Model::LoadFromOBJ("bikst2");
+	ModelBikswordsty_ = Model::LoadFromOBJ("bikswordsty");
+	ModelBikswordsty2_ = Model::LoadFromOBJ("bikswordsty2");
 
 	Obj_ = Object3d::Create();
-	Obj_->SetModel(Model_);
+	Obj_->SetModel(Modelst_);
 	Obj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	Obj_->wtf.position = { 0.0f,-2.0f,-20.0f };
 
@@ -112,7 +120,7 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	collModel_ = Model::LoadFromOBJ("collboll");
 	collObj_ = Object3d::Create();
 	collObj_->SetModel(collModel_);
-	collObj_->wtf.position = { 0.0f,-1.5f,-1.0f };
+	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 0.5f,-1.0f };
 
 	//自機の弾(弱)
 	shootModel_ = Model::LoadFromOBJ("boll2");
@@ -163,7 +171,7 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 
 
 
-void Player::Update() {
+void Player::Update(Vector3 ARbuPos ) {
 	camera->Update();
 	shootObj_->Update();
 	shootStObj_->Update();
@@ -176,8 +184,6 @@ void Player::Update() {
 	Obj_->Update();
 	EffUpdate();
 	collObj_->Update();
-
-
 
 	isGameStartFlag = true;
 
@@ -193,37 +199,58 @@ void Player::Update() {
 	}
 	else{isbulletEffFlag_ = 1;}
 
-	bikSpinTimer++;
-
-	//バイクの車輪が動き出す
-	if ( bikSpinTimer > 10 ){bikSpinTimer = 0;}
-
-	if ( isAtTimerFlag == false )
+	if ( isBikswordstyFlag == 2){
+		bikSpinTimer++;
+		//バイクの車輪が動き出す(抜刀)
+		if ( bikSpinTimer > 10 )
+		{
+			bikSpinTimer = 0;
+		}
+		if ( isAtTimerFlag == false )
+		{
+			if ( bikSpinTimer >= 1 && bikSpinTimer <= 5 )
+			{
+				Obj_->SetModel(ModelBefo_);
+			}
+			else if ( bikSpinTimer >= 6 && bikSpinTimer <= 10 )
+			{
+				Obj_->SetModel(Model_);
+			}
+		}
+	}
+	else if ( isBikswordstyFlag == 0 )
 	{
-		if ( bikSpinTimer >= 1 && bikSpinTimer <= 5 )
+		bikstSpinTimer++;
+		//バイクの車輪が動き出す(納刀)
+		if ( bikstSpinTimer > 10 )
 		{
-			Obj_->SetModel(ModelBefo_);
+			bikstSpinTimer = 0;
 		}
-		else if ( bikSpinTimer >= 6 && bikSpinTimer <= 10 )
+		if ( isAtTimerFlag == false )
 		{
-			Obj_->SetModel(Model_);
+			if ( bikstSpinTimer >= 1 && bikstSpinTimer <= 5 )
+			{
+				Obj_->SetModel(Modelst_);
+			}
+			else if ( bikstSpinTimer >= 6 && bikstSpinTimer <= 10 )
+			{
+				Obj_->SetModel(Modelst2_);
+			}
 		}
 	}
-	//自機の被弾エフェクト(敵の攻撃がないのでおいてる)
-	if ( input_->TriggerKey(DIK_Q) ){
-		isCamShake = true;
-		camShakeTimer = camShakeLimit;
-	}
-	if ( isCamShake == true ){
-		DamageCamShake();
-	}
-	
 
+
+	if ( isCamShake == 1 ){DamageCamShake();}
+	if ( coll.CircleCollision(ARbuPos,GetWorldPosition(),0.6f,0.6f) ){
+		isCamShake = 1;
+		camShakeTimer = camShakeLimit;
+	};
 
 	ImGui::Begin("Player");
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
 	ImGui::Text("Cameraposition:%f,%f,%f",camera->wtf.rotation.x,camera->wtf.rotation.y,camera->wtf.rotation.z);
+	ImGui::Text("isCamShake:%d",isCamShake);
 
 	ImGui::End();
 
@@ -684,8 +711,7 @@ void Player::PlayerAction()
 			isAtTimerFlag = true;
 		}
 	}
-	if ( isAtTimerFlag == true )
-	{
+	if ( isAtTimerFlag == true ){
 		AtTimer++;
 		bikSpinTimer = 6;
 	}
@@ -698,9 +724,15 @@ void Player::PlayerAction()
 	}
 
 	//自機が左右に動いたらモデルも傾く
-	if ( input_->PushKey(DIK_D) ){Obj_->wtf.rotation.z = -0.4f;}
-	else if ( input_->PushKey(DIK_A) ){Obj_->wtf.rotation.z = 0.4f;}
-	else{Obj_->wtf.rotation.z = 0.0f;}
+	if ( input_->PushKey(DIK_D) ){
+		Obj_->wtf.rotation.z = -0.4f;
+	}
+	else if ( input_->PushKey(DIK_A) ){
+		Obj_->wtf.rotation.z = 0.4f;
+	}
+	else{
+		Obj_->wtf.rotation.z = 0.0f;
+	}
 
 	//自機のスライディング
 	if ( isbikslidFlag == false )
@@ -1064,6 +1096,7 @@ void Player::GameStartMovie()
 		acflag = true;
 		camerasetFlag = true;
 		isGameStartTimer++;
+		bikstSpinTimer++;
 	}
 
 	if ( camerasetFlag == true )
@@ -1086,18 +1119,34 @@ void Player::GameStartMovie()
 		camera->wtf.rotation.y -= 0.05f;
 	}
 
-	if ( camera->wtf.rotation.y <= 0.2f )
-	{
-		camera->wtf.rotation.y = 0.2f;
-	}
+	if ( camera->wtf.rotation.y <= 0.2f ){camera->wtf.rotation.y = 0.2f;}
 
 	if ( isGameStartTimer >= 180 )
 	{
-		isGameStartTimer = 180;
 		acflag = false;
 		Obj_->wtf.position.z = 0.0f;
 		retdisplay = true;
 		camera->wtf.rotation.y = 0.0f;
+	}
+
+	if ( isGameStartTimer >= 220 ){
+		isBikswordstyFlag = 1;
+	}
+
+	if ( isBikswordstyFlag == 1){
+		BikswordstyTimer++;
+	}
+
+	if ( BikswordstyTimer >= 1 && BikswordstyTimer <= 5 ){
+		Obj_->SetModel(ModelBikswordsty_);
+	}
+	else if ( BikswordstyTimer >= 6 && BikswordstyTimer <= 11 ){
+		Obj_->SetModel(ModelBikswordsty2_);
+	}
+
+	if ( BikswordstyTimer >= 12 )
+	{
+		isBikswordstyFlag = 2;
 	}
 
 }
@@ -1105,7 +1154,7 @@ void Player::GameStartMovie()
 void Player::DamageCamShake()
 {
 	//画面シェイク
-	if ( isCamShake == true )
+	if ( isCamShake == 1 )
 	{
 		camShakeTimer--;
 		if ( camShakeTimer <= camShakeLimit && camShakeTimer > camShakeLimit * 3 / 4 )
@@ -1130,7 +1179,7 @@ void Player::DamageCamShake()
 		}
 		else if ( camShakeTimer <= 0 )
 		{
-			isCamShake = false;
+			isCamShake = 0;
 			camera->wtf.position = { 0,0,0 };
 		}
 	}

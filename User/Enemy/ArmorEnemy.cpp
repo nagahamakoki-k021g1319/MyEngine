@@ -30,9 +30,6 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	spriteCommon = new SpriteCommon;
 	spriteCommon->Initialize(dxCommon);
 
-	camTransForm = new Transform();
-	camera = new Camera(WinApp::window_width,WinApp::window_height);
-
 	//雑魚敵(攻撃状態)
 	Model_ = Model::LoadFromOBJ("armorenemy");
 	//雑魚敵(待機状態)
@@ -65,7 +62,6 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 void ArmorEnemy::Update(Vector3 playerPos)
 {
-	camera->Update();
 	Obj_->Update();
 	bulletObj_->Update();
 	EffUpdate();
@@ -112,15 +108,7 @@ void ArmorEnemy::Update(Vector3 playerPos)
 		BulletCoolTime = 0;
 	}
 
-	if ( isCamShake == 1){
-		DamageCamShake();
-	}
-
-	if ( coll.CircleCollision(GetWorldBulletPosition(),player_->GetWorldPosition(),0.5f,0.5f) )
-	{
-		isCamShake = 1;
-		camShakeTimer = camShakeLimit;
-	};
+	
 
 //ポリゴン爆散
 	if ( input_->TriggerKey(DIK_5) )
@@ -143,7 +131,7 @@ void ArmorEnemy::Update(Vector3 playerPos)
 	ImGui::Begin("ArmorEnemy");
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
-	ImGui::Text("isCamShake:%d",isCamShake);
+	
 
 	ImGui::End();
 
@@ -292,37 +280,4 @@ Vector3 ArmorEnemy::GetWorldBulletPosition()
 	return worldbulletPos;
 }
 
-void ArmorEnemy::DamageCamShake()
-{
-	//画面シェイク
-	if ( isCamShake == 1 )
-	{
-		camShakeTimer--;
-		if ( camShakeTimer <= camShakeLimit && camShakeTimer > camShakeLimit * 3 / 4 )
-		{
-			camera->wtf.position.y += 0.1f;
-			camera->wtf.position.z += 0.1f;
-		}
-		else if ( camShakeTimer <= camShakeLimit * 3 / 4 && camShakeTimer > camShakeLimit * 2 / 4 )
-		{
-			camera->wtf.position.y -= 0.1f;
-			camera->wtf.position.z -= 0.1f;
-		}
-		else if ( camShakeTimer <= camShakeLimit * 2 / 4 && camShakeTimer > camShakeLimit * 1 / 4 )
-		{
-			camera->wtf.position.y += 0.1f;
-			camera->wtf.position.z += 0.1f;
-		}
-		else if ( camShakeTimer <= camShakeLimit * 1 / 4 && camShakeTimer > 0 )
-		{
-			camera->wtf.position.y -= 0.1f;
-			camera->wtf.position.z -= 0.1f;
-		}
-		else if ( camShakeTimer <= 0 )
-		{
-			isCamShake = 0;
-			camera->wtf.position = { 0,0,0 };
-		}
-	}
-}
 

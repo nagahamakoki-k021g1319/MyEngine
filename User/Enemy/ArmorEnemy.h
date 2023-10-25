@@ -45,9 +45,6 @@ public:
 
 	void SetPlayer(Player* player) {player_ = player;};
 
-	//被弾時のカメラシェイク
-	void DamageCamShake();
-
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
@@ -85,17 +82,6 @@ private:
 	float ExpolTimer = 0;
 	float ExpolMT = 40;
 	bool isAliveFlag = true;
-
-
-	//画面シェイク
-	Camera* camera = nullptr;
-	Transform* camTransForm = nullptr;
-	int isCamShake = 0;
-	const int camShakeLimit = 20;
-	int camShakeTimer = camShakeLimit;
-	Vector3 camShakeVec;
-	Vector3 moveBack;
-
 
 };
 
