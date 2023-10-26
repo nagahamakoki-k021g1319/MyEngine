@@ -16,6 +16,9 @@ ArmorEnemy::~ArmorEnemy()
 	delete bulletObj_;
 	delete bulletModel_;
 
+	delete collObj_;
+	delete collModel_;
+
 }
 
 void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
@@ -47,6 +50,13 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	bulletObj_->SetModel(bulletModel_);
 	bulletObj_->wtf.position = { 3.0f,0.5f,23.0f };
 
+	//自機の当たり判定のモデル
+	collModel_ = Model::LoadFromOBJ("collboll");
+	collObj_ = Object3d::Create();
+	collObj_->SetModel(collModel_);
+	collObj_->wtf.scale = { 2.0f,2.0f,2.0f };
+	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 1.0f,Obj_->wtf.position.z };
+
 	//パーティクル生成
 	gasParticle = std::make_unique<ParticleManager>();
 	gasParticle.get()->Initialize();
@@ -60,34 +70,31 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 }
 
-void ArmorEnemy::Update(Vector3 playerPos)
+void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 {
 	Obj_->Update();
+	collObj_->Update();
 	bulletObj_->Update();
 	EffUpdate();
 	isGameStartTimer++;
 	isbulletEffFlag_ = 1;
 
-	if ( isGameStartTimer >= 200 && isShootFlag == false )
-	{
-		BulletCoolTime++;
+	if ( isGameStartTimer >= 200 && isShootFlag == false ){
+		if ( isAliveFlag == true){
+			BulletCoolTime++;
+		}
 	}
-	if ( BulletCoolTime == 59 )
-	{
+	if ( BulletCoolTime == 59 ){
 		playerlen = playerPos - bulletObj_->wtf.position;
 		playerlen.nomalize();
 	}
 	//攻撃時モデルが変わる
-	if ( BulletCoolTime >= 60 )
-	{
+	if ( BulletCoolTime >= 60 ){
 		BulletCoolTime = 60;
 		Obj_->SetModel(Model_);
 		isShootFlag = true;
 	}
-	else
-	{
-		Obj_->SetModel(Modelst_);
-	}
+	else{Obj_->SetModel(Modelst_);}
 
 	if ( isShootFlag == true )
 	{
@@ -111,12 +118,8 @@ void ArmorEnemy::Update(Vector3 playerPos)
 	
 
 //ポリゴン爆散
-	if ( input_->TriggerKey(DIK_5) )
-	{
-		isExpolFlag = true;
-	}
-	if ( isExpolFlag == true )
-	{
+	if ( input_->TriggerKey(DIK_5) ){isExpolFlag = true;}
+	if ( isExpolFlag == true ){
 		ExpolTimer++;
 
 		float polygon = ExpolTimer / ExpolMT;
@@ -124,14 +127,22 @@ void ArmorEnemy::Update(Vector3 playerPos)
 		Obj_->SetDestruction(polygon);
 		if ( ExpolTimer >= ExpolMT )
 		{
+			bulletEffTimer_ = 0;
 			isAliveFlag = false;
+			isShootFlag = false;
 		}
+	}
+
+
+	//当たり判定
+	if ( coll.CircleCollision(playerBpos,GetWorldPosition(),1.0f,1.0f) ){
+		isExpolFlag = true;
 	}
 
 	ImGui::Begin("ArmorEnemy");
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
-	
+	ImGui::Text("isCollFlag:%d",isCollFlag);
 
 	ImGui::End();
 
@@ -145,6 +156,7 @@ void ArmorEnemy::Draw()
 		{
 			Obj_->Draw();
 			bulletObj_->Draw();
+			collObj_->Draw();
 		}
 	}
 }
@@ -244,10 +256,11 @@ void ArmorEnemy::EffSummary2(Vector3 bulletpos2)
 
 void ArmorEnemy::EffDraw()
 {
-	if ( isbulletEffFlag_ == 1 )
-	{
-		gasParticle->Draw();
-		gasParticle2->Draw();
+	if ( isbulletEffFlag_ == 1 ){
+		if ( isAliveFlag == true ){
+			gasParticle->Draw();
+			gasParticle2->Draw();
+		}
 	}
 
 }
@@ -257,11 +270,11 @@ Vector3 ArmorEnemy::GetWorldPosition()
 	//ワールド座標を入れる変数
 	Vector3 worldPos;
 
-	bulletObj_->wtf.UpdateMat();
+	collObj_->wtf.UpdateMat();
 	//ワールド行列の平行移動成分
-	worldPos.x = bulletObj_->wtf.matWorld.m[ 3 ][ 0 ];
-	worldPos.y = bulletObj_->wtf.matWorld.m[ 3 ][ 1 ];
-	worldPos.z = bulletObj_->wtf.matWorld.m[ 3 ][ 2 ];
+	worldPos.x = collObj_->wtf.matWorld.m[ 3 ][ 0 ];
+	worldPos.y = collObj_->wtf.matWorld.m[ 3 ][ 1 ];
+	worldPos.z = collObj_->wtf.matWorld.m[ 3 ][ 2 ];
 
 	return worldPos;
 }
