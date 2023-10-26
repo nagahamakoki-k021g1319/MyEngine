@@ -111,6 +111,7 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	ModelBikswordsty_ = Model::LoadFromOBJ("bikswordsty");
 	ModelBikswordsty2_ = Model::LoadFromOBJ("bikswordsty2");
 
+	//自機
 	Obj_ = Object3d::Create();
 	Obj_->SetModel(Modelst_);
 	Obj_->wtf.scale = { 0.4f,0.4f,0.4f };
@@ -262,9 +263,9 @@ void Player::Draw() {
 		Obj_->Draw();
 	}
 
-	if ( isGameStartTimer >= 180 ){
+	/*if ( isGameStartTimer >= 180 ){
 		collObj_->Draw();
-	}
+	}*/
 
 	if ( isShootFlag == true )
 	{
@@ -530,124 +531,13 @@ void Player::UIInitialize()
 
 void Player::UIDraw()
 {
-	if ( EffTimer <= 20 && EffTimer >= 1 )
+	if ( isCamShake == 1 )
 	{
 		BloodUI->Draw();
 	}
 
 
-	////スプライト、UI
-	//hpgageUI->Draw();
-	//if ( playerHP >= 3 )
-	//{
-	//	hp3UI->Draw();
-	//}
-	//else if ( playerHP == 2 )
-	//{
-	//	hp2UI->Draw();
-	//}
-	//else if ( playerHP == 1 )
-	//{
-	//	hp1UI->Draw();
-	//}
-	//else if ( playerHP <= 0 )
-	//{
-	//	overUI->Draw();
-	//}
 
-	//BulletFlameUI->Draw();
-	//if ( bulletRest == 0 )
-	//{
-	//	Bullet1mUI->Draw();
-	//}
-	//else if ( bulletRest == 1 )
-	//{
-	//	Bullet1fUI->Draw();
-	//}
-	//else if ( bulletRest >= 2 )
-	//{
-	//	Bullet1dUI->Draw();
-	//}
-
-	//if ( bulletRest <= 2 )
-	//{
-	//	Bullet2mUI->Draw();
-	//}
-	//else if ( bulletRest == 3 )
-	//{
-	//	Bullet2fUI->Draw();
-	//}
-	//else if ( bulletRest >= 4 )
-	//{
-	//	Bullet2dUI->Draw();
-	//}
-
-	//if ( bulletRest <= 4 )
-	//{
-	//	Bullet3mUI->Draw();
-	//}
-	//else if ( bulletRest == 5 )
-	//{
-	//	Bullet3fUI->Draw();
-	//}
-	//else if ( bulletRest >= 6 )
-	//{
-	//	Bullet3dUI->Draw();
-	//}
-
-	//if ( bulletMax >= 7 )
-	//{
-	//	if ( bulletRest <= 6 )
-	//	{
-	//		Bullet4mUI->Draw();
-	//	}
-	//	else if ( bulletRest == 7 )
-	//	{
-	//		Bullet4fUI->Draw();
-	//	}
-	//	else if ( bulletRest >= 8 )
-	//	{
-	//		Bullet4dUI->Draw();
-	//	}
-	//}
-
-	//if ( bulletMax >= 9 )
-	//{
-	//	if ( bulletRest <= 8 )
-	//	{
-	//		Bullet5mUI->Draw();
-	//	}
-	//	else if ( bulletRest == 9 )
-	//	{
-	//		Bullet5fUI->Draw();
-	//	}
-	//	else if ( bulletRest >= 10 )
-	//	{
-	//		Bullet5dUI->Draw();
-	//	}
-	//}
-
-	//if ( bulletMax >= 11 )
-	//{
-	//	if ( bulletRest <= 10 )
-	//	{
-	//		Bullet6mUI->Draw();
-	//	}
-	//	else if ( bulletRest == 11 )
-	//	{
-	//		Bullet6fUI->Draw();
-	//	}
-	//	else if ( bulletRest >= 12 )
-	//	{
-	//		Bullet6dUI->Draw();
-	//	}
-	//}
-
-	//if ( isEntryFlag == true )
-	//{
-	//	entryani1UI->Draw();
-	//	entryani2UI->Draw();
-	//}
 
 }
 
@@ -655,9 +545,9 @@ void Player::PlayerAction()
 {
 	//自機とレティクルの速度
 	float playerSpeed = 0.08f;
-	float playerSpeed2 = 0.06f;
+	float playerSpeed2 = 0.01f;
 	float retSpeed = 0.08f;
-	float retSpeed2 = 0.16f;
+	float retSpeed2 = 0.14f;
 	////自機とレティクルの画面制限
 	//float playerLimitX = 0.6f;
 	//float playerLimitY = 0.19f;
@@ -767,14 +657,12 @@ void Player::PlayerAction()
 		Obj_->wtf.position.x -= playerSpeed;
 		collObj_->wtf.position.x -= playerSpeed;
 		retObj_->wtf.position.x += playerSpeed2;
-		camera->wtf.position.x -= 0.01f;
 	}
 	if ( input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT) )
 	{
 		Obj_->wtf.position.x += playerSpeed;
 		collObj_->wtf.position.x += playerSpeed;
 		retObj_->wtf.position.x -= playerSpeed2;
-		camera->wtf.position.x += 0.01f;
 	}
 
 	//移動(レティクル)
@@ -852,63 +740,6 @@ void Player::PlayerAction()
 		isShootFlag = false;
 	}
 
-	//弾発射(強)
-	float ShortStSpeed = 0.02f;
-	if ( input_->PushKey(DIK_Z) || input_->ButtonInput(LT) )
-	{
-		storeStBulletTime++;
-	}
-	else
-	{
-		storeStBulletTime = 0;
-	}
-	if ( storeStBulletTime >= 50 )
-	{
-		if ( isShootStFlag == false && bulletRest < bulletMax )
-		{
-			isShootStFlag = true;
-		}
-	}
-	if ( isShootStFlag == true )
-	{
-		StBulletCoolTime++;
-		shootStObj_->wtf.position += enemylen2;
-		len2 = enemylen2;
-		len2 *= ShortStSpeed;
-
-	}
-	else
-	{
-		shootStObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y - 0.2f, Obj_->wtf.position.z };
-	}
-	if ( StBulletCoolTime >= 10.0f )
-	{
-		bulletRest += 2;
-		storeStBulletTime = 0;
-		StBulletCoolTime = 0;
-		isShootStFlag = false;
-	}
-
-
-	if ( storeStBulletTime >= 1 && storeStBulletTime < 25 )
-	{
-		retObj_->SetModel(ret1Model_);
-	}
-	else if ( storeStBulletTime >= 25 && storeStBulletTime < 60 )
-	{
-		retObj_->SetModel(ret2Model_);
-	}
-	else
-	{
-		retObj_->SetModel(retModel_);
-	}
-
-	//盾
-	if ( input_->TriggerKey(DIK_E) || input_->PButtonTrigger(RB) )
-	{
-
-		bulletRest = 0;
-	}
 }
 
 void Player::EffUpdate()

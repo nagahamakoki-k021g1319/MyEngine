@@ -25,7 +25,7 @@ public:
 	~ArmorEnemy();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
-	void Update(Vector3 playerPos);
+	void Update(Vector3 playerPos,Vector3 playerBpos);
 
 	void Draw();
 
@@ -70,6 +70,11 @@ private:
 	int BulletCoolTime = 0;
 	Vector3 playerlen;
 	Vector3 bitweenlen;
+
+	//当たり判定のモデル
+	Object3d* collObj_ = nullptr;
+	Model* collModel_ = nullptr;
+	bool isCollFlag = false;
 
 	//パーティクル
 	std::unique_ptr<ParticleManager> gasParticle;
