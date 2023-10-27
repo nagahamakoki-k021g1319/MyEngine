@@ -81,15 +81,13 @@ public:
 	//音を止める関数
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
 
-	//自機の当たり判定のモデル
-	Object3d* collObj_ = nullptr;
-	Model* collModel_ = nullptr;
-	float collpos = 0.0f;
-
-	//弾の弾数表示
-	int bulletRest = 0;
-	int bulletMax = 6;
-	int bulletUpCount = 0;
+	//弾発射(弱)
+	Object3d* shootObj_ = nullptr;
+	Model* shootModel_ = nullptr;
+	bool isShootFlag = false;
+	int BulletCoolTime = 0;
+	Vector3 enemylen;
+	Vector3 len;
 
 	//カメラの向きによって自機の動きをかえるフラグ
 	int isCameraBehavior = 0;
@@ -115,6 +113,7 @@ private:
 	//待機
 	//maehito usirohito
 	Object3d* Obj_ = nullptr;
+	//自機のモデル一覧
 	Model* Model_ = nullptr;
 	Model* Model2_ = nullptr;
 	Model* Model3_ = nullptr;
@@ -123,8 +122,19 @@ private:
 	Model* ModelBack_ = nullptr;
 	Model* Modelst_ = nullptr;
 	Model* Modelst2_ = nullptr;
+	//モデル(納刀から抜刀)
 	Model* ModelBikswordsty_ = nullptr;
 	Model* ModelBikswordsty2_ = nullptr;
+	//モデル(左側攻撃)
+	Model* Modelbiksword0_ = nullptr;
+	Model* Modelbiksword1_ = nullptr;
+	Model* Modelbiksword2_ = nullptr;
+	Model* Modelbiksword3_ = nullptr;
+	Model* Modelbiksword4_ = nullptr;
+	Model* Modelbiksword5_ = nullptr;
+	int leftAtTimer = 0;
+	bool isLeftAtFlag = false;
+
 	//自機の納刀モデルから抜刀モデルに切り替え
 	int isBikswordstyFlag = 0;
 	int BikswordstyTimer = 0;
@@ -144,8 +154,12 @@ private:
 	//バイクの車輪動かす(納刀時)
 	int bikstSpinTimer = 0;
 	
+	//自機の当たり判定のモデル
+	Object3d* collObj_ = nullptr;
+	Model* collModel_ = nullptr;
+	float collpos = 0.0f;
 
-
+	//自機の生存フラグ
 	bool isAliveFlag = true;
 	//自機のHP表示
 	int playerHP = 3;
@@ -175,13 +189,7 @@ private:
 	Object3d* retVisualObj_ = nullptr;
 	Model* retVisualModel_ = nullptr;
 
-	//弾発射(弱)
-	Object3d* shootObj_ = nullptr;
-	Model* shootModel_ = nullptr;
-	bool isShootFlag = false;
-	int BulletCoolTime = 0;
-	Vector3 enemylen;
-	Vector3 len;
+	
 
 	//弾発射(強)
 	Object3d* shootStObj_ = nullptr;

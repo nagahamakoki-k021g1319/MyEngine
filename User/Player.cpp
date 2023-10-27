@@ -69,6 +69,13 @@ Player::~Player() {
 	delete ModelBikswordsty_;
 	delete ModelBikswordsty2_;
 
+	delete Modelbiksword0_;
+	delete Modelbiksword1_;
+	delete Modelbiksword2_;
+	delete Modelbiksword3_;
+	delete Modelbiksword4_;
+	delete Modelbiksword5_;
+
 	delete collObj_;
 	delete collModel_;
 
@@ -110,6 +117,15 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	Modelst2_ = Model::LoadFromOBJ("bikst2");
 	ModelBikswordsty_ = Model::LoadFromOBJ("bikswordsty");
 	ModelBikswordsty2_ = Model::LoadFromOBJ("bikswordsty2");
+
+	//近接攻撃(左側)
+	Modelbiksword0_ = Model::LoadFromOBJ("bikswordAt");
+	Modelbiksword1_ = Model::LoadFromOBJ("biksword1");
+	Modelbiksword2_ = Model::LoadFromOBJ("biksword2");
+	Modelbiksword3_ = Model::LoadFromOBJ("biksword3");
+	Modelbiksword4_ = Model::LoadFromOBJ("biksword4");
+	Modelbiksword5_ = Model::LoadFromOBJ("biksword5");
+
 
 	//自機
 	Obj_ = Object3d::Create();
@@ -201,7 +217,8 @@ void Player::Update(Vector3 ARbuPos ) {
 	else{isbulletEffFlag_ = 1;}
 
 	if ( isBikswordstyFlag == 2){
-		bikSpinTimer++;
+		/*bikSpinTimer++;*/
+		isLeftAtFlag = true;
 		//バイクの車輪が動き出す(抜刀)
 		if ( bikSpinTimer > 10 )
 		{
@@ -246,6 +263,22 @@ void Player::Update(Vector3 ARbuPos ) {
 		isCamShake = 1;
 		camShakeTimer = camShakeLimit;
 	};
+
+	if ( isLeftAtFlag == true){
+		Obj_->SetModel(Modelbiksword0_);
+		leftAtTimer++;
+		Obj_->wtf.rotation.y += 0.3f;
+	}
+
+	if ( leftAtTimer >= 30){
+		leftAtTimer = 30;
+		Obj_->wtf.rotation.y = 0.0f;
+	}
+
+	if ( input_->TriggerKey(DIK_5) )
+	{
+		leftAtTimer = 0;
+	}
 
 	ImGui::Begin("Player");
 
@@ -712,12 +745,6 @@ void Player::PlayerAction()
 	if (retObj_->wtf.position.y <= -retLimitY) {
 		retObj_->wtf.position.y = -retLimitY;
 	}*/
-
-	//弾の制限
-	if ( bulletMax > bulletMax + 1 )
-	{
-		bulletMax = bulletMax - 1;
-	}
 
 	//弾発射(弱)
 	float ShortSpeed = 0.01f;

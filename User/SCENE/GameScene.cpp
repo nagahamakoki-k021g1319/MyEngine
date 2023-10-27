@@ -239,7 +239,7 @@ void GameScene::Update() {
 		player_->Update(armorEnemy_->GetWorldBulletPosition());
 		enemyBoss_->Update();
 		obstacle_->Update();
-		armorEnemy_->Update(player_->collObj_->wtf.position,player_->GetBulletWorldPosition());
+		armorEnemy_->Update(player_->GetWorldPosition(),player_->GetBulletWorldPosition(),player_->isShootFlag);
 		bikeEnemy_->Update();
 
 		skydome->Update();

@@ -25,7 +25,7 @@ public:
 	~ArmorEnemy();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
-	void Update(Vector3 playerPos,Vector3 playerBpos);
+	void Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFlag);
 
 	void Draw();
 
@@ -56,11 +56,14 @@ private:
 
 	int isGameStartTimer = 0;
 
-	//待機
+	//待機(魔導兵)
 	//maehito usirohito
 	Object3d* Obj_ = nullptr;
 	Model* Model_ = nullptr;
 	Model* Modelst_ = nullptr;
+
+	//体力
+	int HP = 12;
 
 	//大砲の弾
 	Object3d* bulletObj_ = nullptr;
