@@ -50,7 +50,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	bulletObj_->SetModel(bulletModel_);
 	bulletObj_->wtf.position = { 3.0f,0.5f,23.0f };
 
-	//自機の当たり判定のモデル
+	//当たり判定のモデル
 	collModel_ = Model::LoadFromOBJ("collboll");
 	collObj_ = Object3d::Create();
 	collObj_->SetModel(collModel_);
@@ -70,7 +70,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 }
 
-void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
+void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFlag)
 {
 	Obj_->Update();
 	collObj_->Update();
@@ -79,6 +79,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 	isGameStartTimer++;
 	isbulletEffFlag_ = 1;
 
+	//魔導兵の射撃
 	if ( isGameStartTimer >= 200 && isShootFlag == false ){
 		if ( isAliveFlag == true){
 			BulletCoolTime++;
@@ -96,6 +97,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 	}
 	else{Obj_->SetModel(Modelst_);}
 
+	//誘導弾
 	if ( isShootFlag == true )
 	{
 		BulletdurationTime++;
@@ -106,7 +108,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 	}
 	else
 	{
-		bulletObj_->wtf.position = { 3.0f,0.5f,23.0f };
+		bulletObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 2.5f,Obj_->wtf.position.z};
 	}
 	if ( BulletdurationTime >= 40.0f )
 	{
@@ -117,8 +119,8 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 
 	
 
-//ポリゴン爆散
-	if ( input_->TriggerKey(DIK_5) ){isExpolFlag = true;}
+	//ポリゴン爆散
+	if (HP <= 0 ){isExpolFlag = true;}
 	if ( isExpolFlag == true ){
 		ExpolTimer++;
 
@@ -133,16 +135,19 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 		}
 	}
 
-
 	//当たり判定
-	if ( coll.CircleCollision(playerBpos,GetWorldPosition(),1.0f,1.0f) ){
-		isExpolFlag = true;
+	if ( playerShootFlag == true){
+		if (HP >= 1){
+			if ( coll.CircleCollision(playerBpos,GetWorldPosition(),1.0f,1.0f) ){
+				HP--;
+				playerShootFlag = false;
+			}
+		}
 	}
-
 	ImGui::Begin("ArmorEnemy");
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
-	ImGui::Text("isCollFlag:%d",isCollFlag);
+	ImGui::Text("HP:%d",HP);
 
 	ImGui::End();
 

@@ -69,7 +69,7 @@ void BikeEnemy::Update()
 	isbulletEffFlag_ = 1;
 
 	//バイクスピン
-	if ( input_->TriggerKey(DIK_7) ){isBikclushFlag = true;}
+	if ( input_->TriggerKey(DIK_4) ){isBikclushFlag = true;}
 
 	if( isBikclushFlag == true){
 		bikclushObj_->wtf.rotation.z += 0.1f;
