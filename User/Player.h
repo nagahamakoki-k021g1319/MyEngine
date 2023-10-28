@@ -135,6 +135,7 @@ private:
 	int leftAtTimer = 0;
 	bool isLeftAtFlag = false;
 
+
 	//自機の納刀モデルから抜刀モデルに切り替え
 	int isBikswordstyFlag = 0;
 	int BikswordstyTimer = 0;

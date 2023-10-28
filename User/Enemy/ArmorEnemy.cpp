@@ -40,7 +40,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	Obj_ = Object3d::Create();
 	Obj_->SetModel(Modelst_);
 	Obj_->wtf.scale = { 0.4f,0.4f,0.4f };
-	Obj_->wtf.position = { 3.0f,-2.0f,25.0f };
+	Obj_->wtf.position = { 10.0f,-2.0f,-10.0f };
 	//ポリゴン爆散の情報                 大きさ 回転  飛ぶ量 
 	Obj_->SetPolygonExplosion({ 0.0f,-1.0f,6.28f,20.0f });
 
@@ -48,7 +48,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	bulletModel_ = Model::LoadFromOBJ("eneboll");
 	bulletObj_ = Object3d::Create();
 	bulletObj_->SetModel(bulletModel_);
-	bulletObj_->wtf.position = { 3.0f,0.5f,23.0f };
+	bulletObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 2.5f,Obj_->wtf.position.z - 3.0f };
 
 	//当たり判定のモデル
 	collModel_ = Model::LoadFromOBJ("collboll");
@@ -58,6 +58,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 1.0f,Obj_->wtf.position.z };
 
 	//パーティクル生成
+	//エフェクトの情報(地面のズサ)
 	gasParticle = std::make_unique<ParticleManager>();
 	gasParticle.get()->Initialize();
 	gasParticle->LoadTexture("gas.png");
@@ -68,50 +69,58 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	gasParticle2->LoadTexture("gas.png");
 	gasParticle2->Update();
 
+	//エフェクトの情報(背中の噴射ガス)
+	gasParticle3 = std::make_unique<ParticleManager>();
+	gasParticle3.get()->Initialize();
+	gasParticle3->LoadTexture("gas.png");
+	gasParticle3->Update();
+
+	gasParticle4 = std::make_unique<ParticleManager>();
+	gasParticle4.get()->Initialize();
+	gasParticle4->LoadTexture("gas.png");
+	gasParticle4->Update();
+
 }
 
 void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFlag)
 {
 	Obj_->Update();
 	collObj_->Update();
+	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 1.0f,Obj_->wtf.position.z };
 	bulletObj_->Update();
 	EffUpdate();
 	isGameStartTimer++;
 	isbulletEffFlag_ = 1;
 
+	//魔導兵が後ろから登場
+	if ( isGameStartTimer >= 200 ){Obj_->wtf.position.z += 0.7f;}
+	if ( Obj_->wtf.position.z >= 25.0f ){Obj_->wtf.position.z = 25.0f;}
+
 	//魔導兵の射撃
 	if ( isGameStartTimer >= 200 && isShootFlag == false ){
-		if ( isAliveFlag == true){
-			BulletCoolTime++;
-		}
-	}
-	if ( BulletCoolTime == 59 ){
+		if ( isAliveFlag == true){BulletCoolTime++;}}
+	if ( BulletCoolTime == 79 ){
 		playerlen = playerPos - bulletObj_->wtf.position;
 		playerlen.nomalize();
 	}
-	//攻撃時モデルが変わる
-	if ( BulletCoolTime >= 60 ){
-		BulletCoolTime = 60;
-		Obj_->SetModel(Model_);
+	if ( BulletCoolTime >= 80 ){
+		BulletCoolTime = 80;
 		isShootFlag = true;
 	}
+	//攻撃時モデルが変わる
+	if ( BulletCoolTime >= 70 ){Obj_->SetModel(Model_);}
 	else{Obj_->SetModel(Modelst_);}
 
 	//誘導弾
-	if ( isShootFlag == true )
-	{
+	if ( isShootFlag == true ){
 		BulletdurationTime++;
 
 		bulletObj_->wtf.position += playerlen;
 		bitweenlen = playerlen;
 		bitweenlen *= 0.1f;
 	}
-	else
-	{
-		bulletObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 2.5f,Obj_->wtf.position.z};
-	}
-	if ( BulletdurationTime >= 40.0f )
-	{
+	else{bulletObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 2.5f,Obj_->wtf.position.z - 3.0f};}
+	if ( BulletdurationTime >= 40.0f ){
 		BulletdurationTime = 0;
 		isShootFlag = false;
 		BulletCoolTime = 0;
@@ -147,6 +156,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	ImGui::Begin("ArmorEnemy");
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
+	ImGui::Text("BulletCoolTime:%d",BulletCoolTime);
 	ImGui::Text("HP:%d",HP);
 
 	ImGui::End();
@@ -155,13 +165,13 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 
 void ArmorEnemy::Draw()
 {
-	if ( isGameStartTimer >= 200 )
-	{
-		if ( isAliveFlag == true )
-		{
+	if ( isGameStartTimer >= 200 ){
+		if ( isAliveFlag == true ){
 			Obj_->Draw();
-			bulletObj_->Draw();
-			collObj_->Draw();
+			if ( isShootFlag == true ){
+				bulletObj_->Draw();
+			}
+			/*collObj_->Draw();*/
 		}
 	}
 }
@@ -176,6 +186,8 @@ void ArmorEnemy::EffUpdate()
 	{
 		EffSummary(Vector3(Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y - 1.5f,Obj_->wtf.position.z));
 		EffSummary2(Vector3(Obj_->wtf.position.x - 1.0f,Obj_->wtf.position.y - 1.5f,Obj_->wtf.position.z));
+		EffSummary3(Vector3(Obj_->wtf.position.x + 0.3f,Obj_->wtf.position.y + 2.0f,Obj_->wtf.position.z + 2.0f));
+		EffSummary4(Vector3(Obj_->wtf.position.x - 0.3f,Obj_->wtf.position.y + 2.0f,Obj_->wtf.position.z + 2.0f));
 	}
 	if ( bulletEffTimer_ >= 20 )
 	{
@@ -202,7 +214,7 @@ void ArmorEnemy::EffSummary(Vector3 bulletpos)
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 		const float rnd_velG = 0.0f;
 		const float rnd_velGy = 0.0f;
-		const float rnd_velGz = 0.5f;
+		const float rnd_velGz = 0.1f;
 		Vector3 velG{};
 		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
 		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
@@ -239,7 +251,7 @@ void ArmorEnemy::EffSummary2(Vector3 bulletpos2)
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 		const float rnd_vel2 = 0.0f;
 		const float rnd_vely2 = 0.0f;
-		const float rnd_velz2 = 0.5f;
+		const float rnd_velz2 = 0.1f;
 		Vector3 vel2{};
 		vel2.x = ( float ) rand() / RAND_MAX * rnd_vel2 - rnd_vel2 / 2.0f;
 		vel2.y = ( float ) rand() / RAND_MAX * rnd_vely2 - rnd_vely2 / 2.0f;
@@ -259,12 +271,92 @@ void ArmorEnemy::EffSummary2(Vector3 bulletpos2)
 
 }
 
+void ArmorEnemy::EffSummary3(Vector3 bulletpos3)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 5; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_pos3 = 0.0f;
+		const float rnd_posy3 = 0.0f;
+		const float rnd_posz3 = 0.0f;
+		Vector3 pos3{};
+		pos3.x += ( float ) rand() / RAND_MAX * rnd_pos3 - rnd_pos3 / 2.0f;
+		pos3.y += ( float ) rand() / RAND_MAX * rnd_posy3 - rnd_posy3 / 2.0f;
+		pos3.z += ( float ) rand() / RAND_MAX * rnd_posz3 - rnd_posz3 / 2.0f;
+		pos3 += bulletpos3;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_vel3 = 0.0f;
+		const float rnd_vely3 = -0.05f;
+		const float rnd_velz3 = 0.0f;
+		Vector3 vel3{};
+		vel3.x = ( float ) rand() / RAND_MAX * rnd_vel3 - rnd_vel3 / 2.0f;
+		vel3.y = ( float ) rand() / RAND_MAX * rnd_vely3 - rnd_vely3 / 2.0f;
+		vel3.z = ( float ) rand() / RAND_MAX * rnd_velz3 - rnd_velz3 / 1.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_acc3 = 0.000001f;
+		Vector3 acc3{};
+		acc3.x = ( float ) rand() / RAND_MAX * rnd_acc3 - rnd_acc3 / 2.0f;
+		acc3.y = ( float ) rand() / RAND_MAX * rnd_acc3 - rnd_acc3 / 2.0f;
+
+		//追加
+		gasParticle3->Add(60,pos3,vel3,acc3,0.5f,0.0f);
+
+		gasParticle3->Update();
+
+	}
+}
+
+void ArmorEnemy::EffSummary4(Vector3 bulletpos4)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 5; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_pos4 = 0.0f;
+		const float rnd_posy4 = 0.0f;
+		const float rnd_posz4 = 0.0f;
+		Vector3 pos4{};
+		pos4.x += ( float ) rand() / RAND_MAX * rnd_pos4 - rnd_pos4 / 2.0f;
+		pos4.y += ( float ) rand() / RAND_MAX * rnd_posy4 - rnd_posy4 / 2.0f;
+		pos4.z += ( float ) rand() / RAND_MAX * rnd_posz4 - rnd_posz4 / 2.0f;
+		pos4 += bulletpos4;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_vel4 = 0.0f;
+		const float rnd_vely4 = -0.05f;
+		const float rnd_velz4 = 0.0f;
+		Vector3 vel4{};
+		vel4.x = ( float ) rand() / RAND_MAX * rnd_vel4 - rnd_vel4 / 2.0f;
+		vel4.y = ( float ) rand() / RAND_MAX * rnd_vely4 - rnd_vely4 / 2.0f;
+		vel4.z = ( float ) rand() / RAND_MAX * rnd_velz4 - rnd_velz4 / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_acc4 = 0.000001f;
+		Vector3 acc4{};
+		acc4.x = ( float ) rand() / RAND_MAX * rnd_acc4 - rnd_acc4 / 2.0f;
+		acc4.y = ( float ) rand() / RAND_MAX * rnd_acc4 - rnd_acc4 / 2.0f;
+
+		//追加
+		gasParticle4->Add(60,pos4,vel4,acc4,0.5f,0.0f);
+
+		gasParticle4->Update();
+
+	}
+}
+
 void ArmorEnemy::EffDraw()
 {
-	if ( isbulletEffFlag_ == 1 ){
-		if ( isAliveFlag == true ){
-			gasParticle->Draw();
-			gasParticle2->Draw();
+	if ( isGameStartTimer >= 200 ){
+		if ( isbulletEffFlag_ == 1 ){
+			if ( isAliveFlag == true ){
+				gasParticle->Draw();
+				gasParticle2->Draw();
+				if ( Obj_->wtf.position.z >= 25.0f ){
+					gasParticle3->Draw();
+					gasParticle4->Draw();
+				}
+			}
 		}
 	}
 

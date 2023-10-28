@@ -217,14 +217,13 @@ void Player::Update(Vector3 ARbuPos ) {
 	else{isbulletEffFlag_ = 1;}
 
 	if ( isBikswordstyFlag == 2){
-		/*bikSpinTimer++;*/
-		isLeftAtFlag = true;
+		bikSpinTimer++;
 		//バイクの車輪が動き出す(抜刀)
 		if ( bikSpinTimer > 10 )
 		{
 			bikSpinTimer = 0;
 		}
-		if ( isAtTimerFlag == false )
+		if ( isAtTimerFlag == false && isLeftAtFlag == false )
 		{
 			if ( bikSpinTimer >= 1 && bikSpinTimer <= 5 )
 			{
@@ -244,7 +243,7 @@ void Player::Update(Vector3 ARbuPos ) {
 		{
 			bikstSpinTimer = 0;
 		}
-		if ( isAtTimerFlag == false )
+		if ( isAtTimerFlag == false && isLeftAtFlag == false )
 		{
 			if ( bikstSpinTimer >= 1 && bikstSpinTimer <= 5 )
 			{
@@ -264,21 +263,9 @@ void Player::Update(Vector3 ARbuPos ) {
 		camShakeTimer = camShakeLimit;
 	};
 
-	if ( isLeftAtFlag == true){
-		Obj_->SetModel(Modelbiksword0_);
-		leftAtTimer++;
-		Obj_->wtf.rotation.y += 0.3f;
-	}
+	
 
-	if ( leftAtTimer >= 30){
-		leftAtTimer = 30;
-		Obj_->wtf.rotation.y = 0.0f;
-	}
-
-	if ( input_->TriggerKey(DIK_5) )
-	{
-		leftAtTimer = 0;
-	}
+	
 
 	ImGui::Begin("Player");
 
@@ -568,10 +555,6 @@ void Player::UIDraw()
 	{
 		BloodUI->Draw();
 	}
-
-
-
-
 }
 
 void Player::PlayerAction()
@@ -627,12 +610,9 @@ void Player::PlayerAction()
 	if ( Obj_->wtf.position.y >= 1.0f ){Obj_->wtf.position.y = 1.0f;}
 	if ( Obj_->wtf.position.y <= -2.0f ){Obj_->wtf.position.y = -2.0f;}
 
-	//自機の攻撃モーション
+	//自機の攻撃モーション(射撃)
 	if ( isAtTimerFlag == false ){
-		if ( input_->TriggerKey(DIK_SPACE) )
-		{
-			isAtTimerFlag = true;
-		}
+		if ( input_->TriggerKey(DIK_SPACE) ){isAtTimerFlag = true;}
 	}
 	if ( isAtTimerFlag == true ){
 		AtTimer++;
@@ -645,6 +625,29 @@ void Player::PlayerAction()
 		bikSpinTimer++;
 		isAtTimerFlag = false;
 	}
+
+	//自機の攻撃モーション(近接攻撃)
+	if ( isLeftAtFlag == false ){
+		if ( input_->TriggerKey(DIK_6)){isLeftAtFlag = true;}
+	}
+	if ( isLeftAtFlag == true ){
+		leftAtTimer++;
+		bikSpinTimer = 6;
+	}
+	if ( leftAtTimer >= 1 && leftAtTimer < 30 ){	
+		Obj_->SetModel(Modelbiksword0_);
+		Obj_->wtf.rotation.y += 0.25f;
+	}
+	else if ( leftAtTimer >= 30 )
+	{
+		leftAtTimer = 0;
+		bikSpinTimer++;
+		Obj_->wtf.rotation.y = 0.0f;
+		isLeftAtFlag = false;
+	}
+
+
+
 
 	//自機が左右に動いたらモデルも傾く
 	if ( input_->PushKey(DIK_D) ){
