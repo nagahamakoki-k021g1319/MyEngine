@@ -31,10 +31,14 @@ public:
 
 	//エフェクトの更新処理
 	void EffUpdate();
-	//エフェクトの情報
+	//エフェクトの情報(地面のズサ)
 	void EffSummary(Vector3 bulletpos);
-	//エフェクトの情報
+	//エフェクトの情報(地面のズサ)
 	void EffSummary2(Vector3 bulletpos2);
+	//エフェクトの情報(背中の噴射ガス)
+	void EffSummary3(Vector3 bulletpos3);
+	//エフェクトの情報(背中の噴射ガス)
+	void EffSummary4(Vector3 bulletpos4);
 	//エフェクトの描画
 	void EffDraw();
 
@@ -70,7 +74,7 @@ private:
 	Model* bulletModel_ = nullptr;
 	bool isShootFlag = false;
 	int BulletdurationTime = 0;
-	int BulletCoolTime = 0;
+	int BulletCoolTime = -60;
 	Vector3 playerlen;
 	Vector3 bitweenlen;
 
@@ -80,8 +84,12 @@ private:
 	bool isCollFlag = false;
 
 	//パーティクル
+	//地面のズサ
 	std::unique_ptr<ParticleManager> gasParticle;
 	std::unique_ptr<ParticleManager> gasParticle2;
+	//背中の噴射ガス
+	std::unique_ptr<ParticleManager> gasParticle3;
+	std::unique_ptr<ParticleManager> gasParticle4;
 	int bulletEffTimer_ = 0;
 	int isbulletEffFlag_ = 0;
 
