@@ -263,9 +263,20 @@ void Player::Update(Vector3 ARbuPos ) {
 		camShakeTimer = camShakeLimit;
 	};
 
-	
+	if ( input_->PushKey(DIK_E)){
+		isClearFlag = true;
+	}
 
-	
+	if ( isClearFlag == true ){
+		Obj_->wtf.position.z += 0.5f;
+		isclearFlagTimer++;
+	}
+
+	if ( isclearFlagTimer >= 10 )
+	{
+		isclearFlagTimer = 10;
+	}
+
 
 	ImGui::Begin("Player");
 
@@ -628,7 +639,7 @@ void Player::PlayerAction()
 
 	//自機の攻撃モーション(近接攻撃)
 	if ( isLeftAtFlag == false ){
-		if ( input_->TriggerKey(DIK_6)){isLeftAtFlag = true;}
+		if ( input_->TriggerKey(DIK_Q)){isLeftAtFlag = true;}
 	}
 	if ( isLeftAtFlag == true ){
 		leftAtTimer++;

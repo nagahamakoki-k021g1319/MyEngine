@@ -90,11 +90,19 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	bulletObj_->Update();
 	EffUpdate();
 	isGameStartTimer++;
-	isbulletEffFlag_ = 1;
+	
 
 	//魔導兵が後ろから登場
 	if ( isGameStartTimer >= 200 ){Obj_->wtf.position.z += 0.7f;}
 	if ( Obj_->wtf.position.z >= 25.0f ){Obj_->wtf.position.z = 25.0f;}
+
+	if ( HP >= 1 ){
+		isbulletEffFlag_ = 1;
+	}
+	else{
+		isbulletEffFlag_ = 0;
+		bulletEffTimer_ = 0;
+	}
 
 	//魔導兵の射撃
 	if ( isGameStartTimer >= 200 && isShootFlag == false ){
@@ -229,7 +237,6 @@ void ArmorEnemy::EffSummary(Vector3 bulletpos)
 		gasParticle->Add(60,posG,velG,accG,0.5f,0.0f);
 
 		gasParticle->Update();
-
 	}
 }
 

@@ -119,6 +119,9 @@ private:	//メンバ変数
 	Model* cloudfloorMD_ = nullptr;
 	Object3d* cloudfloor2_ = nullptr;
 	Model* cloudfloorMD2_ = nullptr;
+	Object3d* cloudfloor3_ = nullptr;
+	Model* cloudfloorMD3_ = nullptr;
+
 
 	//タイトル
 	Sprite* TitleSprite = new Sprite();
@@ -130,6 +133,8 @@ private:	//メンバ変数
 	//タイトルで座ってるプレイヤー
 	Object3d* standObj_ = nullptr;
 	Model* standModel_ = nullptr;
+	Model* standModel2_ = nullptr;
+	int spintimer = 0;
 
 	//タイトルからゲームシーンへの暗転
 	Sprite* bbout1 = nullptr;

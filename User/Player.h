@@ -89,6 +89,10 @@ public:
 	Vector3 enemylen;
 	Vector3 len;
 
+	//ゲームクリアするときのバイク移動
+	bool isClearFlag = false;
+	int isclearFlagTimer = 0;
+
 	//カメラの向きによって自機の動きをかえるフラグ
 	int isCameraBehavior = 0;
 
@@ -261,7 +265,5 @@ private:
 	Vector3 camShakeVec;
 	Vector3 moveBack;
 
-
-	
 	
 };
