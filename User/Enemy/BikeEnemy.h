@@ -33,8 +33,6 @@ public:
 	void EffUpdate();
 	//エフェクトの情報
 	void EffSummary(Vector3 bulletpos);
-	//エフェクトの情報
-	void EffSummary2(Vector3 bulletpos2);
 	//エフェクトの描画
 	void EffDraw();
 
@@ -54,10 +52,15 @@ private:
 	//maehito usirohito
 	Object3d* Obj_ = nullptr;
 	Model* Model_ = nullptr;
+	//当たり判定のモデル
+	Object3d* collObj_ = nullptr;
+	Model* collModel_ = nullptr;
+	bool isCollFlag = false;
 
 	//死んだときのバイクがスピンするモデル
 	Object3d* bikclushObj_ = nullptr;
 	Model* bikclushModel_ = nullptr;
+	bool isEntryFlag = false;
 	//死んだときの敵が吹っ飛ぶするモデル
 	Object3d* blowenemyObj_ = nullptr;
 	Model* blowenemyModel_ = nullptr;

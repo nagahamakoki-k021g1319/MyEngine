@@ -10,6 +10,9 @@ BikeEnemy::~BikeEnemy()
 	delete Obj_;
 	delete Model_;
 
+	delete collObj_;
+	delete collModel_;
+
 	delete bikclushObj_;
 	delete bikclushModel_;
 
@@ -31,21 +34,28 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 
 	//雑魚敵(攻撃状態)
-	Model_ = Model::LoadFromOBJ("bikenemy");//bikclush
+	Model_ = Model::LoadFromOBJ("bikenemy");
 	Obj_ = Object3d::Create();
 	Obj_->SetModel(Model_);
 	Obj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	Obj_->wtf.position = { -3.0f,-2.0f,0.0f };
 
+	//当たり判定のモデル
+	collModel_ = Model::LoadFromOBJ("collboll");
+	collObj_ = Object3d::Create();
+	collObj_->SetModel(collModel_);
+	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z - 1.0f };
+
+
 	//雑魚敵(死んだときのバイクスピン)
-	bikclushModel_ = Model::LoadFromOBJ("bikclush");//bikclush
+	bikclushModel_ = Model::LoadFromOBJ("bikclush");
 	bikclushObj_ = Object3d::Create();
 	bikclushObj_->SetModel(bikclushModel_);
 	bikclushObj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	bikclushObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z };
 
 	//雑魚敵(死んだときの敵が吹っ飛ぶ)
-	blowenemyModel_ = Model::LoadFromOBJ("blowenemy");//bikclush
+	blowenemyModel_ = Model::LoadFromOBJ("blowenemy");
 	blowenemyObj_ = Object3d::Create();
 	blowenemyObj_->SetModel(blowenemyModel_);
 	blowenemyObj_->wtf.scale = { 0.4f,0.4f,0.4f };
@@ -62,27 +72,41 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 void BikeEnemy::Update()
 {
 	Obj_->Update();
+	collObj_->Update();
+	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z - 1.0f };
 	bikclushObj_->Update();
 	blowenemyObj_->Update();
 	EffUpdate();
 	isGameStartTimer++;
-	isbulletEffFlag_ = 1;
+
+	/*if ( isGameStartTimer >= 220 ){
+		Obj_->wtf.position.z += 0.5f;
+	}
+	if ( Obj_->wtf.position.z >= 0.0f){
+		Obj_->wtf.position.z = 0.0f;
+	}*/
+
 
 	//バイクスピン
-	if ( input_->TriggerKey(DIK_4) ){isBikclushFlag = true;}
+	if ( input_->TriggerKey(DIK_4) ){
+		isBikclushFlag = true;
+		isbulletEffFlag_ = 0;
+		bulletEffTimer_ = 0;
+	}
+	else{isbulletEffFlag_ = 1;}
 
+	//バイクが前進しながら倒れる
 	if( isBikclushFlag == true){
 		bikclushObj_->wtf.rotation.z += 0.1f;
 		bikclushObj_->wtf.position.z += 0.3f;
 		blowenemyObj_->wtf.position.y -= 0.1f;
 		blowenemyObj_->wtf.position.z -= 0.2f;
 	}
-
 	if ( bikclushObj_->wtf.rotation.z >= 1.5f){
 		bikclushObj_->wtf.rotation.z = 1.5f;
 		isBikSpinFlag = true;
 	}
-
+	//バイクが倒れて後ろに行く
 	if ( isBikSpinFlag == true){
 		bikclushObj_->wtf.position.z -= 0.6f;
 		bikclushObj_->wtf.rotation.x -= 0.05f;
@@ -94,7 +118,10 @@ void BikeEnemy::Update()
 void BikeEnemy::Draw()
 {
 	if ( isGameStartTimer >= 200 ){
-		if ( isBikclushFlag == false ){Obj_->Draw();}
+		if ( isBikclushFlag == false ){
+			Obj_->Draw();
+			/*collObj_->Draw();*/
+		}
 		else if ( isBikclushFlag == true ){
 			bikclushObj_->Draw();
 			blowenemyObj_->Draw();
@@ -159,8 +186,12 @@ void BikeEnemy::EffSummary(Vector3 bulletpos)
 
 void BikeEnemy::EffDraw()
 {
-	if ( isbulletEffFlag_ == 1 ){
-		gasParticle->Draw();
+	if ( isGameStartTimer >= 200 ){
+		if ( isBikclushFlag == false ){
+			if ( isbulletEffFlag_ == 1 ){
+				gasParticle->Draw();
+			}
+		}
 	}
 }
 

@@ -35,8 +35,11 @@ GameScene::~GameScene() {
 	delete cloudfloorMD_;
 	delete cloudfloor2_;
 	delete cloudfloorMD2_;
+	delete cloudfloor3_;
+	delete cloudfloorMD3_;
 	delete standObj_;
 	delete standModel_;
+	delete standModel2_;
 	delete bbout1;
 	delete bbout2;
 	delete bbout3;
@@ -122,15 +125,17 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	floorTitMD_ = Model::LoadFromOBJ("Ground");
 	floorTit_ = Object3d::Create();
 	floorTit_->SetModel(floorTitMD_);
-	floorTit_->wtf.position = (Vector3{ 0, -1.0f, 0 });
+	floorTit_->wtf.position = (Vector3{ 0, -1.5f, 0 });
 	floorTit_->wtf.scale = (Vector3{ 5.0f, 5.0f, 5.0f });
 
 	//タイトルの自機
-	standModel_ = Model::LoadFromOBJ("taikihito");
+	standModel_ = Model::LoadFromOBJ("bikst");
+	standModel2_ = Model::LoadFromOBJ("bikst2");
 	standObj_ = Object3d::Create();
 	standObj_->SetModel(standModel_);
-	standObj_->wtf.scale = { 0.1f,0.1f,0.1f };
+	standObj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	standObj_->wtf.position = { 0.0f,-1.0f,0.0f };
+	standObj_->wtf.rotation.y = 1.4f;
 
 	//天球(ゲームシーン)
 	skydomeMD = Model::LoadFromOBJ("skydome");
@@ -161,6 +166,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	cloudfloor2_->SetModel(cloudfloorMD2_);
 	cloudfloor2_->wtf.position = ( Vector3{ 30, -5.0f, 20000 } );
 	cloudfloor2_->wtf.scale = ( Vector3{ 100.0f, 500.0f, 10000.0f } );
+	//道路のステージ(繋ぎ2)
+	cloudfloorMD3_ = Model::LoadFromOBJ("CloudGround");
+	cloudfloor3_ = Object3d::Create();
+	cloudfloor3_->SetModel(cloudfloorMD3_);
+	cloudfloor3_->wtf.position = ( Vector3{ 30, -5.0f, 40000 } );
+	cloudfloor3_->wtf.scale = ( Vector3{ 100.0f, 500.0f, 10000.0f } );
 
 	//プレイヤー
 	player_ = new Player();
@@ -212,12 +223,14 @@ void GameScene::Update() {
 	mainCamera->Update();
 	
 	if (sceneNo_ == SceneNo::Title) {
+		spintimer++;
 		if (input_->TriggerKey(DIK_SPACE) || input_->PButtonTrigger(B)) {
 			isbboutFlag = true;
 		}
 		if ( isbboutFlag == true )
 		{
 			bboutTimer++;
+			standObj_->wtf.position.x += 0.3f;
 		}
 		if ( bboutTimer >= 30 )
 		{
@@ -226,13 +239,16 @@ void GameScene::Update() {
 		}
 
 		skydomeTit_->Update();
+		skydomeTit_->wtf.rotation.y += 0.001f;
 		floorTit_->Update();
 		standObj_->Update();
-		mainCamera->wtf.rotation.y += 0.005f;
+		if ( spintimer >= 10){spintimer = 0;}
+		if(spintimer >= 0 && spintimer <= 5 ){standObj_->SetModel(standModel_);}
+		else if( spintimer >= 6 && spintimer <= 10 ){standObj_->SetModel(standModel2_);}
 	}
 
 	if (sceneNo_ == SceneNo::Game) {
-		if (enemyBoss_->clushingTimer >= 120){
+		if (player_->isclearFlagTimer >= 10){
 			sceneNo_ = SceneNo::Clear;
 		}
 		
@@ -252,7 +268,8 @@ void GameScene::Update() {
 		cloudfloor_->wtf.position.z -= 10.0f;
 		cloudfloor2_->Update();
 		cloudfloor2_->wtf.position.z -= 10.0f;
-
+		cloudfloor3_->Update();
+		cloudfloor3_->wtf.position.z -= 10.0f;
 		
 
 	}
@@ -288,11 +305,12 @@ void GameScene::Draw() {
 		skydome->Draw();
 		cloudfloor_->Draw();
 		cloudfloor2_->Draw();
+		cloudfloor3_->Draw();
 	}
 	//3Dオブジェクト描画後処理
 	Object3d::PostDraw();
 	if (sceneNo_ == SceneNo::Title) {
-		TitleSprite->Draw();
+		/*TitleSprite->Draw();*/
 		if ( bboutTimer >= 1 && bboutTimer <= 10)
 		{
 			bbout1->Draw();

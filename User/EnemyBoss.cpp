@@ -89,10 +89,6 @@ void EnemyBoss::Initialize(DirectXCommon* dxCommon, Input* input)
 
 void EnemyBoss::Update()
 {
-	if (input_->PushKey(DIK_4)){
-		isEffFlag_ = 1;
-	}
-
 	fbxObject3d_->Update();
 	Obj_->Update();
 	EffUpdate();
