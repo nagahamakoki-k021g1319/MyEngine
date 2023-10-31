@@ -190,9 +190,6 @@
     <ClCompile Include="User\Enemy.cpp">
       <Filter>user\ソース</Filter>
     </ClCompile>
-    <ClCompile Include="User\EnemyBoss.cpp">
-      <Filter>user\ソース</Filter>
-    </ClCompile>
     <ClCompile Include="User\Obstacle.cpp">
       <Filter>user\ソース</Filter>
     </ClCompile>
@@ -206,6 +203,9 @@
       <Filter>user\ソース\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="User\Enemy\BikeEnemy.cpp">
+      <Filter>user\ソース\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="User\Enemy\BossEnemy.cpp">
       <Filter>user\ソース\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
@@ -297,9 +297,6 @@
     <ClInclude Include="User\Obstacle.h">
       <Filter>user\ヘッダー</Filter>
     </ClInclude>
-    <ClInclude Include="User\EnemyBoss.h">
-      <Filter>user\ヘッダー</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\MATH\SplinePosition.h">
       <Filter>Engine\ヘッダーファイル\MATH</Filter>
     </ClInclude>
@@ -313,6 +310,9 @@
       <Filter>user\ヘッダー\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="User\Enemy\BikeEnemy.h">
+      <Filter>user\ヘッダー\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="User\Enemy\BossEnemy.h">
       <Filter>user\ヘッダー\Enemy</Filter>
     </ClInclude>
   </ItemGroup>

@@ -17,7 +17,6 @@
 #include "ImGuiManager.h"
 
 class Enemy;
-class EnemyBoss;
 class ArmorEnemy;
 
 class Player {
@@ -27,7 +26,7 @@ public:
 
 	void Initialize(DirectXCommon* dxCommon, Input* input);
 	void UIInitialize();
-	void Update(Vector3 ARbuPos);
+	void Update(Vector3 ARbuPos,Vector3 ARbuPos2);
 
 	void Draw();
 	void FbxDraw();
@@ -51,8 +50,8 @@ public:
 	Vector3 GetWorldPosition();
 	//ワールド座標を取得(弾)
 	Vector3 GetBulletWorldPosition();
-	//ワールド座標を取得(強弾)
-	Vector3 GetBulletStWorldPosition();
+	//ワールド座標を取得(近接攻撃)
+	Vector3 GetSwordWorldPosition();
 	//ワールド座標を取得(レティクル)
 	Vector3 GetRetWorldPosition();
 
@@ -74,9 +73,6 @@ public:
 	void SetPos(Vector3 pos) { Obj_->wtf.position = pos; };
 	void SetCamera(Camera* cam) { camera = cam; };
 
-	void SetEnemyBoss(EnemyBoss* eneenemyBoss) {enemyBoss_ = eneenemyBoss;};
-
-
 public:
 	//音を止める関数
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
@@ -88,6 +84,9 @@ public:
 	int BulletCoolTime = 0;
 	Vector3 enemylen;
 	Vector3 len;
+
+	//自機の近接攻撃判定がでるフラグ
+	bool isCollSWFlag = false;
 
 	//ゲームクリアするときのバイク移動
 	bool isClearFlag = false;
@@ -103,7 +102,6 @@ private:
 	Input* input_ = nullptr;
 	DirectXCommon* dxCommon_ = nullptr;
 	Audio* audio = nullptr;
-	EnemyBoss* enemyBoss_ = nullptr;
 	SpriteCommon* spriteCommon = nullptr;
 	Collision coll;
 
@@ -131,11 +129,6 @@ private:
 	Model* ModelBikswordsty2_ = nullptr;
 	//モデル(左側攻撃)
 	Model* Modelbiksword0_ = nullptr;
-	Model* Modelbiksword1_ = nullptr;
-	Model* Modelbiksword2_ = nullptr;
-	Model* Modelbiksword3_ = nullptr;
-	Model* Modelbiksword4_ = nullptr;
-	Model* Modelbiksword5_ = nullptr;
 	int leftAtTimer = 0;
 	bool isLeftAtFlag = false;
 
@@ -163,6 +156,10 @@ private:
 	Object3d* collObj_ = nullptr;
 	Model* collModel_ = nullptr;
 	float collpos = 0.0f;
+
+	//自機の近接攻撃判定のモデル
+	Object3d* collSWObj_ = nullptr;
+	Model* collSWModel_ = nullptr;
 
 	//自機の生存フラグ
 	bool isAliveFlag = true;
