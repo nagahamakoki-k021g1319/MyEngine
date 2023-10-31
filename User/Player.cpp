@@ -1,6 +1,5 @@
 #include"Player.h"
 #include"Enemy.h"
-#include"EnemyBoss.h"
 #include <imgui.h>
 #include "Enemy/ArmorEnemy.h"
 
@@ -70,14 +69,13 @@ Player::~Player() {
 	delete ModelBikswordsty2_;
 
 	delete Modelbiksword0_;
-	delete Modelbiksword1_;
-	delete Modelbiksword2_;
-	delete Modelbiksword3_;
-	delete Modelbiksword4_;
-	delete Modelbiksword5_;
+	
 
 	delete collObj_;
 	delete collModel_;
+
+	delete collSWObj_;
+	delete collSWModel_;
 
 	delete entryani1UI;
 	delete entryani2UI;
@@ -120,11 +118,6 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 
 	//近接攻撃(左側)
 	Modelbiksword0_ = Model::LoadFromOBJ("bikswordAt");
-	Modelbiksword1_ = Model::LoadFromOBJ("biksword1");
-	Modelbiksword2_ = Model::LoadFromOBJ("biksword2");
-	Modelbiksword3_ = Model::LoadFromOBJ("biksword3");
-	Modelbiksword4_ = Model::LoadFromOBJ("biksword4");
-	Modelbiksword5_ = Model::LoadFromOBJ("biksword5");
 
 
 	//自機
@@ -138,6 +131,12 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	collObj_ = Object3d::Create();
 	collObj_->SetModel(collModel_);
 	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 0.5f,-1.0f };
+
+	//自機の近接攻撃判定のモデル
+	collSWModel_ = Model::LoadFromOBJ("collboll");
+	collSWObj_ = Object3d::Create();
+	collSWObj_->SetModel(collSWModel_);
+	collSWObj_->wtf.position = { Obj_->wtf.position.x - 0.5f,Obj_->wtf.position.y + 0.5f,-1.0f };
 
 	//自機の弾(弱)
 	shootModel_ = Model::LoadFromOBJ("boll2");
@@ -188,7 +187,7 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 
 
 
-void Player::Update(Vector3 ARbuPos ) {
+void Player::Update(Vector3 ARbuPos,Vector3 ARbuPos2) {
 	camera->Update();
 	shootObj_->Update();
 	shootStObj_->Update();
@@ -201,7 +200,8 @@ void Player::Update(Vector3 ARbuPos ) {
 	Obj_->Update();
 	EffUpdate();
 	collObj_->Update();
-
+	collSWObj_->Update();
+	collSWObj_->wtf.position = { Obj_->wtf.position.x - 1.0f,Obj_->wtf.position.y + 0.5f,-1.0f };
 	isGameStartFlag = true;
 
 	//ゲームが始まる
@@ -256,27 +256,27 @@ void Player::Update(Vector3 ARbuPos ) {
 		}
 	}
 
-
+	//当たり判定
 	if ( isCamShake == 1 ){DamageCamShake();}
 	if ( coll.CircleCollision(ARbuPos,GetWorldPosition(),0.6f,0.6f) ){
 		isCamShake = 1;
 		camShakeTimer = camShakeLimit;
 	};
+	if ( coll.CircleCollision(ARbuPos2,GetWorldPosition(),0.6f,0.6f) ){
+		isCamShake = 1;
+		camShakeTimer = camShakeLimit;
+	};
 
-	if ( input_->PushKey(DIK_E)){
-		isClearFlag = true;
-	}
-
+	if ( input_->PushKey(DIK_E)){isClearFlag = true;}
 	if ( isClearFlag == true ){
 		Obj_->wtf.position.z += 0.5f;
 		isclearFlagTimer++;
 	}
+	if ( isclearFlagTimer >= 100 ){isclearFlagTimer = 100;}
 
-	if ( isclearFlagTimer >= 10 )
-	{
-		isclearFlagTimer = 10;
+	if ( input_->PushKey(DIK_R) ){
+		camera->wtf.rotation.y += 0.01f;
 	}
-
 
 	ImGui::Begin("Player");
 
@@ -294,9 +294,12 @@ void Player::Draw() {
 		Obj_->Draw();
 	}
 
-	/*if ( isGameStartTimer >= 180 ){
-		collObj_->Draw();
-	}*/
+	if ( isGameStartTimer >= 180 ){
+		/*collObj_->Draw();*/
+		if ( isCollSWFlag == true ){
+			collSWObj_->Draw();
+		}
+	}
 
 	if ( isShootFlag == true )
 	{
@@ -310,7 +313,7 @@ void Player::Draw() {
 	/*shootStObj_->Draw();*/
 
 	if ( retdisplay == true ){
-		retObj_->Draw();
+		/*retObj_->Draw();*/
 		retVisualObj_->Draw();
 	}
 
@@ -639,7 +642,10 @@ void Player::PlayerAction()
 
 	//自機の攻撃モーション(近接攻撃)
 	if ( isLeftAtFlag == false ){
-		if ( input_->TriggerKey(DIK_Q)){isLeftAtFlag = true;}
+		if ( input_->TriggerKey(DIK_Q)){
+			isLeftAtFlag = true;
+			isCollSWFlag = true;
+		}
 	}
 	if ( isLeftAtFlag == true ){
 		leftAtTimer++;
@@ -654,6 +660,7 @@ void Player::PlayerAction()
 		leftAtTimer = 0;
 		bikSpinTimer++;
 		Obj_->wtf.rotation.y = 0.0f;
+		isCollSWFlag = false;
 		isLeftAtFlag = false;
 	}
 
@@ -933,18 +940,18 @@ Vector3 Player::GetBulletWorldPosition()
 	return BulletWorldPos;
 }
 
-Vector3 Player::GetBulletStWorldPosition()
+Vector3 Player::GetSwordWorldPosition()
 {
 	//ワールド座標を入れる変数
-	Vector3 BulletStWorldPos;
+	Vector3 SwordWorldPos;
 
-	shootStObj_->wtf.UpdateMat();
+	collSWObj_->wtf.UpdateMat();
 	//ワールド行列の平行移動成分
-	BulletStWorldPos.x = shootStObj_->wtf.matWorld.m[ 3 ][ 0 ];
-	BulletStWorldPos.y = shootStObj_->wtf.matWorld.m[ 3 ][ 1 ];
-	BulletStWorldPos.z = shootStObj_->wtf.matWorld.m[ 3 ][ 2 ];
+	SwordWorldPos.x = collSWObj_->wtf.matWorld.m[ 3 ][ 0 ];
+	SwordWorldPos.y = collSWObj_->wtf.matWorld.m[ 3 ][ 1 ];
+	SwordWorldPos.z = collSWObj_->wtf.matWorld.m[ 3 ][ 2 ];
 
-	return BulletStWorldPos;
+	return SwordWorldPos;
 }
 
 Vector3 Player::GetRetWorldPosition()
@@ -993,10 +1000,13 @@ void Player::GameStartMovie()
 
 	if ( camera->wtf.rotation.y <= 0.2f ){camera->wtf.rotation.y = 0.2f;}
 
+	if ( isGameStartTimer >= 179 && isGameStartTimer <= 180 ){
+		Obj_->wtf.position.z = 0.0f;
+	}
 	if ( isGameStartTimer >= 180 )
 	{
 		acflag = false;
-		Obj_->wtf.position.z = 0.0f;
+		Obj_->wtf.position.z -= 0.3f;
 		retdisplay = true;
 		camera->wtf.rotation.y = 0.0f;
 	}

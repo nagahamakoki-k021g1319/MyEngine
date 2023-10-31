@@ -1,4 +1,6 @@
 #include "BikeEnemy.h"
+#include "Player.h"
+#include <imgui.h>
 
 BikeEnemy::BikeEnemy()
 {
@@ -69,7 +71,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 }
 
-void BikeEnemy::Update()
+void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag)
 {
 	Obj_->Update();
 	collObj_->Update();
@@ -83,12 +85,19 @@ void BikeEnemy::Update()
 		Obj_->wtf.position.z += 0.5f;
 	}
 	if ( Obj_->wtf.position.z >= 0.0f){
-		Obj_->wtf.position.z = 0.0f;
+		Obj_->wtf.position.z -= 0.5f;
 	}*/
 
+	if ( HP >= 1 ){
+		if ( isCollSWFlag == true){
+			if ( coll.CircleCollision(playerSWPos,GetWorldPosition(),1.0f,1.0f) ){
+				HP--;
+			}
+		}
+	}
 
 	//バイクスピン
-	if ( input_->TriggerKey(DIK_4) ){
+	if (HP <= 0 ){
 		isBikclushFlag = true;
 		isbulletEffFlag_ = 0;
 		bulletEffTimer_ = 0;
@@ -113,6 +122,12 @@ void BikeEnemy::Update()
 	}
 
 
+	ImGui::Begin("bikeEnemy");
+
+	ImGui::Text("HP:%d",HP);
+
+	ImGui::End();
+
 }
 
 void BikeEnemy::Draw()
@@ -120,7 +135,7 @@ void BikeEnemy::Draw()
 	if ( isGameStartTimer >= 200 ){
 		if ( isBikclushFlag == false ){
 			Obj_->Draw();
-			/*collObj_->Draw();*/
+			collObj_->Draw();
 		}
 		else if ( isBikclushFlag == true ){
 			bikclushObj_->Draw();
@@ -197,5 +212,14 @@ void BikeEnemy::EffDraw()
 
 Vector3 BikeEnemy::GetWorldPosition()
 {
-	return Vector3();
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+
+	collObj_->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	worldPos.x = collObj_->wtf.matWorld.m[ 3 ][ 0 ];
+	worldPos.y = collObj_->wtf.matWorld.m[ 3 ][ 1 ];
+	worldPos.z = collObj_->wtf.matWorld.m[ 3 ][ 2 ];
+
+	return worldPos;
 }

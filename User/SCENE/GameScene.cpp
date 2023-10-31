@@ -20,7 +20,6 @@ GameScene::~GameScene() {
 	delete armorEnemy_;
 	delete bikeEnemy_;
 	delete obstacle_;
-	delete enemyBoss_;
 	delete skydome;
 	delete skydomeMD;
 	delete floor;
@@ -177,7 +176,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	player_ = new Player();
 	player_->Initialize(dxCommon,input);
 	player_->SetCamera(mainCamera);
-	player_->SetEnemyBoss(enemyBoss_);
 
 
 	//-------敵関連--------//
@@ -191,19 +189,13 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 	bikeEnemy_ = new BikeEnemy();
 	bikeEnemy_->Initialize(dxCommon,input);
+	armorEnemy_->SetPlayer(player_);
 
 	//障害物
 	obstacle_ = new Obstacle();
 	obstacle_->Initialize(dxCommon, input);
 	obstacle_->SetPlayer(player_);
-	//obstacle_->SetEnemy(enemy_);
-	//敵Boss
-	enemyBoss_ = new EnemyBoss();
-	enemyBoss_->Initialize(dxCommon, input);
-	enemyBoss_->SetPlayer(player_);
-	enemyBoss_->SetEnemy(enemy_);
-
-
+	
 	//--------------------//
 
 
@@ -248,15 +240,14 @@ void GameScene::Update() {
 	}
 
 	if (sceneNo_ == SceneNo::Game) {
-		if (player_->isclearFlagTimer >= 10){
+		if (player_->isclearFlagTimer >= 100){
 			sceneNo_ = SceneNo::Clear;
 		}
 		
-		player_->Update(armorEnemy_->GetWorldBulletPosition());
-		enemyBoss_->Update();
+		player_->Update(armorEnemy_->GetWorldBulletPosition(),armorEnemy_->GetWorldBulletPosition2());
 		obstacle_->Update();
 		armorEnemy_->Update(player_->GetWorldPosition(),player_->GetBulletWorldPosition(),player_->isShootFlag);
-		bikeEnemy_->Update();
+		bikeEnemy_->Update(player_->GetSwordWorldPosition(),player_->isCollSWFlag);
 
 		skydome->Update();
 		skydome->wtf.position.z -= 0.02f;
@@ -297,7 +288,6 @@ void GameScene::Draw() {
 	if (sceneNo_ == SceneNo::Game) {
 		//// 3Dオブクジェクトの描画
 		player_->Draw();
-		enemyBoss_->Draw();
 		obstacle_->Draw();
 		armorEnemy_->Draw();
 		bikeEnemy_->Draw();
@@ -332,9 +322,6 @@ void GameScene::Draw() {
 		player_->EffDraw();
 		armorEnemy_->EffDraw();
 		bikeEnemy_->EffDraw();
-		enemyBoss_->FbxDraw();
-		enemyBoss_->UIDraw();
-		enemyBoss_->EffDraw();
 		player_->UIDraw();
 	}
 

@@ -16,7 +16,7 @@
 #include "FBXObject3d.h"
 #include "ImGuiManager.h"
 
-
+class Player;
 
 class BikeEnemy
 {
@@ -25,7 +25,7 @@ public:
 	~BikeEnemy();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
-	void Update();
+	void Update(Vector3 playerSWPos,bool isCollSWFlag);
 
 	void Draw();
 
@@ -38,11 +38,15 @@ public:
 
 	////ワールド座標を取得
 	Vector3 GetWorldPosition();
+
+	void SetPlayer(Player* player) {player_ = player;};
+
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
 	DirectXCommon* dxCommon_ = nullptr;
 	Audio* audio = nullptr;
+	Player* player_ = nullptr;
 	SpriteCommon* spriteCommon = nullptr;
 	Collision coll;
 
@@ -67,7 +71,7 @@ private:
 	bool isBikclushFlag = false;
 	bool isBikSpinFlag = false;
 
-
+	int HP = 1;
 
 	//パーティクル
 	std::unique_ptr<ParticleManager> gasParticle;

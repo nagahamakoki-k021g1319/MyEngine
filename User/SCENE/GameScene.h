@@ -17,7 +17,6 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Obstacle.h"
-#include "EnemyBoss.h"
 #include "Enemy/ArmorEnemy.h"
 #include "Enemy/BikeEnemy.h"
 
@@ -105,9 +104,6 @@ private:	//メンバ変数
 
 	//障害物
 	Obstacle* obstacle_ = nullptr;
-	//敵Boss
-	EnemyBoss* enemyBoss_ = nullptr;
-
 	//--------------------//
 
 	//ゲームシーンの背景や床
