@@ -267,21 +267,61 @@ void Player::Update(Vector3 ARbuPos,Vector3 ARbuPos2) {
 		camShakeTimer = camShakeLimit;
 	};
 
-	if ( input_->PushKey(DIK_E)){isClearFlag = true;}
+	if ( input_->PushKey(DIK_P)){isClearFlag = true;}
 	if ( isClearFlag == true ){
 		Obj_->wtf.position.z += 0.5f;
 		isclearFlagTimer++;
 	}
 	if ( isclearFlagTimer >= 100 ){isclearFlagTimer = 100;}
 
-	if ( input_->PushKey(DIK_R) ){
-		camera->wtf.rotation.y += 0.01f;
+	//ボス登場時のカメラ
+	if ( input_->TriggerKey(DIK_R) ){isCameraBehavior = 1;}
+	if ( isCameraBehavior == 1 ){CameraBehaviorTimer++;}
+
+	
+	if ( isCameraBehavior == 1)
+	{
+		if ( CameraBehaviorTimer <= 70 ){
+			camera->wtf.position.z -= 0.2f;
+		}
+		if ( CameraBehaviorTimer >= 20 ){
+			camera->wtf.rotation.y += 0.05f;
+		}
+
+		if ( camera->wtf.position.z <= -14.0f){camera->wtf.position.z = -14.0f;}
+		if ( camera->wtf.rotation.y >= 2.5f ){
+			camera->wtf.rotation.y = 2.5f;
+			isCameraBehavior = 2;
+		}
+	}
+	if ( isCameraBehavior == 2 ){
+		CameraBehaviorTimer2++;
+		if ( CameraBehaviorTimer2 >= 80)
+		{
+			camera->wtf.position.z += 0.2f;
+		}
+		if ( CameraBehaviorTimer2 >= 100 )
+		{
+			camera->wtf.rotation.y -= 0.05f;
+		}
+
+		if ( camera->wtf.position.z >= 10.0f )
+		{
+			camera->wtf.position.z = 10.0f;
+		}
+		if ( camera->wtf.rotation.y <= 0.0f )
+		{
+			camera->wtf.rotation.y = 0.0f;
+			isCameraBehavior = 0;
+		}
 	}
 
 	ImGui::Begin("Player");
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
-	ImGui::Text("Cameraposition:%f,%f,%f",camera->wtf.rotation.x,camera->wtf.rotation.y,camera->wtf.rotation.z);
+	ImGui::Text("CameraBehaviorTimer:%d",CameraBehaviorTimer);
+	ImGui::Text("Camerarotation:%f,%f,%f",camera->wtf.rotation.x,camera->wtf.rotation.y,camera->wtf.rotation.z);
+	ImGui::Text("Cameraposition:%f,%f,%f",camera->wtf.position.x,camera->wtf.position.y,camera->wtf.position.z);
 	ImGui::Text("isCamShake:%d",isCamShake);
 
 	ImGui::End();
@@ -297,7 +337,7 @@ void Player::Draw() {
 	if ( isGameStartTimer >= 180 ){
 		/*collObj_->Draw();*/
 		if ( isCollSWFlag == true ){
-			collSWObj_->Draw();
+			/*collSWObj_->Draw();*/
 		}
 	}
 
@@ -993,12 +1033,15 @@ void Player::GameStartMovie()
 		rotaflag = true;
 	}
 
-	if ( rotaflag == true )
+	if ( isGameStartTimer <= 180 && rotaflag == true )
 	{
 		camera->wtf.rotation.y -= 0.05f;
 	}
 
-	if ( camera->wtf.rotation.y <= 0.2f ){camera->wtf.rotation.y = 0.2f;}
+	if ( isGameStartTimer <= 180 && camera->wtf.rotation.y <= 0.2f && rotaflag == true ){
+		camera->wtf.rotation.y = 0.2f;
+		rotaflag = false;
+	}
 
 	if ( isGameStartTimer >= 179 && isGameStartTimer <= 180 ){
 		Obj_->wtf.position.z = 0.0f;
@@ -1008,6 +1051,11 @@ void Player::GameStartMovie()
 		acflag = false;
 		Obj_->wtf.position.z -= 0.3f;
 		retdisplay = true;
+		
+	}
+
+	if ( isGameStartTimer >= 180 && isGameStartTimer <= 220 )
+	{
 		camera->wtf.rotation.y = 0.0f;
 	}
 

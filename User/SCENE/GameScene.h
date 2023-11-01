@@ -19,6 +19,7 @@
 #include "Obstacle.h"
 #include "Enemy/ArmorEnemy.h"
 #include "Enemy/BikeEnemy.h"
+#include "Enemy/BossEnemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -101,6 +102,7 @@ private:	//メンバ変数
 	Enemy* enemy_ = nullptr;
 	ArmorEnemy* armorEnemy_ = nullptr;
 	BikeEnemy* bikeEnemy_ = nullptr;
+	BossEnemy* bossEnemy_ = nullptr;
 
 	//障害物
 	Obstacle* obstacle_ = nullptr;
