@@ -92,10 +92,10 @@ public:
 	bool isClearFlag = false;
 	int isclearFlagTimer = 0;
 
-	//カメラの向きによって自機の動きをかえるフラグ
+	//ボス登場でカメラの向きをかえるフラグ
 	int isCameraBehavior = 0;
-
-
+	int CameraBehaviorTimer = 0;
+	int CameraBehaviorTimer2 = 0;
 
 private:
 	const float PI = 3.141592f;

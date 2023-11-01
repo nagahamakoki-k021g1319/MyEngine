@@ -135,11 +135,13 @@ void BikeEnemy::Draw()
 	if ( isGameStartTimer >= 200 ){
 		if ( isBikclushFlag == false ){
 			Obj_->Draw();
-			collObj_->Draw();
+			/*collObj_->Draw();*/
 		}
 		else if ( isBikclushFlag == true ){
-			bikclushObj_->Draw();
-			blowenemyObj_->Draw();
+			if ( bikclushObj_->wtf.position.z >= -20.0f){
+				bikclushObj_->Draw();
+				blowenemyObj_->Draw();
+			}
 		}
 	}
 

@@ -78,8 +78,8 @@ private:
 	Object3d* Obj2_ = nullptr;
 	Model* Model_ = nullptr;
 	Model* Modelst_ = nullptr;
-	bool isAliveFlag = true;
-	bool isAliveFlag2 = true;
+	bool isAliveFlag = false;
+	bool isAliveFlag2 = false;
 
 	//体力
 	int HP = 12;
