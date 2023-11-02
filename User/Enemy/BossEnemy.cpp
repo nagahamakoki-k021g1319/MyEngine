@@ -17,12 +17,14 @@ BossEnemy::~BossEnemy()
 	delete collObj_;
 	delete collModel_;
 
-	for ( int i = 0; i < 10; i++ ){delete swObj_[i];}
+	for ( int i = 0; i < 8; i++ ){delete swObj_[i];}
 	delete swModel_;
 
 	delete collswObj_;
 	delete collswModel_;
 
+	delete  guidbulletObj_;
+	delete	guidbulletModel_;
 
 }
 
@@ -40,9 +42,9 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 
 	//雑魚敵(攻撃状態)
-	Model_ = Model::LoadFromOBJ("bik");
-	Model2_ = Model::LoadFromOBJ("bik2");
-	ModelAt_ = Model::LoadFromOBJ("bikAt");
+	Model_ = Model::LoadFromOBJ("bossbik");
+	Model2_ = Model::LoadFromOBJ("bossbik2");
+	ModelAt_ = Model::LoadFromOBJ("bossbikAt");
 	Obj_ = Object3d::Create();
 	Obj_->SetModel(Model_);
 	Obj_->wtf.scale = { 0.7f,0.7f,0.7f };
@@ -56,7 +58,7 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 	//攻撃時のモデル
 	swModel_ = Model::LoadFromOBJ("enesw");
-	for ( int i = 0; i < 10; i++ )
+	for ( int i = 0; i < 8; i++ )
 	{
 		swObj_[i] = Object3d::Create();
 		swObj_[i]->SetModel(swModel_);
@@ -64,22 +66,27 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		
 	}
 
-	swObj_[0]->wtf.position = { 0.0f,-16.0f, 25.0f };//-7.3
-	swObj_[1]->wtf.position = { 0.0f,-16.0f, 23.0f };
-	swObj_[2]->wtf.position = { 0.0f,-16.0f, 20.0f };
-	swObj_[3]->wtf.position = { 0.0f,-16.0f, 17.0f };
-	swObj_[4]->wtf.position = { 0.0f,-16.0f, 14.7f};
-	swObj_[5]->wtf.position = { 0.0f,-16.0f, 11.0f};//-7.3
-	swObj_[6]->wtf.position = { 0.0f,-16.0f, 8.0f};
-	swObj_[7]->wtf.position = { 0.0f,-16.0f, 5.0f};
-	swObj_[8]->wtf.position = { 0.0f,-16.0f, 2.0f };
-	swObj_[9]->wtf.position = { 0.0f,-16.0f,-0.7f };
+	swObj_[0]->wtf.position = { 5.0f,-16.0f, 20.0f };//-7.3
+	swObj_[1]->wtf.position = { 5.0f,-16.0f, 17.0f };
+	swObj_[2]->wtf.position = { 5.0f,-16.0f, 14.0f };
+	swObj_[3]->wtf.position = { 5.0f,-16.0f, 11.0f };
+	swObj_[4]->wtf.position = { 5.0f,-16.0f, 8.7f };
+	swObj_[5]->wtf.position = { 5.0f,-16.0f, 5.0f };//-7.3
+	swObj_[6]->wtf.position = { 5.0f,-16.0f, 2.0f };
+	swObj_[7]->wtf.position = { 5.0f,-16.0f, -0.7f};
 
-	//当たり判定のモデル
+	//弾の当たり判定のモデル
 	collswModel_ = Model::LoadFromOBJ("collboll");
 	collswObj_ = Object3d::Create();
 	collswObj_->SetModel(collswModel_);
-	collswObj_->wtf.position = { 0.0f,-2.0f,25.0f };
+	collswObj_->wtf.position = { 5.0f,-2.0f,25.0f };
+
+	guidbulletModel_ = Model::LoadFromOBJ("esp");
+	guidbulletObj_ = Object3d::Create();
+	guidbulletObj_->SetModel(guidbulletModel_);
+	guidbulletObj_->wtf.scale = { 0.7f,0.7f,0.7f };
+	guidbulletObj_->wtf.position = { 0.0f,-6.0f,5.0f };
+
 
 	//パーティクル生成
 	gasParticle = std::make_unique<ParticleManager>();
@@ -89,13 +96,14 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 }
 
-void BossEnemy::Update()
+void BossEnemy::Update(Vector3 playerBpos)
 {
 	Obj_->Update();
 	collObj_->Update();
 	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z - 1.0f };
-	for ( int i = 0; i < 10; i++ ){swObj_[i]->Update();}
+	for ( int i = 0; i < 8; i++ ){swObj_[i]->Update();}
 	collswObj_->Update();
+	guidbulletObj_->Update();
 	EffUpdate();
 	isGameStartTimer++;
 
@@ -106,26 +114,48 @@ void BossEnemy::Update()
 	else if ( bikSpinTimer >= 6 && bikSpinTimer <= 10 ){Obj_->SetModel(Model_);}
 
 	if ( input_->PushKey(DIK_T) ){
-		isSWFlag = true;
-		isshotFlag = true;
+		
 	}
+
+	
+
 	//地面から剣
 	if( isSWFlag == true ){SWTimer++;}
-	for ( int i = 0; i < 10; i++ ){
-		if ( SWTimer >= 10 + 10 * i){
+	for ( int i = 0; i < 8; i++ ){
+		if ( SWTimer >= 8 + 10 * i){
 			swObj_[i]->wtf.position.y += 1.0f;
 		}
 	}
-	for ( int i = 0; i < 10; i++ ){
+	for ( int i = 0; i < 8; i++ ){
 		if ( swObj_[ i ]->wtf.position.y >= -7.3f ){
 			swObj_[ i ]->wtf.position.y = -7.3f;
 		}
 	}
 
-	//当たり判定用の弾
-	if ( isshotFlag == true)
+	//剣リセット
+	if ( SWTimer >= 150 )
 	{
-		collswObj_->wtf.position.z -= 0.2f;
+		SWTimer = 0;
+		swObj_[ 0 ]->wtf.position = { Obj_->wtf.position.x,-16.0f, 20.0f };//-7.3
+		swObj_[ 1 ]->wtf.position = { Obj_->wtf.position.x,-16.0f, 17.0f };
+		swObj_[ 2 ]->wtf.position = { Obj_->wtf.position.x,-16.0f, 14.0f };
+		swObj_[ 3 ]->wtf.position = { Obj_->wtf.position.x,-16.0f, 11.0f };
+		swObj_[ 4 ]->wtf.position = { Obj_->wtf.position.x,-16.0f, 8.7f  };
+		swObj_[ 5 ]->wtf.position = { Obj_->wtf.position.x,-16.0f, 5.0f  };//-7.3
+		swObj_[ 6 ]->wtf.position = { Obj_->wtf.position.x,-16.0f, 2.0f };
+		swObj_[ 7 ]->wtf.position = { Obj_->wtf.position.x,-16.0f, -0.7f};
+		isSWFlag = false;
+	}
+
+
+	//当たり判定用の弾
+	if ( isshotFlag == true){
+		collswObj_->wtf.position.z -= 0.22f;
+	}
+	//弾リセット
+	if ( collswObj_->wtf.position.z <= -10 ){
+		collswObj_->wtf.position = { Obj_->wtf.position.x,-2.0f,25.0f };
+		isshotFlag = false;
 	}
 
 	//ボス登場
@@ -135,32 +165,58 @@ void BossEnemy::Update()
 	}
 	BossStartMovie();
 
-	if ( isBesideFlag == 6)
-	{
-		if ( input_->PushKey(DIK_F) )
+	if ( isBesideFlag >= 4 ){
+		SwAtTimer++;
+	}
+	//ボス登場からの攻撃
+	if ( isBesideFlag == 6){
+
+		Obj_->wtf.position.x -= 0.01f;
+		if ( Obj_->wtf.position.x <= 0.0f)
 		{
-			Obj_->SetModel(ModelAt_);
-			bikSpinTimer = 6;
-			Obj_->wtf.rotation.x = -0.7f;
-			Obj_->wtf.rotation.y = -0.8f;
-			Obj_->wtf.position.y = -1.0f;
+			Obj_->wtf.position.x = 0.0f;
 		}
-		else
-		{
+
+		if ( SwAtTimer >= 160 && SwAtTimer <= 190 ){
+			if (HP>=1)
+			{
+				Obj_->SetModel(ModelAt_);
+				isSWFlag = true;
+				isshotFlag = true;
+
+				bikSpinTimer = 6;
+				Obj_->wtf.rotation.x = -0.7f;
+				Obj_->wtf.rotation.y = -0.8f;
+				Obj_->wtf.position.y = -1.0f;
+			}
+		}
+		else{
 			bikSpinTimer++;
 			Obj_->wtf.position.y = -2.0f;
 			Obj_->wtf.rotation.x = 0.0f;
 			Obj_->wtf.rotation.y = 0.0f;
 		}
 
+		if ( SwAtTimer >= 240 )
+		{
+			SwAtTimer = 0;
+		}
 	}
+
+	if ( HP >= 1 ){
+		if ( coll.CircleCollision(playerBpos,Obj_->wtf.position,1.0f,1.0f) ){
+			HP--;
+			player_->isClearFlag = true;
+		}
+	}
+
 
 	ImGui::Begin("BossEnemy");
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
-	ImGui::Text("position:%f,%f,%f",swObj_[0]->wtf.position.x,swObj_[0]->wtf.position.y,swObj_[0]->wtf.position.z);
+	ImGui::Text("position:%f,%f,%f",collswObj_->wtf.position.x,collswObj_->wtf.position.y,collswObj_->wtf.position.z);
 	ImGui::Text("rotation:%f,%f,%f",swObj_[0]->wtf.rotation.x,swObj_[0]->wtf.rotation.y,swObj_[0]->wtf.rotation.z);
-	ImGui::Text("isBesideFlag:%d",isBesideFlag);
+	ImGui::Text("SwAtTimer:%d",SwAtTimer);
 
 
 	ImGui::End();
@@ -169,14 +225,17 @@ void BossEnemy::Update()
 
 void BossEnemy::Draw()
 {
-	if ( isGameStartTimer >= 200 )
-	{
-		Obj_->Draw();
-		for ( int i = 0; i < 10; i++ ){
-			swObj_[i]->Draw();
+	if ( isGameStartTimer >= 200 ){
+		if ( HP >= 1 ){
+			Obj_->Draw();
+			/*guidbulletObj_->Draw();*/
+			for ( int i = 0; i < 8; i++ )
+			{
+				swObj_[ i ]->Draw();
+			}
+			/*collObj_->Draw();
+			collswObj_->Draw();*/
 		}
-		/*collObj_->Draw();*/
-		collswObj_->Draw();
 	}
 
 }
@@ -290,9 +349,8 @@ void BossEnemy::BossStartMovie()
 		if ( Obj_->wtf.position.x <= 5.0f )
 		{
 			Obj_->wtf.position.x = 5.0f;
-
 		}
-		Obj_->wtf.position.y -= 0.1f;
+		Obj_->wtf.position.y -= 0.2f;
 		if ( Obj_->wtf.position.y <= -2.0f )
 		{
 			Obj_->wtf.position.y = -2.0f;

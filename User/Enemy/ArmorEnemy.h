@@ -78,8 +78,8 @@ private:
 	Object3d* Obj2_ = nullptr;
 	Model* Model_ = nullptr;
 	Model* Modelst_ = nullptr;
-	bool isAliveFlag = false;
-	bool isAliveFlag2 = false;
+	bool isAliveFlag = true;
+	bool isAliveFlag2= true;
 
 	//体力
 	int HP = 12;
@@ -104,7 +104,10 @@ private:
 	//魔導兵の移動
 	bool isMoveFlag = false;
 	bool isbesideFlag = false;
-	
+
+	bool isMoveFlag2 = false;
+	bool isbesideFlag2 = false;
+
 	//当たり判定のモデル
 	Object3d* collObj_ = nullptr;
 	Model* collModel_ = nullptr;
