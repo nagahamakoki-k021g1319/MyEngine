@@ -709,10 +709,12 @@ void Player::PlayerAction()
 
 	//自機が左右に動いたらモデルも傾く
 	if ( input_->PushKey(DIK_D) ){
-		Obj_->wtf.rotation.z = -0.4f;
+		Obj_->wtf.rotation.z -= 0.03f;
+		if( Obj_->wtf.rotation.z <= -0.4f){Obj_->wtf.rotation.z = -0.4f;}
 	}
 	else if ( input_->PushKey(DIK_A) ){
-		Obj_->wtf.rotation.z = 0.4f;
+		Obj_->wtf.rotation.z += 0.03f;
+		if ( Obj_->wtf.rotation.z >= 0.4f ){Obj_->wtf.rotation.z = 0.4f;}
 	}
 	else{
 		Obj_->wtf.rotation.z = 0.0f;

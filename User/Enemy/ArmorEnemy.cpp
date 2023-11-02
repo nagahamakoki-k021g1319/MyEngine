@@ -145,12 +145,15 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	}
 
 	if ( isGameStartTimer >= 200 ){Obj2_->wtf.position.z += 0.7f;}
-	if ( Obj2_->wtf.position.z >= 25.0f ){Obj2_->wtf.position.z = 25.0f;}
+	if ( Obj2_->wtf.position.z >= 25.0f ){
+		Obj2_->wtf.position.z = 25.0f;
+		isMoveFlag2 = true;
+	}
 
 	//定位置についたら魔導兵が左右に少しづつ動く
 	if ( isMoveFlag == true ){
 		if ( isbesideFlag == false ){
-			Obj_->wtf.position.x -= 0.01f;
+			Obj_->wtf.position.x -= 0.02f;
 		}
 		else{
 			Obj_->wtf.position.x += 0.01f;
@@ -163,6 +166,28 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	{
 		isbesideFlag = false;
 	}
+
+	if ( isMoveFlag2 == true )
+	{
+		if ( isbesideFlag2 == false )
+		{
+			Obj2_->wtf.position.x += 0.01f;
+		}
+		else
+		{
+			Obj2_->wtf.position.x -= 0.01f;
+		}
+	}
+	if ( isMoveFlag2 == true && Obj2_->wtf.position.x >= -1.0f )
+	{
+		isbesideFlag2 = true;
+	}
+	else if ( isMoveFlag2 == true && Obj2_->wtf.position.x <= -5.0f )
+	{
+		isbesideFlag2 = false;
+	}
+
+
 
 	if ( HP >= 1 ){isbulletEffFlag_ = 1;}
 	else{
@@ -182,16 +207,16 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	//魔導兵の射撃
 	if ( isGameStartTimer >= 200 && isShootFlag == false ){
 		if ( isAliveFlag == true){BulletCoolTime++;}}
-	if ( BulletCoolTime == 79 ){
+	if ( BulletCoolTime == 119 ){
 		playerlen = playerPos - bulletObj_->wtf.position;
 		playerlen.nomalize();
 	}
-	if ( BulletCoolTime >= 80 ){
-		BulletCoolTime = 80;
+	if ( BulletCoolTime >= 120 ){
+		BulletCoolTime = 120;
 		isShootFlag = true;
 	}
 	//攻撃時モデルが変わる
-	if ( BulletCoolTime >= 70 ){Obj_->SetModel(Model_);}
+	if ( BulletCoolTime >= 110 ){Obj_->SetModel(Model_);}
 	else{Obj_->SetModel(Modelst_);}
 
 	//誘導弾

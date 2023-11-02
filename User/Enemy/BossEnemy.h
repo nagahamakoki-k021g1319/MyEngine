@@ -25,7 +25,7 @@ public:
 	~BossEnemy();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
-	void Update();
+	void Update(Vector3 playerBpos);
 
 	void Draw();
 
@@ -63,6 +63,8 @@ private:
 	Object3d* Obj_ = nullptr;
 	Model* Model_ = nullptr;
 	Model* Model2_ = nullptr;
+
+	int HP = 1;
 	//バイクの車輪動かす
 	int bikSpinTimer = 0;
 	//ボスの攻撃時モデル
@@ -78,12 +80,18 @@ private:
 	Model* swModel_ = nullptr;
 	bool isSWFlag = false;
 	int SWTimer = 0;
-
 	//当たり判定のモデル(攻撃時)
 	Object3d* collswObj_ = nullptr;
 	Model* collswModel_ = nullptr;
 	bool isshotFlag = false;
+	//攻撃の間隔タイマー
+	int SwAtTimer = -60;
 
+	//誘導弾のモデル(攻撃時)
+	Object3d* guidbulletObj_ = nullptr;
+	Model* guidbulletModel_ = nullptr;
+	Vector3 playerlen;
+	Vector3 bitweenlen;
 
 	int isBesideFlag = 0;
 	int isUpFlag = 0;
