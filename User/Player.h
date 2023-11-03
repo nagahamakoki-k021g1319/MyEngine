@@ -26,7 +26,7 @@ public:
 
 	void Initialize(DirectXCommon* dxCommon, Input* input);
 	void UIInitialize();
-	void Update(Vector3 ARbuPos,Vector3 ARbuPos2);
+	void Update();
 
 	void Draw();
 	void FbxDraw();
@@ -96,6 +96,13 @@ public:
 	int isCameraBehavior = 0;
 	int CameraBehaviorTimer = 0;
 	int CameraBehaviorTimer2 = 0;
+
+	//画面シェイク
+	int isCamShake = 0;
+	const int camShakeLimit = 20;
+	int camShakeTimer = camShakeLimit;
+	Vector3 camShakeVec;
+	Vector3 moveBack;
 
 private:
 	const float PI = 3.141592f;
@@ -255,12 +262,7 @@ private:
   
 	Vector2 camRotaSpeed = { PI / 1800, PI / 1800};
 
-	//画面シェイク
-	int isCamShake = 0;
-	const int camShakeLimit = 20;
-	int camShakeTimer = camShakeLimit;
-	Vector3 camShakeVec;
-	Vector3 moveBack;
+	
 
 	
 };
