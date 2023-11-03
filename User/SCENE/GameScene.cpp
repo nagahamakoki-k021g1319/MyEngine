@@ -25,6 +25,8 @@ GameScene::~GameScene() {
 	delete skydomeMD;
 	delete floor;
 	delete floorMD;
+	delete floor2;
+	delete floorMD2;
 	delete TitleSprite;
 	delete ClearSprite;
 	delete skydomeTit_;
@@ -141,7 +143,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	skydomeMD = Model::LoadFromOBJ("skydome");
 	skydome = Object3d::Create();
 	skydome->SetModel(skydomeMD);
-	skydome->wtf.scale = { 1000.0f,1000.0f,1000.0f };
+	skydome->wtf.scale = { 10000.0f,10000.0f,10000.0f };
 	skydome->wtf.position = { 0.0f,400.0f,50.0f };
 	skydome->wtf.rotation = {0.0f,0.0f,0.0f};
 
@@ -149,16 +151,23 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	floorMD = Model::LoadFromOBJ("tunnel");
 	floor = Object3d::Create();
 	floor->SetModel(floorMD);
-	floor->wtf.position = (Vector3{ 0, 0, 70 });
+	floor->wtf.position = (Vector3{ 0, 0, -70 });
 	floor->wtf.rotation.z = 10.0f;
-	floor->wtf.scale = (Vector3{ 20.0f, 20.0f, 1000.0f });
+	floor->wtf.scale = (Vector3{ 20.0f, 20.0f, 10000.0f });
+
+	floorMD2 = Model::LoadFromOBJ("tunnel");
+	floor2 = Object3d::Create();
+	floor2->SetModel(floorMD2);
+	floor2->wtf.position = ( Vector3{ 0, 0, 70 } );
+	floor2->wtf.rotation.z = 10.0f;
+	floor2->wtf.scale = ( Vector3{ 30.0f, 30.0f, 100.0f } );
 
 	//道路のステージ
-	cloudfloorMD_ = Model::LoadFromOBJ("loadground");
+	cloudfloorMD_ = Model::LoadFromOBJ("CloudGround");
 	cloudfloor_ = Object3d::Create();
 	cloudfloor_->SetModel(cloudfloorMD_);
-	cloudfloor_->wtf.position = ( Vector3{ 0, -7.0f, 0 } );
-	cloudfloor_->wtf.scale = ( Vector3{ 1.0f, 1.5f, 2.0f } );
+	cloudfloor_->wtf.position = ( Vector3{ 30, -5.0f, 0 } );
+	cloudfloor_->wtf.scale = ( Vector3{ 100.0f, 500.0f, 10000.0f } );
 
 	//道路のステージ(繋ぎ)
 	cloudfloorMD2_ = Model::LoadFromOBJ("CloudGround");
@@ -249,7 +258,7 @@ void GameScene::Update() {
 			sceneNo_ = SceneNo::Clear;
 		}
 		
-		player_->Update(armorEnemy_->GetWorldBulletPosition(),armorEnemy_->GetWorldBulletPosition2());
+		player_->Update();
 		obstacle_->Update();
 		armorEnemy_->Update(player_->GetWorldPosition(),player_->GetBulletWorldPosition(),player_->isShootFlag);
 		bikeEnemy_->Update(player_->GetSwordWorldPosition(),player_->isCollSWFlag);
@@ -261,29 +270,15 @@ void GameScene::Update() {
 
 		floor->Update();
 		floor->wtf.position.z -= 0.1f;
+		floor2->Update();
 		cloudfloor_->Update();
-		/*cloudfloor_->wtf.position.z -= 10.0f;*/
+		cloudfloor_->wtf.position.z -= 10.0f;
 		cloudfloor2_->Update();
 		cloudfloor2_->wtf.position.z -= 10.0f;
 		cloudfloor3_->Update();
 		cloudfloor3_->wtf.position.z -= 10.0f;
 		
-		if ( input_->TriggerKey(DIK_Y))
-		{
-			cloudfloor_->wtf.position.y += 0.1f;
-		}
-		if ( input_->TriggerKey(DIK_H) )
-		{
-			cloudfloor_->wtf.position.y -= 0.1f;
-		}
-		if ( input_->TriggerKey(DIK_G) )
-		{
-			cloudfloor_->wtf.position.x -= 0.1f;
-		}
-		if ( input_->TriggerKey(DIK_J) )
-		{
-			cloudfloor_->wtf.position.x += 0.1f;
-		}
+	
 	}
 }
 
@@ -313,7 +308,7 @@ void GameScene::Draw() {
 		armorEnemy_->Draw();
 		bikeEnemy_->Draw();
 		bossEnemy_->Draw();
-		/*floor->Draw();*/
+		floor->Draw();
 		skydome->Draw();
 		cloudfloor_->Draw();
 		cloudfloor2_->Draw();

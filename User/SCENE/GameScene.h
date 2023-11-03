@@ -113,6 +113,9 @@ private:	//メンバ変数
 	Model* skydomeMD = nullptr;
 	Object3d* floor = nullptr;
 	Model* floorMD = nullptr;
+	Object3d* floor2 = nullptr;
+	Model* floorMD2 = nullptr;
+
 	Object3d* cloudfloor_ = nullptr;
 	Model* cloudfloorMD_ = nullptr;
 	Object3d* cloudfloor2_ = nullptr;

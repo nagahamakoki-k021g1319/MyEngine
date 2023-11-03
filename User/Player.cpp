@@ -187,7 +187,7 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 
 
 
-void Player::Update(Vector3 ARbuPos,Vector3 ARbuPos2) {
+void Player::Update() {
 	camera->Update();
 	shootObj_->Update();
 	shootStObj_->Update();
@@ -258,14 +258,7 @@ void Player::Update(Vector3 ARbuPos,Vector3 ARbuPos2) {
 
 	//当たり判定
 	if ( isCamShake == 1 ){DamageCamShake();}
-	if ( coll.CircleCollision(ARbuPos,GetWorldPosition(),0.6f,0.6f) ){
-		isCamShake = 1;
-		camShakeTimer = camShakeLimit;
-	};
-	if ( coll.CircleCollision(ARbuPos2,GetWorldPosition(),0.6f,0.6f) ){
-		isCamShake = 1;
-		camShakeTimer = camShakeLimit;
-	};
+	
 
 	if ( input_->PushKey(DIK_P)){isClearFlag = true;}
 	if ( isClearFlag == true ){
@@ -335,7 +328,7 @@ void Player::Draw() {
 	}
 
 	if ( isGameStartTimer >= 180 ){
-		/*collObj_->Draw();*/
+		collObj_->Draw();
 		if ( isCollSWFlag == true ){
 			/*collSWObj_->Draw();*/
 		}
