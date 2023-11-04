@@ -26,6 +26,8 @@ BossEnemy::~BossEnemy()
 	delete  guidbulletObj_;
 	delete	guidbulletModel_;
 
+	delete collPlayerObj_;
+
 }
 
 void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
@@ -81,12 +83,14 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	collswObj_->SetModel(collswModel_);
 	collswObj_->wtf.position = { 5.0f,-2.0f,25.0f };
 
-	guidbulletModel_ = Model::LoadFromOBJ("esp");
+	guidbulletModel_ = Model::LoadFromOBJ("collboll");
 	guidbulletObj_ = Object3d::Create();
 	guidbulletObj_->SetModel(guidbulletModel_);
-	guidbulletObj_->wtf.scale = { 0.7f,0.7f,0.7f };
-	guidbulletObj_->wtf.position = { 0.0f,-6.0f,5.0f };
+	guidbulletObj_->wtf.scale = { 1.0f,1.0f,1.0f };
 
+	//自機の当たり判定
+	collPlayerObj_ = Object3d::Create();
+	collPlayerObj_->SetModel(collModel_);
 
 	//パーティクル生成
 	gasParticle = std::make_unique<ParticleManager>();
@@ -96,7 +100,7 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 }
 
-void BossEnemy::Update(Vector3 playerBpos)
+void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 {
 	Obj_->Update();
 	collObj_->Update();
@@ -104,6 +108,8 @@ void BossEnemy::Update(Vector3 playerBpos)
 	for ( int i = 0; i < 8; i++ ){swObj_[i]->Update();}
 	collswObj_->Update();
 	guidbulletObj_->Update();
+	collPlayerObj_->Update();
+	collPlayerObj_->wtf.position = { playerPos};
 	EffUpdate();
 	isGameStartTimer++;
 
@@ -114,9 +120,12 @@ void BossEnemy::Update(Vector3 playerBpos)
 	else if ( bikSpinTimer >= 6 && bikSpinTimer <= 10 ){Obj_->SetModel(Model_);}
 
 	if ( input_->PushKey(DIK_T) ){
-		
+		guidbulletObj_->wtf.position.z += 0.1f;
 	}
-
+	else if ( input_->PushKey(DIK_G) )
+	{
+		guidbulletObj_->wtf.position.z -= 0.1f;
+	}
 	
 
 	//地面から剣
@@ -171,10 +180,10 @@ void BossEnemy::Update(Vector3 playerBpos)
 	//ボス登場からの攻撃
 	if ( isBesideFlag == 6){
 
-		Obj_->wtf.position.x -= 0.01f;
-		if ( Obj_->wtf.position.x <= 0.0f)
+		Obj_->wtf.position.x -= 0.02f;
+		if ( Obj_->wtf.position.x <= -10.0f)
 		{
-			Obj_->wtf.position.x = 0.0f;
+			Obj_->wtf.position.x = -10.0f;
 		}
 
 		if ( SwAtTimer >= 160 && SwAtTimer <= 190 ){
@@ -196,6 +205,38 @@ void BossEnemy::Update(Vector3 playerBpos)
 			Obj_->wtf.rotation.x = 0.0f;
 			Obj_->wtf.rotation.y = 0.0f;
 		}
+
+		//誘導弾
+		if ( SwAtTimer == 219 )
+		{
+			playerlen = collPlayerObj_->wtf.position - guidbulletObj_->wtf.position;
+			playerlen.nomalize();
+		}
+		if ( SwAtTimer >= 220 )
+		{
+			SwAtTimer = 120;
+			isShootFlag = true;
+		}
+
+		//誘導弾
+		if ( isShootFlag == true )
+		{
+			BulletdurationTime++;
+
+			guidbulletObj_->wtf.position += playerlen;
+			bitweenlen = playerlen;
+			bitweenlen *= 0.1f;
+		}
+		else
+		{
+			guidbulletObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 1.0f,Obj_->wtf.position.z};
+		}
+		if ( BulletdurationTime >= 40.0f )
+		{
+			BulletdurationTime = 0;
+			isShootFlag = false;
+		}
+
 
 		if ( SwAtTimer >= 240 )
 		{
@@ -225,10 +266,15 @@ void BossEnemy::Update(Vector3 playerBpos)
 
 void BossEnemy::Draw()
 {
+	collPlayerObj_->Draw();
 	if ( isGameStartTimer >= 200 ){
 		if ( HP >= 1 ){
 			Obj_->Draw();
-			/*guidbulletObj_->Draw();*/
+			if ( isShootFlag == true )
+			{
+				guidbulletObj_->Draw();
+			}
+			
 			for ( int i = 0; i < 8; i++ )
 			{
 				swObj_[ i ]->Draw();

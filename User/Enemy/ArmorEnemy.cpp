@@ -12,22 +12,17 @@ ArmorEnemy::~ArmorEnemy()
 	for ( int i = 0; i < 2; i++ )
 	{
 		delete Obj_[i];
+		delete Model_[ i ];
+		delete Modelst_[ i ];
 	}
 	delete Obj2_;
-	delete Model_;
-	delete Modelst_;
+	
 
-	for ( int i = 0; i < 2; i++ )
-	{
-		delete bulletObj_[i];
-	}
+	delete bulletObj_;
 	delete bulletObj2_;
 	delete bulletModel_;
 
-	for ( int i = 0; i < 2; i++ )
-	{
-		delete collObj_[i];
-	}
+	delete collObj_;
 	delete collObj2_;
 	delete collObj3_;
 	delete collModel_;
@@ -46,27 +41,26 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	spriteCommon = new SpriteCommon;
 	spriteCommon->Initialize(dxCommon);
 
-	//雑魚敵(攻撃状態)
-	Model_ = Model::LoadFromOBJ("armorenemy");
-	//雑魚敵(待機状態)
-	Modelst_ = Model::LoadFromOBJ("armorenemyst");
+
 	for ( int i = 0; i < 2; i++ )
 	{
+	//雑魚敵(攻撃状態)
+		Model_[i] = Model::LoadFromOBJ("armorenemy");
+		//雑魚敵(待機状態)
+		Modelst_[i] = Model::LoadFromOBJ("armorenemyst");
+
 		Obj_[i] = Object3d::Create();
-		Obj_[i]->SetModel(Modelst_);
+		Obj_[i]->SetModel(Modelst_[ 0 ]);
 		Obj_[i]->wtf.scale = { 0.4f,0.4f,0.4f };
-
-		Obj_[ 0 ]->wtf.position = { 10.0f,-2.0f,-10.0f };
-		Obj_[ 1 ]->wtf.position = { 10.0f,-2.0f,-100.0f };
-
+		
 		//ポリゴン爆散の情報                 大きさ 回転  飛ぶ量 
-		Obj_[i]->SetPolygonExplosion({0.0f,-1.0f,6.28f,20.0f});
+		Obj_[i]->SetPolygonExplosion({ 0.0f,-1.0f,6.28f,20.0f });
 	}
-
-	
+	Obj_[ 0 ]->wtf.position = { 10.0f,-2.0f,-10.0f };
+	Obj_[ 1 ]->wtf.position = { 0.0f,-2.0f,25.0f };
 
 	Obj2_ = Object3d::Create();
-	Obj2_->SetModel(Modelst_);
+	Obj2_->SetModel(Modelst_[0]);
 	Obj2_->wtf.scale = { 0.4f,0.4f,0.4f };
 	Obj2_->wtf.position = { -10.0f,-2.0f,-10.0f };
 	//ポリゴン爆散の情報                 大きさ 回転  飛ぶ量 
@@ -75,12 +69,9 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 	//大砲の弾
 	bulletModel_ = Model::LoadFromOBJ("eneboll");
-	for ( int i = 0; i < 2; i++ )
-	{
-		bulletObj_[i] = Object3d::Create();
-		bulletObj_[i]->SetModel(bulletModel_);
-		bulletObj_[i]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + 2.5f,Obj_[i]->wtf.position.z - 3.0f};
-	}
+	bulletObj_ = Object3d::Create();
+	bulletObj_->SetModel(bulletModel_);
+	bulletObj_->wtf.position = { Obj_[0]->wtf.position.x,Obj_[0]->wtf.position.y + 2.5f,Obj_[0]->wtf.position.z - 3.0f};
 
 	bulletObj2_ = Object3d::Create();
 	bulletObj2_->SetModel(bulletModel_);
@@ -88,13 +79,11 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 	//当たり判定のモデル
 	collModel_ = Model::LoadFromOBJ("collboll");
-	for ( int i = 0; i < 2; i++ )
-	{
-		collObj_[i] = Object3d::Create();
-		collObj_[i]->SetModel(collModel_);
-		collObj_[i]->wtf.scale = { 2.0f,2.0f,2.0f };
-		collObj_[i]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + 1.0f,Obj_[i]->wtf.position.z};
-	}
+	collObj_ = Object3d::Create();
+	collObj_->SetModel(collModel_);
+	collObj_->wtf.scale = { 2.0f,2.0f,2.0f };
+	collObj_->wtf.position = { Obj_[0]->wtf.position.x,Obj_[0]->wtf.position.y + 1.0f,Obj_[0]->wtf.position.z};
+
 	collObj2_ = Object3d::Create();
 	collObj2_->SetModel(collModel_);
 	collObj2_->wtf.scale = { 2.0f,2.0f,2.0f };
@@ -106,31 +95,27 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 	//パーティクル生成
 	//エフェクトの情報(地面のズサ)
-	for ( int i = 0; i < 2; i++ )
-	{
-		gasParticle_[i] = std::make_unique<ParticleManager>();
-		gasParticle_[i].get()->Initialize();
-		gasParticle_[i]->LoadTexture("gas.png");
-		gasParticle_[i]->Update();
+	gasParticle = std::make_unique<ParticleManager>();
+	gasParticle.get()->Initialize();
+	gasParticle->LoadTexture("gas.png");
+	gasParticle->Update();
 
-		gasParticle2_[ i ] = std::make_unique<ParticleManager>();
-		gasParticle2_[ i ].get()->Initialize();
-		gasParticle2_[ i ]->LoadTexture("gas.png");
-		gasParticle2_[ i ]->Update();
+	gasParticle2 = std::make_unique<ParticleManager>();
+	gasParticle2.get()->Initialize();
+	gasParticle2->LoadTexture("gas.png");
+	gasParticle2->Update();
 
-		//エフェクトの情報(背中の噴射ガス)
-		gasParticle3_[i] = std::make_unique<ParticleManager>();
-		gasParticle3_[i].get()->Initialize();
-		gasParticle3_[i]->LoadTexture("gas.png");
-		gasParticle3_[i]->Update();
+	//エフェクトの情報(背中の噴射ガス)
+	gasParticle3 = std::make_unique<ParticleManager>();
+	gasParticle3.get()->Initialize();
+	gasParticle3->LoadTexture("gas.png");
+	gasParticle3->Update();
 
-		gasParticle4_[i] = std::make_unique<ParticleManager>();
-		gasParticle4_[i].get()->Initialize();
-		gasParticle4_[i]->LoadTexture("gas.png");
-		gasParticle4_[i]->Update();
-	}
-	//パーティクル生成
-	//エフェクトの情報(地面のズサ)
+	gasParticle4 = std::make_unique<ParticleManager>();
+	gasParticle4.get()->Initialize();
+	gasParticle4->LoadTexture("gas.png");
+	gasParticle4->Update();
+
 	gasParticle_2 = std::make_unique<ParticleManager>();
 	gasParticle_2.get()->Initialize();
 	gasParticle_2->LoadTexture("gas.png");
@@ -156,40 +141,31 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFlag)
 {
-	for ( int i = 0; i < 2; i++ )
-	{
-		Obj_[i]->Update();
-		collObj_[i]->Update();
-		collObj_[i]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + 1.0f,Obj_[i]->wtf.position.z};
-		bulletObj_[i]->Update();
+	for ( int i = 0; i < 2; i++ ){
+		if ( isAliveFlag_[ i ] == 0 )
+		{
+			Obj_[ i ]->Update();
+		}
 	}
 	Obj2_->Update();
-	
+	collObj_->Update();
+	collObj_->wtf.position = { Obj_[0]->wtf.position.x,Obj_[0]->wtf.position.y + 1.0f,Obj_[0]->wtf.position.z};
 	collObj2_->Update();
 	collObj2_->wtf.position = { Obj2_->wtf.position.x,Obj2_->wtf.position.y + 1.0f,Obj2_->wtf.position.z };
-	bulletObj2_->Update();
-	EffUpdate();
-
 	collObj3_->Update();
 	collObj3_->wtf.position = { playerPos };
+	bulletObj_->Update();
+	bulletObj2_->Update();
+	EffUpdate();
 	isGameStartTimer++;
-
-	isAliveFlag_[1] = 1;
+	
 
 	//魔導兵が後ろから登場
-	for ( int i = 0; i < 2; i++ )
-	{
-		if ( isGameStartTimer >= 200 )
-		{
-			Obj_[i]->wtf.position.z += 0.7f;
-		}
-		if ( Obj_[i]->wtf.position.z >= 25.0f )
-		{
-			Obj_[i]->wtf.position.z = 25.0f;
-			isMoveFlag_[i] = true;
-		}
+	if ( isGameStartTimer >= 200 ){Obj_[0]->wtf.position.z += 0.7f; }
+	if ( Obj_[0]->wtf.position.z >= 25.0f ) {
+		Obj_[0]->wtf.position.z = 25.0f;
+		isMoveFlag = true;
 	}
-
 
 	if ( isGameStartTimer >= 200 ){Obj2_->wtf.position.z += 0.7f;}
 	if ( Obj2_->wtf.position.z >= 25.0f ){
@@ -198,24 +174,19 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	}
 
 	//定位置についたら魔導兵が左右に少しづつ動く
-	for ( int i = 0; i < 2; i++ )
-	{
-		if ( isMoveFlag_[i] == true ){
-			if ( isbesideFlag_[ i] == false ){
-				Obj_[ i ]->wtf.position.x -= 0.02f;
-			}
-			else{
-				Obj_[ i ]->wtf.position.x += 0.01f;
-			}
+	if ( isMoveFlag == true ){
+		if ( isbesideFlag == false ){
+			Obj_[0]->wtf.position.x -= 0.02f;
 		}
-		if ( isMoveFlag_[ i ] == true && Obj_[ i ]->wtf.position.x <= 3.0f )
-		{
-			isbesideFlag_[ i ] = true;
+		else{
+			Obj_[0]->wtf.position.x += 0.01f;
 		}
-		else if ( isMoveFlag_[ i ] == true && Obj_[ i ]->wtf.position.x >= 10.0f )
-		{
-			isbesideFlag_[ i ] = false;
-		}
+	}
+	if ( isMoveFlag == true && Obj_[0]->wtf.position.x <= 3.0f ) {
+		isbesideFlag = true;
+	}
+	else if ( isMoveFlag == true && Obj_[0]->wtf.position.x >= 10.0f ) {
+		isbesideFlag = false;
 	}
 
 	if ( isMoveFlag2 == true )
@@ -239,17 +210,11 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	}
 
 
-	for ( int i = 0; i < 2; i++ )
-	{
-		if ( HP_[i] >= 1 )
-		{
-			isbulletEffFlag_[ i ] = 1;
-		}
-		else
-		{
-			isbulletEffFlag_[ i ] = 0;
-			bulletEffTimer_[ i ] = 0;
-		}
+
+	if ( HP >= 1 ){isbulletEffFlag_ = 1;}
+	else{
+		isbulletEffFlag_ = 0;
+		bulletEffTimer_ = 0;
 	}
 
 	if ( HP2 >= 1 ){
@@ -262,55 +227,35 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	}
 
 	//魔導兵の射撃
-	for ( int i = 0; i < 2; i++ )
-	{
-		if ( isGameStartTimer >= 200 && isShootFlag_[i] == false )
-		{
-			if ( isAliveFlag_[ i ] == 1 )
-			{
-				BulletCoolTime_[ i ]++;
-			}
-		}
-		if ( BulletCoolTime_[ i ] == 119 )
-		{
-			playerlen_[ i ] = collObj3_->wtf.position - bulletObj_[ i ]->wtf.position;
-			playerlen_[ i ].nomalize();
-		}
-		if ( BulletCoolTime_[ i ] >= 120 )
-		{
-			BulletCoolTime_[ i ] = 120;
-			isShootFlag_[ i ] = true;
-		}
-		//攻撃時モデルが変わる
-		if ( BulletCoolTime_[ i ] >= 110 )
-		{
-			Obj_[ i ]->SetModel(Model_);
-		}
-		else
-		{
-			Obj_[ i ]->SetModel(Modelst_);
-		}
-
-		//誘導弾
-		if ( isShootFlag_[ i ] == true )
-		{
-			BulletdurationTime_[ i ]++;
-
-			bulletObj_[ i ]->wtf.position += playerlen_[ i ];
-			bitweenlen_[ i ] = playerlen_[ i ];
-			bitweenlen_[ i ] *= 0.1f;
-		}
-		else
-		{
-			bulletObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y + 2.5f,Obj_[ i ]->wtf.position.z - 3.0f };
-		}
-		if ( BulletdurationTime_[ i ] >= 40.0f )
-		{
-			BulletdurationTime_[ i ] = 0;
-			isShootFlag_[ i ] = false;
-			BulletCoolTime_[ i ] = 0;
-		}
+	if ( isGameStartTimer >= 200 && isShootFlag == false ){
+		if ( isAliveFlag_[0] == 0 ) { BulletCoolTime++; } }
+	if ( BulletCoolTime == 119 ){
+		playerlen = collObj3_->wtf.position - bulletObj_->wtf.position;
+		playerlen.nomalize();
 	}
+	if ( BulletCoolTime >= 120 ){
+		BulletCoolTime = 120;
+		isShootFlag = true;
+	}
+	//攻撃時モデルが変わる
+	if ( BulletCoolTime >= 110 ){Obj_[0]->SetModel(Model_[0]); }
+	else{Obj_[0]->SetModel(Modelst_[0]); }
+
+	//誘導弾
+	if ( isShootFlag == true ){
+		BulletdurationTime++;
+
+		bulletObj_->wtf.position += playerlen;
+		bitweenlen = playerlen;
+		bitweenlen *= 0.1f;
+	}
+	else{bulletObj_->wtf.position = { Obj_[0]->wtf.position.x,Obj_[0]->wtf.position.y + 2.5f,Obj_[0]->wtf.position.z - 3.0f}; }
+	if ( BulletdurationTime >= 40.0f ){
+		BulletdurationTime = 0;
+		isShootFlag = false;
+		BulletCoolTime = 0;
+	}
+
 	//魔導兵の射撃
 	if ( isGameStartTimer >= 200 && isShootFlag2 == false )
 	{
@@ -330,10 +275,10 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 		isShootFlag2 = true;
 	}
 	//攻撃時モデルが変わる
-	if ( BulletCoolTime2 >= 150 ){Obj2_->SetModel(Model_);}
-	else{Obj2_->SetModel(Modelst_);}
+	if ( BulletCoolTime2 >= 150 ){Obj2_->SetModel(Model_[0]); }
+	else{Obj2_->SetModel(Modelst_[0]); }
 
-	//誘導弾
+//誘導弾
 	if ( isShootFlag2 == true )
 	{
 		BulletdurationTime2++;
@@ -354,25 +299,18 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	}
 
 	//ポリゴン爆散
-	for ( int i = 0; i < 2; i++ )
-	{
-		if ( HP_[i] <= 0 )
-		{
-			isExpolFlag_[ i ] = true;
-		}
-		if ( isExpolFlag_[ i ] == true )
-		{
-			ExpolTimer_[ i ]++;
+	if (HP <= 0 ){isExpolFlag = true;}
+	if ( isExpolFlag == true ){
+		ExpolTimer++;
 
-			polygon_[ i ] = ExpolTimer_[ i ] / ExpolMT_[ i ];
+		polygon = ExpolTimer / ExpolMT;
 
-			Obj_[ i ]->SetDestruction(polygon_[ i ]);
-			if ( ExpolTimer_[ i ] >= ExpolMT_[ i ] )
-			{
-				bulletEffTimer_[ i ] = 0;
-				/*isAliveFlag_[ i ] = 0;*/
-				isShootFlag_[ i ] = false;
-			}
+		Obj_[0]->SetDestruction(polygon);
+		if ( ExpolTimer >= ExpolMT )
+		{
+			bulletEffTimer_ = 0;
+			isAliveFlag_[0] = 1;
+			isShootFlag = false;
 		}
 	}
 
@@ -397,15 +335,10 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 
 	//当たり判定
 	if ( playerShootFlag == true){
-		for ( int i = 0; i < 2; i++ )
-		{
-			if ( HP_[i] >= 1 )
-			{
-				if ( coll.CircleCollision(playerBpos,collObj_[i]->wtf.position,1.0f,1.0f) )
-				{
-					HP_[ i ]--;
-					playerShootFlag = false;
-				}
+		if (HP >= 1){
+			if ( coll.CircleCollision(playerBpos,GetWorldPosition(),1.0f,1.0f) ){
+				HP--;
+				playerShootFlag = false;
 			}
 		}
 		if ( HP2 >= 1 )
@@ -419,13 +352,13 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 
 	}
 
-	if ( coll.CircleCollision(GetWorldBulletPosition(),collObj3_->wtf.position,0.6f,0.6f) )
+	if ( coll.CircleCollision(bulletObj_->wtf.position,collObj3_->wtf.position,0.6f,0.6f) )
 	{
 		player_->isCamShake = 1;
 		player_->camShakeTimer = player_->camShakeLimit;
 	}
 
-	if ( coll.CircleCollision(GetWorldBulletPosition2(),collObj3_->wtf.position,0.6f,0.6f) )
+	if ( coll.CircleCollision(bulletObj2_->wtf.position,collObj3_->wtf.position,0.6f,0.6f) )
 	{
 		player_->isCamShake = 1;
 		player_->camShakeTimer = player_->camShakeLimit;
@@ -434,11 +367,8 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	ImGui::Begin("ArmorEnemy");
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
-	ImGui::Text("position:%f,%f,%f",Obj_[1]->wtf.position.x,Obj_[1]->wtf.position.y,Obj_[1]->wtf.position.z);
-	ImGui::Text("isAliveFlag_0:%d",isAliveFlag_[0]);
-	ImGui::Text("isAliveFlag_1:%d",isAliveFlag_[1]);
-	//ImGui::Text("BulletCoolTime:%d",BulletCoolTime);
-	//ImGui::Text("HP:%d",HP);
+	ImGui::Text("BulletCoolTime:%d",BulletCoolTime);
+	ImGui::Text("HP:%d",HP);
 
 	ImGui::End();
 
@@ -446,16 +376,22 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 
 void ArmorEnemy::Draw()
 {
-	collObj3_->Draw();
+
+	//collObj3_->Draw();
 	if ( isGameStartTimer >= 200 ){
-		for ( int i = 0; i < 2; i++ ){
-			if ( isAliveFlag_[i] == 1 ){
-				Obj_[ i ]->Draw();
-				if ( isShootFlag_[ i ] == true ){
-					bulletObj_[ i ]->Draw();
-				}
-				collObj_[i]->Draw();
+		/*for ( int i = 0; i < 2; i++ )
+		{
+			if ( isAliveFlag_[i] == 0 )
+			{
+				Obj_[i]->Draw();
 			}
+		}*/
+		Obj_[0]->Draw();
+		if ( isAliveFlag_[0] == 0 ) {
+			if ( isShootFlag == true ){
+				bulletObj_->Draw();
+			}
+			/*collObj_->Draw();*/
 		}
 		if ( isAliveFlag2 == true )
 		{
@@ -472,24 +408,21 @@ void ArmorEnemy::Draw()
 
 void ArmorEnemy::EffUpdate()
 {
-	for ( int i = 0; i < 2; i++ )
+	if ( isbulletEffFlag_ == 1 )
 	{
-		if ( isbulletEffFlag_[i] == 1 )
-		{
-			bulletEffTimer_[ i ]++;
-		}
-		if ( bulletEffTimer_[ i ] <= 20 && bulletEffTimer_[ i ] >= 1 )
-		{
-			EffSummary(Vector3(Obj_[ i ]->wtf.position.x + 1.0f, Obj_[i]->wtf.position.y - 1.5f,Obj_[i]->wtf.position.z),i);
-			EffSummary2(Vector3(Obj_[ i ]->wtf.position.x - 1.0f,Obj_[i]->wtf.position.y - 1.5f,Obj_[i]->wtf.position.z),i);
-			EffSummary3(Vector3(Obj_[ i ]->wtf.position.x + 0.3f,Obj_[i]->wtf.position.y + 2.0f,Obj_[i]->wtf.position.z + 2.0f),i);
-			EffSummary4(Vector3(Obj_[ i ]->wtf.position.x - 0.3f,Obj_[i]->wtf.position.y + 2.0f,Obj_[i]->wtf.position.z + 2.0f),i);
-		}
-		if ( bulletEffTimer_[ i ] >= 20 )
-		{
-			isbulletEffFlag_[ i ] = 0;
-			bulletEffTimer_[ i ] = 0;
-		}
+		bulletEffTimer_++;
+	}
+	if ( bulletEffTimer_ <= 20 && bulletEffTimer_ >= 1 )
+	{
+		EffSummary(Vector3( Obj_[0]->wtf.position.x + 1.0f,Obj_[0]->wtf.position.y - 1.5f,Obj_[0]->wtf.position.z));
+		EffSummary2(Vector3(Obj_[0]->wtf.position.x - 1.0f,Obj_[0]->wtf.position.y - 1.5f,Obj_[0]->wtf.position.z));
+		EffSummary3(Vector3(Obj_[0]->wtf.position.x + 0.3f,Obj_[0]->wtf.position.y + 2.0f,Obj_[0]->wtf.position.z + 2.0f));
+		EffSummary4(Vector3(Obj_[0]->wtf.position.x - 0.3f,Obj_[0]->wtf.position.y + 2.0f,Obj_[0]->wtf.position.z + 2.0f));
+	}
+	if ( bulletEffTimer_ >= 20 )
+	{
+		isbulletEffFlag_ = 0;
+		bulletEffTimer_ = 0;
 	}
 
 	if ( isbulletEffFlag2_ == 1 )
@@ -511,7 +444,7 @@ void ArmorEnemy::EffUpdate()
 
 }
 
-void ArmorEnemy::EffSummary(Vector3 bulletpos,int num)
+void ArmorEnemy::EffSummary(Vector3 bulletpos)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < 5; i++ )
@@ -541,13 +474,13 @@ void ArmorEnemy::EffSummary(Vector3 bulletpos,int num)
 		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 
 		//追加
-		gasParticle_[num]->Add(60,posG,velG,accG,0.5f,0.0f);
+		gasParticle->Add(60,posG,velG,accG,0.5f,0.0f);
 
-		gasParticle_[ num ]->Update();
+		gasParticle->Update();
 	}
 }
 
-void ArmorEnemy::EffSummary2(Vector3 bulletpos2,int num2)
+void ArmorEnemy::EffSummary2(Vector3 bulletpos2)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < 5; i++ )
@@ -577,15 +510,15 @@ void ArmorEnemy::EffSummary2(Vector3 bulletpos2,int num2)
 		acc2.y = ( float ) rand() / RAND_MAX * rnd_acc2 - rnd_acc2 / 2.0f;
 
 		//追加
-		gasParticle2_[ num2 ]->Add(60,pos2,vel2,acc2,0.5f,0.0f);
+		gasParticle2->Add(60,pos2,vel2,acc2,0.5f,0.0f);
 
-		gasParticle2_[ num2 ]->Update();
+		gasParticle2->Update();
 
 	}
 
 }
 
-void ArmorEnemy::EffSummary3(Vector3 bulletpos3,int num3)
+void ArmorEnemy::EffSummary3(Vector3 bulletpos3)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < 5; i++ )
@@ -615,14 +548,14 @@ void ArmorEnemy::EffSummary3(Vector3 bulletpos3,int num3)
 		acc3.y = ( float ) rand() / RAND_MAX * rnd_acc3 - rnd_acc3 / 2.0f;
 
 		//追加
-		gasParticle3_[ num3 ]->Add(60,pos3,vel3,acc3,0.5f,0.0f);
+		gasParticle3->Add(60,pos3,vel3,acc3,0.5f,0.0f);
 
-		gasParticle3_[ num3 ]->Update();
+		gasParticle3->Update();
 
 	}
 }
 
-void ArmorEnemy::EffSummary4(Vector3 bulletpos4,int num4)
+void ArmorEnemy::EffSummary4(Vector3 bulletpos4)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < 5; i++ )
@@ -652,9 +585,9 @@ void ArmorEnemy::EffSummary4(Vector3 bulletpos4,int num4)
 		acc4.y = ( float ) rand() / RAND_MAX * rnd_acc4 - rnd_acc4 / 2.0f;
 
 		//追加
-		gasParticle4_[ num4 ]->Add(60,pos4,vel4,acc4,0.5f,0.0f);
+		gasParticle4->Add(60,pos4,vel4,acc4,0.5f,0.0f);
 
-		gasParticle4_[ num4 ]->Update();
+		gasParticle4->Update();
 
 	}
 }
@@ -809,19 +742,13 @@ void ArmorEnemy::EffSummary4_2(Vector3 bulletpos4)
 void ArmorEnemy::EffDraw()
 {
 	if ( isGameStartTimer >= 200 ){
-		for ( int i = 0; i < 2; i++ )
-		{
-			if ( isbulletEffFlag_[i] == 1 )
-			{
-				if ( isAliveFlag_[ i ] == 1 )
-				{
-					gasParticle_[ i ]->Draw();
-					gasParticle2_[ i ]->Draw();
-					if ( Obj_[ i ]->wtf.position.z >= 25.0f )
-					{
-						gasParticle3_[ i ]->Draw();
-						gasParticle4_[ i ]->Draw();
-					}
+		if ( isbulletEffFlag_ == 1 ){
+			if ( isAliveFlag_[0] == 0 ) {
+				gasParticle->Draw();
+				gasParticle2->Draw();
+				if ( Obj_[0]->wtf.position.z >= 25.0f ) {
+					gasParticle3->Draw();
+					gasParticle4->Draw();
 				}
 			}
 		}
@@ -848,11 +775,11 @@ Vector3 ArmorEnemy::GetWorldPosition()
 	//ワールド座標を入れる変数
 	Vector3 worldPos;
 
-	//collObj_->wtf.UpdateMat();
-	////ワールド行列の平行移動成分
-	//worldPos.x = collObj_->wtf.matWorld.m[ 3 ][ 0 ];
-	//worldPos.y = collObj_->wtf.matWorld.m[ 3 ][ 1 ];
-	//worldPos.z = collObj_->wtf.matWorld.m[ 3 ][ 2 ];
+	collObj_->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	worldPos.x = collObj_->wtf.matWorld.m[ 3 ][ 0 ];
+	worldPos.y = collObj_->wtf.matWorld.m[ 3 ][ 1 ];
+	worldPos.z = collObj_->wtf.matWorld.m[ 3 ][ 2 ];
 
 	return worldPos;
 }
@@ -876,11 +803,11 @@ Vector3 ArmorEnemy::GetWorldBulletPosition()
 	//ワールド座標を入れる変数
 	Vector3 worldbulletPos;
 
-	//bulletObj_->wtf.UpdateMat();
-	////ワールド行列の平行移動成分
-	//worldbulletPos.x = bulletObj_->wtf.matWorld.m[ 3 ][ 0 ];
-	//worldbulletPos.y = bulletObj_->wtf.matWorld.m[ 3 ][ 1 ];
-	//worldbulletPos.z = bulletObj_->wtf.matWorld.m[ 3 ][ 2 ];
+	bulletObj_->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	worldbulletPos.x = bulletObj_->wtf.matWorld.m[ 3 ][ 0 ];
+	worldbulletPos.y = bulletObj_->wtf.matWorld.m[ 3 ][ 1 ];
+	worldbulletPos.z = bulletObj_->wtf.matWorld.m[ 3 ][ 2 ];
 
 	return worldbulletPos;
 }
