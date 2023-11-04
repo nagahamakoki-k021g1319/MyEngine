@@ -119,16 +119,16 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	skydomeTitMD_ = Model::LoadFromOBJ("skydome");
 	skydomeTit_ = Object3d::Create();
 	skydomeTit_->SetModel(skydomeTitMD_);
-	skydomeTit_->wtf.scale = { 100.0f,100.0f,100.0f };
-	skydomeTit_->wtf.position = { 0.0f,-20.0f,50.0f };
+	skydomeTit_->wtf.scale = { 10000.0f,10000.0f,10000.0f };
+	skydomeTit_->wtf.position = { 0.0f,400.0f,50.0f };
 	skydomeTit_->wtf.rotation = { 0.0f,0.0f,0.0f };
 
 	//タイトルの床
-	floorTitMD_ = Model::LoadFromOBJ("Ground");
+	floorTitMD_ = Model::LoadFromOBJ("CloudGround");
 	floorTit_ = Object3d::Create();
 	floorTit_->SetModel(floorTitMD_);
-	floorTit_->wtf.position = (Vector3{ 0, -1.5f, 0 });
-	floorTit_->wtf.scale = (Vector3{ 5.0f, 5.0f, 5.0f});
+	floorTit_->wtf.position = ( Vector3{ 30, -5.0f, 0 } );
+	floorTit_->wtf.scale = ( Vector3{ 100.0f, 500.0f, 10000.0f } );
 
 	//タイトルの自機
 	standModel_ = Model::LoadFromOBJ("bikst");
@@ -137,7 +137,13 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	standObj_->SetModel(standModel_);
 	standObj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	standObj_->wtf.position = { 0.0f,-1.0f,0.0f };
-	standObj_->wtf.rotation.y = 1.4f;
+
+	floorMD2 = Model::LoadFromOBJ("tunnel");
+	floor2 = Object3d::Create();
+	floor2->SetModel(floorMD2);
+	floor2->wtf.position = ( Vector3{ 0, 0, 70 } );
+	floor2->wtf.rotation.z = 10.0f;
+	floor2->wtf.scale = ( Vector3{ 20.0f, 20.0f, 10000.0f } );
 
 	//天球(ゲームシーン)
 	skydomeMD = Model::LoadFromOBJ("skydome");
@@ -155,12 +161,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	floor->wtf.rotation.z = 10.0f;
 	floor->wtf.scale = (Vector3{ 20.0f, 20.0f, 10000.0f });
 
-	floorMD2 = Model::LoadFromOBJ("tunnel");
-	floor2 = Object3d::Create();
-	floor2->SetModel(floorMD2);
-	floor2->wtf.position = ( Vector3{ 0, 0, 70 } );
-	floor2->wtf.rotation.z = 10.0f;
-	floor2->wtf.scale = ( Vector3{ 30.0f, 30.0f, 100.0f } );
+	
 
 	//道路のステージ
 	cloudfloorMD_ = Model::LoadFromOBJ("CloudGround");
@@ -236,7 +237,7 @@ void GameScene::Update() {
 		if ( isbboutFlag == true )
 		{
 			bboutTimer++;
-			standObj_->wtf.position.x += 0.3f;
+			standObj_->wtf.position.z += 0.3f;
 		}
 		if ( bboutTimer >= 30 )
 		{
@@ -247,6 +248,8 @@ void GameScene::Update() {
 		skydomeTit_->Update();
 		skydomeTit_->wtf.rotation.y += 0.001f;
 		floorTit_->Update();
+		floorTit_->wtf.position.z -= 10.0f;
+		floor2->Update();
 		standObj_->Update();
 		if ( spintimer >= 10){spintimer = 0;}
 		if(spintimer >= 0 && spintimer <= 5 ){standObj_->SetModel(standModel_);}
@@ -262,7 +265,7 @@ void GameScene::Update() {
 		obstacle_->Update();
 		armorEnemy_->Update(player_->GetWorldPosition(),player_->GetBulletWorldPosition(),player_->isShootFlag);
 		bikeEnemy_->Update(player_->GetSwordWorldPosition(),player_->isCollSWFlag);
-		bossEnemy_->Update(player_->GetBulletWorldPosition());
+		bossEnemy_->Update(player_->GetWorldPosition(), player_->GetBulletWorldPosition());
 
 		skydome->Update();
 		skydome->wtf.position.z -= 0.02f;
@@ -270,7 +273,6 @@ void GameScene::Update() {
 
 		floor->Update();
 		floor->wtf.position.z -= 0.1f;
-		floor2->Update();
 		cloudfloor_->Update();
 		cloudfloor_->wtf.position.z -= 10.0f;
 		cloudfloor2_->Update();
@@ -298,6 +300,8 @@ void GameScene::Draw() {
 	if (sceneNo_ == SceneNo::Title) {
 		skydomeTit_->Draw();
 		floorTit_->Draw();
+		cloudfloor_->Draw();
+		floor2->Draw();
 		standObj_->Draw();
 	}
 

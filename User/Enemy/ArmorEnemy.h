@@ -32,13 +32,13 @@ public:
 	//エフェクトの更新処理
 	void EffUpdate();
 	//エフェクトの情報(地面のズサ)
-	void EffSummary(Vector3 bulletpos,int num);
+	void EffSummary(Vector3 bulletpos);
 	//エフェクトの情報(地面のズサ)
-	void EffSummary2(Vector3 bulletpos2,int num2);
+	void EffSummary2(Vector3 bulletpos2);
 	//エフェクトの情報(背中の噴射ガス)
-	void EffSummary3(Vector3 bulletpos3,int num3);
+	void EffSummary3(Vector3 bulletpos3);
 	//エフェクトの情報(背中の噴射ガス)
-	void EffSummary4(Vector3 bulletpos4,int num4);
+	void EffSummary4(Vector3 bulletpos4);
 
 	//エフェクトの情報(地面のズサ)
 	void EffSummary_2(Vector3 bulletpos);
@@ -61,7 +61,7 @@ public:
 
 	void SetPlayer(Player* player) {player_ = player;};
 
-
+	
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
@@ -75,31 +75,32 @@ private:
 
 	//待機(魔導兵)
 	//maehito usirohito
-	Object3d* Obj_[ 2 ] = {0};
+	Object3d* Obj_[ 2 ] = { nullptr};
 	Object3d* Obj2_ = nullptr;
-	Model* Model_ = nullptr;
-	Model* Modelst_ = nullptr;
-	int isAliveFlag_[ 2 ] = {1};
+	Model* Model_[ 2 ] = { nullptr };
+	Model* Modelst_[ 2 ] = { nullptr };
+
+	//敵の生存フラグ
+	int isAliveFlag_[2] = {0};
 	bool isAliveFlag2= true;
 
 	//当たり判定のモデル
-	Object3d* collObj_[ 2 ] = {0};
+	Object3d* collObj_ = nullptr;
 	Model* collModel_ = nullptr;
-	bool isCollFlag_[ 2 ] = { false };
-
+	bool isCollFlag = false;
 
 	//体力
-	int HP_[ 2 ] = { 12 };
+	int HP = 12;
 	int HP2 = 12;
 
 	//大砲の弾
-	Object3d* bulletObj_[ 2 ] = {0};
+	Object3d* bulletObj_ = nullptr;
 	Model* bulletModel_ = nullptr;
-	bool isShootFlag_[ 2 ] = { false };
-	int BulletdurationTime_[2] = {0};
-	int BulletCoolTime_[ 2 ] = { -60 };
-	Vector3 playerlen_[2];
-	Vector3 bitweenlen_[2];
+	bool isShootFlag = false;
+	int BulletdurationTime = 0;
+	int BulletCoolTime = -60;
+	Vector3 playerlen;
+	Vector3 bitweenlen;
 
 	Object3d* bulletObj2_ = nullptr;
 	bool isShootFlag2 = false;
@@ -109,8 +110,8 @@ private:
 	Vector3 bitweenlen2;
 
 	//魔導兵の移動
-	bool isMoveFlag_[ 2 ] = { false };
-	bool isbesideFlag_[ 2 ] = { false };
+	bool isMoveFlag = false;
+	bool isbesideFlag = false;
 
 	bool isMoveFlag2 = false;
 	bool isbesideFlag2 = false;
@@ -125,13 +126,13 @@ private:
 
 	//パーティクル
 	//地面のズサ
-	std::unique_ptr<ParticleManager> gasParticle_[ 2 ];
-	std::unique_ptr<ParticleManager> gasParticle2_[2];
+	std::unique_ptr<ParticleManager> gasParticle;
+	std::unique_ptr<ParticleManager> gasParticle2;
 	//背中の噴射ガス
-	std::unique_ptr<ParticleManager> gasParticle3_[2];
-	std::unique_ptr<ParticleManager> gasParticle4_[2];
-	int bulletEffTimer_[ 2 ] = { 0 };
-	int isbulletEffFlag_[ 2 ] = { 0 };
+	std::unique_ptr<ParticleManager> gasParticle3;
+	std::unique_ptr<ParticleManager> gasParticle4;
+	int bulletEffTimer_ = 0;
+	int isbulletEffFlag_ = 0;
 
 	//地面のズサ
 	std::unique_ptr<ParticleManager> gasParticle_2;
@@ -143,10 +144,10 @@ private:
 	int isbulletEffFlag2_ = 0;
 
 	//ポリゴン爆さん
-	bool isExpolFlag_[ 2 ] = { false };
-	float ExpolTimer_[ 2 ] = { 0 };
-	float ExpolMT_[ 2 ] = { 40 };
-	float polygon_[ 2 ] = { 0 };
+	bool isExpolFlag = false;
+	float ExpolTimer = 0;
+	float ExpolMT = 40;
+	float polygon;
 
 	bool isExpolFlag2 = false;
 	float ExpolTimer2 = 0;

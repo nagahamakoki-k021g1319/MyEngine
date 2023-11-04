@@ -25,7 +25,7 @@ public:
 	~BossEnemy();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
-	void Update(Vector3 playerBpos);
+	void Update(Vector3 playerPos,Vector3 playerBpos);
 
 	void Draw();
 
@@ -75,6 +75,9 @@ private:
 	Model* collModel_ = nullptr;
 	bool isCollFlag = false;
 
+	//自機の当たり判定
+	Object3d* collPlayerObj_ = nullptr;
+
 	//攻撃時のモデル(剣のみ)
 	Object3d* swObj_[10] = {0};
 	Model* swModel_ = nullptr;
@@ -92,6 +95,12 @@ private:
 	Model* guidbulletModel_ = nullptr;
 	Vector3 playerlen;
 	Vector3 bitweenlen;
+	bool isShootFlag = false;
+	int BulletdurationTime = 0;
+	
+
+
+
 
 	int isBesideFlag = 0;
 	int isUpFlag = 0;
