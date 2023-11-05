@@ -264,8 +264,8 @@ void GameScene::Update() {
 		player_->Update();
 		obstacle_->Update();
 		armorEnemy_->Update(player_->GetWorldPosition(),player_->GetBulletWorldPosition(),player_->isShootFlag);
-		bikeEnemy_->Update(player_->GetSwordWorldPosition(),player_->isCollSWFlag);
-		bossEnemy_->Update(player_->GetWorldPosition(), player_->GetBulletWorldPosition());
+		bikeEnemy_->Update( player_->GetSwordWorldPosition(),player_->isCollSWFlag);
+		bossEnemy_->Update( player_->GetWorldPosition(), player_->GetBulletWorldPosition());
 
 		skydome->Update();
 		skydome->wtf.position.z -= 0.02f;
