@@ -266,7 +266,7 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 
 void BossEnemy::Draw()
 {
-	collPlayerObj_->Draw();
+	/*collPlayerObj_->Draw();*/
 	if ( isGameStartTimer >= 200 ){
 		if ( HP >= 1 ){
 			Obj_->Draw();
