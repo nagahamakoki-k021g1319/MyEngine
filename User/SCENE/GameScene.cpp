@@ -1,6 +1,5 @@
 #include "GameScene.h"
 
-
 /// <summary>
 	/// コンストクラタ
 	/// </summary>
@@ -17,6 +16,7 @@ GameScene::~GameScene() {
 	delete camera2;
 	delete camera3;
 	delete player_;
+	delete lamp_;
 	delete armorEnemy_;
 	delete bikeEnemy_;
 	delete bossEnemy_;
@@ -27,6 +27,8 @@ GameScene::~GameScene() {
 	delete floorMD;
 	delete floor2;
 	delete floorMD2;
+	delete floor3;
+	delete floorMD3;
 	delete TitleSprite;
 	delete ClearSprite;
 	delete skydomeTit_;
@@ -138,12 +140,27 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	standObj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	standObj_->wtf.position = { 0.0f,-1.0f,0.0f };
 
-	floorMD2 = Model::LoadFromOBJ("tunnel");
+	//ステージ
+	floorMD = Model::LoadFromOBJ("woll");
+	floor = Object3d::Create();
+	floor->SetModel(floorMD);
+	floor->wtf.position = ( Vector3{ 150, -5, 0 } );
+	/*floor2->wtf.rotation.z = 10.0f;*/
+	floor->wtf.scale = ( Vector3{ 7.0f,7.0f, 10.0f } );
+
+	floorMD2 = Model::LoadFromOBJ("woll2");
 	floor2 = Object3d::Create();
 	floor2->SetModel(floorMD2);
-	floor2->wtf.position = ( Vector3{ 0, 0, 70 } );
-	floor2->wtf.rotation.z = 10.0f;
-	floor2->wtf.scale = ( Vector3{ 20.0f, 20.0f, 10000.0f } );
+	floor2->wtf.position = ( Vector3{ -20, -30, 0 } );
+	/*floor2->wtf.rotation.z = 10.0f;*/
+	floor2->wtf.scale = ( Vector3{ 7.0f,7.0f, 10.0f } );
+
+	floorMD3 = Model::LoadFromOBJ("woll3");
+	floor3 = Object3d::Create();
+	floor3->SetModel(floorMD3);
+	floor3->wtf.position = ( Vector3{ 0, -10, 40 } );
+	floor3->wtf.rotation.y = 1.4f;
+	floor3->wtf.scale = ( Vector3{ 5.0f,5.0f,5.0f } );
 
 	//天球(ゲームシーン)
 	skydomeMD = Model::LoadFromOBJ("skydome");
@@ -153,13 +170,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	skydome->wtf.position = { 0.0f,400.0f,50.0f };
 	skydome->wtf.rotation = {0.0f,0.0f,0.0f};
 
-	//ステージ
-	floorMD = Model::LoadFromOBJ("tunnel");
-	floor = Object3d::Create();
-	floor->SetModel(floorMD);
-	floor->wtf.position = (Vector3{ 0, 0, -70 });
-	floor->wtf.rotation.z = 10.0f;
-	floor->wtf.scale = (Vector3{ 20.0f, 20.0f, 10000.0f });
+	
 
 	
 
@@ -210,7 +221,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	obstacle_ = new Obstacle();
 	obstacle_->Initialize(dxCommon, input);
 	obstacle_->SetPlayer(player_);
-	
+
+
+	lamp_ = new Lamp();
+	lamp_->Initialize(dxCommon,input);
 	//--------------------//
 
 
@@ -249,11 +263,22 @@ void GameScene::Update() {
 		skydomeTit_->wtf.rotation.y += 0.001f;
 		floorTit_->Update();
 		floorTit_->wtf.position.z -= 10.0f;
+		floor->Update();
 		floor2->Update();
+		floor3->Update();
 		standObj_->Update();
 		if ( spintimer >= 10){spintimer = 0;}
 		if(spintimer >= 0 && spintimer <= 5 ){standObj_->SetModel(standModel_);}
 		else if( spintimer >= 6 && spintimer <= 10 ){standObj_->SetModel(standModel2_);}
+		lamp_->Update();
+		if ( input_->TriggerKey(DIK_Y) )
+		{
+			floor3->wtf.rotation.y += 0.1f;
+		}
+		if ( input_->TriggerKey(DIK_H) )
+		{
+			floor3->wtf.rotation.y -= 0.1f;
+		}
 	}
 
 	if (sceneNo_ == SceneNo::Game) {
@@ -271,8 +296,7 @@ void GameScene::Update() {
 		skydome->wtf.position.z -= 0.02f;
 		skydome->wtf.rotation.y += 0.0008f;
 
-		floor->Update();
-		floor->wtf.position.z -= 0.1f;
+
 		cloudfloor_->Update();
 		cloudfloor_->wtf.position.z -= 10.0f;
 		cloudfloor2_->Update();
@@ -301,8 +325,11 @@ void GameScene::Draw() {
 		skydomeTit_->Draw();
 		floorTit_->Draw();
 		cloudfloor_->Draw();
+		floor->Draw();
 		floor2->Draw();
+		floor3->Draw();
 		standObj_->Draw();
+		lamp_->Draw();
 	}
 
 	if (sceneNo_ == SceneNo::Game) {
@@ -312,7 +339,6 @@ void GameScene::Draw() {
 		armorEnemy_->Draw();
 		bikeEnemy_->Draw();
 		bossEnemy_->Draw();
-		floor->Draw();
 		skydome->Draw();
 		cloudfloor_->Draw();
 		cloudfloor2_->Draw();
