@@ -129,6 +129,7 @@
     <ClCompile Include="User\Enemy\BikeEnemy.cpp" />
     <ClCompile Include="User\Enemy\BossEnemy.cpp" />
     <ClCompile Include="User\Obstacle.cpp" />
+    <ClCompile Include="User\ornament\Lamp.cpp" />
     <ClCompile Include="User\Player.cpp" />
     <ClCompile Include="User\PlayerBullet.cpp" />
     <ClCompile Include="User\SCENE\GameScene.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="User\Enemy\BikeEnemy.h" />
     <ClInclude Include="User\Enemy\BossEnemy.h" />
     <ClInclude Include="User\Obstacle.h" />
+    <ClInclude Include="User\ornament\Lamp.h" />
     <ClInclude Include="User\Player.h" />
     <ClInclude Include="User\PlayerBullet.h" />
     <ClInclude Include="User\SCENE\GameScene.h" />

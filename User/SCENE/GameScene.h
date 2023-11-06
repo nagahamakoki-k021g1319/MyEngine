@@ -20,6 +20,8 @@
 #include "Enemy/ArmorEnemy.h"
 #include "Enemy/BikeEnemy.h"
 #include "Enemy/BossEnemy.h"
+#include "ornament/Lamp.h"
+
 
 /// <summary>
 /// ゲームシーン
@@ -106,6 +108,7 @@ private:	//メンバ変数
 
 	//障害物
 	Obstacle* obstacle_ = nullptr;
+	Lamp* lamp_ = nullptr;
 	//--------------------//
 
 	//ゲームシーンの背景や床
@@ -115,6 +118,8 @@ private:	//メンバ変数
 	Model* floorMD = nullptr;
 	Object3d* floor2 = nullptr;
 	Model* floorMD2 = nullptr;
+	Object3d* floor3 = nullptr;
+	Model* floorMD3 = nullptr;
 
 	Object3d* cloudfloor_ = nullptr;
 	Model* cloudfloorMD_ = nullptr;

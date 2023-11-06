@@ -100,6 +100,12 @@
     <Filter Include="user\ヘッダー\Enemy">
       <UniqueIdentifier>{bf5f017b-2b4e-4f58-bbb4-c745124b0f79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="user\ソース\ornament">
+      <UniqueIdentifier>{4bf6b305-f72f-4030-a67c-a8fb8b421dfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="user\ヘッダー\ornament">
+      <UniqueIdentifier>{27f46910-5572-4d71-bb75-90093da3a989}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -208,6 +214,9 @@
     <ClCompile Include="User\Enemy\BossEnemy.cpp">
       <Filter>user\ソース\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="User\ornament\Lamp.cpp">
+      <Filter>user\ソース\ornament</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BASE\FPS.h">
@@ -314,6 +323,9 @@
     </ClInclude>
     <ClInclude Include="User\Enemy\BossEnemy.h">
       <Filter>user\ヘッダー\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="User\ornament\Lamp.h">
+      <Filter>user\ヘッダー\ornament</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
