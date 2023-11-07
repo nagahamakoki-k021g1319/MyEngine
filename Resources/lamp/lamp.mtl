@@ -1,9 +1,9 @@
 # Blender MTL File: 'None'
-# Material Count: 1
+# Material Count: 2
 
 newmtl None
-	Ka 0.000 0.000 0.000
-	Kd 1.000 1.000 1.000
+	Ka 1.000 1.000 1.000
+	Kd 0.000 0.000 0.000
 	Ks 0.000 0.000 0.000
-	map_Kd l.png
+	map_Kd cc.png
 illum 2

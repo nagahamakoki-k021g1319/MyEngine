@@ -90,10 +90,12 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag)
 
 	if ( HP >= 1 ){
 		if ( isCollSWFlag == true){
-			if ( coll.CircleCollision(playerSWPos,GetWorldPosition(),1.0f,1.0f) ){
+			if ( coll.CircleCollision(playerSWPos,GetWorldPosition(),0.6f,0.6f) ){
 				HP--;
 			}
 		}
+		
+
 	}
 
 	//バイクスピン

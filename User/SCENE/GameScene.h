@@ -114,11 +114,12 @@ private:	//メンバ変数
 	//ゲームシーンの背景や床
 	Object3d* skydome = nullptr;
 	Model* skydomeMD = nullptr;
-	Object3d* floor = nullptr;
+
+	Object3d* floor_[ 20 ] = {0};
 	Model* floorMD = nullptr;
-	Object3d* floor2 = nullptr;
+	Object3d* floor2_[ 20 ] = { 0 };
 	Model* floorMD2 = nullptr;
-	Object3d* floor3 = nullptr;
+	Object3d* floor3_[ 30 ] = { 0 };
 	Model* floorMD3 = nullptr;
 
 	Object3d* cloudfloor_ = nullptr;

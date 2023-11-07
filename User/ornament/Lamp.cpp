@@ -8,7 +8,10 @@ Lamp::~Lamp()
 {
 	delete spriteCommon;
 
-	delete Obj_;
+	for ( int i = 0; i < 10; i++ )
+	{
+		delete Obj_[i];
+	}
 	delete Model_;
 }
 
@@ -25,21 +28,29 @@ void Lamp::Initialize(DirectXCommon* dxCommon,Input* input)
 	spriteCommon->Initialize(dxCommon);
 
 
-	//雑魚敵(攻撃状態)
+	//ランプ
 	Model_ = Model::LoadFromOBJ("lamp");
-	Obj_ = Object3d::Create();
-	Obj_->SetModel(Model_);
-	Obj_->wtf.position = { -3.0f,1.0f,0.0f };
-
+	for ( int i = 0; i < 10; i++ )
+	{
+		Obj_[i] = Object3d::Create();
+		Obj_[i]->SetModel(Model_);
+		Obj_[i]->wtf.scale = { 1.5f,1.5f,1.5f };
+		Obj_[i]->wtf.position = { 3.0f,2.0f,0.0f + i * 20 };
+	}
 }
 
 void Lamp::Update()
 {
-	Obj_->Update();
-
+	for ( int i = 0; i < 10; i++ )
+	{
+		Obj_[i]->Update();
+	}
 }
 
 void Lamp::Draw()
 {
-	Obj_->Draw();
+	for ( int i = 0; i < 10; i++ )
+	{
+		Obj_[i]->Draw();
+	}
 }
