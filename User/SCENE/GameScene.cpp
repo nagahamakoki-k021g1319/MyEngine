@@ -23,11 +23,17 @@ GameScene::~GameScene() {
 	delete obstacle_;
 	delete skydome;
 	delete skydomeMD;
-	delete floor;
+
+	for ( int i = 0; i < 20; i++ ){
+		delete floor_[i];
+		delete floor2_[ i ];
+	}
+	for ( int i = 0; i < 30; i++ )
+	{
+		delete floor3_[ i ];
+	}
 	delete floorMD;
-	delete floor2;
 	delete floorMD2;
-	delete floor3;
 	delete floorMD3;
 	delete TitleSprite;
 	delete ClearSprite;
@@ -140,28 +146,34 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	standObj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	standObj_->wtf.position = { 0.0f,-1.0f,0.0f };
 
-	//ステージ
+	//ステージ(右壁)
 	floorMD = Model::LoadFromOBJ("woll");
-	floor = Object3d::Create();
-	floor->SetModel(floorMD);
-	floor->wtf.position = ( Vector3{ 150, -5, 0 } );
-	/*floor2->wtf.rotation.z = 10.0f;*/
-	floor->wtf.scale = ( Vector3{ 7.0f,7.0f, 10.0f } );
-
+	for ( int i = 0; i < 20; i++ )
+	{
+		floor_[i] = Object3d::Create();
+		floor_[i]->SetModel(floorMD);
+		floor_[i]->wtf.position = ( Vector3{ 150.0f, -30.0f, 0.0f + i * 230.0f } );
+		floor_[i]->wtf.scale = ( Vector3{ 7.0f,30.0f, 10.0f } );
+	}
+	//ステージ(左壁)
 	floorMD2 = Model::LoadFromOBJ("woll2");
-	floor2 = Object3d::Create();
-	floor2->SetModel(floorMD2);
-	floor2->wtf.position = ( Vector3{ -20, -30, 0 } );
-	/*floor2->wtf.rotation.z = 10.0f;*/
-	floor2->wtf.scale = ( Vector3{ 7.0f,7.0f, 10.0f } );
-
+	for ( int i = 0; i < 20; i++ )
+	{
+		floor2_[i] = Object3d::Create();
+		floor2_[i]->SetModel(floorMD2);
+		floor2_[i]->wtf.position = ( Vector3{ -20, -30, 0.0f + i * 230.0f } );
+		floor2_[i]->wtf.scale = ( Vector3{ 7.0f,30.0f, 10.0f } );
+	}
+	//ステージ(上壁)
 	floorMD3 = Model::LoadFromOBJ("woll3");
-	floor3 = Object3d::Create();
-	floor3->SetModel(floorMD3);
-	floor3->wtf.position = ( Vector3{ 0, -10, 40 } );
-	floor3->wtf.rotation.y = 1.4f;
-	floor3->wtf.scale = ( Vector3{ 5.0f,5.0f,5.0f } );
-
+	for ( int i = 0; i < 30; i++ )
+	{
+		floor3_[i] = Object3d::Create();
+		floor3_[i]->SetModel(floorMD3);
+		floor3_[i]->wtf.position = ( Vector3{ 10, 200, 0.0f + i * 100.0f } );
+	/*	floor3_[i]->wtf.rotation.y = 1.6f;*/
+		floor3_[i]->wtf.scale = ( Vector3{ 20.0f,5.0f,5.0f } );
+	}
 	//天球(ゲームシーン)
 	skydomeMD = Model::LoadFromOBJ("skydome");
 	skydome = Object3d::Create();
@@ -263,22 +275,28 @@ void GameScene::Update() {
 		skydomeTit_->wtf.rotation.y += 0.001f;
 		floorTit_->Update();
 		floorTit_->wtf.position.z -= 10.0f;
-		floor->Update();
-		floor2->Update();
-		floor3->Update();
+		for ( int i = 0; i < 20; i++ )
+		{
+			floor_[i]->Update();
+			floor2_[i]->Update();
+		}
+		for ( int i = 0; i < 30; i++ )
+		{
+			floor3_[ i ]->Update();
+		}
 		standObj_->Update();
 		if ( spintimer >= 10){spintimer = 0;}
 		if(spintimer >= 0 && spintimer <= 5 ){standObj_->SetModel(standModel_);}
 		else if( spintimer >= 6 && spintimer <= 10 ){standObj_->SetModel(standModel2_);}
 		lamp_->Update();
-		if ( input_->TriggerKey(DIK_Y) )
+		/*if ( input_->TriggerKey(DIK_Y) )
 		{
 			floor3->wtf.rotation.y += 0.1f;
 		}
 		if ( input_->TriggerKey(DIK_H) )
 		{
 			floor3->wtf.rotation.y -= 0.1f;
-		}
+		}*/
 	}
 
 	if (sceneNo_ == SceneNo::Game) {
@@ -289,7 +307,7 @@ void GameScene::Update() {
 		player_->Update();
 		obstacle_->Update();
 		armorEnemy_->Update(player_->GetWorldPosition(),player_->GetBulletWorldPosition(),player_->isShootFlag);
-		bikeEnemy_->Update( player_->GetSwordWorldPosition(),player_->isCollSWFlag);
+		bikeEnemy_->Update(player_->GetSwordWorldPosition(),player_->isCollSWFlag);
 		bossEnemy_->Update( player_->GetWorldPosition(), player_->GetBulletWorldPosition());
 
 		skydome->Update();
@@ -325,9 +343,15 @@ void GameScene::Draw() {
 		skydomeTit_->Draw();
 		floorTit_->Draw();
 		cloudfloor_->Draw();
-		floor->Draw();
-		floor2->Draw();
-		floor3->Draw();
+		for ( int i = 0; i < 20; i++ )
+		{
+			floor_[i]->Draw();
+			floor2_[i]->Draw();
+		}
+		for ( int i = 0; i < 30; i++ )
+		{
+			floor3_[ i ]->Draw();
+		}
 		standObj_->Draw();
 		lamp_->Draw();
 	}

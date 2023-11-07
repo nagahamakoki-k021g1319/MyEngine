@@ -716,7 +716,7 @@ void Player::PlayerAction()
 	//自機のスライディング
 	if ( isbikslidFlag == false )
 	{
-		if (input_->TriggerKey(DIK_S) ){isbikslidFlag = true;}
+		if (input_->TriggerKey(DIK_E) ){isbikslidFlag = true;}
 	}
 	if ( isbikslidFlag == true ){
 		bikslidTimer++;
@@ -739,10 +739,19 @@ void Player::PlayerAction()
 	//移動(自機)
 	if ( isJumpFlag == false && isVertFlag == false )
 	{
-		if ( input_->TriggerKey(DIK_W) || input_->StickInput(L_UP) ){isJumpFlag = true;}
+		if ( input_->TriggerKey(DIK_Z) || input_->StickInput(L_UP) ){isJumpFlag = true;}
 	}
-	if ( input_->PushKey(DIK_A) || input_->StickInput(L_LEFT) )
+
+
+	if ( input_->PushKey(DIK_W))
 	{
+		Obj_->wtf.position.z += playerSpeed;
+	}
+	if ( input_->PushKey(DIK_S))
+	{
+		Obj_->wtf.position.z -= playerSpeed;
+	}
+	if ( input_->PushKey(DIK_A) || input_->StickInput(L_LEFT) ){
 		Obj_->wtf.position.x -= playerSpeed;
 		collObj_->wtf.position.x -= playerSpeed;
 		retObj_->wtf.position.x += playerSpeed2;
@@ -777,32 +786,6 @@ void Player::PlayerAction()
 		retObj_->wtf.position.x += retSpeed2;
 		retVisualObj_->wtf.position.x += retSpeed;
 	}
-	////移動制限(自機とレティクル)
-	//if (fbxObject3d_->wtf.position.x >= playerLimitX) {
-	//	fbxObject3d_->wtf.position.x = playerLimitX;
-	//}
-	//if (fbxObject3d_->wtf.position.x <= -playerLimitX) {
-	//	fbxObject3d_->wtf.position.x = -playerLimitX;
-	//}
-	//if (fbxObject3d_->wtf.position.y >= playerLimitY) {
-	//	fbxObject3d_->wtf.position.y = playerLimitY;
-	//}
-	//if (fbxObject3d_->wtf.position.y <= -playerLimitY2) {
-	//	fbxObject3d_->wtf.position.y = -playerLimitY2;
-	//}
-
-	/*if (retObj_->wtf.position.x >= retLimitX) {
-		retObj_->wtf.position.x = retLimitX;
-	}
-	if (retObj_->wtf.position.x <= -retLimitX) {
-		retObj_->wtf.position.x = -retLimitX;
-	}
-	if (retObj_->wtf.position.y >= retLimitY) {
-		retObj_->wtf.position.y = retLimitY;
-	}
-	if (retObj_->wtf.position.y <= -retLimitY) {
-		retObj_->wtf.position.y = -retLimitY;
-	}*/
 
 	//弾発射(弱)
 	float ShortSpeed = 0.01f;
@@ -848,7 +831,7 @@ void Player::EffUpdate()
 void Player::EffSummary(Vector3 bulletpos)
 {
 	//パーティクル範囲
-	for ( int i = 0; i < 5; i++ )
+	for( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
 		const float rnd_posG = 0.0f;
@@ -1107,7 +1090,6 @@ void Player::DamageCamShake()
 		else if ( camShakeTimer <= 0 )
 		{
 			isCamShake = 0;
-			camera->wtf.position = { 0,0,0 };
 		}
 	}
 }
