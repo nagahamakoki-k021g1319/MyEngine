@@ -48,7 +48,8 @@ private:
 	Collision coll;
 
 	//ランプ
-	Object3d* Obj_[ 10 ] = {0};
+	Object3d* RightObj_[ 10 ] = {0};
+	Object3d* LeftObj_[ 10 ] = { 0 };
 	Model* Model_ = nullptr;
 
 
