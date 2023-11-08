@@ -115,9 +115,9 @@ private:	//メンバ変数
 	Object3d* skydome = nullptr;
 	Model* skydomeMD = nullptr;
 
-	Object3d* floor_[ 20 ] = {0};
+	Object3d* floor_[ 30 ] = {0};
 	Model* floorMD = nullptr;
-	Object3d* floor2_[ 20 ] = { 0 };
+	Object3d* floor2_[ 30 ] = { 0 };
 	Model* floorMD2 = nullptr;
 	Object3d* floor3_[ 30 ] = { 0 };
 	Model* floorMD3 = nullptr;

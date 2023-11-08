@@ -24,7 +24,7 @@ GameScene::~GameScene() {
 	delete skydome;
 	delete skydomeMD;
 
-	for ( int i = 0; i < 20; i++ ){
+	for ( int i = 0; i < 30; i++ ){
 		delete floor_[i];
 		delete floor2_[ i ];
 	}
@@ -148,7 +148,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 	//ステージ(右壁)
 	floorMD = Model::LoadFromOBJ("woll");
-	for ( int i = 0; i < 20; i++ )
+	for ( int i = 0; i < 30; i++ )
 	{
 		floor_[i] = Object3d::Create();
 		floor_[i]->SetModel(floorMD);
@@ -157,7 +157,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	}
 	//ステージ(左壁)
 	floorMD2 = Model::LoadFromOBJ("woll2");
-	for ( int i = 0; i < 20; i++ )
+	for ( int i = 0; i < 30; i++ )
 	{
 		floor2_[i] = Object3d::Create();
 		floor2_[i]->SetModel(floorMD2);
@@ -275,8 +275,7 @@ void GameScene::Update() {
 		skydomeTit_->wtf.rotation.y += 0.001f;
 		floorTit_->Update();
 		floorTit_->wtf.position.z -= 10.0f;
-		for ( int i = 0; i < 20; i++ )
-		{
+		for ( int i = 0; i < 30; i++ ){
 			floor_[i]->Update();
 			floor2_[i]->Update();
 		}
@@ -343,7 +342,7 @@ void GameScene::Draw() {
 		skydomeTit_->Draw();
 		floorTit_->Draw();
 		cloudfloor_->Draw();
-		for ( int i = 0; i < 20; i++ )
+		for ( int i = 0; i < 30; i++ )
 		{
 			floor_[i]->Draw();
 			floor2_[i]->Draw();

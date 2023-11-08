@@ -54,8 +54,8 @@ private:
 
 	//待機
 	//maehito usirohito
-	Object3d* Obj_ = nullptr;
-	Model* Model_ = nullptr;
+	Object3d* Obj_[ 2 ] = {0};
+	Model* Model_[ 2 ] = { 0 };
 	//当たり判定のモデル
 	Object3d* collObj_ = nullptr;
 	Model* collModel_ = nullptr;
@@ -72,6 +72,10 @@ private:
 	bool isBikSpinFlag = false;
 
 	int HP = 1;
+
+	//後ろから登場するフラグ
+	int isBackEntryFlag = 0;
+
 
 	//パーティクル
 	std::unique_ptr<ParticleManager> gasParticle;
