@@ -51,7 +51,8 @@ public:
 	//ワールド座標を取得(弾)
 	Vector3 GetBulletWorldPosition();
 	//ワールド座標を取得(近接攻撃)
-	Vector3 GetSwordWorldPosition();
+	Vector3 GetSwordLeftWorldPosition();
+	Vector3 GetSwordRightWorldPosition();
 	//ワールド座標を取得(レティクル)
 	Vector3 GetRetWorldPosition();
 
@@ -86,7 +87,10 @@ public:
 	Vector3 len;
 
 	//自機の近接攻撃判定がでるフラグ
+	//左
 	bool isCollSWFlag = false;
+	//右
+	bool isCollSWRightFlag = false;
 
 	//ゲームクリアするときのバイク移動
 	bool isClearFlag = false;
@@ -138,7 +142,14 @@ private:
 	Model* Modelbiksword0_ = nullptr;
 	int leftAtTimer = 0;
 	bool isLeftAtFlag = false;
-
+	Object3d* collSWObj_ = nullptr;
+	Model* collSWModel_ = nullptr;
+	//モデル(右側攻撃)
+	Model* Modelbiksword1_ = nullptr;
+	int rightAtTimer = 0;
+	bool isRightAtFlag = false;
+	Object3d* collSWRightObj_ = nullptr;
+	Model* collSWRightModel_ = nullptr;
 
 	//自機の納刀モデルから抜刀モデルに切り替え
 	int isBikswordstyFlag = 0;
@@ -164,9 +175,7 @@ private:
 	Model* collModel_ = nullptr;
 	float collpos = 0.0f;
 
-	//自機の近接攻撃判定のモデル
-	Object3d* collSWObj_ = nullptr;
-	Model* collSWModel_ = nullptr;
+	
 
 	//自機の生存フラグ
 	bool isAliveFlag = true;

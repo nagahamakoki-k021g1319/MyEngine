@@ -69,13 +69,15 @@ Player::~Player() {
 	delete ModelBikswordsty2_;
 
 	delete Modelbiksword0_;
-	
+	delete Modelbiksword1_;
 
 	delete collObj_;
 	delete collModel_;
 
 	delete collSWObj_;
 	delete collSWModel_;
+	delete collSWRightObj_;
+	delete collSWRightModel_;
 
 	delete entryani1UI;
 	delete entryani2UI;
@@ -118,7 +120,7 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 
 	//近接攻撃(左側)
 	Modelbiksword0_ = Model::LoadFromOBJ("bikswordAt");
-
+	Modelbiksword1_ = Model::LoadFromOBJ("bikswordAt");
 
 	//自機
 	Obj_ = Object3d::Create();
@@ -132,11 +134,17 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	collObj_->SetModel(collModel_);
 	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 0.5f,-1.0f };
 
-	//自機の近接攻撃判定のモデル
+	//自機の近接攻撃判定のモデル(左)
 	collSWModel_ = Model::LoadFromOBJ("collboll");
 	collSWObj_ = Object3d::Create();
 	collSWObj_->SetModel(collSWModel_);
 	collSWObj_->wtf.position = { Obj_->wtf.position.x - 0.5f,Obj_->wtf.position.y + 0.5f,-1.0f };
+
+	//自機の近接攻撃判定のモデル(左)
+	collSWRightModel_ = Model::LoadFromOBJ("collboll");
+	collSWRightObj_ = Object3d::Create();
+	collSWRightObj_->SetModel(collSWRightModel_);
+	collSWRightObj_->wtf.position = { Obj_->wtf.position.x + 0.5f,Obj_->wtf.position.y + 0.5f,-1.0f };
 
 	//自機の弾(弱)
 	shootModel_ = Model::LoadFromOBJ("boll2");
@@ -202,6 +210,8 @@ void Player::Update() {
 	collObj_->Update();
 	collSWObj_->Update();
 	collSWObj_->wtf.position = { Obj_->wtf.position.x - 1.0f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	collSWRightObj_->Update();
+	collSWRightObj_->wtf.position = { Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y + 0.5f,-1.0f };
 	isGameStartFlag = true;
 
 	//ゲームが始まる
@@ -223,7 +233,7 @@ void Player::Update() {
 		{
 			bikSpinTimer = 0;
 		}
-		if ( isAtTimerFlag == false && isLeftAtFlag == false )
+		if ( isAtTimerFlag == false && isLeftAtFlag == false && isRightAtFlag == false )
 		{
 			if ( bikSpinTimer >= 1 && bikSpinTimer <= 5 )
 			{
@@ -243,7 +253,7 @@ void Player::Update() {
 		{
 			bikstSpinTimer = 0;
 		}
-		if ( isAtTimerFlag == false && isLeftAtFlag == false )
+		if ( isAtTimerFlag == false && isLeftAtFlag == false && isRightAtFlag == false )
 		{
 			if ( bikstSpinTimer >= 1 && bikstSpinTimer <= 5 )
 			{
@@ -331,6 +341,10 @@ void Player::Draw() {
 		/*collObj_->Draw();*/
 		if ( isCollSWFlag == true ){
 			/*collSWObj_->Draw();*/
+		}
+		if ( isCollSWRightFlag == true )
+		{
+			collSWRightObj_->Draw();
 		}
 	}
 
@@ -673,7 +687,7 @@ void Player::PlayerAction()
 		isAtTimerFlag = false;
 	}
 
-	//自機の攻撃モーション(近接攻撃)
+	//自機の攻撃モーション(左近接攻撃)
 	if ( isLeftAtFlag == false ){
 		if ( input_->TriggerKey(DIK_Q)){
 			isLeftAtFlag = true;
@@ -697,6 +711,33 @@ void Player::PlayerAction()
 		isLeftAtFlag = false;
 	}
 
+	//自機の攻撃モーション(右近接攻撃)
+	if ( isRightAtFlag == false )
+	{
+		if ( input_->TriggerKey(DIK_E) )
+		{
+			isRightAtFlag = true;
+			isCollSWRightFlag = true;
+		}
+	}
+	if ( isRightAtFlag == true )
+	{
+		rightAtTimer++;
+		bikSpinTimer = 6;
+	}
+	if ( rightAtTimer >= 1 && rightAtTimer < 30 )
+	{
+		Obj_->SetModel(Modelbiksword1_);
+		Obj_->wtf.rotation.y -= 0.25f;
+	}
+	else if ( rightAtTimer >= 30 )
+	{
+		rightAtTimer = 0;
+		bikSpinTimer++;
+		Obj_->wtf.rotation.y = 0.0f;
+		isCollSWRightFlag = false;
+		isRightAtFlag = false;
+	}
 
 
 
@@ -716,7 +757,7 @@ void Player::PlayerAction()
 	//自機のスライディング
 	if ( isbikslidFlag == false )
 	{
-		if (input_->TriggerKey(DIK_E) ){isbikslidFlag = true;}
+		if (input_->TriggerKey(DIK_X) ){isbikslidFlag = true;}
 	}
 	if ( isbikslidFlag == true ){
 		bikslidTimer++;
@@ -743,14 +784,7 @@ void Player::PlayerAction()
 	}
 
 
-	if ( input_->PushKey(DIK_W))
-	{
-		Obj_->wtf.position.z += playerSpeed;
-	}
-	if ( input_->PushKey(DIK_S))
-	{
-		Obj_->wtf.position.z -= playerSpeed;
-	}
+	
 	if ( input_->PushKey(DIK_A) || input_->StickInput(L_LEFT) ){
 		Obj_->wtf.position.x -= playerSpeed;
 		collObj_->wtf.position.x -= playerSpeed;
@@ -960,7 +994,7 @@ Vector3 Player::GetBulletWorldPosition()
 	return BulletWorldPos;
 }
 
-Vector3 Player::GetSwordWorldPosition()
+Vector3 Player::GetSwordLeftWorldPosition()
 {
 	//ワールド座標を入れる変数
 	Vector3 SwordWorldPos;
@@ -972,6 +1006,20 @@ Vector3 Player::GetSwordWorldPosition()
 	SwordWorldPos.z = collSWObj_->wtf.matWorld.m[ 3 ][ 2 ];
 
 	return SwordWorldPos;
+}
+
+Vector3 Player::GetSwordRightWorldPosition()
+{
+	//ワールド座標を入れる変数
+	Vector3 SwordRightWorldPos;
+
+	collSWRightObj_->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	SwordRightWorldPos.x = collSWRightObj_->wtf.matWorld.m[ 3 ][ 0 ];
+	SwordRightWorldPos.y = collSWRightObj_->wtf.matWorld.m[ 3 ][ 1 ];
+	SwordRightWorldPos.z = collSWRightObj_->wtf.matWorld.m[ 3 ][ 2 ];
+
+	return SwordRightWorldPos;
 }
 
 Vector3 Player::GetRetWorldPosition()
