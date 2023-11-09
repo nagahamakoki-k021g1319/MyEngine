@@ -13,14 +13,11 @@ BikeEnemy::~BikeEnemy()
 	{
 		delete Obj_[i];
 		delete Model_[ i ];
+		delete collObj_[ i ];
+		delete collModel_[ i ];
+		delete bikclushObj_[i];
+		delete bikclushModel_[i];
 	}
-	delete collObj_;
-	delete collModel_;
-	delete bikclushObj_;
-	delete bikclushModel_;
-
-	delete blowenemyObj_;
-	delete blowenemyModel_;
 }
 
 void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
@@ -45,110 +42,146 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		
 	}
 	Obj_[0]->wtf.position = { -3.0f,-2.0f,-20.0f };
-	Obj_[1]->wtf.position = { 1.0f,-2.0f,0.0f };
+	Obj_[1]->wtf.position = { -1.0f,-2.0f,-20.0f };
 
 	
-		//当たり判定のモデル
-		collModel_ = Model::LoadFromOBJ("collboll");
-		collObj_ = Object3d::Create();
-		collObj_->SetModel(collModel_);
-		collObj_->wtf.position = { Obj_[0]->wtf.position.x,Obj_[0]->wtf.position.y,Obj_[0]->wtf.position.z - 1.0f};
-	
+	//当たり判定のモデル
+	for ( int i = 0; i < 2; i++ )
+	{
+		collModel_[i] = Model::LoadFromOBJ("collboll");
+		collObj_[i] = Object3d::Create();
+		collObj_[i]->SetModel(collModel_[ i ]);
+		collObj_[i]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y,Obj_[i]->wtf.position.z - 1.0f };
+	}
+	//ここでHP設定
+	HP_[ 0 ] = 1;
+	HP_[ 1 ] = 1;
 
 	//雑魚敵(死んだときのバイクスピン)
-	bikclushModel_ = Model::LoadFromOBJ("bikclush");
-	bikclushObj_ = Object3d::Create();
-	bikclushObj_->SetModel(bikclushModel_);
-	bikclushObj_->wtf.scale = { 0.4f,0.4f,0.4f };
-	bikclushObj_->wtf.position = { Obj_[0]->wtf.position.x,Obj_[0]->wtf.position.y,Obj_[0]->wtf.position.z};
+	for ( int i = 0; i < 2; i++ )
+	{
+		bikclushModel_[ i ] = Model::LoadFromOBJ("bikclush");
+		bikclushObj_[i] = Object3d::Create();
+		bikclushObj_[i]->SetModel(bikclushModel_[ i ]);
+		bikclushObj_[i]->wtf.scale = { 0.4f,0.4f,0.4f };
+		bikclushObj_[i]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y,Obj_[i]->wtf.position.z };
+	}
 
 	//パーティクル生成
-	gasParticle = std::make_unique<ParticleManager>();
-	gasParticle.get()->Initialize();
-	gasParticle->LoadTexture("gas.png");
-	gasParticle->Update();
-
+	for ( int i = 0; i < 2; i++ )
+	{
+		gasParticle_[i] = std::make_unique<ParticleManager>();
+		gasParticle_[i].get()->Initialize();
+		gasParticle_[i]->LoadTexture("gas.png");
+		gasParticle_[i]->Update();
+	}
 }
 
-void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag)
+void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRightPos,bool isCollSWRightFlag)
 {
 	for ( int i = 0; i < 2; i++ )
 	{
 		Obj_[i]->Update();
-		
+		collObj_[i]->Update();
+		collObj_[i]->wtf.position = {Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + 0.5f,Obj_[i]->wtf.position.z - 1.0f};
+		bikclushObj_[i]->Update();
+		bikclushObj_[i]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y,Obj_[i]->wtf.position.z };
 	}
-	collObj_->Update();
-	collObj_->wtf.position = { Obj_[0]->wtf.position.x,Obj_[0]->wtf.position.y + 0.5f,Obj_[0]->wtf.position.z - 1.0f };
-	bikclushObj_->Update();
-	bikclushObj_->wtf.position = { Obj_[0]->wtf.position.x,Obj_[0]->wtf.position.y,Obj_[0]->wtf.position.z};
+	
+	
 
 	
 	EffUpdate();
 	isGameStartTimer++;
 
-	
-		if (isBackEntryFlag == 0 ) {
+	for ( int i = 0; i < 2; i++ )
+	{
+		if ( isBackEntryFlag_[i] == 0 )
+		{
 			if ( isGameStartTimer >= 220 )
 			{
-				Obj_[0]->wtf.position.z += 0.5f;
+				Obj_[i]->wtf.position.z += 0.5f;
 			}
-			if ( Obj_[0]->wtf.position.z >= 0.0f )
+			if ( Obj_[i]->wtf.position.z >= 0.0f )
 			{
-				Obj_[0]->wtf.position.z = 0.0f;
-				isBackEntryFlag= 1;
+				Obj_[i]->wtf.position.z = 0.0f;
+				isBackEntryFlag_[i] = 1;
 			}
 		}
-	
+	}
 
-	
-		if ( HP >= 1 )
+	for ( int i = 0; i < 2; i++ )
+	{
+		//自機の左攻撃の当たり判定
+		if ( HP_[i] >= 1 )
 		{
 			if ( isCollSWFlag == true )
 			{
-				if ( coll.CircleCollision(playerSWPos,collObj_->wtf.position,0.6f,0.6f) )
+				if ( coll.CircleCollision(playerSWPos,collObj_[i]->wtf.position,0.6f,0.6f) )
 				{
-					HP--;
+					HP_[i]--;
 				}
 			}
 		}
-	
-	//バイクスピン
-	
-		if ( HP <= 0 )
+
+		//自機の右攻撃の当たり判定
+		if ( HP_[ i ] >= 1 )
 		{
-			isBikclushFlag = true;
-			isbulletEffFlag_ = 0;
-			bulletEffTimer_ = 0;
+			if ( isCollSWRightFlag == true )
+			{
+				if ( coll.CircleCollision(playerSWRightPos,collObj_[ i ]->wtf.position,0.6f,0.6f) )
+				{
+					HP_[ i ]--;
+				}
+			}
+		}
+	}
+
+	//バイクスピン
+	for ( int i = 0; i < 2; i++ )
+	{
+		if ( HP_[i] <= 0 )
+		{
+			isBikclushFlag_[i] = 1;
+			isbulletEffFlag_[i] = 0;
+			bulletEffTimer_[i] = 0;
 		}
 		else
 		{
-			isbulletEffFlag_ = 1;
+			isbulletEffFlag_[i] = 1;
 		}
-	
+	}
 
 
 	//バイクが前進しながら倒れる
-	if ( isBackEntryFlag == 1 ) {
-		if ( isBikclushFlag == true ){
-			Obj_[ 0 ]->wtf.position.z += 0.3f;
-			bikclushObj_->wtf.position.z += 0.3f;
-			bikclushObj_->wtf.rotation.z += 0.1f;
-		}
-		if ( bikclushObj_->wtf.rotation.z >= 1.5f ){
-			bikclushObj_->wtf.rotation.z = 1.5f;
-			isBikSpinFlag = true;
-		}
-		//バイクが倒れて後ろに行く
-		if ( isBikSpinFlag == true ){
-			Obj_[ 0 ]->wtf.position.z -= 0.6f;
-			bikclushObj_->wtf.position.z -= 0.6f;
-			bikclushObj_->wtf.rotation.x -= 0.1f;
+	for ( int i = 0; i < 2; i++ )
+	{
+		if ( isBackEntryFlag_[i] == 1 )
+		{
+			if ( isBikclushFlag_[ i ] == 1 )
+			{
+				Obj_[i]->wtf.position.z += 0.3f;
+				bikclushObj_[i]->wtf.position.z += 0.3f;
+				bikclushObj_[i]->wtf.rotation.z += 0.1f;
+			}
+			if ( bikclushObj_[i]->wtf.rotation.z >= bikclushObj_[ i ]->wtf.rotation.z + 1.5f )
+			{
+				bikclushObj_[i]->wtf.rotation.z = bikclushObj_[ i ]->wtf.rotation.z + 1.5f;
+				isBikSpinFlag_[i] = 1;
+			}
+			//バイクが倒れて後ろに行く
+			if ( isBikSpinFlag_[i] == 1 )
+			{
+				Obj_[i]->wtf.position.z -= 0.6f;
+				bikclushObj_[i]->wtf.position.z -= 0.6f;
+				bikclushObj_[i]->wtf.rotation.x -= 0.1f;
+			}
 		}
 	}
 
 	ImGui::Begin("bikeEnemy");
 
-	ImGui::Text("isBackEntryFlag:%d",isBackEntryFlag);
+	ImGui::Text("isBackEntryFlag:%d",isBackEntryFlag_[1]);
 
 	ImGui::End();
 
@@ -159,42 +192,54 @@ void BikeEnemy::Draw()
 	if ( isGameStartTimer >= 200 ){
 		for ( int i = 0; i < 2; i++ )
 		{
-			if ( isBikclushFlag == false )
+			//バイク兵のモデル
+			if ( isBikclushFlag_[i] == 0 )
 			{
 				Obj_[i]->Draw();
-				/*collObj_->Draw();*/
+				collObj_[i]->Draw();
 			}
-		}
 
-		if ( isBikclushFlag == true ){
-			if ( isBackEntryFlag == 1 ){
-				if ( bikclushObj_->wtf.position.z >= -20.0f ){
-					bikclushObj_->Draw();
+			//バイク兵の撃破モデル
+			if ( isBikclushFlag_[i] == 1 )
+			{
+				if ( isBackEntryFlag_[i] == 1 )
+				{
+					if ( bikclushObj_[i]->wtf.position.z >= -20.0f )
+					{
+						bikclushObj_[i]->Draw();
+					}
 				}
 			}
+
+
 		}
+
+		
 	}
 
 }
 
 void BikeEnemy::EffUpdate()
 {
-	if ( isbulletEffFlag_ == 1 )
+	for ( int i = 0; i < 2; i++ )
 	{
-		bulletEffTimer_++;
-	}
-	if ( bulletEffTimer_ <= 20 && bulletEffTimer_ >= 1 )
-	{
-		EffSummary(Vector3(Obj_[0]->wtf.position.x - 0.3f,Obj_[0]->wtf.position.y - 0.5f,Obj_[0]->wtf.position.z + 0.5f));
-	}
-	if ( bulletEffTimer_ >= 20 )
-	{
-		isbulletEffFlag_ = 0;
-		bulletEffTimer_ = 0;
+		if ( isbulletEffFlag_[i] == 1 )
+		{
+			bulletEffTimer_[i]++;
+		}
+		if ( bulletEffTimer_[i] <= 20 && bulletEffTimer_[i] >= 1 )
+		{
+			EffSummary(Vector3(Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y,Obj_[i]->wtf.position.z),i);
+		}
+		if ( bulletEffTimer_[i] >= 20 )
+		{
+			isbulletEffFlag_[i] = 0;
+			bulletEffTimer_[i] = 0;
+		}
 	}
 }
 
-void BikeEnemy::EffSummary(Vector3 bulletpos)
+void BikeEnemy::EffSummary(Vector3 bulletpos,int num)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < 5; i++ )
@@ -224,19 +269,22 @@ void BikeEnemy::EffSummary(Vector3 bulletpos)
 		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 
 		//追加
-		gasParticle->Add(60,posG,velG,accG,0.1f,0.0f);
+		gasParticle_[num]->Add(60,posG,velG,accG,0.1f,0.0f);
 
-		gasParticle->Update();
+		gasParticle_[ num ]->Update();
 
 	}
 }
 
 void BikeEnemy::EffDraw()
 {
-	if ( isGameStartTimer >= 200 ){
-		if ( isBikclushFlag == false ){
-			if ( isbulletEffFlag_ == 1 ){
-				gasParticle->Draw();
+	for ( int i = 0; i < 5; i++ )
+	{
+		if ( isGameStartTimer >= 200 ){
+			if ( isBikclushFlag_[i] == 0 ) {
+				if ( isbulletEffFlag_[i] == 1 ) {
+					gasParticle_[i]->Draw();
+				}
 			}
 		}
 	}
@@ -247,11 +295,11 @@ Vector3 BikeEnemy::GetWorldPosition()
 	//ワールド座標を入れる変数
 	Vector3 worldPos;
 
-	collObj_->wtf.UpdateMat();
-	//ワールド行列の平行移動成分
-	worldPos.x = collObj_->wtf.matWorld.m[ 3 ][ 0 ];
-	worldPos.y = collObj_->wtf.matWorld.m[ 3 ][ 1 ];
-	worldPos.z = collObj_->wtf.matWorld.m[ 3 ][ 2 ];
+	//collObj_->wtf.UpdateMat();
+	////ワールド行列の平行移動成分
+	//worldPos.x = collObj_->wtf.matWorld.m[ 3 ][ 0 ];
+	//worldPos.y = collObj_->wtf.matWorld.m[ 3 ][ 1 ];
+	//worldPos.z = collObj_->wtf.matWorld.m[ 3 ][ 2 ];
 
 	return worldPos;
 }

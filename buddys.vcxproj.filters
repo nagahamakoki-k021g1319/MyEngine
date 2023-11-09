@@ -106,6 +106,12 @@
     <Filter Include="user\ヘッダー\ornament">
       <UniqueIdentifier>{27f46910-5572-4d71-bb75-90093da3a989}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\ソースファイル\PostEffect">
+      <UniqueIdentifier>{295612d8-a8d8-48f6-8bc5-2d5cbf535a69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ヘッダーファイル\PostEffect">
+      <UniqueIdentifier>{21505eb8-0946-49fc-b8e4-116d67e42dcd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
