@@ -88,12 +88,10 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		bikclushObj_[i]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y,Obj_[i]->wtf.position.z };
 	}
 	
-	
-
-	
 	EffUpdate();
 	isGameStartTimer++;
 
+	//バイク兵のエントリー
 	for ( int i = 0; i < 2; i++ )
 	{
 		if ( isBackEntryFlag_[i] == 0 )
@@ -110,6 +108,17 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		}
 	}
 
+	//自機の加減速でバイク兵のZ軸移動
+	for ( int i = 0; i < 2; i++ )
+	{
+		if ( isBackEntryFlag_[ i ] == 1 )
+		{
+			if ( input_->PushKey(DIK_W) ){Obj_[ i ]->wtf.position.z -= 0.03f;}
+			else if ( input_->PushKey(DIK_S) ){Obj_[ i ]->wtf.position.z += 0.03f;}
+		}
+	}
+
+	//当たり判定
 	for ( int i = 0; i < 2; i++ )
 	{
 		//自機の左攻撃の当たり判定
@@ -137,9 +146,8 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		}
 	}
 
-	//バイクスピン
-	for ( int i = 0; i < 2; i++ )
-	{
+	//バイク兵のガス噴射
+	for ( int i = 0; i < 2; i++ ){
 		if ( HP_[i] <= 0 )
 		{
 			isBikclushFlag_[i] = 1;
@@ -164,9 +172,9 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 				bikclushObj_[i]->wtf.position.z += 0.3f;
 				bikclushObj_[i]->wtf.rotation.z += 0.1f;
 			}
-			if ( bikclushObj_[i]->wtf.rotation.z >= bikclushObj_[ i ]->wtf.rotation.z + 1.5f )
+			if ( bikclushObj_[i]->wtf.rotation.z >= 1.5f )
 			{
-				bikclushObj_[i]->wtf.rotation.z = bikclushObj_[ i ]->wtf.rotation.z + 1.5f;
+				bikclushObj_[i]->wtf.rotation.z = 1.5f;
 				isBikSpinFlag_[i] = 1;
 			}
 			//バイクが倒れて後ろに行く

@@ -12,5 +12,4 @@ float4 main(GSOutput input) : SV_TARGET
 	shade_color += m_diffuse * light_diffuse;
 	float4 texcolor = tex.Sample(smp, input.uv);
 	return float4(texcolor.rgb * shade_color, texcolor.a * m_alpha);
-
 }

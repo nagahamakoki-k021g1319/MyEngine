@@ -2,7 +2,7 @@
 # Material Count: 1
 
 newmtl None
-	Ka 1.000 1.000 1.000
+	Ka 0.300 0.300 0.300
 	Kd 0.000 0.000 0.000
 	Ks 0.000 0.000 0.000
 	map_Kd aq1.png

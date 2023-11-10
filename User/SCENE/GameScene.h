@@ -21,7 +21,7 @@
 #include "Enemy/BikeEnemy.h"
 #include "Enemy/BossEnemy.h"
 #include "ornament/Lamp.h"
-
+#include "Light/LightGroup.h"
 
 /// <summary>
 /// ゲームシーン
@@ -74,7 +74,20 @@ private: // メンバ変数 (固定)
 
 	SpriteCommon* spriteCommon = nullptr;
 	Audio* audio = nullptr;
-	
+
+	// オブジェクト共通のライトの初期化
+	LightGroup* light = nullptr;
+
+	// 平行光源
+	bool isActiveDirectional = true;
+
+	// 点光源のステータス
+	float pointLightPos[ 3 ] = { 0,1,0 };
+	float pointLightColor[ 3 ] = { 1,1,1 };
+	float pointLightAtten[ 3 ] = { 0.3f,0.1f,0.1f };
+	bool isActivePoint = false;
+
+
 
 private:	//メンバ変数
 	const float PI = 3.141592f;

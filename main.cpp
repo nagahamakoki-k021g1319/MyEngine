@@ -8,7 +8,7 @@
 
 #include "GameScene.h"
 #include <fbxsdk.h>
-
+#include "Engine/3D/Light/LightGroup.h"
 
 
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
@@ -54,7 +54,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	ParticleManager::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList());
 	// FBX関連静的初期化
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
-
+	// ライトの静的初期化
+	LightGroup::StaticInititalize(dxCommon->GetDevice());
 #pragma endregion
 
 #pragma region 描画初期化処理

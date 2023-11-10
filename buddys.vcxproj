@@ -101,6 +101,7 @@
     <ClCompile Include="Engine\3D\FbxLoader.cpp" />
     <ClCompile Include="Engine\3D\FBXModel.cpp" />
     <ClCompile Include="Engine\3D\FBXObject3d.cpp" />
+    <ClCompile Include="Engine\3D\Light\LightGroup.cpp" />
     <ClCompile Include="Engine\3D\Model.cpp" />
     <ClCompile Include="Engine\3D\Object3d.cpp" />
     <ClCompile Include="Engine\3D\Particle\ParticleManager.cpp" />
@@ -140,6 +141,11 @@
     <ClInclude Include="Engine\3D\FbxLoader.h" />
     <ClInclude Include="Engine\3D\FBXModel.h" />
     <ClInclude Include="Engine\3D\FBXObject3d.h" />
+    <ClInclude Include="Engine\3D\Light\CircleShadow.h" />
+    <ClInclude Include="Engine\3D\Light\DirectionalLight.h" />
+    <ClInclude Include="Engine\3D\Light\LightGroup.h" />
+    <ClInclude Include="Engine\3D\Light\PointLight.h" />
+    <ClInclude Include="Engine\3D\Light\SpotLight.h" />
     <ClInclude Include="Engine\3D\Model.h" />
     <ClInclude Include="Engine\3D\Object3d.h" />
     <ClInclude Include="Engine\3D\Particle\ParticleManager.h" />

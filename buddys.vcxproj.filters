@@ -70,12 +70,6 @@
     <Filter Include="Engine\ソースファイル\MATH">
       <UniqueIdentifier>{3aa7c3a7-76c8-42ac-8131-eafb2efd6470}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\ヘッダーファイル\LIGHT">
-      <UniqueIdentifier>{965007ed-129d-4c35-94c6-280d292716cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\ソースファイル\LIGHT">
-      <UniqueIdentifier>{4d6b5665-f4e0-4a51-a967-7e24850493e9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\ソースファイル\3D\Particle">
       <UniqueIdentifier>{c2b13d9a-9288-4f59-92bb-58908ec38831}</UniqueIdentifier>
     </Filter>
@@ -111,6 +105,12 @@
     </Filter>
     <Filter Include="Engine\ヘッダーファイル\PostEffect">
       <UniqueIdentifier>{21505eb8-0946-49fc-b8e4-116d67e42dcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ソースファイル\3D\Light">
+      <UniqueIdentifier>{71620cbc-abd5-4828-aa25-998cbe2d618a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ヘッダーファイル\3D\Light">
+      <UniqueIdentifier>{55f4ff8c-a92a-4c0a-b825-f036c154994a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +223,9 @@
     <ClCompile Include="User\ornament\Lamp.cpp">
       <Filter>user\ソース\ornament</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\3D\Light\LightGroup.cpp">
+      <Filter>Engine\ソースファイル\3D\Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BASE\FPS.h">
@@ -332,6 +335,21 @@
     </ClInclude>
     <ClInclude Include="User\ornament\Lamp.h">
       <Filter>user\ヘッダー\ornament</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Light\LightGroup.h">
+      <Filter>Engine\ヘッダーファイル\3D\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Light\PointLight.h">
+      <Filter>Engine\ヘッダーファイル\3D\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Light\SpotLight.h">
+      <Filter>Engine\ヘッダーファイル\3D\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Light\CircleShadow.h">
+      <Filter>Engine\ヘッダーファイル\3D\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\3D\Light\DirectionalLight.h">
+      <Filter>Engine\ヘッダーファイル\3D\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
