@@ -30,6 +30,7 @@ Vector3 Object3d::up = { 0, 1, 0 };
 float Object3d::focalLengs = 50.0f;
 
 Camera* Object3d::camera = nullptr;
+//LightGroup* Object3d::light = nullptr;
 
 Object3d::Object3d() {
 
@@ -260,6 +261,7 @@ void Object3d::InitializeGraphicsPipeline()
 	rootparams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[2].InitAsConstantBufferView(2, 0 ,D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[3].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
+	/*rootparams[4].InitAsConstantBufferView(3,0,D3D12_SHADER_VISIBILITY_ALL);*/
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
@@ -396,6 +398,8 @@ void Object3d::Update(){
 	constMap2->_ScaleFactor = ConstMapPolygon_._ScaleFactor;
 	constBuffB2->Unmap(0,nullptr);
 
+
+
 }
 
 void Object3d::Update(Transform* parentWtf) {
@@ -433,8 +437,8 @@ void Object3d::Draw()
 	//// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(2,constBuffB2->GetGPUVirtualAddress());
 
-
-
+	/*light->Draw(ScmdList,3);*/
+	
 	//モデルを描画
 	model->Draw(cmdList.Get(), 1);
 }

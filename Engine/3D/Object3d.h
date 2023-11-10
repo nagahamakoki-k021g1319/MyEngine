@@ -17,7 +17,7 @@
 
 #include "Transform.h"
 #include "Camera.h"
-
+#include "Light/LightGroup.h"
 
 /// <summary>
 /// 3Dオブジェクト
@@ -187,7 +187,9 @@ public: // メンバ関数
 
 	void SetColor(Vector3 color_) {color = color_;}
 
-
+	/*static void SetLight(LightGroup* light) {
+		Object3d::light = light;
+	}*/
 
 	Vector3 GetWorldPosition();
 
@@ -205,10 +207,17 @@ private: // メンバ変数
 	// 色
 	Vector3 color ={ 1,1,1};	
 
+	
+
 	// 親オブジェクト
 	Object3d* parent = nullptr;
 
 	ConstBufferPolygonExplosion ConstMapPolygon_;
+
+	//// ライト
+	//static LightGroup* light;
+	//// コマンドリスト
+	//ID3D12GraphicsCommandList* ScmdList;
 
 	//モデル
 	Model* model = nullptr;

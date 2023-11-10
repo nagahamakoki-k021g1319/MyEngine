@@ -54,6 +54,9 @@ GameScene::~GameScene() {
 	delete bbout2;
 	delete bbout3;
 
+	// ライトの解放
+	delete light;
+
 }
 
 /// <summary>
@@ -122,6 +125,19 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	Object3d::SetCamera(mainCamera);
 	FBXObject3d::SetCamera(mainCamera);
 
+	//// ライトの生成
+	//light = LightGroup::Create();
+	//// ライト設定
+	//light->SetDirLightActive(0,true);
+	//light->SetDirLightActive(1,true);
+	//light->SetDirLightActive(2,true);
+
+	//light->SetPointLightActive(0,true);
+	////light->SetPointLightActive(1,false);
+	////light->SetPointLightActive(2,false);
+
+	//// 3Dオブジェクトにライトをセット
+	//Object3d::SetLight(light);
 
 	//天球(タイトル)
 	skydomeTitMD_ = Model::LoadFromOBJ("skydome");
@@ -254,7 +270,7 @@ void GameScene::Reset() {
 /// </summary>
 void GameScene::Update() {
 	mainCamera->Update();
-	
+	/*light->Update();*/
 	if (sceneNo_ == SceneNo::Title) {
 		spintimer++;
 		if (input_->TriggerKey(DIK_SPACE) || input_->PButtonTrigger(B)) {
