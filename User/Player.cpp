@@ -167,7 +167,7 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	retObj_ = Object3d::Create();
 	retObj_->SetModel(retModel_);
 	retObj_->wtf.scale = { 0.6f,0.6f,0.6f };
-	retObj_->wtf.position = { 0.0f,0.0f,30.0f };
+	retObj_->wtf.position = { 0.0f,0.0f,50.0f };
 
 	//レティクル(可視化)
 	retVisualModel_ = Model::LoadFromOBJ("ret");
@@ -319,12 +319,48 @@ void Player::Update() {
 		}
 	}
 
+	//ラウンド変化
+	if ( input_->TriggerKey(DIK_1) ){
+		isRoundFlag = 1;
+	}
+
+	if ( isRoundFlag == 1){
+		camera->wtf.position.z -= 0.3f;
+		if ( incidenceCamera == 0 ){
+			if ( camera->wtf.position.z <= -10.0f ){
+				camera->wtf.position.z = -10.0f;
+				incidenceCamera = 1;
+			}
+		}
+		else if ( incidenceCamera == 1 )
+		{
+			camera->wtf.position.z += 0.5f;
+			if ( camera->wtf.position.z >= 0.0f )
+			{
+				camera->wtf.position.z = 0.0f;
+
+			}
+		}
+
+	}
+
+	
+
+	/*if ( input_->PushKey(DIK_1) ){camera->wtf.rotation.y -= 0.08f;}
+	else if ( input_->PushKey(DIK_2) ){camera->wtf.rotation.y += 0.08f;}
+	if ( input_->PushKey(DIK_3) ){camera->wtf.rotation.x -= 0.08f;}
+	else if ( input_->PushKey(DIK_4) ){camera->wtf.rotation.x += 0.08f;}
+	if ( input_->PushKey(DIK_5) ){
+		camera->wtf.rotation.x = 0.0f;
+		camera->wtf.rotation.y = 0.0f;
+	}*/
+
 	ImGui::Begin("Player");
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
 	ImGui::Text("CameraBehaviorTimer:%d",CameraBehaviorTimer);
-	ImGui::Text("Camerarotation:%f,%f,%f",camera->wtf.rotation.x,camera->wtf.rotation.y,camera->wtf.rotation.z);
-	ImGui::Text("Cameraposition:%f,%f,%f",camera->wtf.position.x,camera->wtf.position.y,camera->wtf.position.z);
+	ImGui::Text("CameraRotation:%f,%f,%f",camera->wtf.rotation.x,camera->wtf.rotation.y,camera->wtf.rotation.z);
+	ImGui::Text("CameraPosition:%f,%f,%f",camera->wtf.position.x,camera->wtf.position.y,camera->wtf.position.z);
 	ImGui::Text("isCamShake:%d",isCamShake);
 
 	ImGui::End();
@@ -360,7 +396,7 @@ void Player::Draw() {
 	/*shootStObj_->Draw();*/
 
 	if ( retdisplay == true ){
-		/*retObj_->Draw();*/
+		retObj_->Draw();
 		retVisualObj_->Draw();
 	}
 
@@ -622,9 +658,9 @@ void Player::PlayerAction()
 {
 	//自機とレティクルの速度
 	float playerSpeed = 0.08f;
-	float playerSpeed2 = 0.01f;
+	float playerSpeed2 = 0.06f;
 	float retSpeed = 0.08f;
-	float retSpeed2 = 0.14f;
+	float retSpeed2 = 0.20f;
 	////自機とレティクルの画面制限
 	//float playerLimitX = 0.6f;
 	//float playerLimitY = 0.19f;
@@ -783,7 +819,14 @@ void Player::PlayerAction()
 		if ( input_->TriggerKey(DIK_Z) || input_->StickInput(L_UP) ){isJumpFlag = true;}
 	}
 
-
+	/*if ( input_->PushKey(DIK_W) )
+	{
+		camera->wtf.position.z -= 0.08f;
+	}
+	else if ( input_->PushKey(DIK_S) )
+	{
+		camera->wtf.position.z += 0.08f;
+	}*/
 	
 	if ( input_->PushKey(DIK_A) || input_->StickInput(L_LEFT) ){
 		Obj_->wtf.position.x -= playerSpeed;
@@ -829,13 +872,13 @@ void Player::PlayerAction()
 	if ( isShootFlag == true )
 	{
 		BulletCoolTime++;
-		shootObj_->wtf.rotation.z += 0.03f;
+		shootObj_->wtf.rotation.z += 0.2f;
 		shootObj_->wtf.position += enemylen;
 		len = enemylen;
 		len *= ShortSpeed;
 	}
 	else{shootObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z };}
-	if ( BulletCoolTime >= 40.0f )
+	if ( BulletCoolTime >= 45.0f )
 	{
 		BulletCoolTime = 0;
 		shootObj_->wtf.rotation.z = 0.0f;
@@ -1135,9 +1178,10 @@ void Player::DamageCamShake()
 			camera->wtf.position.y -= 0.1f;
 			camera->wtf.position.z -= 0.1f;
 		}
-		else if ( camShakeTimer <= 0 )
-		{
+		else if ( camShakeTimer <= 0 ){
 			isCamShake = 0;
+			camera->wtf.position.y = 0.0f;
+			camera->wtf.position.z = 0.0f;
 		}
 	}
 }

@@ -36,8 +36,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	spriteCommon->Initialize(dxCommon);
 
 
-	for ( int i = 0; i < 2; i++ )
-	{
+	for ( int i = 0; i < 2; i++ ){
 	//雑魚敵(攻撃状態)
 		Model_[i] = Model::LoadFromOBJ("armorenemy");
 		//雑魚敵(待機状態)
@@ -65,8 +64,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 
 	//大砲の弾
-	for ( int i = 0; i < 2; i++ )
-	{
+	for ( int i = 0; i < 2; i++ ){
 		bulletModel_[i] = Model::LoadFromOBJ("eneboll");
 		bulletObj_[i] = Object3d::Create();
 		bulletObj_[i]->SetModel(bulletModel_[i]);
@@ -76,8 +74,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	
 
 	//当たり判定のモデル
-	for ( int i = 0; i < 2; i++ )
-	{
+	for ( int i = 0; i < 2; i++ ){
 		collModel_[i] = Model::LoadFromOBJ("collboll");
 		collObj_[i] = Object3d::Create();
 		collObj_[i]->SetModel(collModel_[i]);
@@ -90,9 +87,8 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	collObj3_->SetModel(collModel_[0]);
 
 	//パーティクル生成
-	for ( int i = 0; i < 2; i++ )
-	{
-	//エフェクトの情報(地面のズサ)
+	for ( int i = 0; i < 2; i++ ){
+		//エフェクトの情報(地面のズサ)
 		gasParticle_[i] = std::make_unique<ParticleManager>();
 		gasParticle_[i].get()->Initialize();
 		gasParticle_[i]->LoadTexture("gas.png");
@@ -134,46 +130,70 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	
 
 	//魔導兵が後ろから登場
-	for ( int i = 0; i < 2; i++ )
-	{
-		if ( isGameStartTimer >= 200 )
-		{
-			Obj_[i]->wtf.position.z += 0.7f;
+	for ( int i = 0; i < 2; i++ ){
+		if ( isMoveFlag_[ i ] == 0){
+			if ( isGameStartTimer >= 200 ){Obj_[ i ]->wtf.position.z += 0.7f;}
+			if ( Obj_[ i ]->wtf.position.z <= 20.0f && Obj_[ i ]->wtf.position.z >= 15.0f ){
+				BulletCoolTime_[ i ] = -50 + i * -20;
+			}
+			if ( Obj_[ i ]->wtf.position.z >= 35.0f )
+			{
+				Obj_[ i ]->wtf.position.z = 35.0f;
+				isMoveFlag_[ i ] = 1;
+			}
 		}
-		if ( Obj_[ i ]->wtf.position.z <= 20.0f && Obj_[ i ]->wtf.position.z >= 15.0f ){
-			BulletCoolTime_[i] = -50 + i * -20;
-		}
-		if ( Obj_[i]->wtf.position.z >= 25.0f )
-		{
-			Obj_[i]->wtf.position.z = 25.0f;
-			isMoveFlag = true;
-		}
-	}
-	
-	//定位置についたら魔導兵が左右に少しづつ動く
-	if ( isMoveFlag == true ){
-		if ( isbesideFlag == false ){
-			Obj_[0]->wtf.position.x -= 0.02f;
-		}
-		else{
-			Obj_[0]->wtf.position.x += 0.01f;
-		}
-	}
-	if ( isMoveFlag == true && Obj_[0]->wtf.position.x <= 3.0f ) {
-		isbesideFlag = true;
-	}
-	else if ( isMoveFlag == true && Obj_[0]->wtf.position.x >= 10.0f ) {
-		isbesideFlag = false;
 	}
 
+	//自機の加減速でバイク兵のZ軸移動
 	for ( int i = 0; i < 2; i++ )
 	{
-		if ( HP_[i] >= 1 )
+		if ( isMoveFlag_[ i ] == 1 )
 		{
+			if ( input_->PushKey(DIK_W) ){
+				Obj_[ i ]->wtf.position.z -= 0.03f;
+			}
+			else if ( input_->PushKey(DIK_S) )
+			{
+				Obj_[ i ]->wtf.position.z += 0.03f;
+			}
+		}
+
+		//定位置についたら魔導兵が左右に少しづつ動く
+		if ( isMoveFlag_[i] == 1 )
+		{
+			if ( isbesideFlag_[ i ] == 0 )
+			{
+				Obj_[i]->wtf.position.x -= 0.02f;
+			}
+			else
+			{
+				Obj_[i]->wtf.position.x += 0.01f;
+			}
+		}
+		//移動制限
+		if ( isMoveFlag_[ i ] == 1 && Obj_[i]->wtf.position.x <= moveLLimit_[ i ] )
+		{
+			//左に移動制限
+			isbesideFlag_[ i ] = 1;
+		}
+		else if ( isMoveFlag_[ i ] == 1 && Obj_[i]->wtf.position.x >= moveRLimit_[i] )
+		{
+			//右に移動制限
+			isbesideFlag_[ i ] = 0;
+		}
+
+	}
+
+
+
+	
+
+	//魔導兵のガス噴射
+	for ( int i = 0; i < 2; i++ ){
+		if ( HP_[i] >= 1 ){
 			isgasEffFlag_[i] = 1;
 		}
-		else
-		{
+		else{
 			isgasEffFlag_[i] = 0;
 			gasEffTimer_[i] = 0;
 		}
@@ -182,7 +202,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	//魔導兵の射撃
 	for ( int i = 0; i < 2; i++ )
 	{
-		if ( isGameStartTimer >= 200 && isShootFlag_[i] == false )
+		if ( isGameStartTimer >= 200 && isShootFlag_[i] == 0 )
 		{
 			if ( isAliveFlag_[i] == 0 )
 			{

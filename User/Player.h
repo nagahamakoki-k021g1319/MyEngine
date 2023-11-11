@@ -108,6 +108,11 @@ public:
 	Vector3 camShakeVec;
 	Vector3 moveBack;
 
+	//ラウンド制御(プレイヤー側で設定する)
+	int isRoundFlag = 0;
+	//ラウンドが変わるたびカメラが一旦引く
+	int incidenceCamera = 0;
+
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;

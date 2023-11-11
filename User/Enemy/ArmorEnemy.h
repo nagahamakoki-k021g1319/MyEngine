@@ -89,8 +89,14 @@ private:
 	Vector3 bitweenlen_[2];
 
 	//魔導兵の移動
-	bool isMoveFlag = false;
-	bool isbesideFlag = false;
+	int isMoveFlag_[ 2 ] = {0};
+	int isbesideFlag_[ 2 ] = {0};
+
+	//移動制限
+	//右
+	int moveRLimit_[ 2 ] = {10,0};
+	//左
+	int moveLLimit_[ 2 ] = {3,-5};
 
 	//自機の当たり判定
 	Object3d* collObj3_ = nullptr;
