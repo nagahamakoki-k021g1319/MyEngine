@@ -128,11 +128,11 @@ private:	//メンバ変数
 	Object3d* skydome = nullptr;
 	Model* skydomeMD = nullptr;
 
-	Object3d* floor_[ 30 ] = {0};
+	Object3d* floor_[ 50 ] = {0};
 	Model* floorMD = nullptr;
-	Object3d* floor2_[ 30 ] = { 0 };
+	Object3d* floor2_[ 50 ] = { 0 };
 	Model* floorMD2 = nullptr;
-	Object3d* floor3_[ 30 ] = { 0 };
+	Object3d* floor3_[ 100 ] = { 0 };
 	Model* floorMD3 = nullptr;
 
 	Object3d* cloudfloor_ = nullptr;
@@ -147,8 +147,8 @@ private:	//メンバ変数
 	Sprite* TitleSprite = new Sprite();
 	Object3d* skydomeTit_ = nullptr;
 	Model* skydomeTitMD_ = nullptr;
-	Object3d* floorTit_ = nullptr;
-	Model* floorTitMD_ = nullptr;
+	Object3d* floorTit_[ 3 ] = {0};
+	Model* floorTitMD_[ 3 ] = { 0 };
 
 	//タイトルで座ってるプレイヤー
 	Object3d* standObj_ = nullptr;

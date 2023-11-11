@@ -53,30 +53,33 @@ private:
 	int isGameStartTimer = 0;
 
 	//待機
-	//maehito usirohito
-	Object3d* Obj_[ 2 ] = {0};
-	Model* Model_[ 2 ] = { 0 };
+	Object3d* Obj_[4] = {0};
+	Model* Model_[4] = { 0 };
+	Model* Model2_[4] = { 0 };
 	//当たり判定のモデル
-	Object3d* collObj_[ 2 ] = { 0 };
-	Model* collModel_[ 2 ] = { 0 };
-	int isCollFlag_[ 2 ] = { 0 };
+	Object3d* collObj_[4] = { 0 };
+	Model* collModel_[4] = { 0 };
+	int isCollFlag_[4] = { 0 };
+
+	//バイクの車輪動かす
+	int bikstSpinTimer = 0;
 
 	//死んだときのバイクがスピンするモデル
-	Object3d* bikclushObj_[ 2 ] = { 0 };
-	Model* bikclushModel_[ 2 ] = { 0 };
-	int isBikclushFlag_[ 2 ] = { 0 };
-	int isBikSpinFlag_[ 2 ] = { 0 };
+	Object3d* bikclushObj_[4] = { 0 };
+	Model* bikclushModel_[4] = { 0 };
+	int isBikclushFlag_[4] = { 0 };
+	int isBikSpinFlag_[4] = { 0 };
 
 	//体力(一旦0で初期化のタイミングで設定する)
-	int HP_[ 2 ] = { 0 };
+	int HP_[4] = { 0 };
 
 	//後ろから登場するフラグ
-	int isBackEntryFlag_[ 2 ] = { 0 };
+	int isBackEntryFlag_[4] = { 0 };
 
 	//パーティクル
-	std::unique_ptr<ParticleManager> gasParticle_[2];
-	int bulletEffTimer_[2] = { 0 };
-	int isbulletEffFlag_[ 2 ] = { 0 };
+	std::unique_ptr<ParticleManager> gasParticle_[4];
+	int bulletEffTimer_[4] = { 0 };
+	int isbulletEffFlag_[4] = { 0 };
 
 };
 

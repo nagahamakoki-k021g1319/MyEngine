@@ -24,11 +24,11 @@ GameScene::~GameScene() {
 	delete skydome;
 	delete skydomeMD;
 
-	for ( int i = 0; i < 30; i++ ){
+	for ( int i = 0; i < 50; i++ ){
 		delete floor_[i];
 		delete floor2_[ i ];
 	}
-	for ( int i = 0; i < 30; i++ )
+	for ( int i = 0; i < 100; i++ )
 	{
 		delete floor3_[ i ];
 	}
@@ -39,8 +39,11 @@ GameScene::~GameScene() {
 	delete ClearSprite;
 	delete skydomeTit_;
 	delete skydomeTitMD_;
-	delete floorTit_;
-	delete floorTitMD_;
+	for ( int i = 0; i < 3; i++ )
+	{
+		delete floorTit_[i];
+		delete floorTitMD_[i];
+	}
 	delete cloudfloor_;
 	delete cloudfloorMD_;
 	delete cloudfloor2_;
@@ -148,11 +151,14 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	skydomeTit_->wtf.rotation = { 0.0f,0.0f,0.0f };
 
 	//タイトルの床
-	floorTitMD_ = Model::LoadFromOBJ("CloudGround");
-	floorTit_ = Object3d::Create();
-	floorTit_->SetModel(floorTitMD_);
-	floorTit_->wtf.position = ( Vector3{ 30, -5.0f, 0 } );
-	floorTit_->wtf.scale = ( Vector3{ 100.0f, 500.0f, 10000.0f } );
+	for ( int i = 0; i < 3; i++ )
+	{
+		floorTitMD_[ i ] = Model::LoadFromOBJ("CloudGround");
+		floorTit_[i] = Object3d::Create();
+		floorTit_[i]->SetModel(floorTitMD_[ i ]);
+		floorTit_[i]->wtf.position = ( Vector3{ 30, -5.0f, 0.0f + i * 20000.0f });
+		floorTit_[i]->wtf.scale = ( Vector3{ 100.0f, 500.0f, 10000.0f } );
+	}
 
 	//タイトルの自機
 	standModel_ = Model::LoadFromOBJ("bikst");
@@ -164,7 +170,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 	//ステージ(右壁)
 	floorMD = Model::LoadFromOBJ("woll");
-	for ( int i = 0; i < 30; i++ )
+	for ( int i = 0; i < 50; i++ )
 	{
 		floor_[i] = Object3d::Create();
 		floor_[i]->SetModel(floorMD);
@@ -173,8 +179,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	}
 	//ステージ(左壁)
 	floorMD2 = Model::LoadFromOBJ("woll2");
-	for ( int i = 0; i < 30; i++ )
-	{
+	for ( int i = 0; i < 50; i++ ){
 		floor2_[i] = Object3d::Create();
 		floor2_[i]->SetModel(floorMD2);
 		floor2_[i]->wtf.position = ( Vector3{ -20, -30, 0.0f + i * 230.0f } );
@@ -182,7 +187,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	}
 	//ステージ(上壁)
 	floorMD3 = Model::LoadFromOBJ("woll3");
-	for ( int i = 0; i < 30; i++ )
+	for ( int i = 0; i < 100; i++ )
 	{
 		floor3_[i] = Object3d::Create();
 		floor3_[i]->SetModel(floorMD3);
@@ -196,7 +201,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	skydome->SetModel(skydomeMD);
 	skydome->wtf.scale = { 10000.0f,10000.0f,10000.0f };
 	skydome->wtf.position = { 0.0f,400.0f,50.0f };
-	skydome->wtf.rotation = {0.0f,0.0f,0.0f};
+	skydome->wtf.rotation = {0.0f,-3.0f,0.0f};
 
 	
 
@@ -273,31 +278,41 @@ void GameScene::Update() {
 	/*light->Update();*/
 	if (sceneNo_ == SceneNo::Title) {
 		spintimer++;
-		if (input_->TriggerKey(DIK_SPACE) || input_->PButtonTrigger(B)) {
-			isbboutFlag = true;
-		}
-		if ( isbboutFlag == true )
-		{
+		if (input_->TriggerKey(DIK_SPACE) || input_->PButtonTrigger(B)) {isbboutFlag = true;}
+		if ( isbboutFlag == true ){
 			bboutTimer++;
 			standObj_->wtf.position.z += 0.3f;
 		}
-		if ( bboutTimer >= 30 )
-		{
+		if ( bboutTimer >= 30 ){
 			mainCamera->wtf.rotation.y = 2.5f;
 			sceneNo_ = SceneNo::Game;
 		}
 
 		skydomeTit_->Update();
-		skydomeTit_->wtf.rotation.y += 0.001f;
-		floorTit_->Update();
-		floorTit_->wtf.position.z -= 10.0f;
-		for ( int i = 0; i < 30; i++ ){
-			floor_[i]->Update();
-			floor2_[i]->Update();
+		//地面
+		for ( int i = 0; i < 3; i++ ){
+			floorTit_[i]->Update();
+			floorTit_[i]->wtf.position.z -= 10.0f;
+			if ( floorTit_[ i ]->wtf.position.z <= -20000.0f ){floorTit_[ i ]->wtf.position.z = 40000.0f;}
 		}
-		for ( int i = 0; i < 30; i++ )
-		{
+
+		//両壁
+		for ( int i = 0; i < 50; i++ ){
+			floor_[i]->Update();
+			floor_[ i ]->wtf.position.z -= 10.0f;
+			if ( floor_[ i ]->wtf.position.z <= -4600.0f ){floor_[ i ]->wtf.position.z = 6900.0f;}
+			floor2_[i]->Update();
+			floor2_[ i ]->wtf.position.z -= 10.0f;
+			if ( floor2_[ i ]->wtf.position.z <= -4600.0f ){floor2_[ i ]->wtf.position.z = 6900.0f;}
+		}
+		//天井
+		for ( int i = 0; i < 100; i++ ){
 			floor3_[ i ]->Update();
+			floor3_[ i ]->wtf.position.z -= 10.0f;
+			if ( floor3_[ i ]->wtf.position.z <= -2000.0f )
+			{
+				floor3_[ i ]->wtf.position.z = 8000.0f;
+			}
 		}
 		standObj_->Update();
 		if ( spintimer >= 10){spintimer = 0;}
@@ -326,18 +341,35 @@ void GameScene::Update() {
 		bossEnemy_->Update( player_->GetWorldPosition(), player_->GetBulletWorldPosition());
 
 		skydome->Update();
-		skydome->wtf.position.z -= 0.02f;
-		skydome->wtf.rotation.y += 0.0008f;
+		lamp_->Update();
 
+		//地面
+		for ( int i = 0; i < 3; i++ ){
+			floorTit_[ i ]->Update();
+			floorTit_[ i ]->wtf.position.z -= 10.0f;
+			if ( floorTit_[ i ]->wtf.position.z <= -20000.0f )
+			{
+				floorTit_[ i ]->wtf.position.z = 40000.0f;
+			}
+		}
 
-		cloudfloor_->Update();
-		cloudfloor_->wtf.position.z -= 10.0f;
-		cloudfloor2_->Update();
-		cloudfloor2_->wtf.position.z -= 10.0f;
-		cloudfloor3_->Update();
-		cloudfloor3_->wtf.position.z -= 10.0f;
-		
-	
+		//両壁
+		for ( int i = 0; i < 50; i++ ){
+			floor_[ i ]->Update();
+			floor_[ i ]->wtf.position.z -= 10.0f;
+			if ( floor_[ i ]->wtf.position.z <= -4600.0f ){floor_[ i ]->wtf.position.z = 6900.0f;}
+			floor2_[ i ]->Update();
+			floor2_[ i ]->wtf.position.z -= 10.0f;
+			if ( floor2_[ i ]->wtf.position.z <= -4600.0f ){floor2_[ i ]->wtf.position.z = 6900.0f;}
+		}
+		//天井
+		for ( int i = 0; i < 100; i++ )
+		{
+			floor3_[ i ]->Update();
+			floor3_[ i ]->wtf.position.z -= 10.0f;
+			if ( floor3_[ i ]->wtf.position.z <= -2000.0f ){floor3_[ i ]->wtf.position.z = 8000.0f;}
+		}
+
 	}
 }
 
@@ -356,14 +388,17 @@ void GameScene::Draw() {
 	Object3d::PreDraw(dxCommon_->GetCommandList());
 	if (sceneNo_ == SceneNo::Title) {
 		skydomeTit_->Draw();
-		floorTit_->Draw();
-		cloudfloor_->Draw();
-		for ( int i = 0; i < 30; i++ )
+
+		for ( int i = 0; i < 3; i++ )
+		{
+			floorTit_[i]->Draw();
+		}
+		for ( int i = 0; i < 50; i++ )
 		{
 			floor_[i]->Draw();
 			floor2_[i]->Draw();
 		}
-		for ( int i = 0; i < 30; i++ )
+		for ( int i = 0; i < 100; i++ )
 		{
 			floor3_[ i ]->Draw();
 		}
@@ -379,9 +414,15 @@ void GameScene::Draw() {
 		bikeEnemy_->Draw();
 		bossEnemy_->Draw();
 		skydome->Draw();
-		cloudfloor_->Draw();
-		cloudfloor2_->Draw();
-		cloudfloor3_->Draw();
+		lamp_->Draw();
+		for ( int i = 0; i < 3; i++ ){floorTit_[ i ]->Draw();}
+		for ( int i = 0; i < 50; i++ ){
+			floor_[ i ]->Draw();
+			floor2_[ i ]->Draw();
+		}
+		for ( int i = 0; i < 100; i++ ){floor3_[ i ]->Draw();}
+
+
 	}
 	//3Dオブジェクト描画後処理
 	Object3d::PostDraw();
