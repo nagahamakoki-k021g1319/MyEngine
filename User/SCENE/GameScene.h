@@ -96,8 +96,8 @@ private:	//メンバ変数
 	enum class SceneNo {
 		Title, //タイトル
 		Game, //射撃
-		Clear //ゲームクリア
-
+		Clear, //ゲームクリア
+		Over  //ゲームオーバー 
 	};
 	SceneNo sceneNo_ = SceneNo::Title;
 

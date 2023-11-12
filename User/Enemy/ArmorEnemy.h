@@ -29,6 +29,8 @@ public:
 
 	void Draw();
 
+	void Reset();
+
 	//エフェクトの更新処理
 	void EffUpdate();
 	//エフェクトの情報(地面のズサ)

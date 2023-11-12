@@ -200,8 +200,7 @@ void Player::Update() {
 	shootObj_->Update();
 	shootStObj_->Update();
 	retObj_->Update();
-	enemylen = retObj_->wtf.position - shootObj_->wtf.position;
-	enemylen.nomalize();
+	
 	enemylen2 = retObj_->wtf.position - shootStObj_->wtf.position;
 	enemylen2.nomalize();
 	retVisualObj_->Update();
@@ -282,7 +281,7 @@ void Player::Update() {
 	if ( isCameraBehavior == 1 ){CameraBehaviorTimer++;}
 
 	
-	if ( isCameraBehavior == 1)
+	if ( isCameraBehavior == 1 && isRoundFlag == 2 )
 	{
 		if ( CameraBehaviorTimer <= 70 ){
 			camera->wtf.position.z -= 0.2f;
@@ -297,7 +296,7 @@ void Player::Update() {
 			isCameraBehavior = 2;
 		}
 	}
-	if ( isCameraBehavior == 2 ){
+	if ( isCameraBehavior == 2 && isRoundFlag == 2 ){
 		CameraBehaviorTimer2++;
 		if ( CameraBehaviorTimer2 >= 80)
 		{
@@ -338,7 +337,8 @@ void Player::Update() {
 			if ( camera->wtf.position.z >= 0.0f )
 			{
 				camera->wtf.position.z = 0.0f;
-
+				incidenceCamera = 2;
+				isRoundFlag = 2;
 			}
 		}
 
@@ -380,7 +380,7 @@ void Player::Draw() {
 		}
 		if ( isCollSWRightFlag == true )
 		{
-			collSWRightObj_->Draw();
+			/*collSWRightObj_->Draw();*/
 		}
 	}
 
@@ -396,7 +396,7 @@ void Player::Draw() {
 	/*shootStObj_->Draw();*/
 
 	if ( retdisplay == true ){
-		retObj_->Draw();
+		/*retObj_->Draw();*/
 		retVisualObj_->Draw();
 	}
 
@@ -869,6 +869,13 @@ void Player::PlayerAction()
 	if ( input_->TriggerKey(DIK_SPACE) || input_->ButtonInput(RT) ){
 		if ( isShootFlag == false){isShootFlag = true;}
 	}
+
+	if ( BulletCoolTime == 0)
+	{
+		enemylen = retObj_->wtf.position - shootObj_->wtf.position;
+		enemylen.nomalize();
+	}
+
 	if ( isShootFlag == true )
 	{
 		BulletCoolTime++;

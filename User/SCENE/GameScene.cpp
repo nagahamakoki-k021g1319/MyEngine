@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include <imgui.h>
 
 /// <summary>
 	/// コンストクラタ
@@ -319,14 +320,13 @@ void GameScene::Update() {
 		if(spintimer >= 0 && spintimer <= 5 ){standObj_->SetModel(standModel_);}
 		else if( spintimer >= 6 && spintimer <= 10 ){standObj_->SetModel(standModel2_);}
 		lamp_->Update();
-		/*if ( input_->TriggerKey(DIK_Y) )
-		{
-			floor3->wtf.rotation.y += 0.1f;
-		}
-		if ( input_->TriggerKey(DIK_H) )
-		{
-			floor3->wtf.rotation.y -= 0.1f;
-		}*/
+
+		ImGui::Begin("Title");
+
+		ImGui::Text("CameraRotation:%f,%f,%f",mainCamera->wtf.rotation.x,mainCamera->wtf.rotation.y,mainCamera->wtf.rotation.z);
+		ImGui::Text("CameraPosition:%f,%f,%f",mainCamera->wtf.position.x,mainCamera->wtf.position.y,mainCamera->wtf.position.z);
+
+		ImGui::End();
 	}
 
 	if (sceneNo_ == SceneNo::Game) {
@@ -370,6 +370,26 @@ void GameScene::Update() {
 			if ( floor3_[ i ]->wtf.position.z <= -2000.0f ){floor3_[ i ]->wtf.position.z = 8000.0f;}
 		}
 
+	}
+
+	if ( sceneNo_ == SceneNo::Clear ){
+		isbboutFlag = false;
+		bboutTimer = 0;
+		standObj_->wtf.position = { 0.0f,-1.0f,0.0f };
+		mainCamera->wtf.rotation.x = 0.0f;
+		mainCamera->wtf.rotation.y = 0.0f;
+		mainCamera->wtf.rotation.z = 0.0f;
+		mainCamera->wtf.position.z = 0.0f;
+		if ( input_->TriggerKey(DIK_Q) || input_->PButtonTrigger(B) ){
+			sceneNo_ = SceneNo::Title;
+		}
+	}
+	if ( sceneNo_ == SceneNo::Over )
+	{
+		if ( input_->TriggerKey(DIK_SPACE) || input_->PButtonTrigger(B) )
+		{
+			sceneNo_ = SceneNo::Title;
+		}
 	}
 }
 

@@ -147,8 +147,8 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	{
 		if ( isBackEntryFlag_[ i ] == 1 )
 		{
-			if ( input_->PushKey(DIK_W) ){Obj_[ i ]->wtf.position.z -= 0.03f;}
-			else if ( input_->PushKey(DIK_S) ){Obj_[ i ]->wtf.position.z += 0.03f;}
+			if ( input_->PushKey(DIK_W) ){Obj_[ i ]->wtf.position.z -= 0.06f;}
+			else if ( input_->PushKey(DIK_S) ){Obj_[ i ]->wtf.position.z += 0.06f;}
 		}
 	}
 
@@ -238,7 +238,7 @@ void BikeEnemy::Draw()
 			if ( isBikclushFlag_[i] == 0 )
 			{
 				Obj_[i]->Draw();
-				collObj_[i]->Draw();
+				/*collObj_[i]->Draw();*/
 			}
 
 			//バイク兵の撃破モデル
