@@ -30,11 +30,11 @@ Player::~Player() {
 	delete hp1UI;
 	delete overUI;
 
-	delete BulletFlameUI;
+	delete hpFlameUI;
 
-	delete Bullet1dUI;
-	delete Bullet1fUI;
-	delete Bullet1mUI;
+	delete hpbUI;
+	delete hpgreenUI;
+	delete hpredUI;
 
 	delete Bullet2dUI;
 	delete Bullet2fUI;
@@ -215,6 +215,12 @@ void Player::Update() {
 
 	//ゲームが始まる
 	GameStartMovie();
+
+	//ダメージを受けた時のHP減少
+	if ( input_->TriggerKey(DIK_4) ){
+		hpgreenPosition.x -= 10.0f;
+		hpgreenUI->SetPozition(hpgreenPosition);
+	}
 
 
 	//プレイヤーの行動一覧
@@ -408,27 +414,30 @@ void Player::FbxDraw() {
 
 void Player::UIInitialize()
 {
-	//自機の弾のUI
-	BulletFlameUI = new Sprite();
-	BulletFlameUI->Initialize(spriteCommon);
-	BulletFlameUI->SetPozition({ 0,0 });
-	BulletFlameUI->SetSize({ 1280.0f, 720.0f });
+	//HPのUI
+	hpFlameUI = new Sprite();
+	hpFlameUI->Initialize(spriteCommon);
+	hpFlameUI->SetPozition({ 0,0 });
+	hpFlameUI->SetSize({ 1280.0f, 720.0f });
 
-	//1発目
-	Bullet1dUI = new Sprite();
-	Bullet1dUI->Initialize(spriteCommon);
-	Bullet1dUI->SetPozition({ 0,0 });
-	Bullet1dUI->SetSize({ 1280.0f, 720.0f });
+	//HPの裏の黒い部分
+	hpbUI = new Sprite();
+	hpbUI->Initialize(spriteCommon);
+	hpbUI->SetPozition({ 0,0 });
+	hpbUI->SetSize({ 1280.0f, 720.0f });
 
-	Bullet1fUI = new Sprite();
-	Bullet1fUI->Initialize(spriteCommon);
-	Bullet1fUI->SetPozition({ 0,0 });
-	Bullet1fUI->SetSize({ 1280.0f, 720.0f });
+	//HPの緑の部分
+	hpgreenUI = new Sprite();
+	hpgreenUI->Initialize(spriteCommon);
+	hpgreenPosition = hpgreenUI->GetPosition();
+	hpgreenUI->SetPozition(hpgreenPosition);
+	hpgreenUI->SetSize({ 1280.0f, 720.0f });
 
-	Bullet1mUI = new Sprite();
-	Bullet1mUI->Initialize(spriteCommon);
-	Bullet1mUI->SetPozition({ 0,0 });
-	Bullet1mUI->SetSize({ 1280.0f, 720.0f });
+	hpredUI = new Sprite();
+	hpredUI->Initialize(spriteCommon);
+	hpredPosition = hpredUI->GetPosition();
+	hpredUI->SetPozition(hpredPosition);
+	hpredUI->SetSize({ 1280.0f, 720.0f });
 
 	//2発目
 	Bullet2dUI = new Sprite();
@@ -561,17 +570,19 @@ void Player::UIInitialize()
 	entryani2UI->SetSize({ 1280.0f, 720.0f });
 
 	//画像読み込み
-	//フレーム
-	spriteCommon->LoadTexture(1,"ff.png");
-	BulletFlameUI->SetTextureIndex(1);
+	//HPゲージ
+	spriteCommon->LoadTexture(1,"hpflame.png");
+	hpFlameUI->SetTextureIndex(1);
 
-	//1発目
-	spriteCommon->LoadTexture(2,"ff1d.png");
-	Bullet1dUI->SetTextureIndex(2);
-	spriteCommon->LoadTexture(3,"ff1f.png");
-	Bullet1fUI->SetTextureIndex(3);
-	spriteCommon->LoadTexture(4,"ff1m.png");
-	Bullet1mUI->SetTextureIndex(4);
+	//HPの裏の黒い部分
+	spriteCommon->LoadTexture(2,"hpflameblack.png");
+	hpbUI->SetTextureIndex(2);
+	//HPの緑の部分
+	spriteCommon->LoadTexture(3,"hpgreen.png");
+	hpgreenUI->SetTextureIndex(3);
+	//HPの赤の部分
+	spriteCommon->LoadTexture(4,"hpred.png");
+	hpredUI->SetTextureIndex(4);
 
 	//2発目
 	spriteCommon->LoadTexture(5,"ff2d.png");
@@ -648,10 +659,17 @@ void Player::UIInitialize()
 
 void Player::UIDraw()
 {
-	if ( isCamShake == 1 )
-	{
-		BloodUI->Draw();
+	//被弾時の赤いエフェクト
+	if ( isCamShake == 1 ){BloodUI->Draw();}
+
+	//HP関連
+	if ( isGameStartTimer >= 180 ){
+		hpbUI->Draw();
+		hpredUI->Draw();
+		hpgreenUI->Draw();
+		hpFlameUI->Draw();
 	}
+
 }
 
 void Player::PlayerAction()

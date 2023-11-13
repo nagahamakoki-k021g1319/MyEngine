@@ -235,13 +235,22 @@ private:
 	int bulletEffTimer_ = 0;
 	int isbulletEffFlag_ = 0;
 
-	//弾の弾数表示(スプライト)
-	Sprite* BulletFlameUI = nullptr;
-	
-	Sprite* Bullet1dUI = nullptr;
-	Sprite* Bullet1fUI = nullptr;
-	Sprite* Bullet1mUI = nullptr;
-	
+	//ダメージを受けた時のフラグ
+	bool isDamageFlag = false;
+	bool hpDeclineFlag = false;
+	bool hpFlagReset = false;
+	//HPゲージ
+	Sprite* hpFlameUI = nullptr;
+	//HPの下の黒い部分
+	Sprite* hpbUI = nullptr;
+	//HPの緑の部分
+	Sprite* hpgreenUI = nullptr;
+	Vector2 hpgreenPosition;
+	//HPの赤の部分
+	Sprite* hpredUI = nullptr;
+	Vector2 hpredPosition;
+
+
 	Sprite* Bullet2dUI = nullptr;
 	Sprite* Bullet2fUI = nullptr;
 	Sprite* Bullet2mUI = nullptr;
