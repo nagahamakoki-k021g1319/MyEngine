@@ -230,19 +230,17 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 		}
 
 		//誘導弾
-		if ( isShootFlag_[ i ] == 1 )
-		{
+		if ( isShootFlag_[ i ] == 1 ){
 			BulletdurationTime_[ i ]++;
 
 			bulletObj_[i]->wtf.position += playerlen_[ i ];
 			bitweenlen_[ i ] = playerlen_[ i ];
 			bitweenlen_[ i ] *= 0.1f;
 		}
-		else
-		{
+		else{
 			bulletObj_[ i ]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + 2.5f,Obj_[i]->wtf.position.z - 3.0f };
 		}
-		if ( BulletdurationTime_[ i ] >= 40.0f )
+		if ( BulletdurationTime_[ i ] >= 80.0f )
 		{
 			BulletdurationTime_[ i ] = 0;
 			isShootFlag_[ i ] = 0;
@@ -289,8 +287,11 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	{
 		if ( coll.CircleCollision(bulletObj_[i]->wtf.position,collObj3_->wtf.position,0.6f,0.6f) )
 		{
+			isShootFlag_[ i ] = 0;
 			player_->isCamShake = 1;
 			player_->camShakeTimer = player_->camShakeLimit;
+			player_->hpgreenPosition.x -= 10.0f;//倍ダメ
+			player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
 		}
 	}
 

@@ -218,7 +218,7 @@ void Player::Update() {
 
 	//ダメージを受けた時のHP減少
 	if ( input_->TriggerKey(DIK_4) ){
-		hpgreenPosition.x -= 10.0f;
+		hpgreenPosition.x -= 20.0f;
 		hpgreenUI->SetPozition(hpgreenPosition);
 	}
 
@@ -367,6 +367,7 @@ void Player::Update() {
 	ImGui::Text("CameraBehaviorTimer:%d",CameraBehaviorTimer);
 	ImGui::Text("CameraRotation:%f,%f,%f",camera->wtf.rotation.x,camera->wtf.rotation.y,camera->wtf.rotation.z);
 	ImGui::Text("CameraPosition:%f,%f,%f",camera->wtf.position.x,camera->wtf.position.y,camera->wtf.position.z);
+	ImGui::Text("HPPosion:%f,%f",hpgreenPosition.x,hpgreenPosition.y);
 	ImGui::Text("isCamShake:%d",isCamShake);
 
 	ImGui::End();
@@ -837,27 +838,38 @@ void Player::PlayerAction()
 		if ( input_->TriggerKey(DIK_Z) || input_->StickInput(L_UP) ){isJumpFlag = true;}
 	}
 
-	/*if ( input_->PushKey(DIK_W) )
-	{
-		camera->wtf.position.z -= 0.08f;
-	}
-	else if ( input_->PushKey(DIK_S) )
-	{
-		camera->wtf.position.z += 0.08f;
-	}*/
+	
 	
 	if ( input_->PushKey(DIK_A) || input_->StickInput(L_LEFT) ){
-		Obj_->wtf.position.x -= playerSpeed;
-		collObj_->wtf.position.x -= playerSpeed;
-		retObj_->wtf.position.x += playerSpeed2;
-		camera->wtf.position.x -= 0.02f;
+		if ( limitmove == true ){
+			Obj_->wtf.position.x -= 0.0f;
+			collObj_->wtf.position.x -= 0.0f;
+			retObj_->wtf.position.x += 0.0f;
+			camera->wtf.position.x -= 0.0f;
+		}
+		else{
+			Obj_->wtf.position.x -= playerSpeed;
+			collObj_->wtf.position.x -= playerSpeed;
+			retObj_->wtf.position.x += playerSpeed2;
+			camera->wtf.position.x -= 0.02f;
+		}
 	}
 	if ( input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT) )
 	{
+		limitmove = false;
 		Obj_->wtf.position.x += playerSpeed;
 		collObj_->wtf.position.x += playerSpeed;
 		retObj_->wtf.position.x -= playerSpeed2;
 		camera->wtf.position.x += 0.02f;
+	}
+
+	if ( input_->PushKey(DIK_W) )
+	{
+		limitmove = false;
+	}
+	if ( input_->PushKey(DIK_S) )
+	{
+		limitmove = false;
 	}
 
 	//移動(レティクル)

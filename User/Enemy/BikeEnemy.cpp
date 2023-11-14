@@ -57,7 +57,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		collObj_[i]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y,Obj_[i]->wtf.position.z - 1.0f };
 	}
 	//ここでHP設定
-	HP_[ 0 ] = 1;
+	HP_[ 0 ] = 10;
 	HP_[ 1 ] = 1;
 	HP_[2] = 1;
 	HP_[3] = 1;
@@ -81,7 +81,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	}
 }
 
-void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRightPos,bool isCollSWRightFlag)
+void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRightPos,bool isCollSWRightFlag,Vector3 playerPos)
 {
 	for ( int i = 0; i < 4; i++ )
 	{
@@ -98,8 +98,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	bikstSpinTimer++;
 	//バイクの車輪が動き出す(納刀)
 	if ( bikstSpinTimer > 10 ){bikstSpinTimer = 0;}
-	for ( int i = 0; i < 4; i++ )
-	{
+	for ( int i = 0; i < 4; i++ ){
 		if ( bikstSpinTimer >= 1 && bikstSpinTimer <= 5 )
 		{
 			Obj_[i]->SetModel(Model_[ i ]);
@@ -111,8 +110,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	}
 
 	//バイク兵のエントリー
-	for ( int i = 0; i < 2; i++ )
-	{
+	for ( int i = 0; i < 2; i++ ){
 		if ( isBackEntryFlag_[i] == 0 ){
 			if ( isGameStartTimer >= 220 ){
 				Obj_[i]->wtf.position.z += 0.5f;
@@ -178,6 +176,17 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 				}
 			}
 		}
+
+		//自機とバイク兵の押し出し処理
+		if ( HP_[ i ] >= 1 )
+		{
+			if ( coll.CircleCollision(playerPos,collObj_[ i ]->wtf.position,0.6f,0.6f) )
+			{
+				player_->limitmove = true;
+			}
+		}
+		
+
 	}
 
 	//バイク兵のガス噴射
@@ -223,6 +232,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 
 	ImGui::Begin("bikeEnemy");
 
+	ImGui::Text("HP:%d",HP_[ 0 ]);
 	ImGui::Text("isBackEntryFlag:%d",isBackEntryFlag_[1]);
 
 	ImGui::End();
