@@ -25,7 +25,7 @@ public:
 	~BikeEnemy();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
-	void Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRightPos,bool isCollSWRightFlag);
+	void Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRightPos,bool isCollSWRightFlag,Vector3 playerPos);
 
 	void Draw();
 

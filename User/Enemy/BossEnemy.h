@@ -78,28 +78,30 @@ private:
 	//自機の当たり判定
 	Object3d* collPlayerObj_ = nullptr;
 
-	//攻撃時のモデル(剣のみ)
-	Object3d* swObj_[10] = {0};
-	Model* swModel_ = nullptr;
-	bool isSWFlag = false;
-	int SWTimer = 0;
-	//当たり判定のモデル(攻撃時)
-	Object3d* collswObj_ = nullptr;
-	Model* collswModel_ = nullptr;
-	bool isshotFlag = false;
 	//攻撃の間隔タイマー
 	int SwAtTimer = -60;
 
-	//誘導弾のモデル(攻撃時)
+	//誘導弾のモデル
 	Object3d* guidbulletObj_ = nullptr;
 	Model* guidbulletModel_ = nullptr;
 	Vector3 playerlen;
 	Vector3 bitweenlen;
 	bool isShootFlag = false;
 	int BulletdurationTime = 0;
-	
+
+	//5連誘導弾のモデル
+	/*Object3d* linkagebulletObj_[ 5 ] = {0};
+	Model* linkagebulletModel_[ 5 ] = {0};
+	Vector3 playerlen_[5];
+	Vector3 bitweenlen_[5];
+	int islinkageShootFlag_[ 5 ] = {0};
+	int linkageBulletdurationTime_[ 5 ] = {0};
+	int linkageCoolTimer_[ 5 ] = { 0 };
+	bool issampleFlag = false;*/
 
 
+	//魔導兵の移動
+	int isMoveFlag_ = 0;
 
 
 	int isBesideFlag = 0;

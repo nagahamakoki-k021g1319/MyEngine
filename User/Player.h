@@ -19,12 +19,13 @@
 class Enemy;
 class ArmorEnemy;
 
-class Player {
+class Player
+{
 public:
 	Player();
 	~Player();
 
-	void Initialize(DirectXCommon* dxCommon, Input* input);
+	void Initialize(DirectXCommon* dxCommon,Input* input);
 	void UIInitialize();
 	void Update();
 
@@ -44,7 +45,7 @@ public:
 	//エフェクトの描画
 	void EffDraw();
 
-	Vector3 bVelocity(Vector3& velocity, Transform& worldTransform);
+	Vector3 bVelocity(Vector3& velocity,Transform& worldTransform);
 
 	////ワールド座標を取得
 	Vector3 GetWorldPosition();
@@ -57,11 +58,15 @@ public:
 	Vector3 GetRetWorldPosition();
 
 
-	Vector3 GetPos() { return Obj_->wtf.position; };
-	Vector3 GetCamShake() { return camShakeVec; };
+	Vector3 GetPos() {
+		return Obj_->wtf.position;
+	};
+	Vector3 GetCamShake() {
+		return camShakeVec;
+	};
 
 
-	//ゲームが始まるときのムービー
+//ゲームが始まるときのムービー
 	void GameStartMovie();
 
 	//被弾時のカメラシェイク
@@ -71,47 +76,16 @@ public:
 	/// ポジション
 	/// </summary>
 	/// <param name="pos"></param>
-	void SetPos(Vector3 pos) { Obj_->wtf.position = pos; };
-	void SetCamera(Camera* cam) { camera = cam; };
+	void SetPos(Vector3 pos) {
+		Obj_->wtf.position = pos;
+	};
+	void SetCamera(Camera* cam) {
+		camera = cam;
+	};
 
 public:
 	//音を止める関数
-	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };
-
-	//弾発射(弱)
-	Object3d* shootObj_ = nullptr;
-	Model* shootModel_ = nullptr;
-	bool isShootFlag = false;
-	int BulletCoolTime = 0;
-	Vector3 enemylen;
-	Vector3 len;
-
-	//自機の近接攻撃判定がでるフラグ
-	//左
-	bool isCollSWFlag = false;
-	//右
-	bool isCollSWRightFlag = false;
-
-	//ゲームクリアするときのバイク移動
-	bool isClearFlag = false;
-	int isclearFlagTimer = 0;
-
-	//ボス登場でカメラの向きをかえるフラグ
-	int isCameraBehavior = 0;
-	int CameraBehaviorTimer = 0;
-	int CameraBehaviorTimer2 = 0;
-
-	//画面シェイク
-	int isCamShake = 0;
-	const int camShakeLimit = 20;
-	int camShakeTimer = camShakeLimit;
-	Vector3 camShakeVec;
-	Vector3 moveBack;
-
-	//ラウンド制御(プレイヤー側で設定する)
-	int isRoundFlag = 0;
-	//ラウンドが変わるたびカメラが一旦引く
-	int incidenceCamera = 0;
+	IXAudio2SourceVoice* pSourceVoice[ 10 ] = { 0 };
 
 private:
 	const float PI = 3.141592f;
@@ -174,13 +148,13 @@ private:
 	int bikSpinTimer = 0;
 	//バイクの車輪動かす(納刀時)
 	int bikstSpinTimer = 0;
-	
+
 	//自機の当たり判定のモデル
 	Object3d* collObj_ = nullptr;
 	Model* collModel_ = nullptr;
 	float collpos = 0.0f;
 
-	
+
 
 	//自機の生存フラグ
 	bool isAliveFlag = true;
@@ -212,7 +186,7 @@ private:
 	Object3d* retVisualObj_ = nullptr;
 	Model* retVisualModel_ = nullptr;
 
-	
+
 
 	//弾発射(強)
 	Object3d* shootStObj_ = nullptr;
@@ -223,7 +197,7 @@ private:
 	Vector3 enemylen2;
 	Vector3 len2;
 
-	
+
 	//被弾時エフェクト
 	Sprite* BloodUI = nullptr;
 	int EffTimer = 0;
@@ -243,9 +217,7 @@ private:
 	Sprite* hpFlameUI = nullptr;
 	//HPの下の黒い部分
 	Sprite* hpbUI = nullptr;
-	//HPの緑の部分
-	Sprite* hpgreenUI = nullptr;
-	Vector2 hpgreenPosition;
+
 	//HPの赤の部分
 	Sprite* hpredUI = nullptr;
 	Vector2 hpredPosition;
@@ -254,11 +226,11 @@ private:
 	Sprite* Bullet2dUI = nullptr;
 	Sprite* Bullet2fUI = nullptr;
 	Sprite* Bullet2mUI = nullptr;
-	
+
 	Sprite* Bullet3dUI = nullptr;
 	Sprite* Bullet3fUI = nullptr;
 	Sprite* Bullet3mUI = nullptr;
-	
+
 	Sprite* Bullet4dUI = nullptr;
 	Sprite* Bullet4fUI = nullptr;
 	Sprite* Bullet4mUI = nullptr;
@@ -282,10 +254,53 @@ private:
 	float targetTheta;
 	float targetDistance = 10;
 	float camMoveSpeed = 0.2f;
-  
-	Vector2 camRotaSpeed = { PI / 1800, PI / 1800};
 
-	
+	Vector2 camRotaSpeed = { PI / 1800, PI / 1800 };
 
-	
+
+public:
+
+	//自機とバイク兵の押し出し処理
+	bool limitmove = false;
+
+
+	//弾発射(弱)
+	Object3d* shootObj_ = nullptr;
+	Model* shootModel_ = nullptr;
+	bool isShootFlag = false;
+	int BulletCoolTime = 0;
+	Vector3 enemylen;
+	Vector3 len;
+
+	//自機の近接攻撃判定がでるフラグ
+	//左
+	bool isCollSWFlag = false;
+	//右
+	bool isCollSWRightFlag = false;
+
+	//ゲームクリアするときのバイク移動
+	bool isClearFlag = false;
+	int isclearFlagTimer = 0;
+
+	//ボス登場でカメラの向きをかえるフラグ
+	int isCameraBehavior = 0;
+	int CameraBehaviorTimer = 0;
+	int CameraBehaviorTimer2 = 0;
+
+	//画面シェイク
+	int isCamShake = 0;
+	const int camShakeLimit = 20;
+	int camShakeTimer = camShakeLimit;
+	Vector3 camShakeVec;
+	Vector3 moveBack;
+
+	//ラウンド制御(プレイヤー側で設定する)
+	int isRoundFlag = 0;
+	//ラウンドが変わるたびカメラが一旦引く
+	int incidenceCamera = 0;
+
+	//HPの緑の部分
+	Sprite* hpgreenUI = nullptr;
+	Vector2 hpgreenPosition;
+
 };

@@ -83,7 +83,7 @@ void LightGroup::TransferConstBuffer()
 	// 点光源
 	for ( int i = 0; i < sPointLightNum; i++ )
 	{
-// ライトが有効なら設定を転送
+	// ライトが有効なら設定を転送
 		if ( pointLights_[ i ].IsActive() )
 		{
 			constMap_->pointLights[ i ].active = 1;
