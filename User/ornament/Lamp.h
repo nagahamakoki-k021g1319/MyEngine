@@ -11,9 +11,7 @@
 #include "ParticleManager.h"
 #include "Audio.h"
 
-#include "FBXModel.h"
-#include "FbxLoader.h"
-#include "FBXObject3d.h"
+
 #include "ImGuiManager.h"
 
 

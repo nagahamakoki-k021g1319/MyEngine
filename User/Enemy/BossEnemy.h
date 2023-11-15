@@ -11,9 +11,6 @@
 #include "ParticleManager.h"
 #include "Audio.h"
 
-#include "FBXModel.h"
-#include "FbxLoader.h"
-#include "FBXObject3d.h"
 #include "ImGuiManager.h"
 
 class Player;
@@ -29,6 +26,9 @@ public:
 
 	void Draw();
 
+	void UIInitialize();
+	void UIDraw();
+
 	//エフェクトの更新処理
 	void EffUpdate();
 	//エフェクトの情報
@@ -38,6 +38,9 @@ public:
 
 	////ワールド座標を取得
 	Vector3 GetWorldPosition();
+
+	//5連誘導弾
+	void inductionAttack();
 
 	//ボスが来るときのムービー
 	void BossStartMovie();
@@ -90,19 +93,19 @@ private:
 	int BulletdurationTime = 0;
 
 	//5連誘導弾のモデル
-	/*Object3d* linkagebulletObj_[ 5 ] = {0};
+	Object3d* linkagebulletObj_[ 5 ] = {0};
 	Model* linkagebulletModel_[ 5 ] = {0};
 	Vector3 playerlen_[5];
 	Vector3 bitweenlen_[5];
-	int islinkageShootFlag_[ 5 ] = {0};
-	int linkageBulletdurationTime_[ 5 ] = {0};
-	int linkageCoolTimer_[ 5 ] = { 0 };
-	bool issampleFlag = false;*/
+	int islinkageShootFlag_[ 5 ] = {0,0,0,0,0};
+	int linkageBulletdurationTime_[ 5 ] = {0,0,0,0,0};
+	int linkageCoolTimer_ = 0;
+	int isLinkageMoveFlag = 0;
+	int isdurationShootFlag = 0;
 
 
 	//魔導兵の移動
 	int isMoveFlag_ = 0;
-
 
 	int isBesideFlag = 0;
 	int isUpFlag = 0;
@@ -111,6 +114,13 @@ private:
 	std::unique_ptr<ParticleManager> gasParticle;
 	int bulletEffTimer_ = 0;
 	int isbulletEffFlag_ = 0;
+
+	//HPフレームゲージ
+	Sprite* hpFlameUI = nullptr;
+	//HPゲージ
+	Sprite* hpUI = nullptr;
+	Vector2 hpPosition;
+
 
 };
 

@@ -52,8 +52,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	Object3d::StaticInitialize(dxCommon->GetDevice());
 	//パーティクル静的初期化
 	ParticleManager::StaticInitialize(dxCommon->GetDevice(), dxCommon->GetCommandList());
-	// FBX関連静的初期化
-	FbxLoader::GetInstance()->Initialize(dxCommon->GetDevice());
 	// ライトの静的初期化
 	LightGroup::StaticInititalize(dxCommon->GetDevice());
 #pragma endregion

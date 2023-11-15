@@ -20,13 +20,16 @@ BossEnemy::~BossEnemy()
 	delete  guidbulletObj_;
 	delete	guidbulletModel_;
 
-	/*for ( int i = 0; i < 5; i++ ){
-		linkagebulletObj_[ i ];
-		linkagebulletModel_[ i ];
-	}*/
-
+	for ( int i = 0; i < 5; i++ ){
+		delete linkagebulletObj_[ i ];
+		delete linkagebulletModel_[i];
+	}
+	
 	delete collPlayerObj_;
 
+	delete hpFlameUI;
+
+	delete hpUI;
 }
 
 void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
@@ -65,18 +68,14 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	guidbulletObj_->wtf.scale = { 1.0f,1.0f,1.0f };
 	guidbulletObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 1.0f,Obj_->wtf.position.z };
 
-	/*for ( int i = 0; i < 5; i++ ){
+	//5連誘導弾
+	for ( int i = 0; i < 5; i++ ){
 		linkagebulletModel_[i] = Model::LoadFromOBJ("collboll");
 		linkagebulletObj_[i] = Object3d::Create();
-		linkagebulletObj_[i]->SetModel(linkagebulletModel_[ i ]);
+		linkagebulletObj_[i]->SetModel(linkagebulletModel_[i]);
 		linkagebulletObj_[i]->wtf.scale = { 1.0f,1.0f,1.0f };
+		linkagebulletObj_[i]->wtf.position = {Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z};
 	}
-	linkagebulletObj_[0]->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 7.0f,Obj_->wtf.position.z };
-	linkagebulletObj_[1]->wtf.position = { Obj_->wtf.position.x + 3.0f,Obj_->wtf.position.y + 3.0f,Obj_->wtf.position.z };
-	linkagebulletObj_[2]->wtf.position = { Obj_->wtf.position.x - 3.0f,Obj_->wtf.position.y + 3.0f,Obj_->wtf.position.z };
-	linkagebulletObj_[3]->wtf.position = { Obj_->wtf.position.x + 2.0f,Obj_->wtf.position.y + 1.0f,Obj_->wtf.position.z };
-	linkagebulletObj_[4]->wtf.position = { Obj_->wtf.position.x - 2.0f,Obj_->wtf.position.y + 1.0f,Obj_->wtf.position.z };*/
-
 
 
 	//自機の当たり判定
@@ -89,6 +88,8 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	gasParticle->LoadTexture("gas.png");
 	gasParticle->Update();
 
+	//UIの初期化(枚数が多いため)
+	UIInitialize();
 }
 
 void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
@@ -97,9 +98,9 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 	collObj_->Update();
 	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z - 1.0f };
 	guidbulletObj_->Update();
-	/*for ( int i = 0; i < 5; i++ ){
+	for ( int i = 0; i < 5; i++ ){
 		linkagebulletObj_[ i ]->Update();
-	}*/
+	}
 	collPlayerObj_->Update();
 	collPlayerObj_->wtf.position = { playerPos};
 	EffUpdate();
@@ -119,55 +120,21 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 	}
 	BossStartMovie();
 
-	//5連誘導弾試し打ち
-	/*if ( input_->PushKey(DIK_2) ){
-		if ( issampleFlag == false){
-			issampleFlag = true;
-		}
+	if ( input_->TriggerKey(DIK_4) )
+	{
+		hpPosition.x -= 10.0f;//倍ダメ
+		hpUI->SetPozition(hpPosition);
 	}
 
-	for ( int i = 0; i < 5; i++ ){
-		if ( issampleFlag == true )
-		{
-			linkageCoolTimer_[i]++;
-		}
-
-		if ( linkageCoolTimer_[i] == 30 + i * 40 )
-		{
-			playerlen_[i] = collPlayerObj_->wtf.position - linkagebulletObj_[i]->wtf.position;
-			playerlen_[i].nomalize();
-			islinkageShootFlag_[ i ] = 1;
-		}
-
-		if ( islinkageShootFlag_[ i ] == 1){
-			linkageBulletdurationTime_[i]++;
-
-			linkagebulletObj_[ i ]->wtf.position += playerlen_[i];
-			bitweenlen_[i] = playerlen_[i];
-			bitweenlen_[i] *= 0.1f;
-		}
-		else
-		{
-			linkagebulletObj_[i]->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 7.0f,Obj_->wtf.position.z };
-		}
-
-		if ( linkageBulletdurationTime_[i] >= 60.0f )
-		{
-			linkageBulletdurationTime_[ i ] = 0;
-			islinkageShootFlag_[ i ] = 0;
-		}
-
-	}
-	*/
-
-
+	//5連誘導弾
+	inductionAttack();
 
 	if ( isBesideFlag >= 4 ){
 		SwAtTimer++;
 	}
 	//ボス登場からの攻撃
 	if ( isBesideFlag == 6){
-
+		//簡単な移動
 		if (isMoveFlag_ == 0){
 			Obj_->wtf.position.x -= 0.04f;
 			if ( Obj_->wtf.position.x <= -10.0f ){
@@ -183,39 +150,16 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 			}
 		}
 
-
-
+		//攻撃
 		if ( SwAtTimer >= 100 && SwAtTimer <= 130 ){
 			if (HP>=1){
 				Obj_->SetModel(ModelAt_);
 				bikSpinTimer = 6;
+				isdurationShootFlag = 1;
 			}
 		}
 		else{
 			bikSpinTimer++;
-		}
-
-		//誘導弾
-		if ( SwAtTimer == 130 )
-		{
-			playerlen = collPlayerObj_->wtf.position - guidbulletObj_->wtf.position;
-			playerlen.nomalize();
-			isShootFlag = true;
-		}
-
-		//誘導弾
-		if ( isShootFlag == true )
-		{
-			BulletdurationTime++;
-
-			guidbulletObj_->wtf.position += playerlen;
-			bitweenlen = playerlen;
-			bitweenlen *= 0.1f;
-		}
-		else{guidbulletObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 1.0f,Obj_->wtf.position.z};}
-		if ( BulletdurationTime >= 60.0f ){
-			BulletdurationTime = 0;
-			isShootFlag = false;
 		}
 
 		if ( SwAtTimer >= 240 ){SwAtTimer = 0;}
@@ -234,7 +178,8 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
 	ImGui::Text("SwAtTimer:%d",SwAtTimer);
-
+	ImGui::Text("issampleFlag:%d",isdurationShootFlag);
+	ImGui::Text("linkageCoolTimer_:%d",linkageCoolTimer_);
 
 	ImGui::End();
 
@@ -246,15 +191,51 @@ void BossEnemy::Draw()
 	if ( isGameStartTimer >= 200 ){
 		if ( HP >= 1 ){
 			Obj_->Draw();
-			if ( isShootFlag == true ){guidbulletObj_->Draw();}
-
+			for ( int i = 0; i < 5; i++ ){
+				if ( isdurationShootFlag == 1 ){linkagebulletObj_[ i ]->Draw();}
+			}
 		}
 
-		/*for ( int i = 0; i < 5; i++ ){
-			linkagebulletObj_[ i ]->Draw();
-		}*/
+		
 	}
 
+}
+
+void BossEnemy::UIInitialize()
+{
+	//HPフレーム
+	hpFlameUI = new Sprite();
+	hpFlameUI->Initialize(spriteCommon);
+	hpFlameUI->SetPozition({ 0,0 });
+	hpFlameUI->SetSize({ 1280.0f, 720.0f });
+
+	//HPゲージ
+	hpUI = new Sprite();
+	hpUI->Initialize(spriteCommon);
+	hpPosition = hpUI->GetPosition();
+	hpUI->SetPozition(hpPosition);
+	hpUI->SetSize({ 1280.0f, 720.0f });
+
+
+	//画像読み込み
+	//HPゲージ
+	spriteCommon->LoadTexture(33,"bosshpFlame.png");
+	hpFlameUI->SetTextureIndex(33);
+
+	//HPの裏の黒い部分
+	spriteCommon->LoadTexture(34,"bosshp.png");
+	hpUI->SetTextureIndex(34);
+
+}
+
+void BossEnemy::UIDraw()
+{
+	//HP関連
+	if ( isGameStartTimer >= 180 )
+	{
+		hpUI->Draw();
+		hpFlameUI->Draw();
+	}
 }
 
 void BossEnemy::EffUpdate()
@@ -319,6 +300,142 @@ void BossEnemy::EffDraw()
 Vector3 BossEnemy::GetWorldPosition()
 {
 	return Vector3();
+}
+
+void BossEnemy::inductionAttack()
+{
+	if ( isdurationShootFlag == 1 ){linkageCoolTimer_++;}
+
+	//誘導弾の攻撃前の拡散
+	if ( linkageCoolTimer_ >= 1 && linkageCoolTimer_ <= 30 ){
+		//1発目の誘導弾(一番上)
+		linkagebulletObj_[ 0 ]->wtf.position.y += 0.3f;
+		if ( linkagebulletObj_[ 0 ]->wtf.position.y >= Obj_->wtf.position.y + 3.0f )
+		{
+			linkagebulletObj_[ 0 ]->wtf.position.y = Obj_->wtf.position.y + 3.0f;
+		}
+		//2発目の誘導弾(右上)
+		linkagebulletObj_[ 1 ]->wtf.position.x += 0.3f;
+		if ( linkagebulletObj_[ 1 ]->wtf.position.x >= Obj_->wtf.position.x + 3.0f )
+		{
+			linkagebulletObj_[ 1 ]->wtf.position.x = Obj_->wtf.position.x + 3.0f;
+		}
+		linkagebulletObj_[ 1 ]->wtf.position.y += 0.1f;
+		if ( linkagebulletObj_[ 1 ]->wtf.position.y >= Obj_->wtf.position.y + 1.0f )
+		{
+			linkagebulletObj_[ 1 ]->wtf.position.y = Obj_->wtf.position.y + 1.0f;
+		}
+		//3発目の誘導弾(左上)
+		linkagebulletObj_[ 2 ]->wtf.position.x -= 0.3f;
+		if ( linkagebulletObj_[ 2 ]->wtf.position.x <= Obj_->wtf.position.x - 3.0f )
+		{
+			linkagebulletObj_[ 2 ]->wtf.position.x = Obj_->wtf.position.x - 3.0f;
+		}
+		linkagebulletObj_[ 2 ]->wtf.position.y += 0.1f;
+		if ( linkagebulletObj_[ 2 ]->wtf.position.y >= Obj_->wtf.position.y + 1.0f )
+		{
+			linkagebulletObj_[ 2 ]->wtf.position.y = Obj_->wtf.position.y + 1.0f;
+		}
+		//4発目の誘導弾(右下)
+		linkagebulletObj_[ 3 ]->wtf.position.x += 0.1f;
+		if ( linkagebulletObj_[ 3 ]->wtf.position.x >= Obj_->wtf.position.x + 1.0f )
+		{
+			linkagebulletObj_[ 3 ]->wtf.position.x = Obj_->wtf.position.x + 1.0f;
+		}
+		linkagebulletObj_[ 3 ]->wtf.position.y -= 0.1f;
+		if ( linkagebulletObj_[ 3 ]->wtf.position.y <= Obj_->wtf.position.y - 1.0f )
+		{
+			linkagebulletObj_[ 3 ]->wtf.position.y = Obj_->wtf.position.y - 1.0f;
+		}
+		//5発目の誘導弾(左下)
+		linkagebulletObj_[ 4 ]->wtf.position.x -= 0.1f;
+		if ( linkagebulletObj_[ 4 ]->wtf.position.x <= Obj_->wtf.position.x - 1.0f )
+		{
+			linkagebulletObj_[ 4 ]->wtf.position.x = Obj_->wtf.position.x - 1.0f;
+		}
+		linkagebulletObj_[ 4 ]->wtf.position.y -= 0.1f;
+		if ( linkagebulletObj_[ 4 ]->wtf.position.y <= Obj_->wtf.position.y - 1.0f )
+		{
+			linkagebulletObj_[ 4 ]->wtf.position.y = Obj_->wtf.position.y - 1.0f;
+		}
+
+	}
+
+	//5連誘導弾の自機ターゲット
+	if ( linkageCoolTimer_ == 30 )
+	{
+		playerlen_[ 0 ] = collPlayerObj_->wtf.position - linkagebulletObj_[ 0 ]->wtf.position;
+		playerlen_[ 0 ].nomalize();
+		islinkageShootFlag_[ 0 ] = 1;
+	}
+	else if ( linkageCoolTimer_ == 50 )
+	{
+		playerlen_[ 1 ] = collPlayerObj_->wtf.position - linkagebulletObj_[ 1 ]->wtf.position;
+		playerlen_[ 1 ].nomalize();
+		islinkageShootFlag_[ 1 ] = 1;
+	}
+	else if ( linkageCoolTimer_ == 70 )
+	{
+		playerlen_[ 2 ] = collPlayerObj_->wtf.position - linkagebulletObj_[ 2 ]->wtf.position;
+		playerlen_[ 2 ].nomalize();
+		islinkageShootFlag_[ 2 ] = 1;
+	}
+	else if ( linkageCoolTimer_ == 90 )
+	{
+		playerlen_[ 3 ] = collPlayerObj_->wtf.position - linkagebulletObj_[ 3 ]->wtf.position;
+		playerlen_[ 3 ].nomalize();
+		islinkageShootFlag_[ 3 ] = 1;
+	}
+	else if ( linkageCoolTimer_ == 110 )
+	{
+		playerlen_[ 4 ] = collPlayerObj_->wtf.position - linkagebulletObj_[ 4 ]->wtf.position;
+		playerlen_[ 4 ].nomalize();
+		islinkageShootFlag_[ 4 ] = 1;
+	}
+
+	//5連誘導弾の発射
+	for ( int i = 0; i < 4; i++ )
+	{
+		if ( islinkageShootFlag_[ i ] == 1 )
+		{
+			linkageBulletdurationTime_[ i ]++;
+
+			linkagebulletObj_[ i ]->wtf.position += playerlen_[ i ];
+			bitweenlen_[ i ] = playerlen_[ i ];
+			bitweenlen_[ i ] *= 0.1f;
+		}
+		else if ( islinkageShootFlag_[ i ] == 0 && linkageCoolTimer_ == 0 )
+		{
+			linkagebulletObj_[ i ]->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z };
+		}
+		if ( linkageBulletdurationTime_[ i ] >= 60.0f )
+		{
+			linkageBulletdurationTime_[ i ] = 0;
+			islinkageShootFlag_[ i ] = 0;
+		}
+	}
+
+	//5発目を打ち切ったら再セット
+	if ( islinkageShootFlag_[ 4 ] == 1 )
+	{
+		linkageBulletdurationTime_[ 4 ]++;
+
+		linkagebulletObj_[ 4 ]->wtf.position += playerlen_[ 4 ];
+		bitweenlen_[ 4 ] = playerlen_[ 4 ];
+		bitweenlen_[ 4 ] *= 0.1f;
+	}
+	else if ( islinkageShootFlag_[ 4 ] == 0 && linkageCoolTimer_ == 0 )
+	{
+		linkagebulletObj_[ 4 ]->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z
+		};
+	}
+	if ( linkageBulletdurationTime_[ 4 ] >= 60.0f )
+	{
+		linkageBulletdurationTime_[ 4 ] = 0;
+		islinkageShootFlag_[ 4 ] = 0;
+		isdurationShootFlag = 0;
+		linkageCoolTimer_ = 0;
+	}
 }
 
 void BossEnemy::BossStartMovie()
