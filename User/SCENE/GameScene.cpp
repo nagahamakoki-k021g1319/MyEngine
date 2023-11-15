@@ -21,7 +21,6 @@ GameScene::~GameScene() {
 	delete armorEnemy_;
 	delete bikeEnemy_;
 	delete bossEnemy_;
-	delete obstacle_;
 	delete skydome;
 	delete skydomeMD;
 
@@ -127,7 +126,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 	ParticleManager::SetCamera(mainCamera);
 	Object3d::SetCamera(mainCamera);
-	FBXObject3d::SetCamera(mainCamera);
 
 	//// ライトの生成
 	//light = LightGroup::Create();
@@ -251,12 +249,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	bossEnemy_->Initialize(dxCommon,input);
 	bossEnemy_->SetPlayer(player_);
 
-	//障害物
-	obstacle_ = new Obstacle();
-	obstacle_->Initialize(dxCommon, input);
-	obstacle_->SetPlayer(player_);
-
-
 	lamp_ = new Lamp();
 	lamp_->Initialize(dxCommon,input);
 	//--------------------//
@@ -335,7 +327,6 @@ void GameScene::Update() {
 		}
 		
 		player_->Update();
-		obstacle_->Update();
 		armorEnemy_->Update(player_->GetWorldPosition(),player_->GetBulletWorldPosition(),player_->isShootFlag);
 		bikeEnemy_->Update(player_->GetSwordLeftWorldPosition(),player_->isCollSWFlag,player_->GetSwordRightWorldPosition(),player_->isCollSWRightFlag,player_->GetWorldPosition());
 		bossEnemy_->Update( player_->GetWorldPosition(), player_->GetBulletWorldPosition());
@@ -429,7 +420,6 @@ void GameScene::Draw() {
 	if (sceneNo_ == SceneNo::Game) {
 		//// 3Dオブクジェクトの描画
 		player_->Draw();
-		obstacle_->Draw();
 		armorEnemy_->Draw();
 		bikeEnemy_->Draw();
 		bossEnemy_->Draw();
@@ -470,6 +460,7 @@ void GameScene::Draw() {
 		armorEnemy_->EffDraw();
 		bikeEnemy_->EffDraw();
 		bossEnemy_->EffDraw();
+		bossEnemy_->UIDraw();
 		player_->UIDraw();
 	}
 

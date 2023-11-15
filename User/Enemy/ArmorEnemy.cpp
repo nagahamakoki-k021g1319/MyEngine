@@ -43,7 +43,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		Modelst_[i] = Model::LoadFromOBJ("armorenemyst");
 
 		Obj_[i] = Object3d::Create();
-		Obj_[i]->SetModel(Modelst_[ 0 ]);
+		Obj_[i]->SetModel(Modelst_[i]);
 		Obj_[i]->wtf.scale = { 0.4f,0.4f,0.4f };
 		
 		//ポリゴン爆散の情報                 大きさ 回転  飛ぶ量 

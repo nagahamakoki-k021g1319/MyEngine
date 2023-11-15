@@ -202,9 +202,6 @@
     <ClCompile Include="User\Enemy.cpp">
       <Filter>user\ソース</Filter>
     </ClCompile>
-    <ClCompile Include="User\Obstacle.cpp">
-      <Filter>user\ソース</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\MATH\SplinePosition.cpp">
       <Filter>Engine\ソースファイル\MATH</Filter>
     </ClCompile>
@@ -310,9 +307,6 @@
       <Filter>Engine\ヘッダーファイル\3D</Filter>
     </ClInclude>
     <ClInclude Include="User\Enemy.h">
-      <Filter>user\ヘッダー</Filter>
-    </ClInclude>
-    <ClInclude Include="User\Obstacle.h">
       <Filter>user\ヘッダー</Filter>
     </ClInclude>
     <ClInclude Include="Engine\MATH\SplinePosition.h">

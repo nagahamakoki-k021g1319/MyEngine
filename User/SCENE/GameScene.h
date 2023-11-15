@@ -16,7 +16,6 @@
 
 #include "Player.h"
 #include "Enemy.h"
-#include "Obstacle.h"
 #include "Enemy/ArmorEnemy.h"
 #include "Enemy/BikeEnemy.h"
 #include "Enemy/BossEnemy.h"
@@ -120,7 +119,6 @@ private:	//メンバ変数
 	BossEnemy* bossEnemy_ = nullptr;
 
 	//障害物
-	Obstacle* obstacle_ = nullptr;
 	Lamp* lamp_ = nullptr;
 	//--------------------//
 

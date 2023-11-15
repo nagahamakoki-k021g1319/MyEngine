@@ -99,11 +99,6 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	camera = new Camera(WinApp::window_width,WinApp::window_height);
 
 
-	// デバイスをセット
-	FBXObject3d::SetDevice(dxCommon->GetDevice());
-	// グラフィックスパイプライン生成
-	FBXObject3d::CreateGraphicsPipeline();
-
 	//自機
 	Model_ = Model::LoadFromOBJ("bik");
 	ModelBefo_ = Model::LoadFromOBJ("bik2");
