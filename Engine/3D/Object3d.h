@@ -188,7 +188,7 @@ public: // メンバ関数
 	void SetColor(Vector3 color_) {color = color_;}
 
 	/*static void SetLight(LightGroup* light) {
-		Object3d::light = light;
+		Object3d::light_ = light;
 	}*/
 
 	Vector3 GetWorldPosition();
@@ -215,9 +215,7 @@ private: // メンバ変数
 	ConstBufferPolygonExplosion ConstMapPolygon_;
 
 	//// ライト
-	//static LightGroup* light;
-	//// コマンドリスト
-	//ID3D12GraphicsCommandList* ScmdList;
+	//static LightGroup* light_;
 
 	//モデル
 	Model* model = nullptr;

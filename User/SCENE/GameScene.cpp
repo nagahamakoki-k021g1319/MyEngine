@@ -58,7 +58,7 @@ GameScene::~GameScene() {
 	delete bbout3;
 
 	// ライトの解放
-	delete light;
+	/*delete light;*/
 
 }
 

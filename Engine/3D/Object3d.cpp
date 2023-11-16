@@ -30,7 +30,7 @@ Vector3 Object3d::up = { 0, 1, 0 };
 float Object3d::focalLengs = 50.0f;
 
 Camera* Object3d::camera = nullptr;
-//LightGroup* Object3d::light = nullptr;
+//LightGroup* Object3d::light_ = nullptr;
 
 Object3d::Object3d() {
 
@@ -256,12 +256,12 @@ void Object3d::InitializeGraphicsPipeline()
 	/*CD3DX12_ROOT_PARAMETER rootparams[2];
 	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[1].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);*/
-	CD3DX12_ROOT_PARAMETER rootparams[ 4 ];
+	CD3DX12_ROOT_PARAMETER rootparams[4];
 	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[2].InitAsConstantBufferView(2, 0 ,D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[3].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
-	/*rootparams[4].InitAsConstantBufferView(3,0,D3D12_SHADER_VISIBILITY_ALL);*/
+	//rootparams[4].InitAsConstantBufferView(3,0,D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = CD3DX12_STATIC_SAMPLER_DESC(0);
@@ -437,7 +437,7 @@ void Object3d::Draw()
 	//// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(2,constBuffB2->GetGPUVirtualAddress());
 
-	/*light->Draw(ScmdList,3);*/
+	/*light_->Draw(cmdList.Get(),3);*/
 	
 	//モデルを描画
 	model->Draw(cmdList.Get(), 1);

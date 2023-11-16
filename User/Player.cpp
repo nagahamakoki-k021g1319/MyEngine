@@ -212,10 +212,10 @@ void Player::Update() {
 	GameStartMovie();
 
 	//ダメージを受けた時のHP減少
-	if ( input_->TriggerKey(DIK_4) ){
-		hpgreenPosition.x -= 20.0f;
-		hpgreenUI->SetPozition(hpgreenPosition);
-	}
+	//if ( input_->TriggerKey(DIK_4) ){
+	//	hpgreenPosition.x -= 20.0f;
+	//	hpgreenUI->SetPozition(hpgreenPosition);
+	//}
 
 
 	//プレイヤーの行動一覧
@@ -270,7 +270,7 @@ void Player::Update() {
 	if ( isCamShake == 1 ){DamageCamShake();}
 	
 
-	if ( input_->PushKey(DIK_P)){isClearFlag = true;}
+	//ゲームクリア時に自機が前に進む
 	if ( isClearFlag == true ){
 		Obj_->wtf.position.z += 0.5f;
 		isclearFlagTimer++;
@@ -278,11 +278,9 @@ void Player::Update() {
 	if ( isclearFlagTimer >= 100 ){isclearFlagTimer = 100;}
 
 	//ボス登場時のカメラ
-	if ( input_->TriggerKey(DIK_R) ){isCameraBehavior = 1;}
+	if ( input_->TriggerKey(DIK_4) ){isCameraBehavior = 1;}
 	if ( isCameraBehavior == 1 ){CameraBehaviorTimer++;}
-
-	
-	if ( isCameraBehavior == 1 && isRoundFlag == 2 )
+	if ( isCameraBehavior == 1 && isRoundFlag == 4 )
 	{
 		if ( CameraBehaviorTimer <= 70 ){
 			camera->wtf.position.z -= 0.2f;
@@ -297,7 +295,7 @@ void Player::Update() {
 			isCameraBehavior = 2;
 		}
 	}
-	if ( isCameraBehavior == 2 && isRoundFlag == 2 ){
+	if ( isCameraBehavior == 2 && isRoundFlag == 4 ){
 		CameraBehaviorTimer2++;
 		if ( CameraBehaviorTimer2 >= 80)
 		{
@@ -319,7 +317,7 @@ void Player::Update() {
 		}
 	}
 
-	//ラウンド変化
+	//ラウンド変化(2ラウンド目)
 	if ( input_->TriggerKey(DIK_1) ){
 		isRoundFlag = 1;
 	}
@@ -345,6 +343,34 @@ void Player::Update() {
 
 	}
 
+	//ラウンド変化(3ラウンド目)
+	if ( input_->TriggerKey(DIK_2) ){
+		isRoundFlag = 3;
+	}
+
+	if ( isRoundFlag == 3 )
+	{
+		camera->wtf.position.z -= 0.3f;
+		if ( incidenceCamera2 == 0 )
+		{
+			if ( camera->wtf.position.z <= -10.0f )
+			{
+				camera->wtf.position.z = -10.0f;
+				incidenceCamera2 = 1;
+			}
+		}
+		else if ( incidenceCamera2 == 1 )
+		{
+			camera->wtf.position.z += 0.5f;
+			if ( camera->wtf.position.z >= 0.0f )
+			{
+				camera->wtf.position.z = 0.0f;
+				incidenceCamera2 = 2;
+				isRoundFlag = 4;
+			}
+		}
+
+	}
 	
 
 	/*if ( input_->PushKey(DIK_1) ){camera->wtf.rotation.y -= 0.08f;}
