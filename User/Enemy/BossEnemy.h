@@ -42,6 +42,9 @@ public:
 	//5連誘導弾
 	void inductionAttack();
 
+	//メテオフォール
+	void MeteorAttack();
+
 	//ボスが来るときのムービー
 	void BossStartMovie();
 
@@ -103,6 +106,12 @@ private:
 	int isLinkageMoveFlag = 0;
 	int isdurationShootFlag = 0;
 
+	//メテオフォールのモデル
+	Object3d* MeteorObj_[ 5 ] = {0};
+	Model* MeteorModel_[ 5 ] = {0};
+	bool isMeteorFlag = false;
+	int MeteorCoolTime = 0;
+	bool isFollFlag = false;
 
 	//魔導兵の移動
 	int isMoveFlag_ = 0;
@@ -118,6 +127,7 @@ private:
 	//HPフレームゲージ
 	Sprite* hpFlameUI = nullptr;
 	//HPゲージ
+	Sprite* hpbUI = nullptr;
 	Sprite* hpUI = nullptr;
 	Vector2 hpPosition;
 

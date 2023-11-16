@@ -24,12 +24,18 @@ BossEnemy::~BossEnemy()
 		delete linkagebulletObj_[ i ];
 		delete linkagebulletModel_[i];
 	}
-	
+
+	for ( int i = 0; i < 5; i++ )
+	{
+		delete MeteorObj_[ i ];
+		delete MeteorModel_[ i ];
+	}
+
 	delete collPlayerObj_;
 
 	delete hpFlameUI;
-
 	delete hpUI;
+	delete hpbUI;
 }
 
 void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
@@ -78,6 +84,16 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	}
 
 
+	//メテオフォール
+	for ( int i = 0; i < 5; i++ )
+	{
+		MeteorModel_[ i ] = Model::LoadFromOBJ("collboll");
+		MeteorObj_[ i ] = Object3d::Create();
+		MeteorObj_[ i ]->SetModel(linkagebulletModel_[ i ]);
+		MeteorObj_[ i ]->wtf.scale = { 1.0f,1.0f,1.0f };
+		MeteorObj_[ i ]->wtf.position = { -6.0f + i * 3.0f,-1,30};
+	}
+
 	//自機の当たり判定
 	collPlayerObj_ = Object3d::Create();
 	collPlayerObj_->SetModel(collModel_);
@@ -98,9 +114,8 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 	collObj_->Update();
 	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z - 1.0f };
 	guidbulletObj_->Update();
-	for ( int i = 0; i < 5; i++ ){
-		linkagebulletObj_[ i ]->Update();
-	}
+	for ( int i = 0; i < 5; i++ ){linkagebulletObj_[ i ]->Update();}
+	for ( int i = 0; i < 5; i++ ){MeteorObj_[ i ]->Update();}
 	collPlayerObj_->Update();
 	collPlayerObj_->wtf.position = { playerPos};
 	EffUpdate();
@@ -120,11 +135,8 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 	}
 	BossStartMovie();
 
-	if ( input_->TriggerKey(DIK_4) )
-	{
-		hpPosition.x -= 10.0f;//倍ダメ
-		hpUI->SetPozition(hpPosition);
-	}
+	//メテオフォール
+	MeteorAttack();
 
 	//5連誘導弾
 	inductionAttack();
@@ -150,9 +162,9 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 			}
 		}
 
-		//攻撃
+		//攻撃1
 		if ( SwAtTimer >= 100 && SwAtTimer <= 130 ){
-			if (HP>=1){
+			if ( hpPosition.x <= 279 ){
 				Obj_->SetModel(ModelAt_);
 				bikSpinTimer = 6;
 				isdurationShootFlag = 1;
@@ -162,23 +174,88 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 			bikSpinTimer++;
 		}
 
-		if ( SwAtTimer >= 240 ){SwAtTimer = 0;}
+		//攻撃2
+		if ( SwAtTimer >= 330 && SwAtTimer <= 360 )
+		{
+			if ( hpPosition.x <= 279 )
+			{
+				Obj_->SetModel(ModelAt_);
+				bikSpinTimer = 6;
+				isdurationShootFlag = 1;
+			}
+		}
+		else
+		{
+			bikSpinTimer++;
+		}
+
+		//攻撃3
+		if ( SwAtTimer >= 560 && SwAtTimer <= 590 )
+		{
+			if ( hpPosition.x <= 279 )
+			{
+				Obj_->SetModel(ModelAt_);
+				bikSpinTimer = 6;
+				isMeteorFlag = true;
+			}
+		}
+		else
+		{
+			bikSpinTimer++;
+		}
+
+		if ( SwAtTimer >= 1100 ){SwAtTimer = 0;}
 
 	}
 
-	if ( HP >= 1 ){
+	//当たり判定(プレイヤー弾からボス)
+	if ( hpPosition.x <= 279 ){
 		if ( coll.CircleCollision(playerBpos,Obj_->wtf.position,1.0f,1.0f) ){
-			HP--;
-			player_->isClearFlag = true;
+			hpPosition.x += 30.0f;//4倍ダメ
+			hpUI->SetPozition(hpPosition);
 		}
 	}
+	//当たり判定(誘導弾からプレイヤー)
+	if ( hpPosition.x <= 279 )
+	{
+		for ( int i = 0; i < 5; i++ )
+		{
+			if ( coll.CircleCollision(linkagebulletObj_[ i ]->wtf.position,collPlayerObj_->wtf.position,0.6f,0.6f) )
+			{
+				player_->isCamShake = 1;
+				player_->camShakeTimer = player_->camShakeLimit;
+				player_->hpgreenPosition.x -= 10.0f;//倍ダメ
+				player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
+			}
+		}
+	}
+	//当たり判定(メテオフォールからプレイヤー)
+	if ( hpPosition.x <= 279 )
+	{
+		for ( int i = 0; i < 5; i++ )
+		{
+			if ( coll.CircleCollision(MeteorObj_[ i ]->wtf.position,collPlayerObj_->wtf.position,0.6f,0.6f) )
+			{
+				player_->isCamShake = 1;
+				player_->camShakeTimer = player_->camShakeLimit;
+				player_->hpgreenPosition.x -= 10.0f;//倍ダメ
+				player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
+			}
+		}
+	}
+
+
+
+
+	//ボスが死んだらゲームクリア
+	if ( hpPosition.x >= 280 ){player_->isClearFlag = true;}
 
 
 	ImGui::Begin("BossEnemy");
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
-	ImGui::Text("SwAtTimer:%d",SwAtTimer);
-	ImGui::Text("issampleFlag:%d",isdurationShootFlag);
+	ImGui::Text("HPPosion:%f,%f",hpPosition.x,hpPosition.y);
+	ImGui::Text("MeteorCoolTime:%d",MeteorCoolTime);
 	ImGui::Text("linkageCoolTimer_:%d",linkageCoolTimer_);
 
 	ImGui::End();
@@ -187,15 +264,22 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 
 void BossEnemy::Draw()
 {
-	collPlayerObj_->Draw();
+	/*collPlayerObj_->Draw();*/
 	if ( isGameStartTimer >= 200 ){
-		if ( HP >= 1 ){
+		if ( hpPosition.x <= 279 ){
 			Obj_->Draw();
 			for ( int i = 0; i < 5; i++ ){
 				if ( isdurationShootFlag == 1 ){linkagebulletObj_[ i ]->Draw();}
 			}
+			for ( int i = 0; i < 5; i++ )
+			{
+				if ( isMeteorFlag == true )
+				{
+					MeteorObj_[ i ]->Draw();
+				}
+			}
 		}
-
+		
 		
 	}
 
@@ -216,25 +300,35 @@ void BossEnemy::UIInitialize()
 	hpUI->SetPozition(hpPosition);
 	hpUI->SetSize({ 1280.0f, 720.0f });
 
+	//HPゲージ(下の黒い部分)
+	hpbUI = new Sprite();
+	hpbUI->Initialize(spriteCommon);
+	hpbUI->SetPozition({ 0,0 });
+	hpbUI->SetSize({ 1280.0f, 720.0f });
 
 	//画像読み込み
-	//HPゲージ
+	//HPフレーム
 	spriteCommon->LoadTexture(33,"bosshpFlame.png");
 	hpFlameUI->SetTextureIndex(33);
 
-	//HPの裏の黒い部分
+	//HPゲージ
 	spriteCommon->LoadTexture(34,"bosshp.png");
 	hpUI->SetTextureIndex(34);
 
+	//HPの裏の黒い部分
+	spriteCommon->LoadTexture(35,"bosshpb.png");
+	hpbUI->SetTextureIndex(35);
 }
 
 void BossEnemy::UIDraw()
 {
 	//HP関連
-	if ( isGameStartTimer >= 180 )
-	{
-		hpUI->Draw();
-		hpFlameUI->Draw();
+	if ( isGameStartTimer >= 180 ){
+		if ( isBesideFlag >= 4 ){
+			hpbUI->Draw();
+			hpUI->Draw();
+			hpFlameUI->Draw();
+		}
 	}
 }
 
@@ -435,6 +529,58 @@ void BossEnemy::inductionAttack()
 		islinkageShootFlag_[ 4 ] = 0;
 		isdurationShootFlag = 0;
 		linkageCoolTimer_ = 0;
+	}
+}
+
+void BossEnemy::MeteorAttack()
+{
+	for ( int i = 0; i < 5; i++ )
+	{
+		if ( isMeteorFlag == true )
+		{
+			MeteorObj_[ i ]->wtf.position.z += 10.0f;
+			if ( MeteorObj_[ i ]->wtf.position.z >= 300.0f )
+			{
+				isFollFlag = true;
+				MeteorObj_[ i ]->wtf.position.z = 300.0f;
+			}
+		}
+	}
+
+	if ( isFollFlag == true )
+	{
+		MeteorCoolTime++;
+	}
+
+	if ( MeteorCoolTime >= 30 )
+	{
+		MeteorObj_[ 0 ]->wtf.position.z -= 15.0f;
+	}
+	if ( MeteorCoolTime >= 70 )
+	{
+		MeteorObj_[ 2 ]->wtf.position.z -= 15.0f;
+	}
+	if ( MeteorCoolTime >= 110 )
+	{
+		MeteorObj_[ 4 ]->wtf.position.z -= 15.0f;
+	}
+	if ( MeteorCoolTime >= 150 )
+	{
+		MeteorObj_[ 1 ]->wtf.position.z -= 15.0f;
+	}
+	if ( MeteorCoolTime >= 190 )
+	{
+		MeteorObj_[ 3 ]->wtf.position.z -= 15.0f;
+	}
+	if ( MeteorCoolTime >= 400 )
+	{
+		isMeteorFlag = false;
+		isFollFlag = false;
+		MeteorCoolTime = 0;
+		for ( int i = 0; i < 5; i++ )
+		{
+			MeteorObj_[ i ]->wtf.position = { -6.0f + i * 3.0f,-1,30 };
+		}
 	}
 }
 

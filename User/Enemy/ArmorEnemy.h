@@ -58,57 +58,57 @@ private:
 
 	//待機(魔導兵)
 	//maehito usirohito
-	Object3d* Obj_[ 2 ] = { nullptr};
-	Model* Model_[ 2 ] = { nullptr };
-	Model* Modelst_[ 2 ] = { nullptr };
+	Object3d* Obj_[ 4 ] = { nullptr};
+	Model* Model_[ 4 ] = { nullptr };
+	Model* Modelst_[ 4 ] = { nullptr };
 
 	//敵の生存フラグ
-	int isAliveFlag_[2] = {0};
+	int isAliveFlag_[4] = {0};
 
 	//当たり判定のモデル
-	Object3d* collObj_[ 2 ] = {nullptr};
-	Model* collModel_[ 2 ] = { nullptr };
-	int isCollFlag_[ 2 ] = {0};
+	Object3d* collObj_[ 4 ] = {nullptr};
+	Model* collModel_[ 4 ] = { nullptr };
+	int isCollFlag_[ 4 ] = {0};
 	//ポリゴン爆さん
-	int isExpolFlag_[ 2 ] = { 0 };
-	float ExpolTimer_[ 2 ] = { 0 };
-	float ExpolMT_[ 2 ] = { 40 };
-	float polygon_[ 2 ];
+	int isExpolFlag_[ 4 ] = { 0 };
+	float ExpolTimer_[ 4 ] = { 0 };
+	float ExpolMT_[ 4 ] = { 40,40,40,40};
+	float polygon_[ 4 ];
 
 	//体力(一旦0で初期化のタイミングで設定する)
-	int HP_[2] = {0};
+	int HP_[4] = {0};
 
 	//大砲の弾
-	Object3d* bulletObj_[ 2 ] = {0};
-	Model* bulletModel_[ 2 ] = { 0 };
-	int isShootFlag_[ 2 ] = { 0 };
-	int BulletdurationTime_[ 2 ] = { 0 };
-	int BulletCoolTime_[ 2 ] = { 0 };
-	Vector3 playerlen_[2];
-	Vector3 bitweenlen_[2];
+	Object3d* bulletObj_[ 4 ] = {0};
+	Model* bulletModel_[ 4 ] = { 0 };
+	int isShootFlag_[ 4 ] = { 0 };
+	int BulletdurationTime_[ 4 ] = { 0 };
+	int BulletCoolTime_[ 4 ] = { 0 };
+	Vector3 playerlen_[4];
+	Vector3 bitweenlen_[4];
 
 	//魔導兵の移動
-	int isMoveFlag_[ 2 ] = {0};
-	int isbesideFlag_[ 2 ] = {0};
+	int isMoveFlag_[ 4] = {0};
+	int isbesideFlag_[ 4 ] = {0};
 
 	//移動制限
 	//右
-	int moveRLimit_[ 2 ] = {10,0};
+	int moveRLimit_[ 4 ] = {10,0,10,0};
 	//左
-	int moveLLimit_[ 2 ] = {3,-5};
+	int moveLLimit_[ 4 ] = {3,-5,-3,-5};
 
 	//自機の当たり判定
 	Object3d* collObj3_ = nullptr;
 
 	//パーティクル
 	//地面のズサ
-	std::unique_ptr<ParticleManager> gasParticle_[2];
-	std::unique_ptr<ParticleManager> gasParticle2_[ 2 ];
+	std::unique_ptr<ParticleManager> gasParticle_[4];
+	std::unique_ptr<ParticleManager> gasParticle2_[4];
 	//背中の噴射ガス
-	std::unique_ptr<ParticleManager> gasParticle3_[ 2 ];
-	std::unique_ptr<ParticleManager> gasParticle4_[ 2 ];
-	int gasEffTimer_[ 2 ] = { 0 };
-	int isgasEffFlag_[ 2 ] = { 0 };
+	std::unique_ptr<ParticleManager> gasParticle3_[4];
+	std::unique_ptr<ParticleManager> gasParticle4_[4];
+	int gasEffTimer_[4] = { 0 };
+	int isgasEffFlag_[4] = { 0 };
 
 	
 };

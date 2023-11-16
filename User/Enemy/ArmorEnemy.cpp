@@ -9,7 +9,7 @@ ArmorEnemy::ArmorEnemy()
 ArmorEnemy::~ArmorEnemy()
 {
 	delete spriteCommon;
-	for ( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 4; i++ )
 	{
 		delete Obj_[i];
 		delete Model_[ i ];
@@ -36,7 +36,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	spriteCommon->Initialize(dxCommon);
 
 
-	for ( int i = 0; i < 2; i++ ){
+	for ( int i = 0; i < 4; i++ ){
 	//雑魚敵(攻撃状態)
 		Model_[i] = Model::LoadFromOBJ("armorenemy");
 		//雑魚敵(待機状態)
@@ -51,20 +51,17 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	}
 	Obj_[ 0 ]->wtf.position = { 10.0f,-2.0f,-10.0f };
 	Obj_[ 1 ]->wtf.position = {-10.0f,-2.0f,-10.0f };
+	Obj_[ 2 ]->wtf.position = { 10.0f,-2.0f,-20.0f };
+	Obj_[ 3 ]->wtf.position = { -10.0f,-2.0f,-20.0f };
 
 	//ここでHP設定
 	HP_[0] = 12;
 	HP_[1] = 12;
-
-	//ここでポリゴン爆散の時間設定
-	ExpolMT_[0] = 40;
-	ExpolMT_[1] = 40;
-
-	
-
+	HP_[2] = 12;
+	HP_[3] = 12;
 
 	//大砲の弾
-	for ( int i = 0; i < 2; i++ ){
+	for ( int i = 0; i < 4; i++ ){
 		bulletModel_[i] = Model::LoadFromOBJ("eneboll");
 		bulletObj_[i] = Object3d::Create();
 		bulletObj_[i]->SetModel(bulletModel_[i]);
@@ -74,7 +71,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	
 
 	//当たり判定のモデル
-	for ( int i = 0; i < 2; i++ ){
+	for ( int i = 0; i < 4; i++ ){
 		collModel_[i] = Model::LoadFromOBJ("collboll");
 		collObj_[i] = Object3d::Create();
 		collObj_[i]->SetModel(collModel_[i]);
@@ -87,7 +84,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	collObj3_->SetModel(collModel_[0]);
 
 	//パーティクル生成
-	for ( int i = 0; i < 2; i++ ){
+	for ( int i = 0; i < 4; i++ ){
 		//エフェクトの情報(地面のズサ)
 		gasParticle_[i] = std::make_unique<ParticleManager>();
 		gasParticle_[i].get()->Initialize();
@@ -114,7 +111,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFlag)
 {
-	for ( int i = 0; i < 2; i++ ){
+	for ( int i = 0; i < 4; i++ ){
 		if ( isAliveFlag_[ i ] == 0 )
 		{
 			Obj_[ i ]->Update();
@@ -129,7 +126,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	isGameStartTimer++;
 	
 
-	//魔導兵が後ろから登場
+	//魔導兵が後ろから登場(ラウンド1)
 	for ( int i = 0; i < 2; i++ ){
 		if ( isMoveFlag_[ i ] == 0){
 			if ( isGameStartTimer >= 200 ){Obj_[ i ]->wtf.position.z += 0.7f;}
@@ -144,17 +141,68 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 		}
 	}
 
+	//魔導兵が後ろから登場(ラウンド2)
+	if ( player_->isRoundFlag == 0 )
+	{
+		BulletCoolTime_[ 2 ] = 0;
+	}
+	if ( player_->isRoundFlag == 1 )
+	{
+		if ( isMoveFlag_[ 2 ] == 0 )
+		{
+			if ( isGameStartTimer >= 200 )
+			{
+				Obj_[ 2 ]->wtf.position.z += 1.0f;
+			}
+			if ( Obj_[ 2 ]->wtf.position.z <= 20.0f && Obj_[ 2 ]->wtf.position.z >= 15.0f && player_->isRoundFlag == 1 )
+			{
+				BulletCoolTime_[ 2 ] = -50;
+			}
+			if ( Obj_[ 2 ]->wtf.position.z >= 35.0f )
+			{
+				Obj_[ 2 ]->wtf.position.z = 35.0f;
+				isMoveFlag_[ 2 ] = 1;
+			}
+		}
+	}
+
+	//魔導兵が後ろから登場(ラウンド3)
+	if ( player_->isRoundFlag <= 2 )
+	{
+		BulletCoolTime_[ 3 ] = 0;
+	}
+	if ( player_->isRoundFlag == 3 )
+	{
+		if ( isMoveFlag_[3] == 0 )
+		{
+			if ( isGameStartTimer >= 200 )
+			{
+				Obj_[3]->wtf.position.z += 1.0f;
+			}
+			if ( Obj_[ 3 ]->wtf.position.z <= 20.0f && Obj_[ 3 ]->wtf.position.z >= 15.0f && player_->isRoundFlag == 3 )
+			{
+				BulletCoolTime_[ 3 ] = -50;
+			}
+			if ( Obj_[ 3 ]->wtf.position.z >= 35.0f )
+			{
+				Obj_[ 3 ]->wtf.position.z = 35.0f;
+				isMoveFlag_[ 3 ] = 1;
+			}
+		}
+	}
+
+
 	//自機の加減速でバイク兵のZ軸移動
-	for ( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 4; i++ )
 	{
 		if ( isMoveFlag_[ i ] == 1 )
 		{
 			if ( input_->PushKey(DIK_W) ){
-				Obj_[ i ]->wtf.position.z -= 0.06f;
+				Obj_[ i ]->wtf.position.z -= 0.02f;
 			}
 			else if ( input_->PushKey(DIK_S) )
 			{
-				Obj_[ i ]->wtf.position.z += 0.06f;
+				Obj_[ i ]->wtf.position.z += 0.02f;
 			}
 		}
 
@@ -184,12 +232,8 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 
 	}
 
-
-
-	
-
 	//魔導兵のガス噴射
-	for ( int i = 0; i < 2; i++ ){
+	for ( int i = 0; i < 4; i++ ){
 		if ( HP_[i] >= 1 ){
 			isgasEffFlag_[i] = 1;
 		}
@@ -200,7 +244,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	}
 
 	//魔導兵の射撃
-	for ( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 4; i++ )
 	{
 		if ( isGameStartTimer >= 200 && isShootFlag_[i] == 0 )
 		{
@@ -249,7 +293,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	}
 
 	//ポリゴン爆散
-	for ( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 4; i++ )
 	{
 		if ( HP_[i] <= 0 ){
 			isExpolFlag_[i] = 1;
@@ -272,7 +316,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 
 	//当たり判定(プレイヤー弾から魔導兵)
 	if ( playerShootFlag == true){
-		for ( int i = 0; i < 2; i++ ){
+		for ( int i = 0; i < 4; i++ ){
 			if ( HP_[i] >= 1 ) {
 				if ( coll.CircleCollision(playerBpos,collObj_[ i ]->wtf.position,1.0f,1.0f) ) {
 					HP_[i]--;
@@ -283,7 +327,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	}
 
 	//当たり判定(魔導兵弾からプレイヤー)
-	for ( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 4; i++ )
 	{
 		if ( coll.CircleCollision(bulletObj_[i]->wtf.position,collObj3_->wtf.position,0.6f,0.6f) )
 		{
@@ -298,7 +342,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	ImGui::Begin("ArmorEnemy");
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
-	ImGui::Text("BulletCoolTime:%d",BulletCoolTime_[1]);
+	ImGui::Text("BulletCoolTime:%d",BulletCoolTime_[2]);
 	ImGui::Text("HP:%d",ExpolMT_[ 1 ]);
 
 	ImGui::End();
@@ -310,7 +354,7 @@ void ArmorEnemy::Draw()
 
 	//collObj3_->Draw();
 	if ( isGameStartTimer >= 200 ){
-		for ( int i = 0; i < 2; i++ ){
+		for ( int i = 0; i < 4; i++ ){
 			//モデル描画
 			if ( isAliveFlag_[i] == 0 ){
 				Obj_[i]->Draw();
@@ -329,7 +373,7 @@ void ArmorEnemy::Reset()
 
 void ArmorEnemy::EffUpdate()
 {
-	for ( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 4; i++ )
 	{
 		if ( isgasEffFlag_[i] == 1 )
 		{
@@ -501,7 +545,7 @@ void ArmorEnemy::EffSummary4(Vector3 bulletpos4,int num4)
 void ArmorEnemy::EffDraw()
 {
 	if ( isGameStartTimer >= 200 ){
-		for ( int i = 0; i < 2; i++ ){
+		for ( int i = 0; i < 4; i++ ){
 			if ( isgasEffFlag_[i] == 1 ) {
 				if ( isAliveFlag_[i] == 0 ){
 					gasParticle_[i]->Draw();
