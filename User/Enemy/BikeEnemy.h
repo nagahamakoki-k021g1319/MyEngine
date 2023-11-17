@@ -67,6 +67,11 @@ private:
 	int isBikclushFlag_[7] = { 0 };
 	int isBikSpinFlag_[7] = { 0 };
 
+	//敵の生存フラグ(0 生きる,1 死亡)
+	int isAliveFlag_[ 7 ] = { 0};
+	int AliveR2Timer = 0;
+	int AliveR3Timer = 0;
+
 	//体力(一旦0で初期化のタイミングで設定する)
 	int HP_[7] = { 0 };
 

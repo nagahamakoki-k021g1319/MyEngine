@@ -112,8 +112,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFlag)
 {
 	for ( int i = 0; i < 4; i++ ){
-		if ( isAliveFlag_[ i ] == 0 )
-		{
+		if ( isAliveFlag_[ i ] == 0 ){
 			Obj_[ i ]->Update();
 			collObj_[i]->Update();
 			collObj_[i]->wtf.position = {Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + 1.0f,Obj_[i]->wtf.position.z};
@@ -128,15 +127,22 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 
 	//魔導兵が後ろから登場(ラウンド1)
 	for ( int i = 0; i < 2; i++ ){
-		if ( isMoveFlag_[ i ] == 0){
-			if ( isGameStartTimer >= 200 ){Obj_[ i ]->wtf.position.z += 0.7f;}
-			if ( Obj_[ i ]->wtf.position.z <= 20.0f && Obj_[ i ]->wtf.position.z >= 15.0f ){
-				BulletCoolTime_[ i ] = -50 + i * -20;
-			}
-			if ( Obj_[ i ]->wtf.position.z >= 35.0f )
+		if ( isAliveFlag_[ i ] == 0 ){
+			if ( isMoveFlag_[ i ] == 0 )
 			{
-				Obj_[ i ]->wtf.position.z = 35.0f;
-				isMoveFlag_[ i ] = 1;
+				if ( isGameStartTimer >= 200 )
+				{
+					Obj_[ i ]->wtf.position.z += 0.7f;
+				}
+				if ( Obj_[ i ]->wtf.position.z <= 20.0f && Obj_[ i ]->wtf.position.z >= 15.0f )
+				{
+					BulletCoolTime_[ i ] = -50 + i * -20;
+				}
+				if ( Obj_[ i ]->wtf.position.z >= 35.0f )
+				{
+					Obj_[ i ]->wtf.position.z = 35.0f;
+					isMoveFlag_[ i ] = 1;
+				}
 			}
 		}
 	}
@@ -146,22 +152,28 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	{
 		BulletCoolTime_[ 2 ] = 0;
 	}
-	if ( player_->isRoundFlag == 1 )
-	{
-		if ( isMoveFlag_[ 2 ] == 0 )
-		{
-			if ( isGameStartTimer >= 200 )
-			{
-				Obj_[ 2 ]->wtf.position.z += 1.0f;
-			}
-			if ( Obj_[ 2 ]->wtf.position.z <= 20.0f && Obj_[ 2 ]->wtf.position.z >= 15.0f && player_->isRoundFlag == 1 )
-			{
-				BulletCoolTime_[ 2 ] = -50;
-			}
-			if ( Obj_[ 2 ]->wtf.position.z >= 35.0f )
-			{
-				Obj_[ 2 ]->wtf.position.z = 35.0f;
-				isMoveFlag_[ 2 ] = 1;
+	if ( player_->isRoundFlag == 1 ){
+		//ここで描画させるタイマーの起動
+		AliveR2Timer++;
+		if( AliveR2Timer >= 1 && AliveR2Timer <= 2){
+			isAliveFlag_[ 2 ] = 0;
+		}
+
+		//後ろから登場して左右移動
+		if ( isAliveFlag_[2] == 0 ){
+			if ( isMoveFlag_[ 2 ] == 0 ){
+				if ( isGameStartTimer >= 200 ){
+					Obj_[ 2 ]->wtf.position.z += 1.0f;
+				}
+				if ( Obj_[ 2 ]->wtf.position.z <= 20.0f && Obj_[ 2 ]->wtf.position.z >= 15.0f && player_->isRoundFlag == 1 )
+				{
+					BulletCoolTime_[ 2 ] = -50;
+				}
+				if ( Obj_[ 2 ]->wtf.position.z >= 35.0f )
+				{
+					Obj_[ 2 ]->wtf.position.z = 35.0f;
+					isMoveFlag_[ 2 ] = 1;
+				}
 			}
 		}
 	}
@@ -171,145 +183,168 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	{
 		BulletCoolTime_[ 3 ] = 0;
 	}
-	if ( player_->isRoundFlag == 3 )
-	{
-		if ( isMoveFlag_[3] == 0 )
+	if ( player_->isRoundFlag == 3 ){
+		//ここで描画させるタイマーの起動
+		AliveR3Timer++;
+		if ( AliveR3Timer >= 1 && AliveR3Timer <= 2 )
 		{
-			if ( isGameStartTimer >= 200 )
+			isAliveFlag_[ 3 ] = 0;
+		}
+
+		//後ろから登場して左右移動
+		if ( isAliveFlag_[ 3 ] == 0 )
+		{
+			if ( isMoveFlag_[ 3 ] == 0 )
 			{
-				Obj_[3]->wtf.position.z += 1.0f;
-			}
-			if ( Obj_[ 3 ]->wtf.position.z <= 20.0f && Obj_[ 3 ]->wtf.position.z >= 15.0f && player_->isRoundFlag == 3 )
-			{
-				BulletCoolTime_[ 3 ] = -50;
-			}
-			if ( Obj_[ 3 ]->wtf.position.z >= 35.0f )
-			{
-				Obj_[ 3 ]->wtf.position.z = 35.0f;
-				isMoveFlag_[ 3 ] = 1;
+				if ( isGameStartTimer >= 200 )
+				{
+					Obj_[ 3 ]->wtf.position.z += 1.0f;
+				}
+				if ( Obj_[ 3 ]->wtf.position.z <= 20.0f && Obj_[ 3 ]->wtf.position.z >= 15.0f && player_->isRoundFlag == 3 )
+				{
+					BulletCoolTime_[ 3 ] = -50;
+				}
+				if ( Obj_[ 3 ]->wtf.position.z >= 35.0f )
+				{
+					Obj_[ 3 ]->wtf.position.z = 35.0f;
+					isMoveFlag_[ 3 ] = 1;
+				}
 			}
 		}
 	}
 
 
 	//自機の加減速でバイク兵のZ軸移動
-	for ( int i = 0; i < 4; i++ )
-	{
-		if ( isMoveFlag_[ i ] == 1 )
-		{
-			if ( input_->PushKey(DIK_W) ){
-				Obj_[ i ]->wtf.position.z -= 0.02f;
+	for ( int i = 0; i < 4; i++ ){
+		if ( isAliveFlag_[ i ] == 0 ){
+			if ( isMoveFlag_[ i ] == 1 ){
+				if ( input_->PushKey(DIK_W) )
+				{
+					Obj_[ i ]->wtf.position.z -= 0.02f;
+				}
+				else if ( input_->PushKey(DIK_S) )
+				{
+					Obj_[ i ]->wtf.position.z += 0.02f;
+				}
 			}
-			else if ( input_->PushKey(DIK_S) )
-			{
-				Obj_[ i ]->wtf.position.z += 0.02f;
-			}
-		}
 
-		//定位置についたら魔導兵が左右に少しづつ動く
-		if ( isMoveFlag_[i] == 1 )
-		{
-			if ( isbesideFlag_[ i ] == 0 )
+			//定位置についたら魔導兵が左右に少しづつ動く
+			if ( isMoveFlag_[ i ] == 1 )
 			{
-				Obj_[i]->wtf.position.x -= 0.02f;
+				if ( isbesideFlag_[ i ] == 0 )
+				{
+					Obj_[ i ]->wtf.position.x -= 0.02f;
+				}
+				else
+				{
+					Obj_[ i ]->wtf.position.x += 0.01f;
+				}
 			}
-			else
+			//移動制限
+			if ( isMoveFlag_[ i ] == 1 && Obj_[ i ]->wtf.position.x <= moveLLimit_[ i ] )
 			{
-				Obj_[i]->wtf.position.x += 0.01f;
+				//左に移動制限
+				isbesideFlag_[ i ] = 1;
 			}
-		}
-		//移動制限
-		if ( isMoveFlag_[ i ] == 1 && Obj_[i]->wtf.position.x <= moveLLimit_[ i ] )
-		{
-			//左に移動制限
-			isbesideFlag_[ i ] = 1;
-		}
-		else if ( isMoveFlag_[ i ] == 1 && Obj_[i]->wtf.position.x >= moveRLimit_[i] )
-		{
-			//右に移動制限
-			isbesideFlag_[ i ] = 0;
+			else if ( isMoveFlag_[ i ] == 1 && Obj_[ i ]->wtf.position.x >= moveRLimit_[ i ] )
+			{
+				//右に移動制限
+				isbesideFlag_[ i ] = 0;
+			}
 		}
 
 	}
 
 	//魔導兵のガス噴射
 	for ( int i = 0; i < 4; i++ ){
-		if ( HP_[i] >= 1 ){
-			isgasEffFlag_[i] = 1;
-		}
-		else{
-			isgasEffFlag_[i] = 0;
-			gasEffTimer_[i] = 0;
+		if ( isAliveFlag_[ i ] == 0 )
+		{
+			if ( HP_[ i ] >= 1 )
+			{
+				isgasEffFlag_[ i ] = 1;
+			}
+			else
+			{
+				isgasEffFlag_[ i ] = 0;
+				gasEffTimer_[ i ] = 0;
+			}
 		}
 	}
 
 	//魔導兵の射撃
 	for ( int i = 0; i < 4; i++ )
 	{
-		if ( isGameStartTimer >= 200 && isShootFlag_[i] == 0 )
+		if ( isAliveFlag_[ i ] == 0 )
 		{
-			if ( isAliveFlag_[i] == 0 )
+			if ( isGameStartTimer >= 200 && isShootFlag_[ i ] == 0 )
 			{
-				BulletCoolTime_[i]++;
+				if ( isAliveFlag_[ i ] == 0 )
+				{
+					BulletCoolTime_[ i ]++;
+				}
 			}
-		}
-		if ( BulletCoolTime_[ i ] == 119 )
-		{
-			playerlen_[ i ] = collObj3_->wtf.position - bulletObj_[i]->wtf.position;
-			playerlen_[ i ].nomalize();
-		}
-		if ( BulletCoolTime_[ i ] >= 120 )
-		{
-			BulletCoolTime_[ i ] = 120;
-			isShootFlag_[ i ] = 1;
-		}
-		//攻撃時モデルが変わる
-		if ( BulletCoolTime_[ i ] >= 110 )
-		{
-			Obj_[i]->SetModel(Model_[i]);
-		}
-		else
-		{
-			Obj_[i]->SetModel(Modelst_[i]);
-		}
+			if ( BulletCoolTime_[ i ] == 119 )
+			{
+				playerlen_[ i ] = collObj3_->wtf.position - bulletObj_[ i ]->wtf.position;
+				playerlen_[ i ].nomalize();
+			}
+			if ( BulletCoolTime_[ i ] >= 120 )
+			{
+				BulletCoolTime_[ i ] = 120;
+				isShootFlag_[ i ] = 1;
+			}
+			//攻撃時モデルが変わる
+			if ( BulletCoolTime_[ i ] >= 110 )
+			{
+				Obj_[ i ]->SetModel(Model_[ i ]);
+			}
+			else
+			{
+				Obj_[ i ]->SetModel(Modelst_[ i ]);
+			}
 
-		//誘導弾
-		if ( isShootFlag_[ i ] == 1 ){
-			BulletdurationTime_[ i ]++;
+			//誘導弾
+			if ( isShootFlag_[ i ] == 1 )
+			{
+				BulletdurationTime_[ i ]++;
 
-			bulletObj_[i]->wtf.position += playerlen_[ i ];
-			bitweenlen_[ i ] = playerlen_[ i ];
-			bitweenlen_[ i ] *= 0.1f;
-		}
-		else{
-			bulletObj_[ i ]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + 2.5f,Obj_[i]->wtf.position.z - 3.0f };
-		}
-		if ( BulletdurationTime_[ i ] >= 80.0f )
-		{
-			BulletdurationTime_[ i ] = 0;
-			isShootFlag_[ i ] = 0;
-			BulletCoolTime_[ i ] = 0;
+				bulletObj_[ i ]->wtf.position += playerlen_[ i ];
+				bitweenlen_[ i ] = playerlen_[ i ];
+				bitweenlen_[ i ] *= 0.1f;
+			}
+			else
+			{
+				bulletObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y + 2.5f,Obj_[ i ]->wtf.position.z - 3.0f };
+			}
+			if ( BulletdurationTime_[ i ] >= 80.0f )
+			{
+				BulletdurationTime_[ i ] = 0;
+				isShootFlag_[ i ] = 0;
+				BulletCoolTime_[ i ] = 0;
+			}
 		}
 	}
 
 	//ポリゴン爆散
-	for ( int i = 0; i < 4; i++ )
-	{
-		if ( HP_[i] <= 0 ){
-			isExpolFlag_[i] = 1;
-		}
-		if ( isExpolFlag_[i] == 1 )
-		{
-			ExpolTimer_[i]++;
-
-			polygon_[i] = ExpolTimer_[i] / ExpolMT_[i];
-
-			Obj_[i]->SetDestruction(polygon_[i]);
-			if ( ExpolTimer_[i] >= ExpolMT_[i] )
+	for ( int i = 0; i < 4; i++ ){
+		if ( isAliveFlag_[ i ] == 0 ){
+			if ( HP_[ i ] <= 0 )
 			{
-				gasEffTimer_[i] = 0;
-				isAliveFlag_[i] = 1;
-				isShootFlag_[ i ] = 0;
+				isExpolFlag_[ i ] = 1;
+			}
+			if ( isExpolFlag_[ i ] == 1 )
+			{
+				ExpolTimer_[ i ]++;
+
+				polygon_[ i ] = ExpolTimer_[ i ] / ExpolMT_[ i ];
+
+				Obj_[ i ]->SetDestruction(polygon_[ i ]);
+				if ( ExpolTimer_[ i ] >= ExpolMT_[ i ] )
+				{
+					gasEffTimer_[ i ] = 0;
+					isAliveFlag_[ i ] = 1;
+					isShootFlag_[ i ] = 0;
+				}
 			}
 		}
 	}
@@ -317,7 +352,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	//当たり判定(プレイヤー弾から魔導兵)
 	if ( playerShootFlag == true){
 		for ( int i = 0; i < 4; i++ ){
-			if ( HP_[i] >= 1 ) {
+			if ( isAliveFlag_[ i ] == 0 ) {
 				if ( coll.CircleCollision(playerBpos,collObj_[ i ]->wtf.position,1.0f,1.0f) ) {
 					HP_[i]--;
 					playerShootFlag = false;
@@ -325,17 +360,18 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 			}
 		}
 	}
-
+	
 	//当たり判定(魔導兵弾からプレイヤー)
-	for ( int i = 0; i < 4; i++ )
-	{
-		if ( coll.CircleCollision(bulletObj_[i]->wtf.position,collObj3_->wtf.position,0.6f,0.6f) )
-		{
-			isShootFlag_[ i ] = 0;
-			player_->isCamShake = 1;
-			player_->camShakeTimer = player_->camShakeLimit;
-			player_->hpgreenPosition.x -= 10.0f;//倍ダメ
-			player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
+	for ( int i = 0; i < 4; i++ ){
+		if ( isAliveFlag_[ i ] == 0 ){
+			if ( coll.CircleCollision(bulletObj_[ i ]->wtf.position,collObj3_->wtf.position,0.6f,0.6f) )
+			{
+				isShootFlag_[ i ] = 0;
+				player_->isCamShake = 1;
+				player_->camShakeTimer = player_->camShakeLimit;
+				player_->hpgreenPosition.x -= 10.0f;//倍ダメ
+				player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
+			}
 		}
 	}
 

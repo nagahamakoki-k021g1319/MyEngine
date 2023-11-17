@@ -62,8 +62,10 @@ private:
 	Model* Model_[ 4 ] = { nullptr };
 	Model* Modelst_[ 4 ] = { nullptr };
 
-	//敵の生存フラグ
-	int isAliveFlag_[4] = {0};
+	//敵の生存フラグ(0 生きる,1 死亡)
+	int isAliveFlag_[4] = {0,0,1,1};
+	int AliveR2Timer = 0;
+	int AliveR3Timer = 0;
 
 	//当たり判定のモデル
 	Object3d* collObj_[ 4 ] = {nullptr};
