@@ -38,6 +38,8 @@ public:
 	void EffSummary3(Vector3 bulletpos3,int num3);
 	//エフェクトの情報(背中の噴射ガス)
 	void EffSummary4(Vector3 bulletpos4,int num4);
+	//エフェクトの情報(ダメージ受けた時の火花)
+	void DamageSummary(Vector3 EnePos, int eneNum);
 
 	//エフェクトの描画
 	void EffDraw();
@@ -111,8 +113,11 @@ private:
 	std::unique_ptr<ParticleManager> gasParticle4_[4];
 	int gasEffTimer_[4] = { 0 };
 	int isgasEffFlag_[4] = { 0 };
+	//攻撃受けた時の火花のパーティクル
+	std::unique_ptr<ParticleManager> DamageParticle_[4];
+	int damEffTimer_[ 4 ] = { 0 };
+	int isdamEffFlag_[ 4 ] = { 0 };
 
-	
 };
 
 

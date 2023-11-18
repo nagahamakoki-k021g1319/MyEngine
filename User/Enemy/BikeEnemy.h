@@ -79,9 +79,15 @@ private:
 	int isBackEntryFlag_[7] = { 0 };
 
 	//パーティクル
+	//地面のズサ
 	std::unique_ptr<ParticleManager> gasParticle_[7];
 	int bulletEffTimer_[7] = { 0 };
 	int isbulletEffFlag_[7] = { 0 };
+	////攻撃受けた時の火花のパーティクル
+	//std::unique_ptr<ParticleManager> DamageParticle_[7];
+	//int damEffTimer_[7] = { 0 };
+	//int isdamEffFlag_[7] = { 0 };
+
 
 };
 

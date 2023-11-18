@@ -88,12 +88,12 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		//エフェクトの情報(地面のズサ)
 		gasParticle_[i] = std::make_unique<ParticleManager>();
 		gasParticle_[i].get()->Initialize();
-		gasParticle_[i]->LoadTexture("gas.png");
+		gasParticle_[i]->LoadTexture("fire.png");
 		gasParticle_[i]->Update();
 
 		gasParticle2_[i] = std::make_unique<ParticleManager>();
 		gasParticle2_[i].get()->Initialize();
-		gasParticle2_[i]->LoadTexture("gas.png");
+		gasParticle2_[i]->LoadTexture("fire.png");
 		gasParticle2_[i]->Update();
 
 		//エフェクトの情報(背中の噴射ガス)
@@ -106,6 +106,12 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		gasParticle4_[i].get()->Initialize();
 		gasParticle4_[i]->LoadTexture("gas.png");
 		gasParticle4_[i]->Update();
+
+		//攻撃受けた時の火花のパーティクル
+		DamageParticle_[i] = std::make_unique<ParticleManager>();
+		DamageParticle_[i].get()->Initialize();
+		DamageParticle_[i]->LoadTexture("fire.png");
+		DamageParticle_[i]->Update();
 	}
 }
 
@@ -355,6 +361,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 			if ( isAliveFlag_[ i ] == 0 ) {
 				if ( coll.CircleCollision(playerBpos,collObj_[ i ]->wtf.position,1.0f,1.0f) ) {
 					HP_[i]--;
+					isdamEffFlag_[ i ] = 1;
 					playerShootFlag = false;
 				}
 			}
@@ -411,6 +418,7 @@ void ArmorEnemy::EffUpdate()
 {
 	for ( int i = 0; i < 4; i++ )
 	{
+		//ガス噴射
 		if ( isgasEffFlag_[i] == 1 )
 		{
 			gasEffTimer_[ i ]++;
@@ -426,6 +434,19 @@ void ArmorEnemy::EffUpdate()
 		{
 			isgasEffFlag_[ i ] = 0;
 			gasEffTimer_[ i ] = 0;
+		}
+
+		//ダメージ
+		if ( isdamEffFlag_[ i ] == 1 )
+		{
+			damEffTimer_[i]++;
+		}
+		if ( damEffTimer_[i] <= 10 && damEffTimer_[i] >= 1) {
+			DamageSummary(Vector3(Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y,Obj_[i]->wtf.position.z),i);
+		}
+		if ( damEffTimer_[i] >= 10) {
+			isdamEffFlag_[i] = 0;
+			damEffTimer_[i] = 0;
 		}
 	}
 }
@@ -578,10 +599,43 @@ void ArmorEnemy::EffSummary4(Vector3 bulletpos4,int num4)
 	}
 }
 
+void ArmorEnemy::DamageSummary(Vector3 EnePos,int eneNum)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 5; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_pos = 5.0f;
+		Vector3 pos{};
+		pos.x += ( float ) rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y += ( float ) rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.z += ( float ) rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos += EnePos;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_vel = 0.5f;
+		Vector3 vel{};
+		vel.x = ( float ) rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = ( float ) rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.z = ( float ) rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_acc = 0.00001f;
+		Vector3 acc{};
+		acc.x = ( float ) rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
+		acc.y = ( float ) rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
+
+		//追加
+		DamageParticle_[ eneNum ]->Add(60,pos,vel,acc,2.0f,1.0f);
+
+		DamageParticle_[ eneNum ]->Update();
+	}
+}
+
 void ArmorEnemy::EffDraw()
 {
 	if ( isGameStartTimer >= 200 ){
 		for ( int i = 0; i < 4; i++ ){
+			//背中の噴射ガス
 			if ( isgasEffFlag_[i] == 1 ) {
 				if ( isAliveFlag_[i] == 0 ){
 					gasParticle_[i]->Draw();
@@ -591,6 +645,11 @@ void ArmorEnemy::EffDraw()
 						gasParticle4_[i]->Draw();
 					}
 				}
+			}
+			//攻撃受けた時の火花のパーティクル
+			if ( isdamEffFlag_[ i ] == 1 )
+			{
+				DamageParticle_[i]->Draw();
 			}
 		}
 	}
