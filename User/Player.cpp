@@ -79,6 +79,11 @@ Player::~Player() {
 	delete collSWRightObj_;
 	delete collSWRightModel_;
 
+	delete extrusionRightModel_;
+	delete extrusionRightObj_;
+	delete extrusionLeftModel_;
+	delete extrusionLeftObj_;
+
 	delete entryani1UI;
 	delete entryani2UI;
 
@@ -140,6 +145,18 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	collSWRightObj_ = Object3d::Create();
 	collSWRightObj_->SetModel(collSWRightModel_);
 	collSWRightObj_->wtf.position = { Obj_->wtf.position.x + 0.5f,Obj_->wtf.position.y + 0.5f,-1.0f };
+
+	//自機が衝突した時用のモデル
+	//右
+	extrusionRightModel_ = Model::LoadFromOBJ("collboll");
+	extrusionRightObj_ = Object3d::Create();
+	extrusionRightObj_->SetModel(extrusionRightModel_);
+	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + 0.2f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	//左
+	extrusionLeftModel_ = Model::LoadFromOBJ("collboll");
+	extrusionLeftObj_ = Object3d::Create();
+	extrusionLeftObj_->SetModel(extrusionLeftModel_);
+	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - 0.2f,Obj_->wtf.position.y + 0.5f,-1.0f };
 
 	//自機の弾(弱)
 	shootModel_ = Model::LoadFromOBJ("boll2");
@@ -206,6 +223,11 @@ void Player::Update() {
 	collSWObj_->wtf.position = { Obj_->wtf.position.x - 1.0f,Obj_->wtf.position.y + 0.5f,-1.0f };
 	collSWRightObj_->Update();
 	collSWRightObj_->wtf.position = { Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	extrusionRightObj_->Update();
+	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + 0.2f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	extrusionLeftObj_->Update();
+	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - 0.2f,Obj_->wtf.position.y + 0.5f,-1.0f };
+
 	isGameStartFlag = true;
 
 	//ゲームが始まる
@@ -402,6 +424,8 @@ void Player::Draw() {
 	}
 
 	if ( isGameStartTimer >= 180 ){
+		/*extrusionRightObj_->Draw();
+		extrusionLeftObj_->Draw();*/
 		/*collObj_->Draw();*/
 		if ( isCollSWFlag == true ){
 			/*collSWObj_->Draw();*/
@@ -869,6 +893,7 @@ void Player::PlayerAction()
 			camera->wtf.position.x -= 0.0f;
 		}
 		else{
+			limitmove2 = false;
 			Obj_->wtf.position.x -= playerSpeed;
 			collObj_->wtf.position.x -= playerSpeed;
 			retObj_->wtf.position.x += playerSpeed2;
@@ -877,20 +902,31 @@ void Player::PlayerAction()
 	}
 	if ( input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT) )
 	{
-		limitmove = false;
-		Obj_->wtf.position.x += playerSpeed;
-		collObj_->wtf.position.x += playerSpeed;
-		retObj_->wtf.position.x -= playerSpeed2;
-		camera->wtf.position.x += 0.02f;
+		if ( limitmove2 == true )
+		{
+			Obj_->wtf.position.x -= 0.0f;
+			collObj_->wtf.position.x -= 0.0f;
+			retObj_->wtf.position.x += 0.0f;
+			camera->wtf.position.x -= 0.0f;
+		}
+		else{
+			limitmove = false;
+			Obj_->wtf.position.x += playerSpeed;
+			collObj_->wtf.position.x += playerSpeed;
+			retObj_->wtf.position.x -= playerSpeed2;
+			camera->wtf.position.x += 0.02f;
+		}
 	}
 
 	if ( input_->PushKey(DIK_W) )
 	{
 		limitmove = false;
+		limitmove2 = false;
 	}
 	if ( input_->PushKey(DIK_S) )
 	{
 		limitmove = false;
+		limitmove2 = false;
 	}
 
 	//移動(レティクル)
@@ -1121,6 +1157,34 @@ Vector3 Player::GetSwordRightWorldPosition()
 	SwordRightWorldPos.z = collSWRightObj_->wtf.matWorld.m[ 3 ][ 2 ];
 
 	return SwordRightWorldPos;
+}
+
+Vector3 Player::GetCollLeftWorldPosition()
+{
+	//ワールド座標を入れる変数
+	Vector3 collLeftWorldPos;
+
+	extrusionLeftObj_->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	collLeftWorldPos.x = extrusionLeftObj_->wtf.matWorld.m[ 3 ][ 0 ];
+	collLeftWorldPos.y = extrusionLeftObj_->wtf.matWorld.m[ 3 ][ 1 ];
+	collLeftWorldPos.z = extrusionLeftObj_->wtf.matWorld.m[ 3 ][ 2 ];
+
+	return collLeftWorldPos;
+}
+
+Vector3 Player::GetCollRightWorldPosition()
+{
+		//ワールド座標を入れる変数
+	Vector3 collRightWorldPos;
+
+	extrusionRightObj_->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	collRightWorldPos.x = extrusionRightObj_->wtf.matWorld.m[ 3 ][ 0 ];
+	collRightWorldPos.y = extrusionRightObj_->wtf.matWorld.m[ 3 ][ 1 ];
+	collRightWorldPos.z = extrusionRightObj_->wtf.matWorld.m[ 3 ][ 2 ];
+
+	return collRightWorldPos;
 }
 
 Vector3 Player::GetRetWorldPosition()

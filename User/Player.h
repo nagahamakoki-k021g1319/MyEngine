@@ -51,6 +51,10 @@ public:
 	//ワールド座標を取得(近接攻撃)
 	Vector3 GetSwordLeftWorldPosition();
 	Vector3 GetSwordRightWorldPosition();
+	//ワールド座標を取得(左右の押し出し)
+	Vector3 GetCollLeftWorldPosition();
+	Vector3 GetCollRightWorldPosition();
+
 	//ワールド座標を取得(レティクル)
 	Vector3 GetRetWorldPosition();
 
@@ -126,6 +130,14 @@ private:
 	bool isRightAtFlag = false;
 	Object3d* collSWRightObj_ = nullptr;
 	Model* collSWRightModel_ = nullptr;
+
+	//自機が衝突した時用のモデル
+	//右
+	Model* extrusionRightModel_ = nullptr;
+	Object3d* extrusionRightObj_ = nullptr;
+	//左
+	Model* extrusionLeftModel_ = nullptr;
+	Object3d* extrusionLeftObj_ = nullptr;
 
 	//自機の納刀モデルから抜刀モデルに切り替え
 	int isBikswordstyFlag = 0;
@@ -259,7 +271,7 @@ public:
 
 	//自機とバイク兵の押し出し処理
 	bool limitmove = false;
-
+	bool limitmove2 = false;
 
 	//弾発射(弱)
 	Object3d* shootObj_ = nullptr;

@@ -328,7 +328,10 @@ void GameScene::Update() {
 		
 		player_->Update();
 		armorEnemy_->Update(player_->GetWorldPosition(),player_->GetBulletWorldPosition(),player_->isShootFlag);
-		bikeEnemy_->Update(player_->GetSwordLeftWorldPosition(),player_->isCollSWFlag,player_->GetSwordRightWorldPosition(),player_->isCollSWRightFlag,player_->GetWorldPosition());
+		bikeEnemy_->Update(
+			player_->GetSwordLeftWorldPosition(),player_->isCollSWFlag,
+			player_->GetSwordRightWorldPosition(),player_->isCollSWRightFlag,
+			player_->GetCollRightWorldPosition(),player_->GetCollLeftWorldPosition());
 		bossEnemy_->Update( player_->GetWorldPosition(), player_->GetBulletWorldPosition());
 
 		skydome->Update();
