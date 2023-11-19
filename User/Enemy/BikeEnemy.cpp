@@ -90,7 +90,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	}
 }
 
-void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRightPos,bool isCollSWRightFlag,Vector3 playerPos)
+void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRightPos,bool isCollSWRightFlag,Vector3 playerRPos,Vector3 playerLPos)
 {
 	for ( int i = 0; i < 7; i++ )
 	{
@@ -222,14 +222,22 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		}
 
 		//自機とバイク兵の押し出し処理
+		//自機が左にいるバイク兵に対して衝突するとき
 		if ( HP_[ i ] >= 1 )
 		{
-			if ( coll.CircleCollision(playerPos,collObj_[ i ]->wtf.position,0.6f,0.6f) )
+			if ( coll.CircleCollision(playerLPos,collObj_[ i ]->wtf.position,0.6f,0.6f) )
 			{
 				player_->limitmove = true;
 			}
 		}
-		
+		//自機が右にいるバイク兵に対して衝突するとき
+		if ( HP_[ i ] >= 1 )
+		{
+			if ( coll.CircleCollision(playerRPos,collObj_[ i ]->wtf.position,0.6f,0.6f) )
+			{
+				player_->limitmove2 = true;
+			}
+		}
 
 	}
 
