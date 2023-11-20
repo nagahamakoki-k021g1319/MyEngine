@@ -43,12 +43,13 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		Obj_[ i ]->wtf.scale = { 0.4f,0.4f,0.4f };
 		
 	}
+	//ラウンド1
 	Obj_[0]->wtf.position = { -3.0f,-2.0f,-20.0f };
 	Obj_[1]->wtf.position = { 3.0f,-2.0f,-20.0f };
-
+	//ラウンド2
 	Obj_[2]->wtf.position = { -3.0f,-2.0f,-20.0f };
 	Obj_[3]->wtf.position = { 3.0f,-2.0f,-20.0f };
-
+	//ラウンド3
 	Obj_[4]->wtf.position = { -3.0f,-2.0f,-20.0f };
 	Obj_[5]->wtf.position = { 3.0f,-2.0f,-20.0f };
 	Obj_[6]->wtf.position = { 5.0f,-2.0f,-20.0f };
@@ -133,57 +134,88 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	}
 
 	//バイク兵のエントリー(ラウンド2)
-	for ( int i = 2; i < 4; i++ ){
-		if (player_->isRoundFlag == 1){
-			if ( isBackEntryFlag_[ i ] == 0 ){
-				if ( isGameStartTimer >= 220 )
-				{
-					Obj_[ i ]->wtf.position.z += 0.5f;
+	if (player_->isRoundFlag == 1){
+		AliveR2Timer++;
+		if ( AliveR2Timer >= 5 ){
+			if ( isBackEntryFlag_[2] == 0 ){
+				if ( isGameStartTimer >= 220 ){
+					Obj_[2]->wtf.position.z += 0.5f;
 				}
-				if ( Obj_[ i ]->wtf.position.z >= 5.0f )
-				{
-					Obj_[ i ]->wtf.position.z = 5.0f;
-					isBackEntryFlag_[ i ] = 1;
+				if ( Obj_[2]->wtf.position.z >= 5.0f ){
+					Obj_[2]->wtf.position.z = 5.0f;
+					isBackEntryFlag_[2] = 1;
 				}
 			}
 		}
+		if ( AliveR2Timer >= 30 ){
+			if ( isBackEntryFlag_[3] == 0 ){
+				if ( isGameStartTimer >= 220 ){
+					Obj_[3]->wtf.position.z += 0.5f;
+				}
+				if ( Obj_[3]->wtf.position.z >= 5.0f ){
+					Obj_[3]->wtf.position.z = 5.0f;
+					isBackEntryFlag_[3] = 1;
+				}
+			}
+		}
+
 	}
+
+
 
 	//バイク兵のエントリー(ラウンド3)
-	for ( int i = 4; i < 6; i++ )
-	{
-		if ( player_->isRoundFlag == 3 )
+	if ( player_->isRoundFlag == 3 ){
+		AliveR3Timer++;
+		if ( AliveR3Timer >= 5 )
 		{
-			if ( isBackEntryFlag_[ i ] == 0 )
+			if ( isBackEntryFlag_[4] == 0 )
 			{
 				if ( isGameStartTimer >= 220 )
 				{
-					Obj_[ i ]->wtf.position.z += 0.5f;
+					Obj_[4]->wtf.position.z += 0.5f;
 				}
-				if ( Obj_[ i ]->wtf.position.z >= 5.0f )
+				if ( Obj_[4]->wtf.position.z >= 5.0f )
 				{
-					Obj_[ i ]->wtf.position.z = 5.0f;
-					isBackEntryFlag_[ i ] = 1;
+					Obj_[4]->wtf.position.z = 5.0f;
+					isBackEntryFlag_[4] = 1;
+				}
+			}
+		}
+
+		if ( AliveR3Timer >= 5 )
+		{
+			if ( isBackEntryFlag_[ 5 ] == 0 )
+			{
+				if ( isGameStartTimer >= 220 )
+				{
+					Obj_[ 5 ]->wtf.position.z += 0.5f;
+				}
+				if ( Obj_[ 5 ]->wtf.position.z >= 5.0f )
+				{
+					Obj_[ 5 ]->wtf.position.z = 5.0f;
+					isBackEntryFlag_[ 5 ] = 1;
+				}
+			}
+		}
+
+		if ( AliveR3Timer >= 20 )
+		{
+			if ( isBackEntryFlag_[ 6 ] == 0 )
+			{
+				if ( isGameStartTimer >= 220 )
+				{
+					Obj_[ 6 ]->wtf.position.z += 1.0f;
+				}
+				if ( Obj_[ 6 ]->wtf.position.z >= 20.0f )
+				{
+					Obj_[ 6 ]->wtf.position.z = 20.0f;
+					isBackEntryFlag_[ 6 ] = 1;
 				}
 			}
 		}
 	}
-	if ( player_->isRoundFlag == 3 )
-	{
-		if ( isBackEntryFlag_[6] == 0 )
-		{
-			if ( isGameStartTimer >= 220 )
-			{
-				Obj_[6]->wtf.position.z += 1.0f;
-			}
-			if ( Obj_[6]->wtf.position.z >= 20.0f )
-			{
-				Obj_[6]->wtf.position.z = 20.0f;
-				isBackEntryFlag_[6] = 1;
-			}
-		}
-	}
-
+	
+	
 	//自機の加減速でバイク兵のZ軸移動
 	for ( int i = 0; i < 7; i++ )
 	{
