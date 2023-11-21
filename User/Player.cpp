@@ -242,7 +242,7 @@ void Player::Update() {
 
 	//プレイヤーの行動一覧
 	PlayerAction();
-	if ( isbikslidFlag == true ){
+	if ( isbikslidFlag == true || isLeftAtFlag == true || isRightAtFlag == true ){
 		isbulletEffFlag_ = 0;
 		bulletEffTimer_ = 0;
 	}
@@ -395,11 +395,11 @@ void Player::Update() {
 	}
 	
 
-	/*if ( input_->PushKey(DIK_1) ){camera->wtf.rotation.y -= 0.08f;}
-	else if ( input_->PushKey(DIK_2) ){camera->wtf.rotation.y += 0.08f;}
-	if ( input_->PushKey(DIK_3) ){camera->wtf.rotation.x -= 0.08f;}
-	else if ( input_->PushKey(DIK_4) ){camera->wtf.rotation.x += 0.08f;}
-	if ( input_->PushKey(DIK_5) ){
+	/*if ( input_->PushKey(DIK_I) ){camera->wtf.rotation.y -= 0.01f;}
+	else if ( input_->PushKey(DIK_K) ){camera->wtf.rotation.y += 0.01f;}
+	if ( input_->PushKey(DIK_J) ){camera->wtf.rotation.x -= 0.01f;}
+	else if ( input_->PushKey(DIK_L) ){camera->wtf.rotation.x += 0.01f;}
+	if ( input_->PushKey(DIK_M) ){
 		camera->wtf.rotation.x = 0.0f;
 		camera->wtf.rotation.y = 0.0f;
 	}*/

@@ -345,6 +345,24 @@ void GameScene::Update() {
 			{
 				floorTit_[ i ]->wtf.position.z = 40000.0f;
 			}
+
+		/*	if ( input_->PushKey(DIK_I) )
+			{
+				floorTit_[ i ]->wtf.rotation.z -= 0.01f;
+			}
+			else if ( input_->PushKey(DIK_K) )
+			{
+				floorTit_[ i ]->wtf.rotation.z += 0.01f;
+			}
+			if ( input_->PushKey(DIK_J) )
+			{
+				floorTit_[ i ]->wtf.rotation.y -= 0.01f;
+			}
+			else if ( input_->PushKey(DIK_L) )
+			{
+				floorTit_[ i ]->wtf.rotation.y += 0.01f;
+			}*/
+
 		}
 
 		//両壁
@@ -355,6 +373,8 @@ void GameScene::Update() {
 			floor2_[ i ]->Update();
 			floor2_[ i ]->wtf.position.z -= 10.0f;
 			if ( floor2_[ i ]->wtf.position.z <= -4600.0f ){floor2_[ i ]->wtf.position.z = 6900.0f;}
+
+			
 		}
 		//天井
 		for ( int i = 0; i < 100; i++ )
@@ -362,7 +382,12 @@ void GameScene::Update() {
 			floor3_[ i ]->Update();
 			floor3_[ i ]->wtf.position.z -= 10.0f;
 			if ( floor3_[ i ]->wtf.position.z <= -2000.0f ){floor3_[ i ]->wtf.position.z = 8000.0f;}
+
 		}
+
+
+		
+
 
 	}
 
