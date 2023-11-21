@@ -88,23 +88,23 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		//エフェクトの情報(地面のズサ)
 		gasParticle_[i] = std::make_unique<ParticleManager>();
 		gasParticle_[i].get()->Initialize();
-		gasParticle_[i]->LoadTexture("fire.png");
+		gasParticle_[i]->LoadTexture("gas.png");
 		gasParticle_[i]->Update();
 
 		gasParticle2_[i] = std::make_unique<ParticleManager>();
 		gasParticle2_[i].get()->Initialize();
-		gasParticle2_[i]->LoadTexture("fire.png");
+		gasParticle2_[i]->LoadTexture("gas.png");
 		gasParticle2_[i]->Update();
 
 		//エフェクトの情報(背中の噴射ガス)
 		gasParticle3_[i] = std::make_unique<ParticleManager>();
 		gasParticle3_[i].get()->Initialize();
-		gasParticle3_[i]->LoadTexture("gas.png");
+		gasParticle3_[i]->LoadTexture("fire.png");
 		gasParticle3_[i]->Update();
 
 		gasParticle4_[i] = std::make_unique<ParticleManager>();
 		gasParticle4_[i].get()->Initialize();
-		gasParticle4_[i]->LoadTexture("gas.png");
+		gasParticle4_[i]->LoadTexture("fire.png");
 		gasParticle4_[i]->Update();
 
 		//攻撃受けた時の火花のパーティクル

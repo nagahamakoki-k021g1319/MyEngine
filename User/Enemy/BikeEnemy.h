@@ -36,6 +36,9 @@ public:
 	////ワールド座標を取得
 	Vector3 GetWorldPosition();
 
+	//バイク兵のエントリーを関数化
+	void BikeEnemyEntry();
+
 	void SetPlayer(Player* player) {player_ = player;};
 
 private:
