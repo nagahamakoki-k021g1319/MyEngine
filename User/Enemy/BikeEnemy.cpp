@@ -105,8 +105,8 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	EffUpdate();
 	isGameStartTimer++;
 
+	//バイクの車輪が動き出す
 	bikstSpinTimer++;
-	//バイクの車輪が動き出す(納刀)
 	if ( bikstSpinTimer > 10 ){bikstSpinTimer = 0;}
 	for ( int i = 0; i < 7; i++ ){
 		if ( bikstSpinTimer >= 1 && bikstSpinTimer <= 5 )
@@ -123,45 +123,16 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	BikeEnemyEntry();
 
 	//エントリー後のバイク兵のアクション
-	if ( isBackEntryFlag_[1] == 1){
-		if ( input_->PushKey(DIK_I) ){
-			Obj_[1]->wtf.position.z += 0.05f;
-			
-		}
-		else if ( input_->PushKey(DIK_K) )
-		{
-			Obj_[1]->wtf.position.z -= 0.05f;
-		}
-
-		if ( input_->PushKey(DIK_J) )
-		{
-			Obj_[1]->wtf.position.x -= 0.05f;
-			Obj_[ 1 ]->wtf.rotation.z += 0.03f;
-			if ( Obj_[ 1 ]->wtf.rotation.z >= 0.2f )
-			{
-				Obj_[ 1 ]->wtf.rotation.z = 0.2f;
-			}
-		}
-		else if ( input_->PushKey(DIK_L) )
-		{
-			Obj_[1]->wtf.position.x += 0.05f;
-			Obj_[ 1 ]->wtf.rotation.z -= 0.03f;
-			if ( Obj_[ 1 ]->wtf.rotation.z <= -0.2f )
-			{
-				Obj_[ 1 ]->wtf.rotation.z = -0.2f;
-			}
-		}
-		else{
-			Obj_[ 1 ]->wtf.rotation.z = 0.0f;
-		}
+	if ( isBackEntryFlag_[ 1 ] == 1 ){
+		actionTimer_++;
 	}
+	BikeEnemyAction();
+	
 
 
 	//自機の加減速でバイク兵のZ軸移動
-	for ( int i = 0; i < 7; i++ )
-	{
-		if ( isBackEntryFlag_[ i ] == 1 )
-		{
+	for ( int i = 0; i < 7; i++ ){
+		if ( isBackEntryFlag_[ i ] == 1 ){
 			if ( input_->PushKey(DIK_W) ){Obj_[ i ]->wtf.position.z -= 0.06f;}
 			else if ( input_->PushKey(DIK_S) ){Obj_[ i ]->wtf.position.z += 0.06f;}
 		}
@@ -257,6 +228,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 
 	ImGui::Begin("bikeEnemy");
 
+	ImGui::Text("Position_[1]:%f,%f,%f",Obj_[ 1 ]->wtf.position.x,Obj_[ 1 ]->wtf.position.y,Obj_[ 1 ]->wtf.position.z);
 	ImGui::Text("HP:%d",HP_[ 0 ]);
 	ImGui::Text("isBackEntryFlag:%d",isBackEntryFlag_[1]);
 
@@ -392,9 +364,9 @@ void BikeEnemy::BikeEnemyEntry()
 			{
 				Obj_[ i ]->wtf.position.z += 0.5f;
 			}
-			if ( Obj_[ i ]->wtf.position.z >= 0.0f )
+			if ( Obj_[ i ]->wtf.position.z >= 5.0f )
 			{
-				Obj_[ i ]->wtf.position.z = 0.0f;
+				Obj_[ i ]->wtf.position.z = 5.0f;
 				isBackEntryFlag_[ i ] = 1;
 			}
 		}
@@ -489,4 +461,40 @@ void BikeEnemy::BikeEnemyEntry()
 			}
 		}
 	}
+}
+
+void BikeEnemy::BikeEnemyAction()
+{
+	if ( actionTimer_ >= 1){
+		if ( isMoveFlag_ == 0){
+			//右に移動
+			Obj_[ 1 ]->wtf.position.z += 0.01f;
+			Obj_[ 1 ]->wtf.position.x -= 0.05f;
+			Obj_[ 1 ]->wtf.rotation.z += 0.03f;
+			//傾き制限
+			if ( Obj_[ 1 ]->wtf.rotation.z >= 0.2f ){Obj_[ 1 ]->wtf.rotation.z = 0.2f;}
+
+			//一定距離でフラグ切り替え
+			if ( Obj_[ 1 ]->wtf.position.x <= -0.5f){
+				Obj_[ 1 ]->wtf.position.x = -0.5f;
+				isMoveFlag_ = 1;
+			}
+		}
+		else if ( isMoveFlag_ == 1 ){
+			//左に移動
+			Obj_[ 1 ]->wtf.position.z -= 0.01f;
+			Obj_[ 1 ]->wtf.position.x += 0.05f;
+			Obj_[ 1 ]->wtf.rotation.z -= 0.03f;
+			//傾き制限
+			if ( Obj_[ 1 ]->wtf.rotation.z <= -0.2f ){Obj_[ 1 ]->wtf.rotation.z = -0.2f;}
+
+			//一定距離でフラグ切り替え
+			if ( Obj_[ 1 ]->wtf.position.x >= 7.0f )
+			{
+				Obj_[ 1 ]->wtf.position.x = 7.0f;
+				isMoveFlag_ = 0;
+			}
+		}
+	}
+
 }

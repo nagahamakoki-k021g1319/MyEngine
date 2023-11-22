@@ -39,6 +39,9 @@ public:
 	//バイク兵のエントリーを関数化
 	void BikeEnemyEntry();
 
+	//バイク兵の登場してからの挙動
+	void BikeEnemyAction();
+
 	void SetPlayer(Player* player) {player_ = player;};
 
 private:
@@ -80,6 +83,10 @@ private:
 
 	//後ろから登場するフラグ
 	int isBackEntryFlag_[7] = { 0 };
+
+	//バイク兵のアクションタイマー
+	int actionTimer_ = 0;
+	int isMoveFlag_ = 0;
 
 	//パーティクル
 	//地面のズサ
