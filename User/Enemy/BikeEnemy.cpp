@@ -95,27 +95,31 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 {
 	for ( int i = 0; i < 7; i++ )
 	{
-		Obj_[i]->Update();
-		collObj_[i]->Update();
-		collObj_[i]->wtf.position = {Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + 0.5f,Obj_[i]->wtf.position.z - 1.0f};
-		bikclushObj_[i]->Update();
-		bikclushObj_[i]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y,Obj_[i]->wtf.position.z };
+		Obj_[ i ]->Update();
+		collObj_[ i ]->Update();
+		collObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y + 0.5f,Obj_[ i ]->wtf.position.z - 1.0f };
+		bikclushObj_[ i ]->Update();
+		bikclushObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z };
 	}
-	
+
 	EffUpdate();
 	isGameStartTimer++;
 
 	//バイクの車輪が動き出す
 	bikstSpinTimer++;
-	if ( bikstSpinTimer > 10 ){bikstSpinTimer = 0;}
-	for ( int i = 0; i < 7; i++ ){
+	if ( bikstSpinTimer > 10 )
+	{
+		bikstSpinTimer = 0;
+	}
+	for ( int i = 0; i < 7; i++ )
+	{
 		if ( bikstSpinTimer >= 1 && bikstSpinTimer <= 5 )
 		{
-			Obj_[i]->SetModel(Model_[ i ]);
+			Obj_[ i ]->SetModel(Model_[ i ]);
 		}
 		else if ( bikstSpinTimer >= 6 && bikstSpinTimer <= 10 )
 		{
-			Obj_[i]->SetModel(Model2_[ i ]);
+			Obj_[ i ]->SetModel(Model2_[ i ]);
 		}
 	}
 
@@ -123,8 +127,8 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	BikeEnemyEntry();
 
 	//エントリー後のバイク兵のアクション
-	if ( isBackEntryFlag_[ 1 ] == 1 ){
-		actionTimer_++;
+	for ( int i = 0; i < 2; i++ ){
+		if ( isBackEntryFlag_[i] == 1 ){actionTimer_[i]++;}
 	}
 	BikeEnemyAction();
 	
@@ -465,36 +469,103 @@ void BikeEnemy::BikeEnemyEntry()
 
 void BikeEnemy::BikeEnemyAction()
 {
-	if ( actionTimer_ >= 1){
-		if ( isMoveFlag_ == 0){
-			//右に移動
-			Obj_[ 1 ]->wtf.position.z += 0.01f;
-			Obj_[ 1 ]->wtf.position.x -= 0.05f;
-			Obj_[ 1 ]->wtf.rotation.z += 0.03f;
+	//ラウンド1の左のバイク兵
+	if ( actionTimer_[ 0 ] >= 1 )
+	{
+		if ( isMoveFlag_[ 0 ] == 1 )
+		{
+			//左に移動
+			Obj_[ 0 ]->wtf.position.x -= 0.02f;
+			Obj_[ 0 ]->wtf.rotation.z += 0.03f;
 			//傾き制限
-			if ( Obj_[ 1 ]->wtf.rotation.z >= 0.2f ){Obj_[ 1 ]->wtf.rotation.z = 0.2f;}
+			if ( Obj_[ 0 ]->wtf.rotation.z >= 0.2f )
+			{
+				Obj_[ 0 ]->wtf.rotation.z = 0.2f;
+			}
 
 			//一定距離でフラグ切り替え
-			if ( Obj_[ 1 ]->wtf.position.x <= -0.5f){
-				Obj_[ 1 ]->wtf.position.x = -0.5f;
-				isMoveFlag_ = 1;
+			if ( Obj_[ 0 ]->wtf.position.x <= -6.0f )
+			{
+				Obj_[ 0 ]->wtf.position.x = -6.0f;
+				isMoveFlag_[ 0 ] = 0;
 			}
 		}
-		else if ( isMoveFlag_ == 1 ){
+
+		if ( isMoveFlag_[ 0 ] == 0 )
+		{
+			//右に移動
+			Obj_[ 0 ]->wtf.position.x += 0.02f;
+			Obj_[ 0 ]->wtf.rotation.z -= 0.03f;
+			//傾き制限
+			if ( Obj_[ 0 ]->wtf.rotation.z <= -0.2f )
+			{
+				Obj_[ 0 ]->wtf.rotation.z = -0.2f;
+			}
+
+			//一定距離でフラグ切り替え
+			if ( Obj_[ 0 ]->wtf.position.x >= 0.5f )
+			{
+				Obj_[ 0 ]->wtf.position.x = 0.5f;
+				isMoveFlag_[ 0 ] = 1;
+			}
+		}
+	}
+
+	//ラウンド1の右のバイク兵
+	if ( actionTimer_[ 1 ] >= 1 )
+	{
+		stopTimer_[ 1 ] = 0;
+		if ( isMoveFlag_[ 1 ] == 0 )
+		{
+			//右に移動
+			Obj_[ 1 ]->wtf.position.x -= 0.02f;
+			Obj_[ 1 ]->wtf.rotation.z += 0.03f;
+			//傾き制限
+			if ( Obj_[ 1 ]->wtf.rotation.z >= 0.2f )
+			{
+				Obj_[ 1 ]->wtf.rotation.z = 0.2f;
+			}
+
+			//一定距離でフラグ切り替え
+			if ( Obj_[ 1 ]->wtf.position.x <= -0.5f )
+			{
+				Obj_[ 1 ]->wtf.position.x = -0.5f;
+				isMoveFlag_[ 1 ] = 1;
+			}
+		}
+		//右に移動後一旦止まる(攻撃するかも？)
+		if ( isMoveFlag_[ 1 ] == 1 ){stopTimer_[1]++;}
+		if(stopTimer_[1] >= 20.0f ){isMoveFlag_[ 1 ] = 2;}
+
+		if ( isMoveFlag_[ 1 ] == 2 )
+		{
+			stopTimer_[ 1 ] = 0;
 			//左に移動
-			Obj_[ 1 ]->wtf.position.z -= 0.01f;
-			Obj_[ 1 ]->wtf.position.x += 0.05f;
+			Obj_[ 1 ]->wtf.position.x += 0.02f;
 			Obj_[ 1 ]->wtf.rotation.z -= 0.03f;
 			//傾き制限
-			if ( Obj_[ 1 ]->wtf.rotation.z <= -0.2f ){Obj_[ 1 ]->wtf.rotation.z = -0.2f;}
+			if ( Obj_[ 1 ]->wtf.rotation.z <= -0.2f )
+			{
+				Obj_[ 1 ]->wtf.rotation.z = -0.2f;
+			}
 
 			//一定距離でフラグ切り替え
 			if ( Obj_[ 1 ]->wtf.position.x >= 7.0f )
 			{
 				Obj_[ 1 ]->wtf.position.x = 7.0f;
-				isMoveFlag_ = 0;
+				isMoveFlag_[ 1 ] = 3;
 			}
 		}
-	}
 
+		if ( isMoveFlag_[ 1 ] == 3 )
+		{
+			stopTimer_[ 1 ]++;
+		}
+		if ( stopTimer_[ 1 ] >= 20.0f )
+		{
+			isMoveFlag_[ 1 ] = 0;
+		}
+
+
+	}
 }
