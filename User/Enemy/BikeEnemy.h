@@ -85,9 +85,9 @@ private:
 	int isBackEntryFlag_[7] = { 0 };
 
 	//バイク兵のアクションタイマー
-	int actionTimer_[ 2 ] = { 0 };
-	int isMoveFlag_[ 2 ] = { 0 };
-	int stopTimer_[ 2 ] = { 0 };
+	int actionTimer_[7] = { 0 };
+	int isMoveFlag_[7] = { 0 };
+	int stopTimer_[7] = { 0 };
 
 	//パーティクル
 	//地面のズサ
