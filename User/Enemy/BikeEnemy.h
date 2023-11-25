@@ -56,48 +56,49 @@ private:
 	int isGameStartTimer = 0;
 
 	//待機
-	Object3d* Obj_[7] = {0};
-	Model* Model_[7] = { 0 };
-	Model* Model2_[7] = { 0 };
+	Object3d* Obj_[9] = {0};
+	Model*  Model_[9] = { 0 };
+	Model* Model2_[9] = { 0 };
 	//当たり判定のモデル
-	Object3d* collObj_[7] = { 0 };
-	Model* collModel_[7] = { 0 };
-	int isCollFlag_[7] = { 0 };
+	Object3d* collObj_[9] = { 0 };
+	Model* collModel_[9] = { 0 };
+	int isCollFlag_[9] = { 0 };
 
 	//バイクの車輪動かす
 	int bikstSpinTimer = 0;
 
 	//死んだときのバイクがスピンするモデル
-	Object3d* bikclushObj_[7] = { 0 };
-	Model* bikclushModel_[7] = { 0 };
-	int isBikclushFlag_[7] = { 0 };
-	int isBikSpinFlag_[7] = { 0 };
+	Object3d* bikclushObj_[9] = { 0 };
+	Model* bikclushModel_[9] = { 0 };
+	int isBikclushFlag_[9] = { 0 };
+	int isBikSpinFlag_[9] = { 0 };
 
 	//敵の生存フラグ(0 生きる,1 死亡)
-	int isAliveFlag_[ 7 ] = { 0};
+	int isAliveFlag_[ 9 ] = { 0};
 	int AliveR2Timer = 0;
 	int AliveR3Timer = 0;
+	int AliveR4Timer = 0;
 
 	//体力(一旦0で初期化のタイミングで設定する)
-	int HP_[7] = { 0 };
+	int HP_[9] = { 0 };
 
 	//後ろから登場するフラグ
-	int isBackEntryFlag_[7] = { 0 };
+	int isBackEntryFlag_[9] = { 0 };
 
 	//バイク兵のアクションタイマー
-	int actionTimer_[7] = { 0 };
-	int isMoveFlag_[7] = { 0 };
-	int stopTimer_[7] = { 0 };
+	int actionTimer_[9] = { 0 };
+	int isMoveFlag_[9] = { 0 };
+	int stopTimer_[9] = { 0 };
 
 	//パーティクル
 	//地面のズサ
-	std::unique_ptr<ParticleManager> gasParticle_[7];
-	int bulletEffTimer_[7] = { 0 };
-	int isbulletEffFlag_[7] = { 0 };
+	std::unique_ptr<ParticleManager> gasParticle_[9];
+	int bulletEffTimer_[9] = { 0 };
+	int isbulletEffFlag_[9] = { 0 };
 	////攻撃受けた時の火花のパーティクル
-	//std::unique_ptr<ParticleManager> DamageParticle_[7];
-	//int damEffTimer_[7] = { 0 };
-	//int isdamEffFlag_[7] = { 0 };
+	//std::unique_ptr<ParticleManager> DamageParticle_[9];
+	//int damEffTimer_[9] = { 0 };
+	//int isdamEffFlag_[9] = { 0 };
 
 
 };

@@ -302,7 +302,7 @@ void Player::Update() {
 	//ボス登場時のカメラ
 	if ( input_->TriggerKey(DIK_4) ){isCameraBehavior = 1;}
 	if ( isCameraBehavior == 1 ){CameraBehaviorTimer++;}
-	if ( isCameraBehavior == 1 && isRoundFlag == 4 )
+	if ( isCameraBehavior == 1 && isRoundFlag == 6 )
 	{
 		if ( CameraBehaviorTimer <= 70 ){
 			camera->wtf.position.z -= 0.2f;
@@ -317,7 +317,7 @@ void Player::Update() {
 			isCameraBehavior = 2;
 		}
 	}
-	if ( isCameraBehavior == 2 && isRoundFlag == 4 ){
+	if ( isCameraBehavior == 2 && isRoundFlag == 6 ){
 		CameraBehaviorTimer2++;
 		if ( CameraBehaviorTimer2 >= 80)
 		{
@@ -343,7 +343,6 @@ void Player::Update() {
 	if ( input_->TriggerKey(DIK_1) ){
 		isRoundFlag = 1;
 	}
-
 	if ( isRoundFlag == 1){
 		camera->wtf.position.z -= 0.3f;
 		if ( incidenceCamera == 0 ){
@@ -369,7 +368,6 @@ void Player::Update() {
 	if ( input_->TriggerKey(DIK_2) ){
 		isRoundFlag = 3;
 	}
-
 	if ( isRoundFlag == 3 )
 	{
 		camera->wtf.position.z -= 0.3f;
@@ -393,7 +391,35 @@ void Player::Update() {
 		}
 
 	}
-	
+
+	//ラウンド変化(3ラウンド目)
+	if ( input_->TriggerKey(DIK_3) )
+	{
+		isRoundFlag = 5;
+	}
+	if ( isRoundFlag == 5 )
+	{
+		camera->wtf.position.z -= 0.3f;
+		if ( incidenceCamera3 == 0 )
+		{
+			if ( camera->wtf.position.z <= -10.0f )
+			{
+				camera->wtf.position.z = -10.0f;
+				incidenceCamera3 = 1;
+			}
+		}
+		else if ( incidenceCamera3 == 1 )
+		{
+			camera->wtf.position.z += 0.5f;
+			if ( camera->wtf.position.z >= 0.0f )
+			{
+				camera->wtf.position.z = 0.0f;
+				incidenceCamera3 = 2;
+				isRoundFlag = 6;
+			}
+		}
+
+	}
 
 	/*if ( input_->PushKey(DIK_I) ){camera->wtf.rotation.y -= 0.01f;}
 	else if ( input_->PushKey(DIK_K) ){camera->wtf.rotation.y += 0.01f;}
