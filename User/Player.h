@@ -308,6 +308,7 @@ public:
 	//ラウンドが変わるたびカメラが一旦引く
 	int incidenceCamera = 0;
 	int incidenceCamera2 = 0;
+	int incidenceCamera3 = 0;
 	//HPの緑の部分
 	Sprite* hpgreenUI = nullptr;
 	Vector2 hpgreenPosition;
