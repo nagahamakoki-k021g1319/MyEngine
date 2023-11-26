@@ -234,7 +234,7 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 	{
 		for ( int i = 0; i < 5; i++ )
 		{
-			if ( coll.CircleCollision(MeteorObj_[ i ]->wtf.position,collPlayerObj_->wtf.position,0.6f,0.6f) )
+			if ( coll.CircleCollision(MeteorObj_[ i ]->wtf.position,collPlayerObj_->wtf.position,0.8f,0.8f) )
 			{
 				player_->isCamShake = 1;
 				player_->camShakeTimer = player_->camShakeLimit;
