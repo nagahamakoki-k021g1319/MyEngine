@@ -216,12 +216,9 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 		}
 	}
 	//当たり判定(誘導弾からプレイヤー)
-	if ( hpPosition.x <= 279 )
-	{
-		for ( int i = 0; i < 5; i++ )
-		{
-			if ( coll.CircleCollision(linkagebulletObj_[ i ]->wtf.position,collPlayerObj_->wtf.position,0.6f,0.6f) )
-			{
+	if ( hpPosition.x <= 279 ){
+		for ( int i = 0; i < 5; i++ ){
+			if ( coll.CircleCollision(linkagebulletObj_[ i ]->wtf.position,collPlayerObj_->wtf.position,0.6f,0.6f) ){
 				player_->isCamShake = 1;
 				player_->camShakeTimer = player_->camShakeLimit;
 				player_->hpgreenPosition.x -= 10.0f;//倍ダメ

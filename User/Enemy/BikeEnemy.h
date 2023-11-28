@@ -59,10 +59,14 @@ private:
 	Object3d* Obj_[9] = {0};
 	Model*  Model_[9] = { 0 };
 	Model* Model2_[9] = { 0 };
-	//当たり判定のモデル
+	//当たり判定のモデル(本体)
 	Object3d* collObj_[9] = { 0 };
 	Model* collModel_[9] = { 0 };
 	int isCollFlag_[9] = { 0 };
+	//当たり判定のモデル(衝突してノックバックする用)
+	Object3d* collRightObj_[ 9 ] = { 0 };
+	Object3d* collLeftObj_[ 9 ] = { 0 };
+	Model* collLRModel_[ 9 ] = { 0 };
 
 	//バイクの車輪動かす
 	int bikstSpinTimer = 0;
@@ -89,6 +93,14 @@ private:
 	int actionTimer_[9] = { 0 };
 	int isMoveFlag_[9] = { 0 };
 	int stopTimer_[9] = { 0 };
+
+	//自機とバイク兵の押し出し処理(0 false,1 true)
+	int limitRightmove_[ 9 ] = {0};
+	int limitLeftmove_[ 9 ] = { 0 };
+
+	//衝突した時のノックバックタイマー
+	int knockbackTimer_[ 9 ] = { 0 };
+	int knockbackTimer2_[ 9 ] = { 0 };
 
 	//パーティクル
 	//地面のズサ
