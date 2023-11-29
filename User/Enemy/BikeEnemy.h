@@ -93,7 +93,7 @@ private:
 	int actionTimer_[9] = { 0 };
 	int isMoveFlag_[9] = { 0 };
 	int stopTimer_[9] = { 0 };
-
+	int stopTimerR_[ 9 ] = { 0 };
 	//自機とバイク兵の押し出し処理(0 false,1 true)
 	int limitRightmove_[ 9 ] = {0};
 	int limitLeftmove_[ 9 ] = { 0 };

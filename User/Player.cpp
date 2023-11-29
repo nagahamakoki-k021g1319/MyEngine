@@ -923,7 +923,7 @@ void Player::PlayerAction()
 			Obj_->wtf.position.x -= playerSpeed;
 			collObj_->wtf.position.x -= playerSpeed;
 			retObj_->wtf.position.x += playerSpeed2;
-			camera->wtf.position.x -= 0.02f;
+			/*camera->wtf.position.x -= 0.02f;*/
 		}
 	}
 	if ( input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT) )
@@ -940,7 +940,7 @@ void Player::PlayerAction()
 			Obj_->wtf.position.x += playerSpeed;
 			collObj_->wtf.position.x += playerSpeed;
 			retObj_->wtf.position.x -= playerSpeed2;
-			camera->wtf.position.x += 0.02f;
+			/*camera->wtf.position.x += 0.02f;*/
 		}
 	}
 

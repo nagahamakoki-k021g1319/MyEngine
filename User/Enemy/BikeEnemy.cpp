@@ -47,7 +47,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		
 	}
 	//ラウンド1
-	Obj_[0]->wtf.position = { -3.0f,-2.0f,-20.0f };
+	Obj_[0]->wtf.position = { -3.0f,-2.0f,-30.0f };
 	Obj_[1]->wtf.position = { 3.0f,-2.0f,-20.0f };
 	//ラウンド2
 	Obj_[2]->wtf.position = { -3.0f,-2.0f,-20.0f };
@@ -564,10 +564,11 @@ void BikeEnemy::BikeEnemyAction()
 {
 	//ラウンド1の左のバイク兵
 	if ( actionTimer_[ 0 ] >= 10 ){
-		if ( isMoveFlag_[ 0 ] == 1 && limitLeftmove_[0] == 0 ){
-			//左に移動
-			Obj_[ 0 ]->wtf.position.x -= 0.03f;
-			Obj_[ 0 ]->wtf.rotation.z += 0.03f;
+		//左に移動
+		if ( isMoveFlag_[ 0 ] == 2 && limitLeftmove_[0] == 0 ){
+			stopTimerR_[ 0 ] = 0;
+			Obj_[ 0 ]->wtf.position.x -= 0.02f;
+			Obj_[ 0 ]->wtf.rotation.z += 0.05f;
 			//傾き制限
 			if ( Obj_[ 0 ]->wtf.rotation.z >= 0.2f )
 			{
@@ -575,23 +576,40 @@ void BikeEnemy::BikeEnemyAction()
 			}
 
 			//一定距離でフラグ切り替え
-			if ( Obj_[ 0 ]->wtf.position.x <= -6.0f )
+			if ( Obj_[ 0 ]->wtf.position.x <= -4.5f )
 			{
-				Obj_[ 0 ]->wtf.position.x = -6.0f;
-				isMoveFlag_[ 0 ] = 0;
+				Obj_[ 0 ]->wtf.position.x = -4.5f;
+				isMoveFlag_[ 0 ] = 3;
 			}
 
 			//衝突時のノックバックの移動制限
-			if ( Obj_[ 0 ]->wtf.position.x >= -0.5f )
+			if ( Obj_[ 0 ]->wtf.position.x >= -1.5f )
 			{
-				Obj_[ 0 ]->wtf.position.x = -0.5f;
+				Obj_[ 0 ]->wtf.position.x = -1.5f;
 			}
 
 		}
-
+		//左に移動後一旦止まる(攻撃するかも？)
+		if ( isMoveFlag_[ 0 ] == 3 )
+		{
+			stopTimer_[ 0 ]++;
+			//傾きリセット
+			Obj_[ 0 ]->wtf.rotation.z -= 0.03f;
+			Obj_[ 0 ]->wtf.position.z += 0.05f;
+			//傾き制限
+			if ( Obj_[ 0 ]->wtf.rotation.z <= 0.0f )
+			{
+				Obj_[ 0 ]->wtf.rotation.z = 0.0f;
+			}
+		}
+		if ( stopTimer_[ 0 ] >= 60.0f )
+		{
+			isMoveFlag_[ 0 ] = 0;
+		}
+		//右に移動
 		if ( isMoveFlag_[ 0 ] == 0 && limitRightmove_[ 0 ] == 0 ){
-			//右に移動
-			Obj_[ 0 ]->wtf.position.x += 0.03f;
+			stopTimer_[ 0 ] = 0;
+			Obj_[ 0 ]->wtf.position.x += 0.02f;
 			Obj_[ 0 ]->wtf.rotation.z -= 0.03f;
 			//傾き制限
 			if ( Obj_[ 0 ]->wtf.rotation.z <= -0.2f )
@@ -600,28 +618,47 @@ void BikeEnemy::BikeEnemyAction()
 			}
 
 			//一定距離でフラグ切り替え
-			if ( Obj_[ 0 ]->wtf.position.x >= -0.5f )
+			if ( Obj_[ 0 ]->wtf.position.x >= -1.5f )
 			{
-				Obj_[ 0 ]->wtf.position.x = -0.5f;
+				Obj_[ 0 ]->wtf.position.x = -1.5f;
 				isMoveFlag_[ 0 ] = 1;
 			}
 
 			//衝突時のノックバックの移動制限
-			if ( Obj_[ 0 ]->wtf.position.x <= -6.0f )
+			if ( Obj_[ 0 ]->wtf.position.x <= -4.5f )
 			{
-				Obj_[ 0 ]->wtf.position.x = -6.0f;
+				Obj_[ 0 ]->wtf.position.x = -4.5f;
 			}
 		}
+
+		//右に移動後一旦止まる(攻撃するかも？)
+		if ( isMoveFlag_[ 0 ] == 1 )
+		{
+			stopTimerR_[ 0 ]++;
+			//傾きリセット
+			Obj_[ 0 ]->wtf.rotation.z += 0.03f;
+			Obj_[ 0 ]->wtf.position.z -= 0.05f;
+			//傾き制限
+			if ( Obj_[0]->wtf.rotation.z >= 0.0f )
+			{
+				Obj_[ 0 ]->wtf.rotation.z = 0.0f;
+			}
+
+		}
+		if ( stopTimerR_[ 0 ] >= 60.0f )
+		{
+			isMoveFlag_[ 0 ] = 2;
+		}
+
 	}
 
 	//ラウンド1の右のバイク兵
 	if ( actionTimer_[ 1 ] >= 25 )
 	{
-		if ( isMoveFlag_[ 1 ] == 0 )
-		{
-			stopTimer_[ 1 ] = 0;
-			//左に移動
-			Obj_[ 1 ]->wtf.position.x -= 0.03f;
+		//左に移動
+		if ( isMoveFlag_[ 1 ] == 0 && limitLeftmove_[ 0 ] == 0 ){
+			stopTimerR_[ 1 ] = 0;
+			Obj_[ 1 ]->wtf.position.x -= 0.02f;
 			Obj_[ 1 ]->wtf.rotation.z += 0.03f;
 			//傾き制限
 			if ( Obj_[ 1 ]->wtf.rotation.z >= 0.2f )
@@ -630,27 +667,32 @@ void BikeEnemy::BikeEnemyAction()
 			}
 
 			//一定距離でフラグ切り替え
-			if ( Obj_[ 1 ]->wtf.position.x <= 1.5f )
+			if ( Obj_[ 1 ]->wtf.position.x <= 2.0f )
 			{
-				Obj_[ 1 ]->wtf.position.x = 1.5f;
+				Obj_[ 1 ]->wtf.position.x = 2.0f;
 				isMoveFlag_[ 1 ] = 1;
 			}
+			//衝突時のノックバックの移動制限
+			if ( Obj_[1]->wtf.position.x >= 6.0f )
+			{
+				Obj_[1]->wtf.position.x = 6.0f;
+			}
+
 		}
 		//左に移動後一旦止まる(攻撃するかも？)
 		if ( isMoveFlag_[ 1 ] == 1 ){
 			stopTimer_[1]++;
 			//傾きリセット
 			Obj_[ 1 ]->wtf.rotation.z -= 0.03f;
+			Obj_[ 1 ]->wtf.position.z += 0.05f;
 			//傾き制限
 			if ( Obj_[ 1 ]->wtf.rotation.z <= 0.0f ){Obj_[ 1 ]->wtf.rotation.z = 0.0f;}
 		}
 		if(stopTimer_[1] >= 60.0f ){isMoveFlag_[ 1 ] = 2;}
-
-		if ( isMoveFlag_[ 1 ] == 2 )
-		{
+		//右に移動
+		if ( isMoveFlag_[ 1 ] == 2 && limitRightmove_[ 0 ] == 0 ){
 			stopTimer_[ 1 ] = 0;
-			//右に移動
-			Obj_[ 1 ]->wtf.position.x += 0.03f;
+			Obj_[ 1 ]->wtf.position.x += 0.02f;
 			Obj_[ 1 ]->wtf.rotation.z -= 0.03f;
 			//傾き制限
 			if ( Obj_[ 1 ]->wtf.rotation.z <= -0.2f )
@@ -659,18 +701,25 @@ void BikeEnemy::BikeEnemyAction()
 			}
 
 			//一定距離でフラグ切り替え
-			if ( Obj_[ 1 ]->wtf.position.x >= 7.0f )
+			if ( Obj_[ 1 ]->wtf.position.x >= 4.0f )
 			{
-				Obj_[ 1 ]->wtf.position.x = 7.0f;
+				Obj_[ 1 ]->wtf.position.x = 4.0f;
 				isMoveFlag_[ 1 ] = 3;
+			}
+
+			//衝突時のノックバックの移動制限
+			if ( Obj_[1]->wtf.position.x <= 2.0f )
+			{
+				Obj_[1]->wtf.position.x = 2.0f;
 			}
 		}
 		//右に移動後一旦止まる(攻撃するかも？)
 		if ( isMoveFlag_[ 1 ] == 3 )
 		{
-			stopTimer_[ 1 ]++;
+			stopTimerR_[ 1 ]++;
 			//傾きリセット
 			Obj_[ 1 ]->wtf.rotation.z += 0.03f;
+			Obj_[ 1 ]->wtf.position.z -= 0.05f;
 			//傾き制限
 			if ( Obj_[ 1 ]->wtf.rotation.z >= 0.0f )
 			{
@@ -678,7 +727,7 @@ void BikeEnemy::BikeEnemyAction()
 			}
 
 		}
-		if ( stopTimer_[ 1 ] >= 60.0f )
+		if ( stopTimerR_[ 1 ] >= 60.0f )
 		{
 			isMoveFlag_[ 1 ] = 0;
 		}

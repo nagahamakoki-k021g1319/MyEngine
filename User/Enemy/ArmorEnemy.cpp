@@ -243,7 +243,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 				}
 				else
 				{
-					Obj_[ i ]->wtf.position.x += 0.01f;
+					Obj_[ i ]->wtf.position.x += 0.02f;
 				}
 			}
 			//移動制限
