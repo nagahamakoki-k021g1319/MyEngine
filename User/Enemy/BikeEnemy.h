@@ -68,6 +68,19 @@ private:
 	Object3d* collLeftObj_[ 9 ] = { 0 };
 	Model* collLRModel_[ 9 ] = { 0 };
 
+	//突進用に自機に対して横一列になってる当たり判定モデル
+	//右
+	Object3d* collRushObj_[8] = { 0 };
+	//左
+	Object3d* collRushObjL_[ 8 ] = { 0 };
+	Model* collRushModel_[8] = { 0 };
+	//自機と横軸があった時に突進するフラグ(0 待機,1 突進,2 自機と衝突)
+	int isRushFlag_ = 0;
+	//衝突した時のノックバックタイマーとフラグ
+	int rushKnockbackTimer_ = 0;
+	int isRushKnockbackFlag_ = 0;
+
+
 	//バイクの車輪動かす
 	int bikstSpinTimer = 0;
 
@@ -98,7 +111,7 @@ private:
 	int limitRightmove_[ 9 ] = {0};
 	int limitLeftmove_[ 9 ] = { 0 };
 
-	//衝突した時のノックバックタイマー
+	//衝突した時のノックバックタイマー(通常時)
 	int knockbackTimer_[ 9 ] = { 0 };
 	int knockbackTimer2_[ 9 ] = { 0 };
 
