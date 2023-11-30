@@ -273,6 +273,11 @@ public:
 	bool limitmove = false;
 	bool limitmove2 = false;
 
+	//バイク兵との突進でノックバックするフラグ
+	//右から敵が突進
+	bool isKnockbackFlag = false;
+	int knockbackTimer = 0;
+
 	//弾発射(弱)
 	Object3d* shootObj_ = nullptr;
 	Model* shootModel_ = nullptr;

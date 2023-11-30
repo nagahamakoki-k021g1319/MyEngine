@@ -893,8 +893,7 @@ void Player::PlayerAction()
 		Obj_->wtf.rotation.y = -1.5f;
 		Obj_->wtf.rotation.x = -1.0f;
 	}
-	if ( bikslidTimer >= 31 )
-	{
+	if ( bikslidTimer >= 31 ){
 		Obj_->wtf.rotation.y = 0.0f;
 		Obj_->wtf.rotation.x = 0.0f;
 		bikslidTimer = 0;
@@ -908,9 +907,6 @@ void Player::PlayerAction()
 	{
 		if ( input_->TriggerKey(DIK_Z) || input_->StickInput(L_UP) ){isJumpFlag = true;}
 	}
-
-	
-	
 	if ( input_->PushKey(DIK_A) || input_->StickInput(L_LEFT) ){
 		if ( limitmove == true ){
 			Obj_->wtf.position.x -= 0.0f;
@@ -923,7 +919,7 @@ void Player::PlayerAction()
 			Obj_->wtf.position.x -= playerSpeed;
 			collObj_->wtf.position.x -= playerSpeed;
 			retObj_->wtf.position.x += playerSpeed2;
-			/*camera->wtf.position.x -= 0.02f;*/
+			/*camera->wtf.position.x -= 0.01f;*/
 		}
 	}
 	if ( input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT) )
@@ -940,7 +936,7 @@ void Player::PlayerAction()
 			Obj_->wtf.position.x += playerSpeed;
 			collObj_->wtf.position.x += playerSpeed;
 			retObj_->wtf.position.x -= playerSpeed2;
-			/*camera->wtf.position.x += 0.02f;*/
+			/*camera->wtf.position.x += 0.01f;*/
 		}
 	}
 
@@ -982,13 +978,11 @@ void Player::PlayerAction()
 	if ( input_->TriggerKey(DIK_SPACE) || input_->ButtonInput(RT) ){
 		if ( isShootFlag == false){isShootFlag = true;}
 	}
-
 	if ( BulletCoolTime == 0)
 	{
 		enemylen = retObj_->wtf.position - shootObj_->wtf.position;
 		enemylen.nomalize();
 	}
-
 	if ( isShootFlag == true )
 	{
 		BulletCoolTime++;
@@ -1003,6 +997,16 @@ void Player::PlayerAction()
 		BulletCoolTime = 0;
 		shootObj_->wtf.rotation.z = 0.0f;
 		isShootFlag = false;
+	}
+
+	//突進を受けた時にノックバック
+	if( isKnockbackFlag == true){knockbackTimer++;}
+	if (knockbackTimer >= 1){
+		Obj_->wtf.position.x -= 0.03f;
+	}
+	if ( knockbackTimer >= 21){
+		knockbackTimer = 0;
+		isKnockbackFlag = false;
 	}
 
 }

@@ -22,6 +22,12 @@ BikeEnemy::~BikeEnemy()
 		delete collLeftObj_[ i ];
 		delete collLRModel_[i];
 	}
+	for ( int i = 0; i < 8; i++ )
+	{
+		delete collRushObj_[ i ];
+		delete collRushObjL_[ i ];
+		delete collRushModel_[ i ];
+	}
 }
 
 void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
@@ -85,6 +91,16 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 	}
 
+	//突進用に自機に対して横一列になってる当たり判定モデル
+	for ( int i = 0; i < 8; i++ )
+	{
+		collRushModel_[ i ] = Model::LoadFromOBJ("collboll");
+		collRushObj_[ i ] = Object3d::Create();
+		collRushObj_[ i ]->SetModel(collRushModel_[ i ]);
+		collRushObjL_[ i ] = Object3d::Create();
+		collRushObjL_[ i ]->SetModel(collRushModel_[ i ]);
+	}
+
 	//雑魚敵(死んだときのバイクスピン)
 	for ( int i = 0; i < 9; i++ )
 	{
@@ -119,6 +135,13 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		collLeftObj_[ i ]->Update();
 		collLeftObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x - 0.2f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
 	}
+	//自機から横に出ているモデル
+	for ( int i = 0; i < 8; i++ ){
+		collRushObj_[i]->Update();
+		collRushObj_[ i ]->wtf.position = { playerRPos.x + i + 0.5f,playerRPos.y - 0.5f,playerRPos.z};
+		collRushObjL_[ i ]->Update();
+		collRushObjL_[ i ]->wtf.position = { playerRPos.x - i + 0.5f,playerRPos.y - 0.5f,playerRPos.z };
+	}
 
 	EffUpdate();
 	isGameStartTimer++;
@@ -150,6 +173,39 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	}
 	BikeEnemyAction();
 	
+	//突進攻撃の当たり判定(右の敵と右側の自機の横並びモデル)
+	for ( int i = 0; i < 8; i++ ){
+		if ( isBackEntryFlag_[ 1 ] == 1 && HP_[ 1 ] >= 1 && isRushFlag_ == 0 ){
+			if ( coll.CircleCollision(collRushObj_[ i ]->wtf.position,collObj_[ 1 ]->wtf.position,0.5f,0.5f)){
+				isRushFlag_ = 1;
+			}
+		}
+	}
+	//突進攻撃の当たり判定(右の敵と自機)
+	if ( isRushFlag_ == 1 ){
+		Obj_[ 1 ]->wtf.position.x -= 0.04f;
+		if ( Obj_[ 1 ]->wtf.position.x <= -3.5f){Obj_[ 1 ]->wtf.position.x = -3.5f;}
+		//突進中に自機と当たったらフラグ切り替え
+		if ( coll.CircleCollision(playerRPos,collLeftObj_[1]->wtf.position,0.6f,0.6f) ){
+			isRushKnockbackFlag_ = 1;
+			player_->isKnockbackFlag = true;
+		}
+	}
+	//当たったらノックバックタイマー起動
+	if ( isRushKnockbackFlag_ == 1){
+		rushKnockbackTimer_++;
+		isRushFlag_ = 2;
+	}
+	//タイマー起動時元の位置に戻る
+	if ( rushKnockbackTimer_ >= 1){
+		Obj_[ 1 ]->wtf.position.x += 0.03f;
+		if ( Obj_[ 1 ]->wtf.position.x >= 4.0f ){
+			Obj_[ 1 ]->wtf.position.x = 4.0f;
+			isRushFlag_ = 0;
+			isRushKnockbackFlag_ = 0;
+			rushKnockbackTimer_ = 0;
+		}
+	}
 
 
 	//自機の加減速でバイク兵のZ軸移動
@@ -216,8 +272,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		}
 
 		//自機が右にいるバイク兵に対して衝突するとき
-		if ( HP_[ i ] >= 1 )
-		{
+		if ( HP_[ i ] >= 1 ){
 			if ( coll.CircleCollision(playerRPos,collLeftObj_[ i ]->wtf.position,0.6f,0.6f) )
 			{
 				player_->limitmove2 = true;
@@ -239,6 +294,8 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 			knockbackTimer_[ i ] = 0;
 		}
 
+
+
 	}
 
 	//バイク兵のガス噴射
@@ -254,7 +311,6 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 			isbulletEffFlag_[i] = 1;
 		}
 	}
-
 
 	//バイクが前進しながら倒れる
 	for ( int i = 0; i < 9; i++ )
@@ -302,7 +358,7 @@ void BikeEnemy::Draw()
 			if ( isBikclushFlag_[i] == 0 )
 			{
 				Obj_[i]->Draw();
-				/*collObj_[i]->Draw();*/
+				collObj_[i]->Draw();
 				/*collRightObj_[ i ]->Draw();
 				collLeftObj_[ i ]->Draw();*/
 			}
@@ -318,10 +374,13 @@ void BikeEnemy::Draw()
 					}
 				}
 			}
-
-
 		}
-
+		//突進用に自機に対して横一列になってる当たり判定モデル
+		for ( int i = 0; i < 8; i++ )
+		{
+			collRushObj_[ i ]->Draw();
+			collRushObjL_[ i ]->Draw();
+		}
 		
 	}
 
@@ -415,19 +474,28 @@ Vector3 BikeEnemy::GetWorldPosition()
 void BikeEnemy::BikeEnemyEntry()
 {
 	//バイク兵のエントリー(ラウンド1)
-	for ( int i = 0; i < 2; i++ )
+	if ( isBackEntryFlag_[ 0 ] == 0 )
 	{
-		if ( isBackEntryFlag_[ i ] == 0 )
+		if ( isGameStartTimer >= 220 )
 		{
-			if ( isGameStartTimer >= 220 )
-			{
-				Obj_[ i ]->wtf.position.z += 0.5f;
-			}
-			if ( Obj_[ i ]->wtf.position.z >= 5.0f )
-			{
-				Obj_[ i ]->wtf.position.z = 5.0f;
-				isBackEntryFlag_[ i ] = 1;
-			}
+			Obj_[ 0 ]->wtf.position.z += 0.5f;
+		}
+		if ( Obj_[ 0 ]->wtf.position.z >= 5.0f )
+		{
+			Obj_[0]->wtf.position.z = 5.0f;
+			isBackEntryFlag_[ 0 ] = 1;
+		}
+	}
+	if ( isBackEntryFlag_[1] == 0 )
+	{
+		if ( isGameStartTimer >= 220 )
+		{
+			Obj_[1]->wtf.position.z += 0.5f;
+		}
+		if ( Obj_[1]->wtf.position.z >= 10.0f )
+		{
+			Obj_[1]->wtf.position.z = 10.0f;
+			isBackEntryFlag_[1] = 1;
 		}
 	}
 
@@ -567,7 +635,7 @@ void BikeEnemy::BikeEnemyAction()
 		//左に移動
 		if ( isMoveFlag_[ 0 ] == 2 && limitLeftmove_[0] == 0 ){
 			stopTimerR_[ 0 ] = 0;
-			Obj_[ 0 ]->wtf.position.x -= 0.02f;
+			Obj_[ 0 ]->wtf.position.x -= 0.03f;
 			Obj_[ 0 ]->wtf.rotation.z += 0.05f;
 			//傾き制限
 			if ( Obj_[ 0 ]->wtf.rotation.z >= 0.2f )
@@ -595,7 +663,7 @@ void BikeEnemy::BikeEnemyAction()
 			stopTimer_[ 0 ]++;
 			//傾きリセット
 			Obj_[ 0 ]->wtf.rotation.z -= 0.03f;
-			Obj_[ 0 ]->wtf.position.z += 0.05f;
+			/*Obj_[ 0 ]->wtf.position.z += 0.05f;*/
 			//傾き制限
 			if ( Obj_[ 0 ]->wtf.rotation.z <= 0.0f )
 			{
@@ -609,7 +677,7 @@ void BikeEnemy::BikeEnemyAction()
 		//右に移動
 		if ( isMoveFlag_[ 0 ] == 0 && limitRightmove_[ 0 ] == 0 ){
 			stopTimer_[ 0 ] = 0;
-			Obj_[ 0 ]->wtf.position.x += 0.02f;
+			Obj_[ 0 ]->wtf.position.x += 0.03f;
 			Obj_[ 0 ]->wtf.rotation.z -= 0.03f;
 			//傾き制限
 			if ( Obj_[ 0 ]->wtf.rotation.z <= -0.2f )
@@ -637,7 +705,7 @@ void BikeEnemy::BikeEnemyAction()
 			stopTimerR_[ 0 ]++;
 			//傾きリセット
 			Obj_[ 0 ]->wtf.rotation.z += 0.03f;
-			Obj_[ 0 ]->wtf.position.z -= 0.05f;
+			/*Obj_[ 0 ]->wtf.position.z -= 0.05f;*/
 			//傾き制限
 			if ( Obj_[0]->wtf.rotation.z >= 0.0f )
 			{
@@ -653,87 +721,87 @@ void BikeEnemy::BikeEnemyAction()
 	}
 
 	//ラウンド1の右のバイク兵
-	if ( actionTimer_[ 1 ] >= 25 )
-	{
-		//左に移動
-		if ( isMoveFlag_[ 1 ] == 0 && limitLeftmove_[ 0 ] == 0 ){
-			stopTimerR_[ 1 ] = 0;
-			Obj_[ 1 ]->wtf.position.x -= 0.02f;
-			Obj_[ 1 ]->wtf.rotation.z += 0.03f;
-			//傾き制限
-			if ( Obj_[ 1 ]->wtf.rotation.z >= 0.2f )
-			{
-				Obj_[ 1 ]->wtf.rotation.z = 0.2f;
-			}
+	//if ( actionTimer_[ 1 ] >= 25 )
+	//{
+	//	//左に移動
+	//	if ( isMoveFlag_[ 1 ] == 0 && limitLeftmove_[ 1 ] == 0 ){
+	//		stopTimerR_[ 1 ] = 0;
+	//		Obj_[ 1 ]->wtf.position.x -= 0.03f;
+	//		Obj_[ 1 ]->wtf.rotation.z += 0.03f;
+	//		//傾き制限
+	//		if ( Obj_[ 1 ]->wtf.rotation.z >= 0.2f )
+	//		{
+	//			Obj_[ 1 ]->wtf.rotation.z = 0.2f;
+	//		}
 
-			//一定距離でフラグ切り替え
-			if ( Obj_[ 1 ]->wtf.position.x <= 2.0f )
-			{
-				Obj_[ 1 ]->wtf.position.x = 2.0f;
-				isMoveFlag_[ 1 ] = 1;
-			}
-			//衝突時のノックバックの移動制限
-			if ( Obj_[1]->wtf.position.x >= 6.0f )
-			{
-				Obj_[1]->wtf.position.x = 6.0f;
-			}
+	//		//一定距離でフラグ切り替え
+	//		if ( Obj_[ 1 ]->wtf.position.x <= 2.0f )
+	//		{
+	//			Obj_[ 1 ]->wtf.position.x = 2.0f;
+	//			isMoveFlag_[ 1 ] = 1;
+	//		}
+	//		//衝突時のノックバックの移動制限
+	//		if ( Obj_[1]->wtf.position.x >= 6.0f )
+	//		{
+	//			Obj_[1]->wtf.position.x = 6.0f;
+	//		}
 
-		}
-		//左に移動後一旦止まる(攻撃するかも？)
-		if ( isMoveFlag_[ 1 ] == 1 ){
-			stopTimer_[1]++;
-			//傾きリセット
-			Obj_[ 1 ]->wtf.rotation.z -= 0.03f;
-			Obj_[ 1 ]->wtf.position.z += 0.05f;
-			//傾き制限
-			if ( Obj_[ 1 ]->wtf.rotation.z <= 0.0f ){Obj_[ 1 ]->wtf.rotation.z = 0.0f;}
-		}
-		if(stopTimer_[1] >= 60.0f ){isMoveFlag_[ 1 ] = 2;}
-		//右に移動
-		if ( isMoveFlag_[ 1 ] == 2 && limitRightmove_[ 0 ] == 0 ){
-			stopTimer_[ 1 ] = 0;
-			Obj_[ 1 ]->wtf.position.x += 0.02f;
-			Obj_[ 1 ]->wtf.rotation.z -= 0.03f;
-			//傾き制限
-			if ( Obj_[ 1 ]->wtf.rotation.z <= -0.2f )
-			{
-				Obj_[ 1 ]->wtf.rotation.z = -0.2f;
-			}
+	//	}
+	//	//左に移動後一旦止まる(攻撃するかも？)
+	//	if ( isMoveFlag_[ 1 ] == 1 ){
+	//		stopTimer_[1]++;
+	//		//傾きリセット
+	//		Obj_[ 1 ]->wtf.rotation.z -= 0.03f;
+	//		/*Obj_[ 1 ]->wtf.position.z += 0.05f;*/
+	//		//傾き制限
+	//		if ( Obj_[ 1 ]->wtf.rotation.z <= 0.0f ){Obj_[ 1 ]->wtf.rotation.z = 0.0f;}
+	//	}
+	//	if(stopTimer_[1] >= 60.0f ){isMoveFlag_[ 1 ] = 2;}
+	//	//右に移動
+	//	if ( isMoveFlag_[ 1 ] == 2 && limitRightmove_[ 1 ] == 0 ){
+	//		stopTimer_[ 1 ] = 0;
+	//		Obj_[ 1 ]->wtf.position.x += 0.03f;
+	//		Obj_[ 1 ]->wtf.rotation.z -= 0.03f;
+	//		//傾き制限
+	//		if ( Obj_[ 1 ]->wtf.rotation.z <= -0.2f )
+	//		{
+	//			Obj_[ 1 ]->wtf.rotation.z = -0.2f;
+	//		}
 
-			//一定距離でフラグ切り替え
-			if ( Obj_[ 1 ]->wtf.position.x >= 4.0f )
-			{
-				Obj_[ 1 ]->wtf.position.x = 4.0f;
-				isMoveFlag_[ 1 ] = 3;
-			}
+	//		//一定距離でフラグ切り替え
+	//		if ( Obj_[ 1 ]->wtf.position.x >= 4.0f )
+	//		{
+	//			Obj_[ 1 ]->wtf.position.x = 4.0f;
+	//			isMoveFlag_[ 1 ] = 3;
+	//		}
 
-			//衝突時のノックバックの移動制限
-			if ( Obj_[1]->wtf.position.x <= 2.0f )
-			{
-				Obj_[1]->wtf.position.x = 2.0f;
-			}
-		}
-		//右に移動後一旦止まる(攻撃するかも？)
-		if ( isMoveFlag_[ 1 ] == 3 )
-		{
-			stopTimerR_[ 1 ]++;
-			//傾きリセット
-			Obj_[ 1 ]->wtf.rotation.z += 0.03f;
-			Obj_[ 1 ]->wtf.position.z -= 0.05f;
-			//傾き制限
-			if ( Obj_[ 1 ]->wtf.rotation.z >= 0.0f )
-			{
-				Obj_[ 1 ]->wtf.rotation.z = 0.0f;
-			}
+	//		//衝突時のノックバックの移動制限
+	//		if ( Obj_[1]->wtf.position.x <= 2.0f )
+	//		{
+	//			Obj_[1]->wtf.position.x = 2.0f;
+	//		}
+	//	}
+	//	//右に移動後一旦止まる(攻撃するかも？)
+	//	if ( isMoveFlag_[ 1 ] == 3 )
+	//	{
+	//		stopTimerR_[ 1 ]++;
+	//		//傾きリセット
+	//		Obj_[ 1 ]->wtf.rotation.z += 0.03f;
+	//		/*Obj_[ 1 ]->wtf.position.z -= 0.05f;*/
+	//		//傾き制限
+	//		if ( Obj_[ 1 ]->wtf.rotation.z >= 0.0f )
+	//		{
+	//			Obj_[ 1 ]->wtf.rotation.z = 0.0f;
+	//		}
 
-		}
-		if ( stopTimerR_[ 1 ] >= 60.0f )
-		{
-			isMoveFlag_[ 1 ] = 0;
-		}
+	//	}
+	//	if ( stopTimerR_[ 1 ] >= 60.0f )
+	//	{
+	//		isMoveFlag_[ 1 ] = 0;
+	//	}
 
 
-	}
+	//}
 
 	//ラウンド2の左のバイク兵
 	if ( actionTimer_[2] >= 40 )
