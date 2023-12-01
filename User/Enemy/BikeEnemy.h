@@ -76,10 +76,12 @@ private:
 	Model* collRushModel_[8] = { 0 };
 	//自機と横軸があった時に突進するフラグ(0 待機,1 突進,2 自機と衝突)
 	int isRushFlag_ = 0;
+	int isRushFlagR_ = 0;
 	//衝突した時のノックバックタイマーとフラグ
 	int rushKnockbackTimer_ = 0;
+	int rushKnockbackTimerR_ = 0;
 	int isRushKnockbackFlag_ = 0;
-
+	int rushCoolTimer_ = 0;
 
 	//バイクの車輪動かす
 	int bikstSpinTimer = 0;

@@ -278,6 +278,10 @@ public:
 	bool isKnockbackFlag = false;
 	int knockbackTimer = 0;
 
+	//左から敵が突進
+	bool isKnockbackFlagL = false;
+	int knockbackTimerL = 0;
+
 	//弾発射(弱)
 	Object3d* shootObj_ = nullptr;
 	Model* shootModel_ = nullptr;
