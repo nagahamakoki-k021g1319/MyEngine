@@ -151,12 +151,12 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	extrusionRightModel_ = Model::LoadFromOBJ("collboll");
 	extrusionRightObj_ = Object3d::Create();
 	extrusionRightObj_->SetModel(extrusionRightModel_);
-	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + 0.2f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + 0.01f,Obj_->wtf.position.y + 0.5f,-1.0f };
 	//左
 	extrusionLeftModel_ = Model::LoadFromOBJ("collboll");
 	extrusionLeftObj_ = Object3d::Create();
 	extrusionLeftObj_->SetModel(extrusionLeftModel_);
-	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - 0.2f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - 0.01f,Obj_->wtf.position.y + 0.5f,-1.0f };
 
 	//自機の弾(弱)
 	shootModel_ = Model::LoadFromOBJ("boll2");
@@ -224,9 +224,9 @@ void Player::Update() {
 	collSWRightObj_->Update();
 	collSWRightObj_->wtf.position = { Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y + 0.5f,-1.0f };
 	extrusionRightObj_->Update();
-	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + 0.2f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + 0.01f,Obj_->wtf.position.y + 0.5f,-1.0f };
 	extrusionLeftObj_->Update();
-	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - 0.2f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - 0.01f,Obj_->wtf.position.y + 0.5f,-1.0f };
 
 	isGameStartFlag = true;
 
@@ -450,8 +450,8 @@ void Player::Draw() {
 	}
 
 	if ( isGameStartTimer >= 180 ){
-		/*extrusionRightObj_->Draw();
-		extrusionLeftObj_->Draw();*/
+		extrusionRightObj_->Draw();
+		extrusionLeftObj_->Draw();
 		/*collObj_->Draw();*/
 		if ( isCollSWFlag == true ){
 			/*collSWObj_->Draw();*/
@@ -999,7 +999,7 @@ void Player::PlayerAction()
 		isShootFlag = false;
 	}
 
-	//突進を受けた時にノックバック
+	//突進を受けた時にノックバック(右からの突進)
 	if( isKnockbackFlag == true){knockbackTimer++;}
 	if (knockbackTimer >= 1){
 		Obj_->wtf.position.x -= 0.03f;
@@ -1007,6 +1007,20 @@ void Player::PlayerAction()
 	if ( knockbackTimer >= 21){
 		knockbackTimer = 0;
 		isKnockbackFlag = false;
+	}
+	//突進を受けた時にノックバック(左からの突進)
+	if ( isKnockbackFlagL == true )
+	{
+		knockbackTimerL++;
+	}
+	if ( knockbackTimerL >= 1 )
+	{
+		Obj_->wtf.position.x += 0.03f;
+	}
+	if ( knockbackTimerL >= 21 )
+	{
+		knockbackTimerL = 0;
+		isKnockbackFlagL = false;
 	}
 
 }
