@@ -83,11 +83,11 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		//右
 		collRightObj_[ i ] = Object3d::Create();
 		collRightObj_[ i ]->SetModel(collLRModel_[ i ]);
-		collRightObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x + 0.01f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
+		collRightObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x + 0.1f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
 		//左
 		collLeftObj_[ i ] = Object3d::Create();
 		collLeftObj_[ i ]->SetModel(collLRModel_[ i ]);
-		collLeftObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x - 0.01f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
+		collLeftObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x - 0.1f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
 
 	}
 
@@ -131,9 +131,9 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		bikclushObj_[ i ]->Update();
 		bikclushObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z };
 		collRightObj_[ i ]->Update();
-		collRightObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x + 0.01f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
+		collRightObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x + 0.1f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
 		collLeftObj_[ i ]->Update();
-		collLeftObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x - 0.01f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
+		collLeftObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x - 0.1f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
 	}
 	//自機から横に出ているモデル
 	for ( int i = 0; i < 8; i++ ){
@@ -177,113 +177,169 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	if ( input_->PushKey(DIK_J))
 	{
 		Obj_[ 1 ]->wtf.rotation.z += 0.03f;
+		if ( Obj_[ 1 ]->wtf.rotation.z >= 0.45f )
+		{
+			Obj_[ 1 ]->wtf.rotation.z = 0.45f;
+		}
 	}
 	if ( input_->PushKey(DIK_L))
 	{
-		Obj_[ 1 ]->wtf.rotation.z -= 0.02f;
+		Obj_[ 1 ]->wtf.rotation.z -= 0.03f;
+		if ( Obj_[ 1 ]->wtf.rotation.z <= -0.45f )
+		{
+			Obj_[ 1 ]->wtf.rotation.z = -0.45f;
+		}
+		
 	}
 	
 
 
 	//突進攻撃の当たり判定
 	for ( int i = 0; i < 8; i++ ){
-		//突進攻撃の当たり判定(右の敵と右側の自機の横並びモデル)
-		if ( isBackEntryFlag_[ 1 ] == 1 && HP_[ 1 ] >= 1 && isRushFlag_ == 0 ){
-			if ( coll.CircleCollision(collRushObj_[ i ]->wtf.position,collObj_[ 1 ]->wtf.position,0.5f,0.5f)){
-				isRushFlag_ = 1;
+		for ( int j = 0; j < 8; j++ ){
+			//突進攻撃の当たり判定(右の敵と右側の自機の横並びモデル)
+			if ( isBackEntryFlag_[j] == 1 && HP_[j] >= 1 && isRushFlag_[j] == 0 )
+			{
+				if ( coll.CircleCollision(collRushObj_[ i ]->wtf.position,collObj_[j]->wtf.position,0.5f,0.5f) )
+				{
+					isRushFlag_[j] = 1;
+				}
 			}
-		}
-		//突進攻撃の当たり判定(左の敵と左側の自機の横並びモデル)
-		if ( isBackEntryFlag_[ 1 ] == 1 && HP_[ 1 ] >= 1 && isRushFlag_ == 0 ){
-			if (coll.CircleCollision(collRushObjL_[ i ]->wtf.position,collObj_[ 1 ]->wtf.position,0.5f,0.5f)){
-				isRushFlag_ = 4;
+			//突進攻撃の当たり判定(左の敵と左側の自機の横並びモデル)
+			if ( isBackEntryFlag_[j] == 1 && HP_[j] >= 1 && isRushFlag_[j] == 0 )
+			{
+				if ( coll.CircleCollision(collRushObjL_[ i ]->wtf.position,collObj_[j]->wtf.position,0.5f,0.5f) )
+				{
+					isRushFlag_[j] = 4;
+				}
 			}
 		}
 	}
 	//突進攻撃の当たり判定(右の敵と自機)
-	if ( isRushFlag_ == 1 ){
-		Obj_[ 1 ]->wtf.position.x -= 0.04f;
-		if ( Obj_[ 1 ]->wtf.position.x <= -3.0f){
-			Obj_[ 1 ]->wtf.position.x = -3.0f;
-			isRushFlag_ = 3;
+	for ( int i = 0; i < 9; i++ )
+	{
+		if ( isRushFlag_[i] == 1 )
+		{
+			Obj_[i]->wtf.position.x -= 0.04f;
+			if ( Obj_[i]->wtf.position.x <= -3.0f )
+			{
+				Obj_[i]->wtf.position.x = -3.0f;
+				isRushFlag_[ i ] = 3;
+			}
+			Obj_[i]->wtf.rotation.z += 0.03f;
+			if ( Obj_[i]->wtf.rotation.z >= 0.45f )
+			{
+				Obj_[i]->wtf.rotation.z = 0.45f;
+			}
+			//突進中に自機と当たったらフラグ切り替え
+			if ( coll.CircleCollision(playerRPos,collLeftObj_[i]->wtf.position,0.6f,0.6f) )
+			{
+				isRushKnockbackFlag_[ i ] = 1;
+				player_->isKnockbackFlag = true;
+				player_->isCamShake = 1;
+				player_->camShakeTimer = player_->camShakeLimit;
+				player_->hpgreenPosition.x -= 10.0f;//倍ダメ
+				player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
+			}
 		}
-		//突進中に自機と当たったらフラグ切り替え
-		if ( coll.CircleCollision(playerRPos,collLeftObj_[1]->wtf.position,0.6f,0.6f) ){
-			isRushKnockbackFlag_ = 1;
-			player_->isKnockbackFlag = true;
-			player_->isCamShake = 1;
-			player_->camShakeTimer = player_->camShakeLimit;
-			player_->hpgreenPosition.x -= 10.0f;//倍ダメ
-			player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
+		//当たったらノックバックタイマー起動
+		if ( isRushKnockbackFlag_[ i ] == 1 )
+		{
+			rushKnockbackTimer_[ i ]++;
+			isRushFlag_[ i ] = 2;
 		}
-	}
-	//当たったらノックバックタイマー起動
-	if ( isRushKnockbackFlag_ == 1){
-		rushKnockbackTimer_++;
-		isRushFlag_ = 2;
-	}
-	//タイマー起動時元の位置に戻る
-	if ( rushKnockbackTimer_ >= 1){
-		Obj_[ 1 ]->wtf.position.x += 0.03f;
-		if ( Obj_[ 1 ]->wtf.position.x >= 4.0f ){
-			Obj_[ 1 ]->wtf.position.x = 4.0f;
-			isRushFlag_ = 3;
-			isRushKnockbackFlag_ = 0;
-			rushKnockbackTimer_ = 0;
+		//タイマー起動時元の位置に戻る
+		if ( rushKnockbackTimer_[ i ] >= 1 )
+		{
+			Obj_[i]->wtf.rotation.z -= 0.03f;
+			if ( Obj_[i]->wtf.rotation.z <= 0.0f )
+			{
+				Obj_[i]->wtf.rotation.z = 0.0f;
+			}
+			Obj_[i]->wtf.position.x += 0.03f;
+			if ( Obj_[i]->wtf.position.x >= 4.0f )
+			{
+				Obj_[i]->wtf.position.x = 4.0f;
+				isRushFlag_[ i ] = 3;
+				isRushKnockbackFlag_[ i ] = 0;
+				rushKnockbackTimer_[ i ] = 0;
+			}
 		}
-	}
-	//突進後クールタイム
-	if ( isRushFlag_ == 3 ){rushCoolTimer_++;}
+		//突進後クールタイム
+		if ( isRushFlag_[ i ] == 3 )
+		{
+			Obj_[i]->wtf.rotation.z -= 0.03f;
+			if ( Obj_[i]->wtf.rotation.z <= 0.0f )
+			{
+				Obj_[i]->wtf.rotation.z = 0.0f;
+			}
+			rushCoolTimer_[ i ]++;
+		}
 
-	//突進攻撃の当たり判定(左の敵と自機)
-	if ( isRushFlag_ == 4 )
-	{
-		Obj_[ 1 ]->wtf.position.x += 0.04f;
-		if ( Obj_[ 1 ]->wtf.position.x >= 3.0f )
+		//突進攻撃の当たり判定(左の敵と自機)
+		if ( isRushFlag_[ i ] == 4 )
 		{
-			Obj_[ 1 ]->wtf.position.x = 3.0f;
-			isRushFlag_ = 5;
+			Obj_[i]->wtf.position.x += 0.04f;
+			if ( Obj_[i]->wtf.position.x >= 3.0f )
+			{
+				Obj_[i]->wtf.position.x = 3.0f;
+				isRushFlag_[ i ] = 5;
+			}
+			Obj_[i]->wtf.rotation.z -= 0.03f;
+			if ( Obj_[i]->wtf.rotation.z <= -0.45f )
+			{
+				Obj_[i]->wtf.rotation.z = -0.45f;
+			}
+			//突進中に自機と当たったらフラグ切り替え
+			if ( coll.CircleCollision(playerLPos,collRightObj_[ 1 ]->wtf.position,0.6f,0.6f) )
+			{
+				isRushKnockbackFlag_[ i ] = 2;
+				player_->isKnockbackFlagL = true;
+				player_->isCamShake = 1;
+				player_->camShakeTimer = player_->camShakeLimit;
+				player_->hpgreenPosition.x -= 10.0f;//倍ダメ
+				player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
+			}
 		}
-		//突進中に自機と当たったらフラグ切り替え
-		if ( coll.CircleCollision(playerLPos,collRightObj_[ 1 ]->wtf.position,0.6f,0.6f) )
+		//当たったらノックバックタイマー起動
+		if ( isRushKnockbackFlag_[ i ] == 2 )
 		{
-			isRushKnockbackFlag_ = 2;
-			player_->isKnockbackFlagL = true;
-			player_->isCamShake = 1;
-			player_->camShakeTimer = player_->camShakeLimit;
-			player_->hpgreenPosition.x -= 10.0f;//倍ダメ
-			player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
+			rushKnockbackTimerR_[ i ]++;
+			isRushFlag_[ i ] = 6;
 		}
-	}
-	//当たったらノックバックタイマー起動
-	if ( isRushKnockbackFlag_ == 2 )
-	{
-		rushKnockbackTimerR_++;
-		isRushFlag_ = 6;
-	}
-	//タイマー起動時元の位置に戻る
-	if ( rushKnockbackTimerR_ >= 1 )
-	{
-		Obj_[ 1 ]->wtf.position.x -= 0.03f;
-		if ( Obj_[ 1 ]->wtf.position.x <= -4.0f )
+		//タイマー起動時元の位置に戻る
+		if ( rushKnockbackTimerR_[ i ] >= 1 )
 		{
-			Obj_[ 1 ]->wtf.position.x = -4.0f;
-			isRushFlag_ = 5;
-			isRushKnockbackFlag_ = 0;
-			rushKnockbackTimerR_ = 0;
+			Obj_[i]->wtf.rotation.z += 0.03f;
+			if ( Obj_[i]->wtf.rotation.z >= 0.0f )
+			{
+				Obj_[i]->wtf.rotation.z = 0.0f;
+			}
+			Obj_[i]->wtf.position.x -= 0.03f;
+			if ( Obj_[i]->wtf.position.x <= -4.0f )
+			{
+				Obj_[i]->wtf.position.x = -4.0f;
+				isRushFlag_[ i ] = 5;
+				isRushKnockbackFlag_[ i ] = 0;
+				rushKnockbackTimerR_[ i ] = 0;
+			}
+		}
+		//突進後クールタイム
+		if ( isRushFlag_[ i ] == 5 )
+		{
+			Obj_[i]->wtf.rotation.z += 0.03f;
+			if ( Obj_[i]->wtf.rotation.z >= 0.0f )
+			{
+				Obj_[i]->wtf.rotation.z = 0.0f;
+			}
+			rushCoolTimer_[ i ]++;
+		}
+		if ( rushCoolTimer_[ i ] >= 200 )
+		{
+			isRushFlag_[ i ] = 0;
+			rushCoolTimer_[ i ] = 0;
 		}
 	}
-	//突進後クールタイム
-	if ( isRushFlag_ == 5 )
-	{
-		rushCoolTimer_++;
-	}
-	if ( rushCoolTimer_ >= 100 )
-	{
-		isRushFlag_ = 0;
-		rushCoolTimer_ = 0;
-	}
-
 
 	//自機の加減速でバイク兵のZ軸移動
 	for ( int i = 0; i < 9; i++ ){
@@ -328,6 +384,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 			{
 				player_->limitmove = true;
 				limitRightmove_[ i ] = 1;
+				isHit_[ i ]++;
 			}
 		}
 		//左にいるバイク兵のノックバック
@@ -353,6 +410,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 			{
 				player_->limitmove2 = true;
 				limitLeftmove_[ i ] = 1;
+				isHit_[ i ]++;
 			}
 		}
 		//右にいるバイク兵のノックバック
@@ -414,11 +472,20 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		}
 	}
 
+	//数回タックルされたらやられる
+	for ( int i = 0; i < 9; i++ )
+	{
+		if ( isHit_[ i ] >= 20 )
+		{
+			HP_[ i ] = 0;
+		}
+	}
+
 	ImGui::Begin("bikeEnemy");
 
 	ImGui::Text("rotation_[1]:%f,%f,%f",Obj_[ 1 ]->wtf.rotation.x,Obj_[ 1 ]->wtf.rotation.y,Obj_[ 1 ]->wtf.rotation.z);
 	ImGui::Text("HP:%d",HP_[ 0 ]);
-	ImGui::Text("isRushFlag_:%d",isRushFlag_);
+	ImGui::Text("isHit_:%d",isHit_[1]);
 	ImGui::Text("isBackEntryFlag:%d",isBackEntryFlag_[1]);
 
 	ImGui::End();
@@ -435,8 +502,8 @@ void BikeEnemy::Draw()
 			{
 				Obj_[i]->Draw();
 				collObj_[i]->Draw();
-				/*collRightObj_[ i ]->Draw();
-				collLeftObj_[ i ]->Draw();*/
+				collRightObj_[ i ]->Draw();
+				collLeftObj_[ i ]->Draw();
 			}
 
 			//バイク兵の撃破モデル
@@ -454,8 +521,8 @@ void BikeEnemy::Draw()
 		//突進用に自機に対して横一列になってる当たり判定モデル
 		for ( int i = 0; i < 8; i++ )
 		{
-			collRushObj_[ i ]->Draw();
-			collRushObjL_[ i ]->Draw();
+			/*collRushObj_[ i ]->Draw();
+			collRushObjL_[ i ]->Draw();*/
 		}
 		
 	}
@@ -708,96 +775,41 @@ void BikeEnemy::BikeEnemyAction()
 {
 	//ラウンド1の左のバイク兵
 	if ( actionTimer_[ 0 ] >= 10 ){
-		//上に移動
-		if ( isMoveFlag_[ 0 ] == 0){
-			actionTimer_[ 0 ]++;
-		}
-		//左に移動後一旦止まる(攻撃するかも？)
-		if ( isMoveFlag_[ 0 ] == 1 )
-		{
-			
-		}
-		if ( stopTimer_[ 0 ] >= 60.0f )
-		{
-			isMoveFlag_[ 0 ] = 0;
-		}
-		//右に移動
-		if ( isMoveFlag_[ 0 ] == 0 && limitRightmove_[ 0 ] == 0 ){
-			stopTimer_[ 0 ] = 0;
-			Obj_[ 0 ]->wtf.position.x += 0.03f;
-			Obj_[ 0 ]->wtf.rotation.z -= 0.03f;
-			//傾き制限
-			if ( Obj_[ 0 ]->wtf.rotation.z <= -0.2f )
-			{
-				Obj_[ 0 ]->wtf.rotation.z = -0.2f;
-			}
 
-			//一定距離でフラグ切り替え
-			if ( Obj_[ 0 ]->wtf.position.x >= -1.5f )
-			{
-				Obj_[ 0 ]->wtf.position.x = -1.5f;
-				isMoveFlag_[ 0 ] = 1;
-			}
-
-			//衝突時のノックバックの移動制限
-			if ( Obj_[ 0 ]->wtf.position.x <= -4.5f )
-			{
-				Obj_[ 0 ]->wtf.position.x = -4.5f;
-			}
-		}
-
-		//右に移動後一旦止まる(攻撃するかも？)
-		if ( isMoveFlag_[ 0 ] == 1 )
-		{
-			stopTimerR_[ 0 ]++;
-			//傾きリセット
-			Obj_[ 0 ]->wtf.rotation.z += 0.03f;
-			/*Obj_[ 0 ]->wtf.position.z -= 0.05f;*/
-			//傾き制限
-			if ( Obj_[0]->wtf.rotation.z >= 0.0f )
-			{
-				Obj_[ 0 ]->wtf.rotation.z = 0.0f;
-			}
-
-		}
-		if ( stopTimerR_[ 0 ] >= 60.0f )
-		{
-			isMoveFlag_[ 0 ] = 2;
-		}
 
 	}
 
 	//ラウンド1の右のバイク兵
 	if ( actionTimer_[ 1 ] >= 5 ){
-		//下に移動
-		if ( isMoveFlag_[ 1 ] == 0 )
-		{
-			actionTimer_[ 1 ]++;
-			if ( actionTimer_[ 1 ] <= 100 )
-			{
-				Obj_[ 1 ]->wtf.position.z -= 0.03f;
-			}
-			if ( actionTimer_[ 1 ] == 400 )
-			{
-				isMoveFlag_[ 1 ] = 0;
-				actionTimer_[ 1 ] = 0;
-			}
-		}
-		
-		//上に移動
-		if ( isMoveFlag_[ 1 ] == 1 )
-		{
-			actionTimer_[ 1 ]++;
-			if ( actionTimer_[ 1 ] <= 100 )
-			{
-				Obj_[ 1 ]->wtf.position.z += 0.03f;
-			}
-			if ( actionTimer_[ 1 ] == 400 )
-			{
-				isMoveFlag_[ 1 ] = 1;
-				actionTimer_[ 1 ] = 0;
-			}
-		}
+		////下に移動
+		//if ( isMoveFlag_[ 1 ] == 0 )
+		//{
+		//	actionTimer_[ 1 ]++;
+		//	if ( actionTimer_[ 1 ] <= 200 )
+		//	{
+		//		Obj_[ 1 ]->wtf.position.z -= 0.07f;
+		//	}
+		//	if ( actionTimer_[ 1 ] == 400 )
+		//	{
+		//		isMoveFlag_[ 1 ] = 1;
+		//		actionTimer_[ 1 ] = 0;
+		//	}
+		//}
+		//
+		////上に移動
+		//if ( isMoveFlag_[ 1 ] == 1 )
+		//{
+		//	actionTimer_[ 1 ]++;
+		//	if ( actionTimer_[ 1 ] <= 200 )
+		//	{
+		//		Obj_[ 1 ]->wtf.position.z += 0.07f;
+		//	}
+		//	if ( actionTimer_[ 1 ] == 400 )
+		//	{
+		//		isMoveFlag_[ 1 ] = 0;
+		//		actionTimer_[ 1 ] = 0;
+		//	}
+		//}
 		
 		
 
