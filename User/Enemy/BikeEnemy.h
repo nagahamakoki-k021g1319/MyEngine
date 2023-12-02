@@ -55,6 +55,13 @@ private:
 
 	int isGameStartTimer = 0;
 
+	//突進用に自機に対して横一列になってる当たり判定モデル
+	//右
+	Object3d* collRushObj_[ 8 ] = { 0 };
+	//左
+	Object3d* collRushObjL_[ 8 ] = { 0 };
+	Model* collRushModel_[ 8 ] = { 0 };
+
 	//待機
 	Object3d* Obj_[9] = {0};
 	Model*  Model_[9] = { 0 };
@@ -68,20 +75,17 @@ private:
 	Object3d* collLeftObj_[ 9 ] = { 0 };
 	Model* collLRModel_[ 9 ] = { 0 };
 
-	//突進用に自機に対して横一列になってる当たり判定モデル
-	//右
-	Object3d* collRushObj_[8] = { 0 };
-	//左
-	Object3d* collRushObjL_[ 8 ] = { 0 };
-	Model* collRushModel_[8] = { 0 };
 	//自機と横軸があった時に突進するフラグ(0 待機,1 突進,2 自機と衝突)
-	int isRushFlag_ = 0;
-	int isRushFlagR_ = 0;
+	int isRushFlag_[ 9 ] = { 0 };
+	int isRushFlagR_[ 9 ] = { 0 };
 	//衝突した時のノックバックタイマーとフラグ
-	int rushKnockbackTimer_ = 0;
-	int rushKnockbackTimerR_ = 0;
-	int isRushKnockbackFlag_ = 0;
-	int rushCoolTimer_ = 0;
+	int rushKnockbackTimer_[ 9 ] = { 0 };
+	int rushKnockbackTimerR_[ 9 ] = { 0 };
+	int isRushKnockbackFlag_[ 9 ] = { 0 };
+	int rushCoolTimer_[ 9 ] = { 0 };
+
+	//自機のタックルでバイク兵が喰らうフラグ
+	int isHit_[ 9 ] = { 0 };
 
 	//バイクの車輪動かす
 	int bikstSpinTimer = 0;
@@ -100,6 +104,7 @@ private:
 
 	//体力(一旦0で初期化のタイミングで設定する)
 	int HP_[9] = { 0 };
+
 
 	//後ろから登場するフラグ
 	int isBackEntryFlag_[9] = { 0 };

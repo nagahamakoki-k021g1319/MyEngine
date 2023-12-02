@@ -151,12 +151,12 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	extrusionRightModel_ = Model::LoadFromOBJ("collboll");
 	extrusionRightObj_ = Object3d::Create();
 	extrusionRightObj_->SetModel(extrusionRightModel_);
-	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + 0.01f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + 0.1f,Obj_->wtf.position.y + 0.5f,-1.0f };
 	//左
 	extrusionLeftModel_ = Model::LoadFromOBJ("collboll");
 	extrusionLeftObj_ = Object3d::Create();
 	extrusionLeftObj_->SetModel(extrusionLeftModel_);
-	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - 0.01f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - 0.1f,Obj_->wtf.position.y + 0.5f,-1.0f };
 
 	//自機の弾(弱)
 	shootModel_ = Model::LoadFromOBJ("boll2");
@@ -224,9 +224,9 @@ void Player::Update() {
 	collSWRightObj_->Update();
 	collSWRightObj_->wtf.position = { Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y + 0.5f,-1.0f };
 	extrusionRightObj_->Update();
-	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + 0.01f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + 0.1f,Obj_->wtf.position.y + 0.5f,-1.0f };
 	extrusionLeftObj_->Update();
-	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - 0.01f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - 0.1f,Obj_->wtf.position.y + 0.5f,-1.0f };
 
 	isGameStartFlag = true;
 
