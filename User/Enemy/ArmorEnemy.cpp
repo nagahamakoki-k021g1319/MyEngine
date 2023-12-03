@@ -289,18 +289,18 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 					BulletCoolTime_[ i ]++;
 				}
 			}
-			if ( BulletCoolTime_[ i ] == 119 )
+			if ( BulletCoolTime_[ i ] == 219 )
 			{
 				playerlen_[ i ] = collObj3_->wtf.position - bulletObj_[ i ]->wtf.position;
 				playerlen_[ i ].nomalize();
 			}
-			if ( BulletCoolTime_[ i ] >= 120 )
+			if ( BulletCoolTime_[ i ] >= 220 )
 			{
-				BulletCoolTime_[ i ] = 120;
+				BulletCoolTime_[ i ] = 220;
 				isShootFlag_[ i ] = 1;
 			}
 			//攻撃時モデルが変わる
-			if ( BulletCoolTime_[ i ] >= 110 )
+			if ( BulletCoolTime_[ i ] >= 210 )
 			{
 				Obj_[ i ]->SetModel(Model_[ i ]);
 			}

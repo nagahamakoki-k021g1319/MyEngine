@@ -450,8 +450,8 @@ void Player::Draw() {
 	}
 
 	if ( isGameStartTimer >= 180 ){
-		extrusionRightObj_->Draw();
-		extrusionLeftObj_->Draw();
+		/*extrusionRightObj_->Draw();
+		extrusionLeftObj_->Draw();*/
 		/*collObj_->Draw();*/
 		if ( isCollSWFlag == true ){
 			/*collSWObj_->Draw();*/
