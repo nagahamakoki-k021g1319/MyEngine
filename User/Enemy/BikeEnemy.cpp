@@ -220,7 +220,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	{
 		if ( isRushFlag_[i] == 1 )
 		{
-			Obj_[i]->wtf.position.x -= 0.04f;
+			Obj_[i]->wtf.position.x -= 0.05f;
 			if ( Obj_[i]->wtf.position.x <= -3.0f )
 			{
 				Obj_[i]->wtf.position.x = -3.0f;
@@ -279,7 +279,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		//突進攻撃の当たり判定(左の敵と自機)
 		if ( isRushFlag_[ i ] == 4 )
 		{
-			Obj_[i]->wtf.position.x += 0.04f;
+			Obj_[i]->wtf.position.x += 0.05f;
 			if ( Obj_[i]->wtf.position.x >= 3.0f )
 			{
 				Obj_[i]->wtf.position.x = 3.0f;
@@ -291,7 +291,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 				Obj_[i]->wtf.rotation.z = -0.45f;
 			}
 			//突進中に自機と当たったらフラグ切り替え
-			if ( coll.CircleCollision(playerLPos,collRightObj_[ 1 ]->wtf.position,0.6f,0.6f) )
+			if ( coll.CircleCollision(playerLPos,collRightObj_[i]->wtf.position,0.6f,0.6f) )
 			{
 				isRushKnockbackFlag_[ i ] = 2;
 				player_->isKnockbackFlagL = true;
