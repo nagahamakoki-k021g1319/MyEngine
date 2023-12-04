@@ -173,26 +173,6 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	}
 	BikeEnemyAction();
 
-	//突進時
-	if ( input_->PushKey(DIK_J))
-	{
-		Obj_[ 1 ]->wtf.rotation.z += 0.03f;
-		if ( Obj_[ 1 ]->wtf.rotation.z >= 0.45f )
-		{
-			Obj_[ 1 ]->wtf.rotation.z = 0.45f;
-		}
-	}
-	if ( input_->PushKey(DIK_L))
-	{
-		Obj_[ 1 ]->wtf.rotation.z -= 0.03f;
-		if ( Obj_[ 1 ]->wtf.rotation.z <= -0.45f )
-		{
-			Obj_[ 1 ]->wtf.rotation.z = -0.45f;
-		}
-		
-	}
-	
-
 
 	//突進攻撃の当たり判定
 	for ( int i = 0; i < 8; i++ ){
@@ -346,6 +326,11 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		if ( isBackEntryFlag_[ i ] == 1 ){
 			if ( input_->PushKey(DIK_W) ){Obj_[ i ]->wtf.position.z -= 0.06f;}
 			else if ( input_->PushKey(DIK_S) ){Obj_[ i ]->wtf.position.z += 0.06f;}
+			if (player_->isDecelerationFlag == true)
+			{
+				Obj_[ i ]->wtf.position.z += 0.1f;
+			}
+
 		}
 	}
 

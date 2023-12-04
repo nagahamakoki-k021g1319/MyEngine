@@ -20,6 +20,7 @@
 #include "Enemy/BikeEnemy.h"
 #include "Enemy/BossEnemy.h"
 #include "ornament/Lamp.h"
+#include "ornament/Block.h"
 #include "Light/LightGroup.h"
 
 /// <summary>
@@ -118,8 +119,11 @@ private:	//メンバ変数
 	BikeEnemy* bikeEnemy_ = nullptr;
 	BossEnemy* bossEnemy_ = nullptr;
 
-	//障害物
+	//左右ランプ
 	Lamp* lamp_ = nullptr;
+
+	//障害物
+	Block* block_ = nullptr;
 	//--------------------//
 
 	//ゲームシーンの背景や床
@@ -147,6 +151,8 @@ private:	//メンバ変数
 	Model* skydomeTitMD_ = nullptr;
 	Object3d* floorTit_[ 3 ] = {0};
 	Model* floorTitMD_[ 3 ] = { 0 };
+	Sprite* st = nullptr;
+	int stTimer = 0;
 
 	//タイトルで座ってるプレイヤー
 	Object3d* standObj_ = nullptr;

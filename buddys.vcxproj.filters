@@ -223,6 +223,9 @@
     <ClCompile Include="Engine\3D\Light\LightGroup.cpp">
       <Filter>Engine\ソースファイル\3D\Light</Filter>
     </ClCompile>
+    <ClCompile Include="User\ornament\Block.cpp">
+      <Filter>user\ソース\ornament</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BASE\FPS.h">
@@ -344,6 +347,9 @@
     </ClInclude>
     <ClInclude Include="Engine\3D\Light\DirectionalLight.h">
       <Filter>Engine\ヘッダーファイル\3D\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="User\ornament\Block.h">
+      <Filter>user\ヘッダー\ornament</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

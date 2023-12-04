@@ -290,7 +290,6 @@ void Player::Update() {
 
 	//当たり判定
 	if ( isCamShake == 1 ){DamageCamShake();}
-	
 
 	//ゲームクリア時に自機が前に進む
 	if ( isClearFlag == true ){
@@ -434,7 +433,7 @@ void Player::Update() {
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
 	ImGui::Text("CameraBehaviorTimer:%d",CameraBehaviorTimer);
-	ImGui::Text("CameraRotation:%f,%f,%f",camera->wtf.rotation.x,camera->wtf.rotation.y,camera->wtf.rotation.z);
+	ImGui::Text("Rotation:%f,%f,%f",Obj_->wtf.rotation.x,Obj_->wtf.rotation.y,Obj_->wtf.rotation.z);
 	ImGui::Text("CameraPosition:%f,%f,%f",camera->wtf.position.x,camera->wtf.position.y,camera->wtf.position.z);
 	ImGui::Text("HPPosion:%f,%f",hpgreenPosition.x,hpgreenPosition.y);
 	ImGui::Text("isCamShake:%d",isCamShake);
@@ -757,6 +756,37 @@ void Player::PlayerAction()
 	//float playerLimitY2 = 0.35f;
 	//float retLimitX = 6.0f;
 	//float retLimitY = 3.0f;
+
+	//減速
+	if ( isDecelerationFlag == true){DecelerationTimer++;}
+	if ( DecelerationTimer >= 1 && DecelerationTimer <= 20 )
+	{
+		Obj_->wtf.rotation.y += 0.03f;
+		if ( Obj_->wtf.rotation.y >= 0.5f)
+		{
+			Obj_->wtf.rotation.y = 0.5f;
+		}
+	}
+	if ( DecelerationTimer >= 21 && DecelerationTimer <= 50 )
+	{
+		Obj_->wtf.rotation.y -= 0.03f;
+		if ( Obj_->wtf.rotation.y <= -0.5f )
+		{
+			Obj_->wtf.rotation.y = -0.5f;
+		}
+	}
+	if ( DecelerationTimer >= 51 && DecelerationTimer <= 59 )
+	{
+		Obj_->wtf.rotation.y += 0.05f;
+		if ( Obj_->wtf.rotation.y >= 0.0f )
+		{
+			Obj_->wtf.rotation.y = 0.0f;
+		}
+	}
+	if( DecelerationTimer >= 60){
+		isDecelerationFlag = false;
+		DecelerationTimer = 0;
+	}
 
 	//自機のジャンプの挙動とモデル変更
 	if ( isJumpFlag == true ){

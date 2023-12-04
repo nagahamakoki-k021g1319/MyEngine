@@ -322,4 +322,8 @@ public:
 	Sprite* hpgreenUI = nullptr;
 	Vector2 hpgreenPosition;
 
+	//障害物に当たって減速
+	bool isDecelerationFlag = false;
+	int DecelerationTimer = 0;
+
 };

@@ -257,6 +257,13 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 				//右に移動制限
 				isbesideFlag_[ i ] = 0;
 			}
+
+			//障害物に当たって自機が減速
+			if ( player_->isDecelerationFlag == true )
+			{
+				Obj_[ i ]->wtf.position.z += 0.1f;
+			}
+
 		}
 
 	}
