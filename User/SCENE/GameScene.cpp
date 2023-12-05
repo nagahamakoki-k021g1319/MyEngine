@@ -56,6 +56,8 @@ GameScene::~GameScene() {
 	delete bbout1;
 	delete bbout2;
 	delete bbout3;
+	delete st;
+	delete block_;
 
 	// ライトの解放
 	/*delete light;*/
@@ -105,6 +107,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	bbout3->SetPozition({ 0,0 });
 	bbout3->SetSize({ 1280.0f, 720.0f });
 
+	st = new Sprite();
+	st->Initialize(spriteCommon);
+	st->SetPozition({ 0,0 });
+	st->SetSize({ 1280.0f, 720.0f });
 
 	spriteCommon->LoadTexture(0,"tt.png");
 	TitleSprite->SetTextureIndex(0);
@@ -120,6 +126,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 	spriteCommon->LoadTexture(35,"bbout3.png");
 	bbout3->SetTextureIndex(35);
+
+	spriteCommon->LoadTexture(36,"st.png");
+	st->SetTextureIndex(36);
 
 	// カメラ生成
 	mainCamera = new Camera(WinApp::window_width, WinApp::window_height);
@@ -249,8 +258,14 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	bossEnemy_->Initialize(dxCommon,input);
 	bossEnemy_->SetPlayer(player_);
 
+	//ランプ
 	lamp_ = new Lamp();
 	lamp_->Initialize(dxCommon,input);
+
+	//障害物
+	block_ = new Block();
+	block_->Initialize(dxCommon,input);
+	block_->SetPlayer(player_);
 	//--------------------//
 
 
@@ -271,6 +286,7 @@ void GameScene::Update() {
 	/*light->Update();*/
 	if (sceneNo_ == SceneNo::Title) {
 		spintimer++;
+		stTimer++;
 		if (input_->TriggerKey(DIK_SPACE) || input_->PButtonTrigger(B)) {isbboutFlag = true;}
 		if ( isbboutFlag == true ){
 			bboutTimer++;
@@ -279,6 +295,10 @@ void GameScene::Update() {
 		if ( bboutTimer >= 30 ){
 			mainCamera->wtf.rotation.y = 2.5f;
 			sceneNo_ = SceneNo::Game;
+		}
+		if ( stTimer >= 50 )
+		{
+			stTimer = 0;
 		}
 
 		skydomeTit_->Update();
@@ -336,6 +356,7 @@ void GameScene::Update() {
 
 		skydome->Update();
 		lamp_->Update();
+		block_->Update(player_->GetWorldPosition());
 
 		//地面
 		for ( int i = 0; i < 3; i++ ){
@@ -416,9 +437,6 @@ void GameScene::Update() {
 /// 描画
 /// </summary>
 void GameScene::Draw() {
-
-	
-
 	/// <summary>
 	/// 3Dオブジェクトの描画
 	/// ここに3Dオブジェクトの描画処理を追加できる
@@ -453,6 +471,7 @@ void GameScene::Draw() {
 		bossEnemy_->Draw();
 		skydome->Draw();
 		lamp_->Draw();
+		block_->Draw();
 		for ( int i = 0; i < 3; i++ ){floorTit_[ i ]->Draw();}
 		for ( int i = 0; i < 50; i++ ){
 			floor_[ i ]->Draw();
@@ -465,7 +484,11 @@ void GameScene::Draw() {
 	//3Dオブジェクト描画後処理
 	Object3d::PostDraw();
 	if (sceneNo_ == SceneNo::Title) {
-		/*TitleSprite->Draw();*/
+		TitleSprite->Draw();
+		if ( stTimer >= 1 && stTimer <= 35 )
+		{
+			st->Draw();
+		}
 		if ( bboutTimer >= 1 && bboutTimer <= 10)
 		{
 			bbout1->Draw();

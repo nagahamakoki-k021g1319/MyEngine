@@ -2,8 +2,8 @@
 # Material Count: 1
 
 newmtl None
-	Ka 0.300 0.300 0.300
+	Ka 1.000 1.000 1.000
 	Kd 0.000 0.000 0.000
 	Ks 0.000 0.000 0.000
-	map_Kd as2.png
+	map_Kd kon.png
 illum 2

@@ -57,10 +57,10 @@ private:
 
 	//突進用に自機に対して横一列になってる当たり判定モデル
 	//右
-	Object3d* collRushObj_[ 8 ] = { 0 };
+	Object3d* collRushObj_[ 5 ] = { 0 };
 	//左
-	Object3d* collRushObjL_[ 8 ] = { 0 };
-	Model* collRushModel_[ 8 ] = { 0 };
+	Object3d* collRushObjL_[ 5 ] = { 0 };
+	Model* collRushModel_[ 5 ] = { 0 };
 
 	//待機
 	Object3d* Obj_[9] = {0};
@@ -121,6 +121,9 @@ private:
 	//衝突した時のノックバックタイマー(通常時)
 	int knockbackTimer_[ 9 ] = { 0 };
 	int knockbackTimer2_[ 9 ] = { 0 };
+
+	//生きているバイク兵で後ろに近いやつを基準にカメラを少し下げる(数字はバイク兵の番号)
+	int standardPos = 0;
 
 	//パーティクル
 	//地面のズサ

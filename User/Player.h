@@ -322,4 +322,13 @@ public:
 	Sprite* hpgreenUI = nullptr;
 	Vector2 hpgreenPosition;
 
+	//障害物に当たって減速
+	bool isDecelerationFlag = false;
+	int DecelerationTimer = 0;
+	int backTimer = 0;
+
+	//敵が自機より後ろにいるときカメラを少し下げる
+	int standardCamera = 0;
+	int moveCamera = 0;
+
 };
