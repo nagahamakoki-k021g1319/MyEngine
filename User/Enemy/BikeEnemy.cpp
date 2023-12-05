@@ -22,7 +22,7 @@ BikeEnemy::~BikeEnemy()
 		delete collLeftObj_[ i ];
 		delete collLRModel_[i];
 	}
-	for ( int i = 0; i < 8; i++ )
+	for ( int i = 0; i < 5; i++ )
 	{
 		delete collRushObj_[ i ];
 		delete collRushObjL_[ i ];
@@ -92,7 +92,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	}
 
 	//突進用に自機に対して横一列になってる当たり判定モデル
-	for ( int i = 0; i < 8; i++ )
+	for ( int i = 0; i < 5; i++ )
 	{
 		collRushModel_[ i ] = Model::LoadFromOBJ("collboll");
 		collRushObj_[ i ] = Object3d::Create();
@@ -136,7 +136,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		collLeftObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x - 0.1f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
 	}
 	//自機から横に出ているモデル
-	for ( int i = 0; i < 8; i++ ){
+	for ( int i = 0; i < 5; i++ ){
 		collRushObj_[i]->Update();
 		collRushObj_[ i ]->wtf.position = { playerRPos.x + i + 0.5f,playerRPos.y - 0.5f,playerRPos.z};
 		collRushObjL_[ i ]->Update();
@@ -171,12 +171,13 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	for ( int i = 0; i < 9; i++ ){
 		if ( isBackEntryFlag_[i] == 1 ){actionTimer_[i]++;}
 	}
+	//バイク兵の挙動と自機より後ろにいるときカメラを少し下げる
 	BikeEnemyAction();
 
 
 	//突進攻撃の当たり判定
-	for ( int i = 0; i < 8; i++ ){
-		for ( int j = 0; j < 8; j++ ){
+	for ( int i = 0; i < 5; i++ ){
+		for ( int j = 0; j < 9; j++ ){
 			//突進攻撃の当たり判定(右の敵と右側の自機の横並びモデル)
 			if ( isBackEntryFlag_[j] == 1 && HP_[j] >= 1 && isRushFlag_[j] == 0 )
 			{
@@ -200,7 +201,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	{
 		if ( isRushFlag_[i] == 1 )
 		{
-			Obj_[i]->wtf.position.x -= 0.05f;
+			Obj_[i]->wtf.position.x -= 0.08f;
 			if ( Obj_[i]->wtf.position.x <= -3.0f )
 			{
 				Obj_[i]->wtf.position.x = -3.0f;
@@ -259,7 +260,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		//突進攻撃の当たり判定(左の敵と自機)
 		if ( isRushFlag_[ i ] == 4 )
 		{
-			Obj_[i]->wtf.position.x += 0.05f;
+			Obj_[i]->wtf.position.x += 0.08f;
 			if ( Obj_[i]->wtf.position.x >= 3.0f )
 			{
 				Obj_[i]->wtf.position.x = 3.0f;
@@ -326,13 +327,16 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		if ( isBackEntryFlag_[ i ] == 1 ){
 			if ( input_->PushKey(DIK_W) ){Obj_[ i ]->wtf.position.z -= 0.06f;}
 			else if ( input_->PushKey(DIK_S) ){Obj_[ i ]->wtf.position.z += 0.06f;}
-			if (player_->isDecelerationFlag == true)
+			//自機が障害物と当たった時
+			if ( player_->backTimer >= 1 && player_->backTimer <= 29 )
 			{
-				Obj_[ i ]->wtf.position.z += 0.1f;
+				Obj_[ i ]->wtf.position.z += 0.07f;
 			}
-
+			
 		}
 	}
+
+	
 
 	//当たり判定
 	for ( int i = 0; i < 9; i++ )
@@ -467,13 +471,13 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	}
 
 	ImGui::Begin("bikeEnemy");
-
-	ImGui::Text("rotation_[1]:%f,%f,%f",Obj_[ 1 ]->wtf.rotation.x,Obj_[ 1 ]->wtf.rotation.y,Obj_[ 1 ]->wtf.rotation.z);
-	ImGui::Text("HP:%d",HP_[ 0 ]);
-	ImGui::Text("isHit_:%d",isHit_[1]);
-	ImGui::Text("isBackEntryFlag:%d",isBackEntryFlag_[1]);
-
+	ImGui::Text("position_:%f,%f,%f",Obj_[ 2 ]->wtf.position.x,Obj_[ 2 ]->wtf.position.y,Obj_[ 2 ]->wtf.position.z);
 	ImGui::End();
+	/*ImGui::Text("HP:%d",HP_[ 0 ]);
+	ImGui::Text("isHit_:%d",isHit_[1]);
+	ImGui::Text("isBackEntryFlag:%d",isBackEntryFlag_[1]);*/
+
+	
 
 }
 
@@ -486,9 +490,9 @@ void BikeEnemy::Draw()
 			if ( isBikclushFlag_[i] == 0 )
 			{
 				Obj_[i]->Draw();
-				collObj_[i]->Draw();
+			/*	collObj_[i]->Draw();
 				collRightObj_[ i ]->Draw();
-				collLeftObj_[ i ]->Draw();
+				collLeftObj_[ i ]->Draw();*/
 			}
 
 			//バイク兵の撃破モデル
@@ -504,7 +508,7 @@ void BikeEnemy::Draw()
 			}
 		}
 		//突進用に自機に対して横一列になってる当たり判定モデル
-		for ( int i = 0; i < 8; i++ )
+		for ( int i = 0; i < 5; i++ )
 		{
 			/*collRushObj_[ i ]->Draw();
 			collRushObjL_[ i ]->Draw();*/
@@ -758,46 +762,35 @@ void BikeEnemy::BikeEnemyEntry()
 
 void BikeEnemy::BikeEnemyAction()
 {
-	//ラウンド1の左のバイク兵
-	if ( actionTimer_[ 0 ] >= 10 ){
+	//バイク兵が自機より後ろにいるときカメラを少し下げる
+	for ( int i = 0; i < 9; i++ )
+	{
+		if ( isBackEntryFlag_[ i ] == 1 && isBikclushFlag_[ i ] == 0 )
+		{
+			if ( standardPos == i )
+			{
+				if ( player_->standardCamera == 0 )
+				{
+					if ( Obj_[ i ]->wtf.position.z <= -1.0f )
+					{
+						player_->standardCamera = 1;
+					}
+				}
 
-
-	}
-
-	//ラウンド1の右のバイク兵
-	if ( actionTimer_[ 1 ] >= 5 ){
-		////下に移動
-		//if ( isMoveFlag_[ 1 ] == 0 )
-		//{
-		//	actionTimer_[ 1 ]++;
-		//	if ( actionTimer_[ 1 ] <= 200 )
-		//	{
-		//		Obj_[ 1 ]->wtf.position.z -= 0.07f;
-		//	}
-		//	if ( actionTimer_[ 1 ] == 400 )
-		//	{
-		//		isMoveFlag_[ 1 ] = 1;
-		//		actionTimer_[ 1 ] = 0;
-		//	}
-		//}
-		//
-		////上に移動
-		//if ( isMoveFlag_[ 1 ] == 1 )
-		//{
-		//	actionTimer_[ 1 ]++;
-		//	if ( actionTimer_[ 1 ] <= 200 )
-		//	{
-		//		Obj_[ 1 ]->wtf.position.z += 0.07f;
-		//	}
-		//	if ( actionTimer_[ 1 ] == 400 )
-		//	{
-		//		isMoveFlag_[ 1 ] = 0;
-		//		actionTimer_[ 1 ] = 0;
-		//	}
-		//}
-		
-		
-
+				if ( player_->standardCamera == 1 )
+				{
+					if ( Obj_[ i ]->wtf.position.z >= 3.0f )
+					{
+						player_->standardCamera = 0;
+					}
+				}
+			}
+		}
+		if ( isBikclushFlag_[ i ] == 1 )
+		{
+			standardPos = i + 1;
+			player_->standardCamera = 0;
+		}
 	}
 	
 

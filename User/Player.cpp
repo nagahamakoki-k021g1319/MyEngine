@@ -212,21 +212,24 @@ void Player::Update() {
 	shootObj_->Update();
 	shootStObj_->Update();
 	retObj_->Update();
-	
+	retObj_->wtf.position.z = Obj_->wtf.position.z + 50.0f;
+
 	enemylen2 = retObj_->wtf.position - shootStObj_->wtf.position;
 	enemylen2.nomalize();
 	retVisualObj_->Update();
+	retVisualObj_->wtf.position.z = Obj_->wtf.position.z + 15.0f;
 	Obj_->Update();
 	EffUpdate();
 	collObj_->Update();
+	if ( isGameStartTimer >= 180 ){collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z - 1.0f };}
 	collSWObj_->Update();
-	collSWObj_->wtf.position = { Obj_->wtf.position.x - 1.0f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	collSWObj_->wtf.position = { Obj_->wtf.position.x - 1.0f,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z-1.0f };
 	collSWRightObj_->Update();
-	collSWRightObj_->wtf.position = { Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	collSWRightObj_->wtf.position = { Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z -1.0f };
 	extrusionRightObj_->Update();
-	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + 0.1f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + 0.1f,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z -1.0f };
 	extrusionLeftObj_->Update();
-	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - 0.1f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - 0.1f,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z -1.0f };
 
 	isGameStartFlag = true;
 
@@ -342,53 +345,10 @@ void Player::Update() {
 	if ( input_->TriggerKey(DIK_1) ){
 		isRoundFlag = 1;
 	}
-	if ( isRoundFlag == 1){
-		camera->wtf.position.z -= 0.3f;
-		if ( incidenceCamera == 0 ){
-			if ( camera->wtf.position.z <= -10.0f ){
-				camera->wtf.position.z = -10.0f;
-				incidenceCamera = 1;
-			}
-		}
-		else if ( incidenceCamera == 1 )
-		{
-			camera->wtf.position.z += 0.5f;
-			if ( camera->wtf.position.z >= 0.0f )
-			{
-				camera->wtf.position.z = 0.0f;
-				incidenceCamera = 2;
-				isRoundFlag = 2;
-			}
-		}
-
-	}
 
 	//ラウンド変化(3ラウンド目)
 	if ( input_->TriggerKey(DIK_2) ){
 		isRoundFlag = 3;
-	}
-	if ( isRoundFlag == 3 )
-	{
-		camera->wtf.position.z -= 0.3f;
-		if ( incidenceCamera2 == 0 )
-		{
-			if ( camera->wtf.position.z <= -10.0f )
-			{
-				camera->wtf.position.z = -10.0f;
-				incidenceCamera2 = 1;
-			}
-		}
-		else if ( incidenceCamera2 == 1 )
-		{
-			camera->wtf.position.z += 0.5f;
-			if ( camera->wtf.position.z >= 0.0f )
-			{
-				camera->wtf.position.z = 0.0f;
-				incidenceCamera2 = 2;
-				isRoundFlag = 4;
-			}
-		}
-
 	}
 
 	//ラウンド変化(3ラウンド目)
@@ -396,49 +356,40 @@ void Player::Update() {
 	{
 		isRoundFlag = 5;
 	}
-	if ( isRoundFlag == 5 )
+
+	//敵が自機より後ろにいるときカメラを少し下げる
+	if ( isGameStartTimer >= 250 )
 	{
-		camera->wtf.position.z -= 0.3f;
-		if ( incidenceCamera3 == 0 )
+		if ( standardCamera == 0 )
 		{
-			if ( camera->wtf.position.z <= -10.0f )
-			{
-				camera->wtf.position.z = -10.0f;
-				incidenceCamera3 = 1;
-			}
-		}
-		else if ( incidenceCamera3 == 1 )
-		{
-			camera->wtf.position.z += 0.5f;
+			camera->wtf.position.z += 0.1f;
 			if ( camera->wtf.position.z >= 0.0f )
 			{
 				camera->wtf.position.z = 0.0f;
-				incidenceCamera3 = 2;
-				isRoundFlag = 6;
 			}
 		}
-
+		if ( standardCamera == 1 )
+		{
+			camera->wtf.position.z -= 0.1f;
+			if ( camera->wtf.position.z <= -10.0f )
+			{
+				camera->wtf.position.z = -10.0f;
+			}
+		}
 	}
-
-	/*if ( input_->PushKey(DIK_I) ){camera->wtf.rotation.y -= 0.01f;}
-	else if ( input_->PushKey(DIK_K) ){camera->wtf.rotation.y += 0.01f;}
-	if ( input_->PushKey(DIK_J) ){camera->wtf.rotation.x -= 0.01f;}
-	else if ( input_->PushKey(DIK_L) ){camera->wtf.rotation.x += 0.01f;}
-	if ( input_->PushKey(DIK_M) ){
-		camera->wtf.rotation.x = 0.0f;
-		camera->wtf.rotation.y = 0.0f;
-	}*/
+	
 
 	ImGui::Begin("Player");
-
-	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
-	ImGui::Text("CameraBehaviorTimer:%d",CameraBehaviorTimer);
-	ImGui::Text("Rotation:%f,%f,%f",Obj_->wtf.rotation.x,Obj_->wtf.rotation.y,Obj_->wtf.rotation.z);
-	ImGui::Text("CameraPosition:%f,%f,%f",camera->wtf.position.x,camera->wtf.position.y,camera->wtf.position.z);
-	ImGui::Text("HPPosion:%f,%f",hpgreenPosition.x,hpgreenPosition.y);
-	ImGui::Text("isCamShake:%d",isCamShake);
-
+	ImGui::Text("standardCamera:%d",standardCamera);
+	ImGui::Text("Position:%f,%f,%f",camera->wtf.position.x,camera->wtf.position.y,camera->wtf.position.z);
 	ImGui::End();
+	/*ImGui::Text("isGameStartTimer:%d",isGameStartTimer);*/
+	
+	//ImGui::Text("Rotation:%f,%f,%f",Obj_->wtf.rotation.x,Obj_->wtf.rotation.y,Obj_->wtf.rotation.z);
+	//ImGui::Text("Position:%f,%f,%f",Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z);
+	
+	/*ImGui::Text("HPPosion:%f,%f",hpgreenPosition.x,hpgreenPosition.y);
+	ImGui::Text("backTimer:%d",backTimer);*/
 
 }
 
@@ -450,8 +401,8 @@ void Player::Draw() {
 
 	if ( isGameStartTimer >= 180 ){
 		/*extrusionRightObj_->Draw();
-		extrusionLeftObj_->Draw();*/
-		/*collObj_->Draw();*/
+		extrusionLeftObj_->Draw();
+		collObj_->Draw();*/
 		if ( isCollSWFlag == true ){
 			/*collSWObj_->Draw();*/
 		}
@@ -470,9 +421,8 @@ void Player::Draw() {
 	{
 		shootStObj_->Draw();
 	}
-	/*shootStObj_->Draw();*/
 
-	if ( retdisplay == true ){
+	if ( retdisplay == true && isClearFlag == false ){
 		/*retObj_->Draw();*/
 		retVisualObj_->Draw();
 	}
@@ -757,36 +707,34 @@ void Player::PlayerAction()
 	//float retLimitX = 6.0f;
 	//float retLimitY = 3.0f;
 
+	
+
 	//減速
-	if ( isDecelerationFlag == true){DecelerationTimer++;}
-	if ( DecelerationTimer >= 1 && DecelerationTimer <= 20 )
-	{
-		Obj_->wtf.rotation.y += 0.03f;
-		if ( Obj_->wtf.rotation.y >= 0.5f)
+	if ( isDecelerationFlag == true){
+		DecelerationTimer++;
+		backTimer++;
+		//減速で自機も少し後ろに下がる
+		if ( backTimer >= 1 && backTimer <= 30 )
 		{
-			Obj_->wtf.rotation.y = 0.5f;
+			Obj_->wtf.position.z -= 0.07f;
+		}
+		if ( backTimer >= 31 && backTimer <= 90 )
+		{
+			Obj_->wtf.position.z += 0.03f;
+			if ( Obj_->wtf.position.z >= -0.3f )
+			{
+				Obj_->wtf.position.z = -0.3f;
+			}
 		}
 	}
-	if ( DecelerationTimer >= 21 && DecelerationTimer <= 50 )
-	{
-		Obj_->wtf.rotation.y -= 0.03f;
-		if ( Obj_->wtf.rotation.y <= -0.5f )
-		{
-			Obj_->wtf.rotation.y = -0.5f;
-		}
-	}
-	if ( DecelerationTimer >= 51 && DecelerationTimer <= 59 )
-	{
-		Obj_->wtf.rotation.y += 0.05f;
-		if ( Obj_->wtf.rotation.y >= 0.0f )
-		{
-			Obj_->wtf.rotation.y = 0.0f;
-		}
-	}
-	if( DecelerationTimer >= 60){
+	if( DecelerationTimer >= 100){
 		isDecelerationFlag = false;
+		backTimer = 0;
 		DecelerationTimer = 0;
 	}
+
+
+
 
 	//自機のジャンプの挙動とモデル変更
 	if ( isJumpFlag == true ){
@@ -1357,27 +1305,27 @@ void Player::DamageCamShake()
 		if ( camShakeTimer <= camShakeLimit && camShakeTimer > camShakeLimit * 3 / 4 )
 		{
 			camera->wtf.position.y += 0.1f;
-			camera->wtf.position.z += 0.1f;
+			/*camera->wtf.position.z += 0.1f;*/
 		}
 		else if ( camShakeTimer <= camShakeLimit * 3 / 4 && camShakeTimer > camShakeLimit * 2 / 4 )
 		{
-			camera->wtf.position.y -= 0.1f;
-			camera->wtf.position.z -= 0.1f;
+			camera->wtf.position.y -= 0.2f;
+			/*camera->wtf.position.z -= 0.1f;*/
 		}
 		else if ( camShakeTimer <= camShakeLimit * 2 / 4 && camShakeTimer > camShakeLimit * 1 / 4 )
 		{
-			camera->wtf.position.y += 0.1f;
-			camera->wtf.position.z += 0.1f;
+			camera->wtf.position.y += 0.2f;
+			/*camera->wtf.position.z += 0.1f;*/
 		}
 		else if ( camShakeTimer <= camShakeLimit * 1 / 4 && camShakeTimer > 0 )
 		{
-			camera->wtf.position.y -= 0.1f;
-			camera->wtf.position.z -= 0.1f;
+			camera->wtf.position.y -= 0.2f;
+			/*camera->wtf.position.z -= 0.1f;*/
 		}
 		else if ( camShakeTimer <= 0 ){
 			isCamShake = 0;
 			camera->wtf.position.y = 0.0f;
-			camera->wtf.position.z = 0.0f;
+			/*camera->wtf.position.z = 0.0f;*/
 		}
 	}
 }

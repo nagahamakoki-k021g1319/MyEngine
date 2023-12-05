@@ -226,11 +226,11 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 			if ( isMoveFlag_[ i ] == 1 ){
 				if ( input_->PushKey(DIK_W) )
 				{
-					Obj_[ i ]->wtf.position.z -= 0.02f;
+					Obj_[ i ]->wtf.position.z -= 0.03f;
 				}
 				else if ( input_->PushKey(DIK_S) )
 				{
-					Obj_[ i ]->wtf.position.z += 0.02f;
+					Obj_[ i ]->wtf.position.z += 0.03f;
 				}
 			}
 
@@ -259,9 +259,9 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 			}
 
 			//障害物に当たって自機が減速
-			if ( player_->isDecelerationFlag == true )
+			if ( player_->backTimer >= 1 && player_->backTimer <= 29 )
 			{
-				Obj_[ i ]->wtf.position.z += 0.1f;
+				Obj_[ i ]->wtf.position.z += 0.07f;
 			}
 
 		}

@@ -58,22 +58,22 @@ private:
 	Model* collModel_ = nullptr;
 
 	//木箱
-	Object3d* boxObj_[ 3 ] = {0};
-	Model* boxModel_[ 3 ] = { 0 };
-
-	//三角コーン
-	Object3d* konObj_[2] = { 0 };
-	Model* konModel_[2] = { 0 };
-
+	Object3d* boxObj_[12] = {0};
+	Model* boxModel_[12] = { 0 };
 	//障害物に当たった時に散らばるフラグ
 	//木箱
-	int isBoxScatterFlag_[ 3 ] = { 0 };
-	//三角コーン
-	int isKonScatterFlag_[2] = { 0 };
-
+	int isBoxScatterFlag_[12] = { 0 };
 	//木箱散らばるタイマー
-	int boxScattertimer_[ 3 ] = { 0 };
+	int boxScattertimer_[12] = { 0 };
+
+	//三角コーン
+	Object3d* konObj_[8] = { 0 };
+	Model* konModel_[8] = { 0 };
+
+	//障害物に当たった時に散らばるフラグ
+	//三角コーン
+	int isKonScatterFlag_[8] = { 0 };
 	//三角コーン散らばるタイマー
-	int konScattertimer_[2] = { 0 };
+	int konScattertimer_[8] = { 0 };
 };
 

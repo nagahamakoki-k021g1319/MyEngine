@@ -9,13 +9,13 @@ Block::~Block()
 {
 	delete spriteCommon;
 	//木箱
-	for ( int i = 0; i < 3; i++ )
+	for ( int i = 0; i < 12; i++ )
 	{
 		delete boxObj_[i];
 		delete boxModel_[i];
 	}
 	//三角コーン
-	for ( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 8; i++ )
 	{
 		delete konObj_[ i ];
 		delete konModel_[ i ];
@@ -39,7 +39,7 @@ void Block::Initialize(DirectXCommon* dxCommon,Input* input)
 	spriteCommon->Initialize(dxCommon);
 
 	//木箱
-	for ( int i = 0; i < 3; i++ )
+	for ( int i = 0; i < 12; i++ )
 	{
 		boxModel_[ i ] = Model::LoadFromOBJ("box");
 		boxObj_[ i ] = Object3d::Create();
@@ -50,8 +50,20 @@ void Block::Initialize(DirectXCommon* dxCommon,Input* input)
 	boxObj_[1]->wtf.position = { 0.3f,-2.0f,101.0f };
 	boxObj_[2]->wtf.position = { -0.3f,-2.0f,101.0f };
 
+	boxObj_[ 3 ]->wtf.position = { 0.0f,-1.5f,301.0f };
+	boxObj_[ 4 ]->wtf.position = { 0.3f,-2.0f,301.0f };
+	boxObj_[ 5 ]->wtf.position = { -0.3f,-2.0f,301.0f };
+
+	boxObj_[ 6 ]->wtf.position = { 0.0f,-1.5f,501.0f };
+	boxObj_[ 7 ]->wtf.position = { 0.3f,-2.0f,501.0f };
+	boxObj_[ 8 ]->wtf.position = { -0.3f,-2.0f,501.0f };
+
+	boxObj_[ 9 ]->wtf.position = { 0.0f,-1.5f,701.0f };
+	boxObj_[ 10 ]->wtf.position = { 0.3f,-2.0f,701.0f };
+	boxObj_[ 11 ]->wtf.position = { -0.3f,-2.0f,701.0f };
+
 	//三角コーン
-	for ( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 8; i++ )
 	{
 		konModel_[i] = Model::LoadFromOBJ("kon");
 		konObj_[i] = Object3d::Create();
@@ -61,6 +73,14 @@ void Block::Initialize(DirectXCommon* dxCommon,Input* input)
 	konObj_[0]->wtf.position = { 0.5f,-2.0f,100.0f };
 	konObj_[1]->wtf.position = { -0.5f,-2.0f,100.0f };
 
+	konObj_[ 2 ]->wtf.position = { 0.5f,-2.0f,300.0f };
+	konObj_[ 3 ]->wtf.position = { -0.5f,-2.0f,300.0f };
+
+	konObj_[ 4 ]->wtf.position = { 0.5f,-2.0f,500.0f };
+	konObj_[ 5 ]->wtf.position = { -0.5f,-2.0f,500.0f };
+
+	konObj_[ 6 ]->wtf.position = { 0.5f,-2.0f,700.0f };
+	konObj_[ 7 ]->wtf.position = { -0.5f,-2.0f,700.0f };
 
 
 	//自機の当たり判定
@@ -74,44 +94,32 @@ void Block::Initialize(DirectXCommon* dxCommon,Input* input)
 void Block::Update(Vector3 playerPos)
 {
 	//木箱
-	for ( int i = 0; i < 3; i++ ){boxObj_[i]->Update();}
+	for ( int i = 0; i < 12; i++ ){boxObj_[i]->Update();}
 	//三角コーン
-	for ( int i = 0; i < 2; i++ ){konObj_[i]->Update();}
+	for ( int i = 0; i < 8; i++ ){konObj_[i]->Update();}
 
 	collObj_->Update();
-	collObj_->wtf.position = { playerPos.x,playerPos.y - 0.5f,playerPos.z + 2.0f };
+	collObj_->wtf.position = {playerPos};
 
 	isGameStartTimer++;
 
 	//ゲームが始まったら全て障害物が迫る
 	if ( isGameStartTimer >= 240){
 		//木箱
-		for ( int i = 0; i < 3; i++ )
+		for ( int i = 0; i < 12; i++ )
 		{
 			boxObj_[ i ]->wtf.position.z -= 0.3f;
 		}
 		//三角コーン
-		for ( int i = 0; i < 2; i++ )
+		for ( int i = 0; i < 8; i++ )
 		{
 			konObj_[ i ]->wtf.position.z -= 0.3f;
 		}
 
 	}
 
-	//当たった時に障害物が散らばる
-	if ( input_->TriggerKey(DIK_R) ){
-		for ( int i = 0; i < 3; i++ )
-		{
-			isBoxScatterFlag_[i] = 1;
-		}
-		for ( int i = 0; i < 2; i++ )
-		{
-			isKonScatterFlag_[i] = 1;
-		}
-	}
-
 	//木箱が散らばる
-	for ( int i = 0; i < 3; i++ )
+	for ( int i = 1; i < 12; i++ )
 	{
 		if ( isBoxScatterFlag_[i] == 1 )
 		{
@@ -119,32 +127,54 @@ void Block::Update(Vector3 playerPos)
 
 			if ( boxScattertimer_[ i ] >= 1 && boxScattertimer_[ i ] <= 10 )
 			{
-				boxObj_[i]->wtf.position.z += 2.0f;
+				boxObj_[i]->wtf.position.z += 3.0f;
 			}
 			if ( boxScattertimer_[ i ] >= 11 )
 			{
 				boxObj_[i]->wtf.position.z -= 0.4f;
-				boxObj_[ i ]->wtf.position.y += 0.02f;
 			}
-			boxObj_[i]->wtf.rotation.x += 0.03f;
-			boxObj_[i]->wtf.rotation.z += 0.03f;
+			boxObj_[i]->wtf.rotation.x += 0.06f;
+			boxObj_[i]->wtf.rotation.z += 0.1f;
 
 		}
 	}
-	//木箱の当たり判定
-	for ( int i = 0; i < 3; i++ )
+
+	if ( isBoxScatterFlag_[0] == 1 )
 	{
+		boxScattertimer_[0]++;
+
+		if ( boxScattertimer_[0] >= 1 && boxScattertimer_[0] <= 10 )
+		{
+			boxObj_[0]->wtf.position.z += 3.5f;
+		}
+		if ( boxScattertimer_[0] >= 11 )
+		{
+			boxObj_[0]->wtf.position.z -= 0.4f;
+		}
+		boxObj_[0]->wtf.rotation.x += 0.06f;
+		boxObj_[0]->wtf.rotation.z += 0.1f;
+
+	}
+
+	//木箱の当たり判定
+	for ( int i = 0; i < 12; i++ )
+	{
+		if ( player_->isDecelerationFlag == false)
+		{
+			if ( coll.CircleCollision(playerPos,boxObj_[ i ]->wtf.position,0.5f,0.5f) )
+			{
+				player_->isDecelerationFlag = true;
+			}
+		}
 		if ( coll.CircleCollision(playerPos,boxObj_[ i ]->wtf.position,0.5f,0.5f) )
 		{
 			isBoxScatterFlag_[ i ] = 1;
-			player_->isDecelerationFlag = true;
 		}
-		
 	}
 
 
 	//三角コーンが散らばる
-	for ( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 8; i++ )
 	{
 		if ( isKonScatterFlag_[i] == 1 )
 		{
@@ -152,7 +182,7 @@ void Block::Update(Vector3 playerPos)
 
 			if ( konScattertimer_[ i ] >= 1 && konScattertimer_[ i ] <= 10 )
 			{
-				konObj_[i]->wtf.position.z += 2.0f;
+				konObj_[i]->wtf.position.z += 3.5f;
 			}
 			if ( konScattertimer_[ i ] >= 11 )
 			{
@@ -169,13 +199,21 @@ void Block::Update(Vector3 playerPos)
 		}
 	}
 	//三角コーンの当たり判定
-	for ( int i = 0; i < 2; i++ ){
-		if ( coll.CircleCollision(playerPos,konObj_[ i ]->wtf.position,0.5f,0.5f) )
+	for ( int i = 0; i < 8; i++ ){
+		if ( isKonScatterFlag_[ i ] == 0 )
 		{
-			isKonScatterFlag_[ i ] = 1;
-			player_->isDecelerationFlag = true;
+			if ( player_->isDecelerationFlag == false )
+			{
+				if ( coll.CircleCollision(playerPos,konObj_[ i ]->wtf.position,0.5f,0.5f) )
+				{
+					player_->isDecelerationFlag = true;
+				}
+			}
+			if ( coll.CircleCollision(playerPos,konObj_[ i ]->wtf.position,0.5f,0.5f) )
+			{
+				isKonScatterFlag_[ i ] = 1;
+			}
 		}
-
 	}
 
 
@@ -184,15 +222,18 @@ void Block::Update(Vector3 playerPos)
 
 void Block::Draw()
 {
+	if ( isGameStartTimer >= 240 )
+	{
 	//木箱
-	for ( int i = 0; i < 3; i++ )
-	{
-		boxObj_[i]->Draw();
-	}
-	//三角コーン
-	for ( int i = 0; i < 2; i++ )
-	{
-		konObj_[i]->Draw();
+		for ( int i = 0; i < 12; i++ )
+		{
+			boxObj_[ i ]->Draw();
+		}
+		//三角コーン
+		for ( int i = 0; i < 8; i++ )
+		{
+			konObj_[ i ]->Draw();
+		}
 	}
 
 	/*collObj_->Draw();*/
