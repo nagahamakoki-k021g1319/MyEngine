@@ -24,7 +24,7 @@ GameScene::~GameScene() {
 	delete skydome;
 	delete skydomeMD;
 
-	for ( int i = 0; i < 50; i++ ){
+	for ( int i = 0; i < 100; i++ ){
 		delete floor_[i];
 		delete floor2_[ i ];
 	}
@@ -32,9 +32,14 @@ GameScene::~GameScene() {
 	{
 		delete floor3_[ i ];
 	}
+	for ( int i = 0; i < 30; i++ )
+	{
+		delete floor4_[ i ];
+	}
 	delete floorMD;
 	delete floorMD2;
 	delete floorMD3;
+	delete floorMD4;
 	delete TitleSprite;
 	delete ClearSprite;
 	delete skydomeTit_;
@@ -58,8 +63,9 @@ GameScene::~GameScene() {
 	delete bbout3;
 	delete st;
 	delete block_;
-
-	// ライトの解放
+	delete slipModel_;
+	delete slipObj_;
+	// ライslipObj_ トの解放
 	/*delete light;*/
 
 }
@@ -115,7 +121,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	spriteCommon->LoadTexture(0,"tt.png");
 	TitleSprite->SetTextureIndex(0);
 
-	spriteCommon->LoadTexture(32,"clear.png");
+	spriteCommon->LoadTexture(32,"result.png");
 	ClearSprite->SetTextureIndex(32);
 
 	spriteCommon->LoadTexture(33,"bbout1.png");
@@ -176,9 +182,16 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	standObj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	standObj_->wtf.position = { 0.0f,-1.0f,0.0f };
 
+	//ゲームクリアの自機
+	slipModel_ = Model::LoadFromOBJ("bikst");
+	slipObj_ = Object3d::Create();
+	slipObj_->SetModel(slipModel_);
+	slipObj_->wtf.scale = { 0.4f,0.4f,0.4f };
+	slipObj_->wtf.position = { 0.0f,-1.0f,-5.0f };
+
 	//ステージ(右壁)
 	floorMD = Model::LoadFromOBJ("woll");
-	for ( int i = 0; i < 50; i++ )
+	for ( int i = 0; i < 100; i++ )
 	{
 		floor_[i] = Object3d::Create();
 		floor_[i]->SetModel(floorMD);
@@ -187,7 +200,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	}
 	//ステージ(左壁)
 	floorMD2 = Model::LoadFromOBJ("woll2");
-	for ( int i = 0; i < 50; i++ ){
+	for ( int i = 0; i < 100; i++ ){
 		floor2_[i] = Object3d::Create();
 		floor2_[i]->SetModel(floorMD2);
 		floor2_[i]->wtf.position = ( Vector3{ -20, -30, 0.0f + i * 230.0f } );
@@ -203,6 +216,18 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	/*	floor3_[i]->wtf.rotation.y = 1.6f;*/
 		floor3_[i]->wtf.scale = ( Vector3{ 20.0f,5.0f,5.0f } );
 	}
+	//ステージ(奥壁)
+	floorMD4 = Model::LoadFromOBJ("woll2");
+	for ( int i = 0; i < 30; i++ )
+	{
+		floor4_[ i ] = Object3d::Create();
+		floor4_[ i ]->SetModel(floorMD4);
+		floor4_[ i ]->wtf.position = ( Vector3{ 150.0f, -30.0f, 2300.0f + i * 230.0f } );
+		floor4_[ i ]->wtf.scale = ( Vector3{ 7.0f,30.0f, 10.0f } );
+		floor4_[ i ]->wtf.rotation.y = -1.5f;
+	}
+
+
 	//天球(ゲームシーン)
 	skydomeMD = Model::LoadFromOBJ("skydome");
 	skydome = Object3d::Create();
@@ -307,16 +332,17 @@ void GameScene::Update() {
 			floorTit_[i]->Update();
 			floorTit_[i]->wtf.position.z -= 10.0f;
 			if ( floorTit_[ i ]->wtf.position.z <= -20000.0f ){floorTit_[ i ]->wtf.position.z = 40000.0f;}
+			
 		}
 
 		//両壁
-		for ( int i = 0; i < 50; i++ ){
+		for ( int i = 0; i < 100; i++ ){
 			floor_[i]->Update();
 			floor_[ i ]->wtf.position.z -= 10.0f;
-			if ( floor_[ i ]->wtf.position.z <= -4600.0f ){floor_[ i ]->wtf.position.z = 6900.0f;}
+			if ( floor_[ i ]->wtf.position.z <= -4600.0f ){floor_[ i ]->wtf.position.z = 18400.0f;}
 			floor2_[i]->Update();
 			floor2_[ i ]->wtf.position.z -= 10.0f;
-			if ( floor2_[ i ]->wtf.position.z <= -4600.0f ){floor2_[ i ]->wtf.position.z = 6900.0f;}
+			if ( floor2_[ i ]->wtf.position.z <= -4600.0f ){floor2_[ i ]->wtf.position.z = 18400.0f;}
 		}
 		//天井
 		for ( int i = 0; i < 100; i++ ){
@@ -327,15 +353,44 @@ void GameScene::Update() {
 				floor3_[ i ]->wtf.position.z = 8000.0f;
 			}
 		}
+		//奥壁
+		for ( int i = 0; i < 30; i++ )
+		{
+			floor4_[ i ]->Update();
+			
+		}
 		standObj_->Update();
 		if ( spintimer >= 10){spintimer = 0;}
 		if(spintimer >= 0 && spintimer <= 5 ){standObj_->SetModel(standModel_);}
 		else if( spintimer >= 6 && spintimer <= 10 ){standObj_->SetModel(standModel2_);}
+
+		/*if ( input_->TriggerKey(DIK_I) )
+		{
+			standObj_->wtf.rotation.x -= 0.1f;
+		}
+		else if ( input_->TriggerKey(DIK_K) )
+		{
+			standObj_->wtf.rotation.x += 0.1f;
+		}
+		if ( input_->TriggerKey(DIK_J) )
+		{
+			standObj_->wtf.rotation.y -= 0.1f;
+		}
+		else if ( input_->TriggerKey(DIK_L) )
+		{
+			standObj_->wtf.rotation.y += 0.1f;
+		}
+		if ( input_->TriggerKey(DIK_O) )
+		{
+			standObj_->wtf.rotation.x = 0.0f;
+			standObj_->wtf.rotation.y = 0.0f;
+		}*/
+
 		lamp_->Update();
 
 		ImGui::Begin("Title");
 
-		ImGui::Text("CameraRotation:%f,%f,%f",mainCamera->wtf.rotation.x,mainCamera->wtf.rotation.y,mainCamera->wtf.rotation.z);
+		ImGui::Text("standObj_->wtf.rotation:%f,%f,%f",standObj_->wtf.rotation.x,standObj_->wtf.rotation.y,standObj_->wtf.rotation.z);
 		ImGui::Text("CameraPosition:%f,%f,%f",mainCamera->wtf.position.x,mainCamera->wtf.position.y,mainCamera->wtf.position.z);
 
 		ImGui::End();
@@ -366,34 +421,16 @@ void GameScene::Update() {
 			{
 				floorTit_[ i ]->wtf.position.z = 40000.0f;
 			}
-
-		/*	if ( input_->PushKey(DIK_I) )
-			{
-				floorTit_[ i ]->wtf.rotation.z -= 0.01f;
-			}
-			else if ( input_->PushKey(DIK_K) )
-			{
-				floorTit_[ i ]->wtf.rotation.z += 0.01f;
-			}
-			if ( input_->PushKey(DIK_J) )
-			{
-				floorTit_[ i ]->wtf.rotation.y -= 0.01f;
-			}
-			else if ( input_->PushKey(DIK_L) )
-			{
-				floorTit_[ i ]->wtf.rotation.y += 0.01f;
-			}*/
-
 		}
 
 		//両壁
-		for ( int i = 0; i < 50; i++ ){
+		for ( int i = 0; i < 100; i++ ){
 			floor_[ i ]->Update();
 			floor_[ i ]->wtf.position.z -= 10.0f;
-			if ( floor_[ i ]->wtf.position.z <= -4600.0f ){floor_[ i ]->wtf.position.z = 6900.0f;}
+			if ( floor_[ i ]->wtf.position.z <= -4600.0f ){floor_[ i ]->wtf.position.z = 18400.0f;}
 			floor2_[ i ]->Update();
 			floor2_[ i ]->wtf.position.z -= 10.0f;
-			if ( floor2_[ i ]->wtf.position.z <= -4600.0f ){floor2_[ i ]->wtf.position.z = 6900.0f;}
+			if ( floor2_[ i ]->wtf.position.z <= -4600.0f ){floor2_[ i ]->wtf.position.z = 18400.0f;}
 
 			
 		}
@@ -405,14 +442,95 @@ void GameScene::Update() {
 			if ( floor3_[ i ]->wtf.position.z <= -2000.0f ){floor3_[ i ]->wtf.position.z = 8000.0f;}
 
 		}
-
-
+		//奥壁
+		for ( int i = 0; i < 30; i++ )
+		{
+			floor4_[ i ]->Update();
+		
+		}
+		
 		
 
 
 	}
 
 	if ( sceneNo_ == SceneNo::Clear ){
+		clearTimer++;
+		skydome->Update();
+		slipObj_->Update();
+		if ( clearTimer <= 100 && clearTimer >= 1 )
+		{
+			slipObj_->wtf.position.z += 0.1f;
+		}
+		if ( clearTimer >= 20 )
+		{
+			//横向く
+			slipObj_->wtf.rotation.y -= 0.1f;
+			if ( slipObj_->wtf.rotation.y <= -1.5f )
+			{
+				slipObj_->wtf.rotation.y = -1.5f;
+			}
+			//ある程度横向いたらスライディング
+			if ( slipObj_->wtf.rotation.y <= -0.8f )
+			{
+				slipObj_->wtf.rotation.x -= 0.07f;
+				if ( slipObj_->wtf.rotation.x <= -0.7f )
+				{
+					slipObj_->wtf.rotation.x = -0.7f;
+				}
+			}
+			
+
+		}
+
+		//地面
+		for ( int i = 0; i < 3; i++ )
+		{
+			floorTit_[ i ]->Update();
+			if ( clearTimer <= 100)
+			{
+				floorTit_[ i ]->wtf.position.z -= 10.0f;
+			}
+			if ( floorTit_[ i ]->wtf.position.z <= -20000.0f )
+			{
+				floorTit_[ i ]->wtf.position.z = 40000.0f;
+			}
+		}
+
+		//両壁
+		for ( int i = 0; i < 100; i++ )
+		{
+			floor_[ i ]->Update();
+			if ( clearTimer <= 100 )
+			{
+				floor_[ i ]->wtf.position.z -= 10.0f;
+			}
+			if ( floor_[ i ]->wtf.position.z <= -4600.0f )
+			{
+				floor_[ i ]->wtf.position.z = 18400.0f;
+			}
+			floor2_[ i ]->Update();
+			if ( clearTimer <= 100 )
+			{
+				floor2_[ i ]->wtf.position.z -= 10.0f;
+			}
+			if ( floor2_[ i ]->wtf.position.z <= -4600.0f )
+			{
+				floor2_[ i ]->wtf.position.z = 18400.0f;
+			}
+
+
+		}
+		//奥壁
+		for ( int i = 0; i < 30; i++ )
+		{
+			if ( clearTimer <= 100 )
+			{
+				floor4_[ i ]->wtf.position.z -= 10.0f;
+			}
+			floor4_[ i ]->Update();
+		}
+
 		isbboutFlag = false;
 		bboutTimer = 0;
 		standObj_->wtf.position = { 0.0f,-1.0f,0.0f };
@@ -450,7 +568,7 @@ void GameScene::Draw() {
 		{
 			floorTit_[i]->Draw();
 		}
-		for ( int i = 0; i < 50; i++ )
+		for ( int i = 0; i < 100; i++ )
 		{
 			floor_[i]->Draw();
 			floor2_[i]->Draw();
@@ -473,14 +591,34 @@ void GameScene::Draw() {
 		lamp_->Draw();
 		block_->Draw();
 		for ( int i = 0; i < 3; i++ ){floorTit_[ i ]->Draw();}
-		for ( int i = 0; i < 50; i++ ){
+		for ( int i = 0; i < 100; i++ ){
 			floor_[ i ]->Draw();
 			floor2_[ i ]->Draw();
 		}
 		for ( int i = 0; i < 100; i++ ){floor3_[ i ]->Draw();}
-
+		
 
 	}
+	if ( sceneNo_ == SceneNo::Clear )
+	{
+		skydomeTit_->Draw();
+		slipObj_->Draw();
+		for ( int i = 0; i < 3; i++ )
+		{
+			floorTit_[ i ]->Draw();
+		}
+		for ( int i = 0; i < 100; i++ )
+		{
+			floor_[ i ]->Draw();
+			floor2_[ i ]->Draw();
+		}
+		for ( int i = 0; i < 30; i++ )
+		{
+			floor4_[ i ]->Draw();
+		}
+	}
+
+
 	//3Dオブジェクト描画後処理
 	Object3d::PostDraw();
 	if (sceneNo_ == SceneNo::Title) {
@@ -517,7 +655,10 @@ void GameScene::Draw() {
 
 	if ( sceneNo_ == SceneNo::Clear)
 	{
-		ClearSprite->Draw();
+		if ( clearTimer >= 90)
+		{
+			ClearSprite->Draw();
+		}
 	}
 
 }

@@ -226,11 +226,11 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 			if ( isMoveFlag_[ i ] == 1 ){
 				if ( input_->PushKey(DIK_W) )
 				{
-					Obj_[ i ]->wtf.position.z -= 0.03f;
+					Obj_[ i ]->wtf.position.z -= 0.06f;
 				}
 				else if ( input_->PushKey(DIK_S) )
 				{
-					Obj_[ i ]->wtf.position.z += 0.03f;
+					Obj_[ i ]->wtf.position.z += 0.06f;
 				}
 			}
 

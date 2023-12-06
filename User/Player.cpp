@@ -304,7 +304,7 @@ void Player::Update() {
 	//ボス登場時のカメラ
 	if ( input_->TriggerKey(DIK_4) ){isCameraBehavior = 1;}
 	if ( isCameraBehavior == 1 ){CameraBehaviorTimer++;}
-	if ( isCameraBehavior == 1 && isRoundFlag == 6 )
+	if ( isCameraBehavior == 1 && isRoundFlag == 5 )
 	{
 		if ( CameraBehaviorTimer <= 70 ){
 			camera->wtf.position.z -= 0.2f;
@@ -319,7 +319,7 @@ void Player::Update() {
 			isCameraBehavior = 2;
 		}
 	}
-	if ( isCameraBehavior == 2 && isRoundFlag == 6 ){
+	if ( isCameraBehavior == 2 && isRoundFlag == 5 ){
 		CameraBehaviorTimer2++;
 		if ( CameraBehaviorTimer2 >= 80)
 		{
