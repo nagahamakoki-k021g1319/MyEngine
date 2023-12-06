@@ -130,12 +130,14 @@ private:	//メンバ変数
 	Object3d* skydome = nullptr;
 	Model* skydomeMD = nullptr;
 
-	Object3d* floor_[ 50 ] = {0};
+	Object3d* floor_[ 100 ] = {0};
 	Model* floorMD = nullptr;
-	Object3d* floor2_[ 50 ] = { 0 };
+	Object3d* floor2_[ 100 ] = { 0 };
 	Model* floorMD2 = nullptr;
 	Object3d* floor3_[ 100 ] = { 0 };
 	Model* floorMD3 = nullptr;
+	Object3d* floor4_[ 30 ] = { 0 };
+	Model* floorMD4 = nullptr;
 
 	Object3d* cloudfloor_ = nullptr;
 	Model* cloudfloorMD_ = nullptr;
@@ -154,7 +156,7 @@ private:	//メンバ変数
 	Sprite* st = nullptr;
 	int stTimer = 0;
 
-	//タイトルで座ってるプレイヤー
+	//タイトルのプレイヤー
 	Object3d* standObj_ = nullptr;
 	Model* standModel_ = nullptr;
 	Model* standModel2_ = nullptr;
@@ -169,6 +171,10 @@ private:	//メンバ変数
 
 	//ゲームクリア
 	Sprite* ClearSprite = nullptr;
-
+	//クリアのプレイヤー
+	Object3d* slipObj_ = nullptr;
+	Model* slipModel_ = nullptr;
+	//クリア時に背景がとまる
+	int clearTimer = 0;
 
 };
