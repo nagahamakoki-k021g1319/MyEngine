@@ -786,6 +786,7 @@ void BikeEnemy::BikeEnemyAction()
 				}
 			}
 		}
+
 		if ( isBikclushFlag_[ i ] == 1 )
 		{
 			standardPos = i + 1;
