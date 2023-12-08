@@ -364,28 +364,7 @@ void GameScene::Update() {
 		if(spintimer >= 0 && spintimer <= 5 ){standObj_->SetModel(standModel_);}
 		else if( spintimer >= 6 && spintimer <= 10 ){standObj_->SetModel(standModel2_);}
 
-		/*if ( input_->TriggerKey(DIK_I) )
-		{
-			standObj_->wtf.rotation.x -= 0.1f;
-		}
-		else if ( input_->TriggerKey(DIK_K) )
-		{
-			standObj_->wtf.rotation.x += 0.1f;
-		}
-		if ( input_->TriggerKey(DIK_J) )
-		{
-			standObj_->wtf.rotation.y -= 0.1f;
-		}
-		else if ( input_->TriggerKey(DIK_L) )
-		{
-			standObj_->wtf.rotation.y += 0.1f;
-		}
-		if ( input_->TriggerKey(DIK_O) )
-		{
-			standObj_->wtf.rotation.x = 0.0f;
-			standObj_->wtf.rotation.y = 0.0f;
-		}*/
-
+		
 		lamp_->Update();
 
 		ImGui::Begin("Title");
