@@ -1,15 +1,4 @@
-
-#include "WinApp.h"
-#include "Input.h"
-#include "DirectXCommon.h"
-#include "FPS.h"
-#include "ImGuiManager.h"
-#include <imgui.h>
-
-#include "GameScene.h"
-#include <fbxsdk.h>
-#include "Engine/3D/Light/LightGroup.h"
-
+#include "Framework.h"
 
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 

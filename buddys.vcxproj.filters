@@ -226,6 +226,9 @@
     <ClCompile Include="User\ornament\Block.cpp">
       <Filter>user\ソース\ornament</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\Framework.cpp">
+      <Filter>Engine\ソースファイル\BASE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BASE\FPS.h">
@@ -350,6 +353,9 @@
     </ClInclude>
     <ClInclude Include="User\ornament\Block.h">
       <Filter>user\ヘッダー\ornament</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\Framework.h">
+      <Filter>Engine\ヘッダーファイル\BASE</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
