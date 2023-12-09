@@ -357,7 +357,6 @@ void GameScene::Update() {
 		for ( int i = 0; i < 30; i++ )
 		{
 			floor4_[ i ]->Update();
-			
 		}
 		standObj_->Update();
 		if ( spintimer >= 10){spintimer = 0;}
