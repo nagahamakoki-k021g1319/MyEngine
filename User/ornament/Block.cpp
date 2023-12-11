@@ -46,21 +46,7 @@ void Block::Initialize(DirectXCommon* dxCommon,Input* input)
 		boxObj_[ i ]->SetModel(boxModel_[ i ]);
 		boxObj_[ i ]->wtf.scale = { 0.3f,0.3f,0.3f };
 	}
-	boxObj_[0]->wtf.position = { 0.0f,-1.5f,101.0f };
-	boxObj_[1]->wtf.position = { 0.3f,-2.0f,101.0f };
-	boxObj_[2]->wtf.position = { -0.3f,-2.0f,101.0f };
-
-	boxObj_[ 3 ]->wtf.position = { 0.0f,-1.5f,301.0f };
-	boxObj_[ 4 ]->wtf.position = { 0.3f,-2.0f,301.0f };
-	boxObj_[ 5 ]->wtf.position = { -0.3f,-2.0f,301.0f };
-
-	boxObj_[ 6 ]->wtf.position = { 0.0f,-1.5f,501.0f };
-	boxObj_[ 7 ]->wtf.position = { 0.3f,-2.0f,501.0f };
-	boxObj_[ 8 ]->wtf.position = { -0.3f,-2.0f,501.0f };
-
-	boxObj_[ 9 ]->wtf.position = { 0.0f,-1.5f,701.0f };
-	boxObj_[ 10 ]->wtf.position = { 0.3f,-2.0f,701.0f };
-	boxObj_[ 11 ]->wtf.position = { -0.3f,-2.0f,701.0f };
+	
 
 	//三角コーン
 	for ( int i = 0; i < 8; i++ )
@@ -70,18 +56,8 @@ void Block::Initialize(DirectXCommon* dxCommon,Input* input)
 		konObj_[i]->SetModel(konModel_[i]);
 		konObj_[i]->wtf.scale = { 0.4f,0.4f,0.4f };
 	}
-	konObj_[0]->wtf.position = { 0.5f,-2.0f,100.0f };
-	konObj_[1]->wtf.position = { -0.5f,-2.0f,100.0f };
-
-	konObj_[ 2 ]->wtf.position = { 0.5f,-2.0f,300.0f };
-	konObj_[ 3 ]->wtf.position = { -0.5f,-2.0f,300.0f };
-
-	konObj_[ 4 ]->wtf.position = { 0.5f,-2.0f,500.0f };
-	konObj_[ 5 ]->wtf.position = { -0.5f,-2.0f,500.0f };
-
-	konObj_[ 6 ]->wtf.position = { 0.5f,-2.0f,700.0f };
-	konObj_[ 7 ]->wtf.position = { -0.5f,-2.0f,700.0f };
-
+	
+	InitialPosition();
 
 	//自機の当たり判定
 	collModel_ = Model::LoadFromOBJ("collboll");
@@ -237,4 +213,45 @@ void Block::Draw()
 	}
 
 	/*collObj_->Draw();*/
+}
+
+void Block::InitialPosition()
+{
+	//1番目の障害物
+	boxObj_[ 0 ]->wtf.position = { 0.0f,-1.5f,301.0f };
+	boxObj_[ 1 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x + 0.3f,-2.0f,boxObj_[ 0 ]->wtf.position.z };
+	boxObj_[ 2 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x -0.3f,-2.0f,boxObj_[ 0 ]->wtf.position.z };
+
+	konObj_[ 0 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x +0.5f, -2.0f,boxObj_[ 0 ]->wtf.position.z - 1.0f };
+	konObj_[ 1 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x -0.5f,-2.0f, boxObj_[ 0 ]->wtf.position.z - 1.0f };
+
+	//2番目の障害物
+	boxObj_[ 3 ]->wtf.position = { 0.0f,-1.5f,501.0f };
+	boxObj_[ 4 ]->wtf.position = { boxObj_[ 3 ]->wtf.position.x + 0.3f,-2.0f,boxObj_[ 3 ]->wtf.position.z };
+	boxObj_[ 5 ]->wtf.position = { boxObj_[ 3 ]->wtf.position.x -0.3f,-2.0f,boxObj_[ 3 ]->wtf.position.z };
+
+	konObj_[ 2 ]->wtf.position = { boxObj_[ 3 ]->wtf.position.x + 0.5f,-2.0f,boxObj_[ 3 ]->wtf.position.z - 1.0f };
+	konObj_[ 3 ]->wtf.position = { boxObj_[ 3 ]->wtf.position.x -0.5f,-2.0f,boxObj_[ 3 ]->wtf.position.z - 1.0f };
+
+	//3番目の障害物
+	boxObj_[ 6 ]->wtf.position = { 0.0f,-1.5f,501.0f };
+	boxObj_[ 7 ]->wtf.position = { boxObj_[ 6 ]->wtf.position.x + 0.3f,-2.0f,boxObj_[ 6 ]->wtf.position.z };
+	boxObj_[ 8 ]->wtf.position = { boxObj_[ 6 ]->wtf.position.x -0.3f,-2.0f,boxObj_[ 6 ]->wtf.position.z };
+
+	konObj_[ 4 ]->wtf.position = { 0.5f,-2.0f,500.0f };
+	konObj_[ 5 ]->wtf.position = { -0.5f,-2.0f,500.0f };
+
+
+
+	boxObj_[ 9 ]->wtf.position = { 0.0f,-1.5f,701.0f };
+	boxObj_[ 10 ]->wtf.position = { 0.3f,-2.0f,701.0f };
+	boxObj_[ 11 ]->wtf.position = { -0.3f,-2.0f,701.0f };
+
+	
+
+	
+
+	konObj_[ 6 ]->wtf.position = { 0.5f,-2.0f,700.0f };
+	konObj_[ 7 ]->wtf.position = { -0.5f,-2.0f,700.0f };
+
 }

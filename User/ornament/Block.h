@@ -38,6 +38,9 @@ public:
 	///</summary>
 	void Draw();
 
+	//障害物の初期値
+	void InitialPosition();
+
 	void SetPlayer(Player* player) {
 		player_ = player;
 	};
