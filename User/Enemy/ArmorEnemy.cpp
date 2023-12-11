@@ -223,7 +223,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	//自機の加減速でバイク兵のZ軸移動
 	for ( int i = 0; i < 4; i++ ){
 		if ( isAliveFlag_[ i ] == 0 ){
-			if ( isMoveFlag_[ i ] == 1 ){
+			/*if ( isMoveFlag_[ i ] == 1 ){
 				if ( input_->PushKey(DIK_W) )
 				{
 					Obj_[ i ]->wtf.position.z -= 0.06f;
@@ -232,7 +232,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 				{
 					Obj_[ i ]->wtf.position.z += 0.06f;
 				}
-			}
+			}*/
 
 			//定位置についたら魔導兵が左右に少しづつ動く
 			if ( isMoveFlag_[ i ] == 1 )
