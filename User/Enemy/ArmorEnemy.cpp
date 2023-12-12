@@ -223,17 +223,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	//自機の加減速でバイク兵のZ軸移動
 	for ( int i = 0; i < 4; i++ ){
 		if ( isAliveFlag_[ i ] == 0 ){
-			/*if ( isMoveFlag_[ i ] == 1 ){
-				if ( input_->PushKey(DIK_W) )
-				{
-					Obj_[ i ]->wtf.position.z -= 0.06f;
-				}
-				else if ( input_->PushKey(DIK_S) )
-				{
-					Obj_[ i ]->wtf.position.z += 0.06f;
-				}
-			}*/
-
+			
 			//定位置についたら魔導兵が左右に少しづつ動く
 			if ( isMoveFlag_[ i ] == 1 )
 			{
@@ -434,8 +424,8 @@ void ArmorEnemy::EffUpdate()
 		{
 			EffSummary(Vector3( Obj_[i]->wtf.position.x + 1.0f,Obj_[i]->wtf.position.y - 1.5f,Obj_[i]->wtf.position.z),i);
 			EffSummary2(Vector3(Obj_[i]->wtf.position.x - 1.0f,Obj_[i]->wtf.position.y - 1.5f,Obj_[i]->wtf.position.z),i);
-			EffSummary3(Vector3(Obj_[i]->wtf.position.x + 0.3f,Obj_[i]->wtf.position.y + 2.0f,Obj_[i]->wtf.position.z + 2.0f),i);
-			EffSummary4(Vector3(Obj_[i]->wtf.position.x - 0.3f,Obj_[i]->wtf.position.y + 2.0f,Obj_[i]->wtf.position.z + 2.0f),i);
+			EffSummary3(Vector3(Obj_[i]->wtf.position.x + 0.3f,Obj_[i]->wtf.position.y + 1.8f,Obj_[i]->wtf.position.z + 2.0f),i);
+			EffSummary4(Vector3(Obj_[i]->wtf.position.x - 0.3f,Obj_[i]->wtf.position.y + 1.8f,Obj_[i]->wtf.position.z + 2.0f),i);
 		}
 		if ( gasEffTimer_[ i ] >= 20 )
 		{
@@ -549,7 +539,7 @@ void ArmorEnemy::EffSummary3(Vector3 bulletpos3,int num3)
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 		const float rnd_vel3 = 0.0f;
-		const float rnd_vely3 = -0.05f;
+		const float rnd_vely3 = -0.07f;
 		const float rnd_velz3 = 0.0f;
 		Vector3 vel3{};
 		vel3.x = ( float ) rand() / RAND_MAX * rnd_vel3 - rnd_vel3 / 2.0f;
@@ -586,7 +576,7 @@ void ArmorEnemy::EffSummary4(Vector3 bulletpos4,int num4)
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 		const float rnd_vel4 = 0.0f;
-		const float rnd_vely4 = -0.05f;
+		const float rnd_vely4 = -0.07f;
 		const float rnd_velz4 = 0.0f;
 		Vector3 vel4{};
 		vel4.x = ( float ) rand() / RAND_MAX * rnd_vel4 - rnd_vel4 / 2.0f;
