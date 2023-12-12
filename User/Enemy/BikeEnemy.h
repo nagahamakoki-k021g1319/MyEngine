@@ -73,6 +73,9 @@ private:
 	//当たり判定のモデル(衝突してノックバックする用)
 	Object3d* collRightObj_[ 9 ] = { 0 };
 	Object3d* collLeftObj_[ 9 ] = { 0 };
+	Object3d* collFrontObj_[ 9 ] = { 0 };
+	Object3d* collBackObj_[ 9 ] = { 0 };
+
 	Model* collLRModel_[ 9 ] = { 0 };
 
 	//自機と横軸があった時に突進するフラグ(0 待機,1 突進,2 自機と衝突)

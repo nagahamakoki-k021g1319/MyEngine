@@ -471,7 +471,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	}
 
 	ImGui::Begin("bikeEnemy");
-	ImGui::Text("position_:%f,%f,%f",Obj_[ 2 ]->wtf.position.x,Obj_[ 2 ]->wtf.position.y,Obj_[ 2 ]->wtf.position.z);
+	ImGui::Text("position_:%f,%f,%f",Obj_[ 0 ]->wtf.position.x,Obj_[ 0 ]->wtf.position.y,Obj_[ 0 ]->wtf.position.z);
 	ImGui::End();
 	/*ImGui::Text("HP:%d",HP_[ 0 ]);
 	ImGui::Text("isHit_:%d",isHit_[1]);
@@ -612,9 +612,9 @@ void BikeEnemy::BikeEnemyEntry()
 		{
 			Obj_[ 0 ]->wtf.position.z += 0.5f;
 		}
-		if ( Obj_[ 0 ]->wtf.position.z >= 5.0f )
+		if ( Obj_[ 0 ]->wtf.position.z >= 3.0f )
 		{
-			Obj_[0]->wtf.position.z = 5.0f;
+			Obj_[0]->wtf.position.z = 3.0f;
 			isBackEntryFlag_[ 0 ] = 1;
 		}
 	}
@@ -624,9 +624,9 @@ void BikeEnemy::BikeEnemyEntry()
 		{
 			Obj_[1]->wtf.position.z += 0.5f;
 		}
-		if ( Obj_[1]->wtf.position.z >= 10.0f )
+		if ( Obj_[1]->wtf.position.z >= 8.0f )
 		{
-			Obj_[1]->wtf.position.z = 10.0f;
+			Obj_[1]->wtf.position.z = 8.0f;
 			isBackEntryFlag_[1] = 1;
 		}
 	}
@@ -643,9 +643,9 @@ void BikeEnemy::BikeEnemyEntry()
 				{
 					Obj_[ 2 ]->wtf.position.z += 0.5f;
 				}
-				if ( Obj_[ 2 ]->wtf.position.z >= 5.0f )
+				if ( Obj_[ 2 ]->wtf.position.z >= 3.0f )
 				{
-					Obj_[ 2 ]->wtf.position.z = 5.0f;
+					Obj_[ 2 ]->wtf.position.z = 3.0f;
 					isBackEntryFlag_[ 2 ] = 1;
 				}
 			}
@@ -658,9 +658,9 @@ void BikeEnemy::BikeEnemyEntry()
 				{
 					Obj_[ 3 ]->wtf.position.z += 0.5f;
 				}
-				if ( Obj_[ 3 ]->wtf.position.z >= 5.0f )
+				if ( Obj_[ 3 ]->wtf.position.z >= 3.0f )
 				{
-					Obj_[ 3 ]->wtf.position.z = 5.0f;
+					Obj_[ 3 ]->wtf.position.z = 3.0f;
 					isBackEntryFlag_[ 3 ] = 1;
 				}
 			}
@@ -696,9 +696,9 @@ void BikeEnemy::BikeEnemyEntry()
 				{
 					Obj_[ 5 ]->wtf.position.z += 0.5f;
 				}
-				if ( Obj_[ 5 ]->wtf.position.z >= 10.0f )
+				if ( Obj_[ 5 ]->wtf.position.z >= 8.0f )
 				{
-					Obj_[ 5 ]->wtf.position.z = 10.0f;
+					Obj_[ 5 ]->wtf.position.z = 8.0f;
 					isBackEntryFlag_[ 5 ] = 1;
 				}
 			}
@@ -712,9 +712,9 @@ void BikeEnemy::BikeEnemyEntry()
 				{
 					Obj_[ 6 ]->wtf.position.z += 1.0f;
 				}
-				if ( Obj_[ 6 ]->wtf.position.z >= 20.0f )
+				if ( Obj_[ 6 ]->wtf.position.z >= 8.0f )
 				{
-					Obj_[ 6 ]->wtf.position.z = 20.0f;
+					Obj_[ 6 ]->wtf.position.z = 8.0f;
 					isBackEntryFlag_[ 6 ] = 1;
 				}
 			}
@@ -733,9 +733,9 @@ void BikeEnemy::BikeEnemyEntry()
 				{
 					Obj_[7]->wtf.position.z += 0.5f;
 				}
-				if ( Obj_[7]->wtf.position.z >= 5.0f )
+				if ( Obj_[7]->wtf.position.z >= 3.0f )
 				{
-					Obj_[7 ]->wtf.position.z = 5.0f;
+					Obj_[7 ]->wtf.position.z = 3.0f;
 					isBackEntryFlag_[7] = 1;
 				}
 			}
@@ -749,9 +749,9 @@ void BikeEnemy::BikeEnemyEntry()
 				{
 					Obj_[ 8 ]->wtf.position.z += 0.5f;
 				}
-				if ( Obj_[8]->wtf.position.z >= 10.0f )
+				if ( Obj_[8]->wtf.position.z >= 8.0f )
 				{
-					Obj_[ 8 ]->wtf.position.z = 10.0f;
+					Obj_[ 8 ]->wtf.position.z = 8.0f;
 					isBackEntryFlag_[ 8 ] = 1;
 				}
 			}
@@ -771,10 +771,11 @@ void BikeEnemy::BikeEnemyAction()
 			{
 				if ( player_->standardCamera == 0 )
 				{
-					if ( Obj_[ i ]->wtf.position.z <= -1.0f )
+					if ( Obj_[ i ]->wtf.position.z <= -3.0f )
 					{
 						player_->standardCamera = 1;
 					}
+				
 				}
 
 				if ( player_->standardCamera == 1 )
@@ -786,7 +787,19 @@ void BikeEnemy::BikeEnemyAction()
 				}
 			}
 		}
-
+		//移動制限
+		if ( isBackEntryFlag_[ i ] == 1 && isBikclushFlag_[ i ] == 0 )
+		{
+			if ( Obj_[ i ]->wtf.position.z <= -8.0f )
+			{
+				Obj_[ i ]->wtf.position.z = -8.0f;
+			}
+			if ( Obj_[ i ]->wtf.position.z >= 8.0f )
+			{
+				Obj_[ i ]->wtf.position.z = 8.0f;
+			}
+		}
+		//ウェーブの一番自機に近いやつがカメラの主導権を握る
 		if ( isBikclushFlag_[ i ] == 1 )
 		{
 			standardPos = i + 1;
