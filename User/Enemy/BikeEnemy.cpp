@@ -21,6 +21,9 @@ BikeEnemy::~BikeEnemy()
 		delete collRightObj_[ i ];
 		delete collLeftObj_[ i ];
 		delete collLRModel_[i];
+		delete collFrontObj_[ i ];
+		delete collBackObj_[ i ];
+
 	}
 	for ( int i = 0; i < 5; i++ )
 	{
@@ -88,6 +91,14 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		collLeftObj_[ i ] = Object3d::Create();
 		collLeftObj_[ i ]->SetModel(collLRModel_[ i ]);
 		collLeftObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x - 0.1f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
+		//前
+		collFrontObj_[ i ] = Object3d::Create();
+		collFrontObj_[ i ]->SetModel(collLRModel_[ i ]);
+		collFrontObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z + 2.0f };
+		//後
+		collBackObj_[ i ] = Object3d::Create();
+		collBackObj_[ i ]->SetModel(collLRModel_[ i ]);
+		collBackObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 2.0f };
 
 	}
 
@@ -134,6 +145,10 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		collRightObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x + 0.1f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
 		collLeftObj_[ i ]->Update();
 		collLeftObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x - 0.1f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
+		collFrontObj_[ i ]->Update();
+		collFrontObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z + 2.0f };
+		collBackObj_[ i ]->Update();
+		collBackObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 2.0f };
 	}
 	//自機から横に出ているモデル
 	for ( int i = 0; i < 5; i++ ){
@@ -338,7 +353,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 
 	
 
-	//当たり判定
+	//当たり判定(自機とバイク兵の当たり判定)
 	for ( int i = 0; i < 9; i++ )
 	{
 		//自機の左攻撃の当たり判定
@@ -421,6 +436,9 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 
 	}
 
+	//当たり判定(バイク兵同士の当たり判定)
+	BiketoBikeColl();
+	
 	//バイク兵のガス噴射
 	for ( int i = 0; i < 9; i++ ){
 		if ( HP_[i] <= 0 )
@@ -471,7 +489,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	}
 
 	ImGui::Begin("bikeEnemy");
-	ImGui::Text("position_:%f,%f,%f",Obj_[ 0 ]->wtf.position.x,Obj_[ 0 ]->wtf.position.y,Obj_[ 0 ]->wtf.position.z);
+	ImGui::Text("position_:%f,%f,%f",Obj_[ 1]->wtf.position.x,Obj_[ 1 ]->wtf.position.y,Obj_[ 1 ]->wtf.position.z);
 	ImGui::End();
 	/*ImGui::Text("HP:%d",HP_[ 0 ]);
 	ImGui::Text("isHit_:%d",isHit_[1]);
@@ -493,6 +511,9 @@ void BikeEnemy::Draw()
 			/*	collObj_[i]->Draw();
 				collRightObj_[ i ]->Draw();
 				collLeftObj_[ i ]->Draw();*/
+				collFrontObj_[ i ]->Draw();
+				collBackObj_[ i ]->Draw(); 
+
 			}
 
 			//バイク兵の撃破モデル
@@ -612,9 +633,9 @@ void BikeEnemy::BikeEnemyEntry()
 		{
 			Obj_[ 0 ]->wtf.position.z += 0.5f;
 		}
-		if ( Obj_[ 0 ]->wtf.position.z >= 3.0f )
+		if ( Obj_[ 0 ]->wtf.position.z >= 2.0f )
 		{
-			Obj_[0]->wtf.position.z = 3.0f;
+			Obj_[0]->wtf.position.z = 2.0f;
 			isBackEntryFlag_[ 0 ] = 1;
 		}
 	}
@@ -624,9 +645,9 @@ void BikeEnemy::BikeEnemyEntry()
 		{
 			Obj_[1]->wtf.position.z += 0.5f;
 		}
-		if ( Obj_[1]->wtf.position.z >= 8.0f )
+		if ( Obj_[1]->wtf.position.z >= 7.0f )
 		{
-			Obj_[1]->wtf.position.z = 8.0f;
+			Obj_[1]->wtf.position.z = 7.0f;
 			isBackEntryFlag_[1] = 1;
 		}
 	}
@@ -794,9 +815,9 @@ void BikeEnemy::BikeEnemyAction()
 			{
 				Obj_[ i ]->wtf.position.z = -8.0f;
 			}
-			if ( Obj_[ i ]->wtf.position.z >= 8.0f )
+			if ( Obj_[ i ]->wtf.position.z >= 10.0f )
 			{
-				Obj_[ i ]->wtf.position.z = 8.0f;
+				Obj_[ i ]->wtf.position.z = 10.0f;
 			}
 		}
 		//ウェーブの一番自機に近いやつがカメラの主導権を握る
@@ -808,4 +829,32 @@ void BikeEnemy::BikeEnemyAction()
 	}
 	
 
+}
+
+void BikeEnemy::BiketoBikeColl()
+{
+	//////////////////////////////////////
+	//--当たり判定(バイク兵同士の当たり判定)--//
+	/////////////////////////////////////
+	
+	//ウェーブ1のバイク兵同士の当たり判定
+	if ( isBackEntryFlag_[0] == 1 && isBikclushFlag_[0] == 0 && isBackEntryFlag_[ 1 ] == 1 && isBikclushFlag_[ 1 ] == 0 ){
+		if ( HP_[0] >= 1 && HP_[ 1 ] >= 1 ){
+			if ( isEachKnockbackFlag_ == 0){
+				if ( coll.CircleCollision(collFrontObj_[ 0 ]->wtf.position,collBackObj_[ 1 ]->wtf.position,1.0f,1.0f) ){
+					isEachKnockbackFlag_ = 1;
+				}
+			}
+		}
+	}
+	if ( isEachKnockbackFlag_ == 1 ){eachKnockbackTimer_++;}
+	if ( eachKnockbackTimer_ >= 1 && eachKnockbackTimer_ <= 20){
+		Obj_[ 1 ]->wtf.position.z += 0.15f;
+		Obj_[ 0 ]->wtf.position.z -= 0.15f;
+	}
+	if ( eachKnockbackTimer_ >= 21 )
+	{
+		isEachKnockbackFlag_ = 0;
+		eachKnockbackTimer_ = 0;
+	}
 }
