@@ -42,6 +42,9 @@ public:
 	//バイク兵の登場してからの挙動
 	void BikeEnemyAction();
 
+	//バイク兵同士の当たり判定
+	void BiketoBikeColl();
+
 	void SetPlayer(Player* player) {player_ = player;};
 
 private:
@@ -75,8 +78,11 @@ private:
 	Object3d* collLeftObj_[ 9 ] = { 0 };
 	Object3d* collFrontObj_[ 9 ] = { 0 };
 	Object3d* collBackObj_[ 9 ] = { 0 };
-
 	Model* collLRModel_[ 9 ] = { 0 };
+
+	//バイク兵同士が当たった時のノックバックフラグ
+	int isEachKnockbackFlag_ = 0;
+	int eachKnockbackTimer_ = 0;
 
 	//自機と横軸があった時に突進するフラグ(0 待機,1 突進,2 自機と衝突)
 	int isRushFlag_[ 9 ] = { 0 };

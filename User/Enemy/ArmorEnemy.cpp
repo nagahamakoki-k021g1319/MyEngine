@@ -248,12 +248,6 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 				isbesideFlag_[ i ] = 0;
 			}
 
-			//障害物に当たって自機が減速
-			if ( player_->backTimer >= 1 && player_->backTimer <= 29 )
-			{
-				Obj_[ i ]->wtf.position.z += 0.07f;
-			}
-
 		}
 
 	}

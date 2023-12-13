@@ -423,7 +423,7 @@ void Player::Draw() {
 	}
 
 	if ( retdisplay == true && isClearFlag == false ){
-		/*retObj_->Draw();*/
+		retObj_->Draw();
 		retVisualObj_->Draw();
 	}
 
