@@ -45,7 +45,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		Obj_[i] = Object3d::Create();
 		Obj_[i]->SetModel(Modelst_[i]);
 		Obj_[i]->wtf.scale = { 0.4f,0.4f,0.4f };
-		
+		Obj_[i]->wtf.rotation.y = -3.0f;
 		//ポリゴン爆散の情報                 大きさ 回転  飛ぶ量 
 		Obj_[i]->SetPolygonExplosion({ 0.0f,-1.0f,6.28f,20.0f });
 	}
@@ -113,6 +113,13 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		DamageParticle_[i]->LoadTexture("fire.png");
 		DamageParticle_[i]->Update();
 	}
+
+	//攻撃受けた時の火花のパーティクル
+	smokeParticle_ = std::make_unique<ParticleManager>();
+	smokeParticle_.get()->Initialize();
+	smokeParticle_->LoadTexture("smo.png");
+	smokeParticle_->Update();
+
 }
 
 void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFlag)
@@ -129,7 +136,34 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	collObj3_->wtf.position = { playerPos };
 	EffUpdate();
 	isGameStartTimer++;
-	
+
+	if ( input_->PushKey(DIK_J) ){
+		if ( isSmoEffFlag_ == 0){
+			isSmoEffFlag_ = 1;
+		}
+	}
+	if ( input_->PushKey(DIK_L) )
+	{
+		Obj_[ 0 ]->wtf.rotation.y -= 0.01f;
+	}
+
+	//魔導兵が一定距離進むとこっちを向く
+	for ( int i = 0; i < 4; i++ )
+	{
+		if ( Obj_[ i ]->wtf.position.z >= 20.0f )
+		{
+			RotTimer_[i]++;
+		}
+		if ( RotTimer_[i] >= 1 )
+		{
+			Obj_[ i ]->wtf.rotation.y += 0.3f;
+			if ( Obj_[ i ]->wtf.rotation.y >= 0.0f)
+			{
+				Obj_[ i ]->wtf.rotation.y = 0.0f;
+			}
+		}
+	}
+
 
 	//魔導兵が後ろから登場(ラウンド1)
 	for ( int i = 0; i < 2; i++ ){
@@ -374,10 +408,10 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	}
 
 	ImGui::Begin("ArmorEnemy");
-
+	ImGui::Text("position_:%f,%f,%f",Obj_[ 0 ]->wtf.rotation.x,Obj_[ 0 ]->wtf.rotation.y,Obj_[ 0 ]->wtf.rotation.z);
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
 	ImGui::Text("BulletCoolTime:%d",BulletCoolTime_[2]);
-	ImGui::Text("HP:%d",ExpolMT_[ 1 ]);
+	ImGui::Text("isSmoEffFlag_:%d",isSmoEffFlag_);
 
 	ImGui::End();
 
@@ -439,6 +473,21 @@ void ArmorEnemy::EffUpdate()
 			isdamEffFlag_[i] = 0;
 			damEffTimer_[i] = 0;
 		}
+	}
+
+	//発砲時の硝煙
+	if ( isSmoEffFlag_ == 1 )
+	{
+		smoEffTimer_++;
+	}
+	if ( smoEffTimer_ <= 10 && smoEffTimer_ >= 1 )
+	{
+		smokeSummary();
+	}
+	if ( smoEffTimer_ >= 10 )
+	{
+		isSmoEffFlag_ = 0;
+		smoEffTimer_ = 0;
 	}
 }
 
@@ -622,6 +671,37 @@ void ArmorEnemy::DamageSummary(Vector3 EnePos,int eneNum)
 	}
 }
 
+void ArmorEnemy::smokeSummary()
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 5; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_smokepos = 0.01f;
+		Vector3 poss{};
+		poss.x += ( float ) rand() / RAND_MAX * rnd_smokepos - rnd_smokepos / 2.0f;
+		poss.y += ( float ) rand() / RAND_MAX * rnd_smokepos - rnd_smokepos / 2.0f;
+		poss.z += ( float ) rand() / RAND_MAX * rnd_smokepos - rnd_smokepos / 2.0f;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_smokevel = 0.01f;
+		Vector3 vels{};
+		vels.x = ( float ) rand() / RAND_MAX * rnd_smokevel - rnd_smokevel / 2.0f;
+		vels.y = ( float ) rand() / RAND_MAX * rnd_smokevel - rnd_smokevel / 2.0f;
+		vels.z = ( float ) rand() / RAND_MAX * rnd_smokevel - rnd_smokevel / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_smokeacc = 0.00001f;
+		Vector3 accs{};
+		accs.x = ( float ) rand() / RAND_MAX * rnd_smokeacc - rnd_smokeacc / 2.0f;
+		accs.y = ( float ) rand() / RAND_MAX * rnd_smokeacc - rnd_smokeacc / 2.0f;
+
+		//追加
+		smokeParticle_->Add(60,poss,vels,accs,0.1f,0.1f);
+
+		smokeParticle_->Update();
+	}
+}
+
 void ArmorEnemy::EffDraw()
 {
 	if ( isGameStartTimer >= 200 ){
@@ -629,9 +709,9 @@ void ArmorEnemy::EffDraw()
 			//背中の噴射ガス
 			if ( isgasEffFlag_[i] == 1 ) {
 				if ( isAliveFlag_[i] == 0 ){
-					gasParticle_[i]->Draw();
-					gasParticle2_[i]->Draw();
-					if ( Obj_[i]->wtf.position.z >= 25.0f ){
+					gasParticle_[ i ]->Draw();
+					gasParticle2_[ i ]->Draw();
+					if ( Obj_[i]->wtf.position.z >= 35.0f ){
 						gasParticle3_[i]->Draw();
 						gasParticle4_[i]->Draw();
 					}
@@ -642,6 +722,11 @@ void ArmorEnemy::EffDraw()
 			{
 				DamageParticle_[i]->Draw();
 			}
+		}
+		//発砲時の硝煙パーティクル
+		if ( isSmoEffFlag_ == 1 )
+		{
+			smokeParticle_->Draw();
 		}
 	}
 

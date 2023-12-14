@@ -40,6 +40,9 @@ public:
 	void EffSummary4(Vector3 bulletpos4,int num4);
 	//エフェクトの情報(ダメージ受けた時の火花)
 	void DamageSummary(Vector3 EnePos, int eneNum);
+	//エフェクトの情報(発砲するときの硝煙)
+	void smokeSummary();
+
 
 	//エフェクトの描画
 	void EffDraw();
@@ -68,6 +71,10 @@ private:
 	int isAliveFlag_[4] = {0,0,1,1};
 	int AliveR2Timer = 0;
 	int AliveR3Timer = 0;
+
+	//定位置についてからこっちをむくフラグ
+	int isRotFlag_[ 4 ] = { 0 };
+	int RotTimer_[ 4 ] = { 0 };
 
 	//当たり判定のモデル
 	Object3d* collObj_[ 4 ] = {nullptr};
@@ -117,6 +124,10 @@ private:
 	std::unique_ptr<ParticleManager> DamageParticle_[4];
 	int damEffTimer_[ 4 ] = { 0 };
 	int isdamEffFlag_[ 4 ] = { 0 };
+	//発砲するときの硝煙
+	std::unique_ptr<ParticleManager> smokeParticle_;
+	int smoEffTimer_ = 0;
+	int isSmoEffFlag_ = 0;
 
 };
 
