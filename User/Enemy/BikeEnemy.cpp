@@ -94,11 +94,11 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		//前
 		collFrontObj_[ i ] = Object3d::Create();
 		collFrontObj_[ i ]->SetModel(collLRModel_[ i ]);
-		collFrontObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z + 2.0f };
+		collFrontObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z + 1.0f };
 		//後
 		collBackObj_[ i ] = Object3d::Create();
 		collBackObj_[ i ]->SetModel(collLRModel_[ i ]);
-		collBackObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 2.0f };
+		collBackObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
 
 	}
 
@@ -146,9 +146,9 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		collLeftObj_[ i ]->Update();
 		collLeftObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x - 0.1f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
 		collFrontObj_[ i ]->Update();
-		collFrontObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z + 2.0f };
+		collFrontObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z + 1.0f };
 		collBackObj_[ i ]->Update();
-		collBackObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 2.0f };
+		collBackObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
 	}
 	//自機から横に出ているモデル
 	for ( int i = 0; i < 5; i++ ){
@@ -511,8 +511,8 @@ void BikeEnemy::Draw()
 			/*	collObj_[i]->Draw();
 				collRightObj_[ i ]->Draw();
 				collLeftObj_[ i ]->Draw();*/
-				collFrontObj_[ i ]->Draw();
-				collBackObj_[ i ]->Draw(); 
+				/*collFrontObj_[ i ]->Draw();
+				collBackObj_[ i ]->Draw(); */
 
 			}
 
@@ -841,7 +841,7 @@ void BikeEnemy::BiketoBikeColl()
 	if ( isBackEntryFlag_[0] == 1 && isBikclushFlag_[0] == 0 && isBackEntryFlag_[ 1 ] == 1 && isBikclushFlag_[ 1 ] == 0 ){
 		if ( HP_[0] >= 1 && HP_[ 1 ] >= 1 ){
 			if ( isEachKnockbackFlag_ == 0){
-				if ( coll.CircleCollision(collFrontObj_[ 0 ]->wtf.position,collBackObj_[ 1 ]->wtf.position,1.0f,1.0f) ){
+				if ( coll.CircleCollision(collFrontObj_[ 0 ]->wtf.position,collBackObj_[ 1 ]->wtf.position,0.6f,0.6f) ){
 					isEachKnockbackFlag_ = 1;
 				}
 			}
