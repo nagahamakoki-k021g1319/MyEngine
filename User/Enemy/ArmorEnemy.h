@@ -41,7 +41,7 @@ public:
 	//エフェクトの情報(ダメージ受けた時の火花)
 	void DamageSummary(Vector3 EnePos, int eneNum);
 	//エフェクトの情報(発砲するときの硝煙)
-	void smokeSummary();
+	void smokeSummary(Vector3 EnePos,int eneNum);
 
 
 	//エフェクトの描画
@@ -127,9 +127,9 @@ private:
 	int damEffTimer_[ 4 ] = { 0 };
 	int isdamEffFlag_[ 4 ] = { 0 };
 	//発砲するときの硝煙
-	std::unique_ptr<ParticleManager> smokeParticle_;
-	int smoEffTimer_ = 0;
-	int isSmoEffFlag_ = 0;
+	std::unique_ptr<ParticleManager> smokeParticle_[4];
+	int smoEffTimer_[ 4 ] = { 0 };
+	int isSmoEffFlag_[ 4 ] = { 0 };
 
 };
 

@@ -112,13 +112,15 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		DamageParticle_[i].get()->Initialize();
 		DamageParticle_[i]->LoadTexture("fire.png");
 		DamageParticle_[i]->Update();
+
+		//攻撃受けた時の火花のパーティクル
+		smokeParticle_[ i ] = std::make_unique<ParticleManager>();
+		smokeParticle_[ i ].get()->Initialize();
+		smokeParticle_[ i ]->LoadTexture("smo.png");
+		smokeParticle_[ i ]->Update();
 	}
 
-	//攻撃受けた時の火花のパーティクル
-	smokeParticle_ = std::make_unique<ParticleManager>();
-	smokeParticle_.get()->Initialize();
-	smokeParticle_->LoadTexture("smo.png");
-	smokeParticle_->Update();
+	
 
 }
 
@@ -130,6 +132,10 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 			collObj_[i]->Update();
 			collObj_[i]->wtf.position = {Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + 1.0f,Obj_[i]->wtf.position.z};
 			bulletObj_[i]->Update();
+			if ( isSmoEffFlag_ == 0 )
+			{
+				
+			}
 		}
 	}
 	collObj3_->Update();
@@ -137,9 +143,13 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	EffUpdate();
 	isGameStartTimer++;
 
-	if ( input_->PushKey(DIK_J) ){
-		if ( isSmoEffFlag_ == 0){
-			isSmoEffFlag_ = 1;
+	if ( input_->PushKey(DIK_J) )
+	{
+		for ( int i = 0; i < 4; i++ ){
+			if ( isSmoEffFlag_[ i ] == 0 )
+			{
+				isSmoEffFlag_[ i ] = 1;
+			}
 		}
 	}
 	if ( input_->PushKey(DIK_L) )
@@ -333,6 +343,11 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 			{
 				Obj_[ i ]->SetModel(Modelst_[ i ]);
 			}
+			//攻撃時硝煙がでる
+			if ( BulletCoolTime_[ i ] >= 215 && BulletCoolTime_[ i ] <= 218 )
+			{
+				isSmoEffFlag_[ i ] = 1;
+			}
 
 			//誘導弾
 			if ( isShootFlag_[ i ] == 1 )
@@ -473,22 +488,23 @@ void ArmorEnemy::EffUpdate()
 			isdamEffFlag_[i] = 0;
 			damEffTimer_[i] = 0;
 		}
+		//発砲時の硝煙
+		if ( isSmoEffFlag_[i] == 1 )
+		{
+			smoEffTimer_[ i ]++;
+		}
+		if ( smoEffTimer_[ i ] <= 5 && smoEffTimer_[ i ] >= 0 )
+		{
+			smokeSummary(Vector3(Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y + 3.0f,Obj_[ i ]->wtf.position.z - 4.0f),i);
+		}
+		if ( smoEffTimer_[ i ] >= 6 )
+		{
+			isSmoEffFlag_[ i ] = 0;
+			smoEffTimer_[ i ] = 0;
+		}
 	}
 
-	//発砲時の硝煙
-	if ( isSmoEffFlag_ == 1 )
-	{
-		smoEffTimer_++;
-	}
-	if ( smoEffTimer_ <= 10 && smoEffTimer_ >= 1 )
-	{
-		smokeSummary();
-	}
-	if ( smoEffTimer_ >= 10 )
-	{
-		isSmoEffFlag_ = 0;
-		smoEffTimer_ = 0;
-	}
+	
 }
 
 void ArmorEnemy::EffSummary(Vector3 bulletpos,int num)
@@ -671,20 +687,21 @@ void ArmorEnemy::DamageSummary(Vector3 EnePos,int eneNum)
 	}
 }
 
-void ArmorEnemy::smokeSummary()
+void ArmorEnemy::smokeSummary(Vector3 EnePos,int eneNum)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_smokepos = 0.01f;
+		const float rnd_smokepos = 0.001f;
 		Vector3 poss{};
 		poss.x += ( float ) rand() / RAND_MAX * rnd_smokepos - rnd_smokepos / 2.0f;
 		poss.y += ( float ) rand() / RAND_MAX * rnd_smokepos - rnd_smokepos / 2.0f;
 		poss.z += ( float ) rand() / RAND_MAX * rnd_smokepos - rnd_smokepos / 2.0f;
+		poss += EnePos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_smokevel = 0.01f;
+		const float rnd_smokevel = 0.05f;
 		Vector3 vels{};
 		vels.x = ( float ) rand() / RAND_MAX * rnd_smokevel - rnd_smokevel / 2.0f;
 		vels.y = ( float ) rand() / RAND_MAX * rnd_smokevel - rnd_smokevel / 2.0f;
@@ -696,9 +713,9 @@ void ArmorEnemy::smokeSummary()
 		accs.y = ( float ) rand() / RAND_MAX * rnd_smokeacc - rnd_smokeacc / 2.0f;
 
 		//追加
-		smokeParticle_->Add(60,poss,vels,accs,0.1f,0.1f);
+		smokeParticle_[ eneNum ]->Add(60,poss,vels,accs,0.8f,0.0f);
 
-		smokeParticle_->Update();
+		smokeParticle_[ eneNum ]->Update();
 	}
 }
 
@@ -722,12 +739,13 @@ void ArmorEnemy::EffDraw()
 			{
 				DamageParticle_[i]->Draw();
 			}
+			//発砲時の硝煙パーティクル
+			if ( isSmoEffFlag_[i] == 1 && smoEffTimer_[ i ] <= 5 && smoEffTimer_[ i ] >= 1 )
+			{
+				smokeParticle_[i]->Draw();
+			}
 		}
-		//発砲時の硝煙パーティクル
-		if ( isSmoEffFlag_ == 1 )
-		{
-			smokeParticle_->Draw();
-		}
+		
 	}
 
 }
