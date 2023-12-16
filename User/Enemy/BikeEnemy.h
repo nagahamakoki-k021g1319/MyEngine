@@ -30,6 +30,8 @@ public:
 	void EffUpdate();
 	//エフェクトの情報
 	void EffSummary(Vector3 bulletpos,int num);
+	void DamageLeftSummary(Vector3 firepos,int num);
+	void DamageRightSummary(Vector3 firepos,int num);
 	//エフェクトの描画
 	void EffDraw();
 
@@ -143,7 +145,15 @@ private:
 	//std::unique_ptr<ParticleManager> DamageParticle_[9];
 	//int damEffTimer_[9] = { 0 };
 	//int isdamEffFlag_[9] = { 0 };
+	//攻撃受けた時の火花のパーティクル(左側)
+	std::unique_ptr<ParticleManager> DamageLeftParticle_[9];
+	int DamageLeftEffTimer_[9] = { 0 };
+	int isDamageLeftEffFlag_[9] = { 0 };
 
+	//攻撃受けた時の火花のパーティクル(右側)
+	std::unique_ptr<ParticleManager> DamageRightParticle_[ 9 ];
+	int DamageRightEffTimer_[ 9 ] = { 0 };
+	int isDamageRightEffFlag_[ 9 ] = { 0 };
 
 };
 
