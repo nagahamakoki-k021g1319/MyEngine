@@ -600,7 +600,7 @@ void BikeEnemy::EffUpdate()
 		}
 		if ( DamageLeftEffTimer_[ i ] <= 10 && DamageLeftEffTimer_[ i ] >= 0 )
 		{
-			DamageLeftSummary(Vector3(collLeftObj_[ i ]->wtf.position.x - 0.1f,collLeftObj_[ i ]->wtf.position.y + 1.0f,collLeftObj_[ i ]->wtf.position.z),i);
+			DamageLeftSummary(Vector3(collLeftObj_[ i ]->wtf.position.x - 0.1f,collLeftObj_[ i ]->wtf.position.y + 0.6f,collLeftObj_[ i ]->wtf.position.z),i);
 		}
 		if ( DamageLeftEffTimer_[ i ] >= 10 )
 		{
@@ -614,7 +614,7 @@ void BikeEnemy::EffUpdate()
 		}
 		if ( DamageRightEffTimer_[ i ] <= 10 && DamageRightEffTimer_[ i ] >= 0 )
 		{
-			DamageRightSummary(Vector3(collRightObj_[ i ]->wtf.position.x + 0.1f,collRightObj_[ i ]->wtf.position.y + 1.0f,collRightObj_[ i ]->wtf.position.z),i);
+			DamageRightSummary(Vector3(collRightObj_[ i ]->wtf.position.x + 0.1f,collRightObj_[ i ]->wtf.position.y + 0.6f,collRightObj_[ i ]->wtf.position.z),i);
 		}
 		if ( DamageRightEffTimer_[ i ] >= 10 )
 		{
