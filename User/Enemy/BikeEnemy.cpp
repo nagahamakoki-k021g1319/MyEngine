@@ -579,13 +579,14 @@ void BikeEnemy::EffUpdate()
 {
 	for ( int i = 0; i < 9; i++ )
 	{
+		//ガス
 		if ( isbulletEffFlag_[ i ] == 1 )
 		{
 			bulletEffTimer_[ i ]++;
 		}
 		if ( bulletEffTimer_[ i ] <= 20 && bulletEffTimer_[ i ] >= 1 )
 		{
-			EffSummary(Vector3(Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z),i);
+			EffSummary(Vector3(Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y - 0.2f,Obj_[ i ]->wtf.position.z - 1.3f),i);
 		}
 		if ( bulletEffTimer_[ i ] >= 20 )
 		{
@@ -600,7 +601,7 @@ void BikeEnemy::EffUpdate()
 		}
 		if ( DamageLeftEffTimer_[ i ] <= 10 && DamageLeftEffTimer_[ i ] >= 0 )
 		{
-			DamageLeftSummary(Vector3(collLeftObj_[ i ]->wtf.position.x - 0.1f,collLeftObj_[ i ]->wtf.position.y + 0.6f,collLeftObj_[ i ]->wtf.position.z),i);
+			DamageLeftSummary(Vector3(collLeftObj_[ i ]->wtf.position.x - 0.1f,collLeftObj_[ i ]->wtf.position.y + 0.6f,collLeftObj_[ i ]->wtf.position.z - 0.2f),i);
 		}
 		if ( DamageLeftEffTimer_[ i ] >= 10 )
 		{
@@ -614,7 +615,7 @@ void BikeEnemy::EffUpdate()
 		}
 		if ( DamageRightEffTimer_[ i ] <= 10 && DamageRightEffTimer_[ i ] >= 0 )
 		{
-			DamageRightSummary(Vector3(collRightObj_[ i ]->wtf.position.x + 0.1f,collRightObj_[ i ]->wtf.position.y + 0.6f,collRightObj_[ i ]->wtf.position.z),i);
+			DamageRightSummary(Vector3(collRightObj_[ i ]->wtf.position.x + 0.1f,collRightObj_[ i ]->wtf.position.y + 0.6f,collRightObj_[ i ]->wtf.position.z - 0.2f),i);
 		}
 		if ( DamageRightEffTimer_[ i ] >= 10 )
 		{
@@ -645,11 +646,11 @@ void BikeEnemy::EffSummary(Vector3 bulletpos,int num)
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 		const float rnd_velG = 0.0f;
 		const float rnd_velGy = 0.0f;
-		const float rnd_velGz = 0.5f;
+		const float rnd_velGz = 0.03f;
 		Vector3 velG{};
 		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
 		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
-		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 0.5f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.5f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
 		const float rnd_accG = 0.000001f;
 		Vector3 accG{};
