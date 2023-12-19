@@ -377,6 +377,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 			if ( HP_[ i ] <= 0 )
 			{
 				isExpolFlag_[ i ] = 1;
+				deathTimer_[ i ]++;
 			}
 			if ( isExpolFlag_[ i ] == 1 )
 			{
@@ -392,6 +393,18 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 					isShootFlag_[ i ] = 0;
 				}
 			}
+		}
+	}
+	//デスタイマーの起動
+	for ( int i = 0; i < 4; i++ )
+	{
+		if ( deathTimer_[ i ] == 1 )
+		{
+			player_->isDeadEnemy++;
+		}
+		if ( deathTimer_[ i ] >= 2 )
+		{
+			deathTimer_[ i ] = 2;
 		}
 	}
 

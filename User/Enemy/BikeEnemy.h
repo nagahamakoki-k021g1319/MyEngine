@@ -86,6 +86,9 @@ private:
 	int isEachKnockbackFlag_ = 0;
 	int eachKnockbackTimer_ = 0;
 
+	//死んだときにタイマー動す
+	int deathTimer_[ 9 ] = { 0 };
+
 	//自機と横軸があった時に突進するフラグ(0 待機,1 突進,2 自機と衝突)
 	int isRushFlag_[ 9 ] = { 0 };
 	int isRushFlagR_[ 9 ] = { 0 };
@@ -141,10 +144,7 @@ private:
 	std::unique_ptr<ParticleManager> gasParticle_[9];
 	int bulletEffTimer_[9] = { 0 };
 	int isbulletEffFlag_[9] = { 0 };
-	////攻撃受けた時の火花のパーティクル
-	//std::unique_ptr<ParticleManager> DamageParticle_[9];
-	//int damEffTimer_[9] = { 0 };
-	//int isdamEffFlag_[9] = { 0 };
+
 	//攻撃受けた時の火花のパーティクル(左側)
 	std::unique_ptr<ParticleManager> DamageLeftParticle_[9];
 	int DamageLeftEffTimer_[9] = { 0 };

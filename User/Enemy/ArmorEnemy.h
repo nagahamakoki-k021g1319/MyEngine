@@ -74,6 +74,9 @@ private:
 	int AliveR2Timer = 0;
 	int AliveR3Timer = 0;
 
+	//死んだときにタイマー動す
+	int deathTimer_[4] = { 0 };
+
 	//定位置についてからこっちをむくフラグ
 	int isRotFlag_[ 4 ] = { 0 };
 	int RotTimer_[ 4 ] = { 0 };

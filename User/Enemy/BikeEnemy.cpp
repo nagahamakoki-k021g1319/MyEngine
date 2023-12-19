@@ -498,6 +498,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 				Obj_[ i ]->wtf.position.z += 0.5f;
 				bikclushObj_[ i ]->wtf.position.z += 0.5f;
 				bikclushObj_[ i ]->wtf.rotation.z += 0.1f;
+				deathTimer_[i]++;
 			}
 			if ( bikclushObj_[ i ]->wtf.rotation.z >= 1.5f )
 			{
@@ -511,6 +512,19 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 				bikclushObj_[ i ]->wtf.position.z -= 0.8f;
 				bikclushObj_[ i ]->wtf.rotation.x -= 0.1f;
 			}
+		}
+	}
+
+	//デスタイマーの起動
+	for ( int i = 0; i < 9; i++ )
+	{
+		if ( deathTimer_[ i ] == 1)
+		{
+			player_->isDeadEnemy++;
+		}
+		if ( deathTimer_[ i ] >=2 )
+		{
+			deathTimer_[ i ] = 2;
 		}
 	}
 
