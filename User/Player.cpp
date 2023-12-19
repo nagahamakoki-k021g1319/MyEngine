@@ -71,6 +71,9 @@ Player::~Player() {
 	delete Modelbiksword0_;
 	delete Modelbiksword1_;
 
+	delete ModelAc_;
+	delete ModelAc2_;
+
 	delete collObj_;
 	delete collModel_;
 
@@ -107,6 +110,10 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	//自機
 	Model_ = Model::LoadFromOBJ("bik");
 	ModelBefo_ = Model::LoadFromOBJ("bik2");
+
+	//加速
+	ModelAc_ = Model::LoadFromOBJ("bikac");
+	ModelAc2_ = Model::LoadFromOBJ("bikac2");
 
 	//攻撃
 	Model2_ = Model::LoadFromOBJ("bikmid");
@@ -200,14 +207,24 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	gasParticle2->Update();
 
 	//ガス(加速)
-	gasParticle3 = std::make_unique<ParticleManager>();
-	gasParticle3.get()->Initialize();
-	gasParticle3->LoadTexture("gas1.png");
-	gasParticle3->Update();
-	gasParticle4 = std::make_unique<ParticleManager>();
-	gasParticle4.get()->Initialize();
-	gasParticle4->LoadTexture("gas1.png");
-	gasParticle4->Update();
+	gasParticleAccelR = std::make_unique<ParticleManager>();
+	gasParticleAccelR.get()->Initialize();
+	gasParticleAccelR->LoadTexture("gas1.png");
+	gasParticleAccelR->Update();
+	gasParticleAccelL = std::make_unique<ParticleManager>();
+	gasParticleAccelL.get()->Initialize();
+	gasParticleAccelL->LoadTexture("gas1.png");
+	gasParticleAccelL->Update();
+
+	//ガス(減速)
+	gasParticleDecelR = std::make_unique<ParticleManager>();
+	gasParticleDecelR.get()->Initialize();
+	gasParticleDecelR->LoadTexture("gas.png");
+	gasParticleDecelR->Update();
+	gasParticleDecelL = std::make_unique<ParticleManager>();
+	gasParticleDecelL.get()->Initialize();
+	gasParticleDecelL->LoadTexture("gas.png");
+	gasParticleDecelL->Update();
 
 	//UIの初期化(枚数が多いため)
 	UIInitialize();
@@ -268,7 +285,8 @@ void Player::Update() {
 		{
 			bikSpinTimer = 0;
 		}
-		if ( isAtTimerFlag == false && isLeftAtFlag == false && isRightAtFlag == false )
+		//通常
+		if ( isAtTimerFlag == false && isLeftAtFlag == false && isRightAtFlag == false && isAccelFlag == false)
 		{
 			if ( bikSpinTimer >= 1 && bikSpinTimer <= 5 )
 			{
@@ -277,6 +295,19 @@ void Player::Update() {
 			else if ( bikSpinTimer >= 6 && bikSpinTimer <= 10 )
 			{
 				Obj_->SetModel(Model_);
+			}
+		}
+
+		//加速
+		if (isAccelFlag == true)
+		{
+			if ( bikSpinTimer >= 1 && bikSpinTimer <= 5 )
+			{
+				Obj_->SetModel(ModelAc_);
+			}
+			else if ( bikSpinTimer >= 6 && bikSpinTimer <= 10 )
+			{
+				Obj_->SetModel(ModelAc2_);
 			}
 		}
 	}
@@ -314,7 +345,7 @@ void Player::Update() {
 	//ボス登場時のカメラ
 	if ( input_->TriggerKey(DIK_4) ){isCameraBehavior = 1;}
 	if ( isCameraBehavior == 1 ){CameraBehaviorTimer++;}
-	if ( isCameraBehavior == 1 && isRoundFlag == 5 )
+	if ( isCameraBehavior == 1 && isRoundFlag >= 5 )
 	{
 		if ( CameraBehaviorTimer <= 70 ){
 			camera->wtf.position.z -= 0.2f;
@@ -329,7 +360,7 @@ void Player::Update() {
 			isCameraBehavior = 2;
 		}
 	}
-	if ( isCameraBehavior == 2 && isRoundFlag == 5 ){
+	if ( isCameraBehavior == 2 && isRoundFlag >= 5 ){
 		CameraBehaviorTimer2++;
 		if ( CameraBehaviorTimer2 >= 80)
 		{
@@ -352,17 +383,17 @@ void Player::Update() {
 	}
 
 	//ラウンド変化(2ラウンド目)
-	if ( input_->TriggerKey(DIK_1) ){
+	if ( isDeadEnemy == 4 ){
 		isRoundFlag = 1;
 	}
 
 	//ラウンド変化(3ラウンド目)
-	if ( input_->TriggerKey(DIK_2) ){
+	if ( isDeadEnemy == 7 ){
 		isRoundFlag = 3;
 	}
 
 	//ラウンド変化(3ラウンド目)
-	if ( input_->TriggerKey(DIK_3) )
+	if ( isDeadEnemy == 11 )
 	{
 		isRoundFlag = 5;
 	}
@@ -390,7 +421,7 @@ void Player::Update() {
 	
 
 	ImGui::Begin("Player");
-	ImGui::Text("standardCamera:%d",standardCamera);
+	ImGui::Text("isDeadEnemy:%d",isDeadEnemy);
 	ImGui::Text("Position:%f,%f,%f",camera->wtf.position.x,camera->wtf.position.y,camera->wtf.position.z);
 	ImGui::Text("isboostFlag:%d",isboostFlag);
 	ImGui::End();
@@ -810,6 +841,7 @@ void Player::PlayerAction()
 		}
 	}
 	if ( isLeftAtFlag == true ){
+		Obj_->wtf.rotation.z = 0.0f;
 		leftAtTimer++;
 		bikSpinTimer = 6;
 	}
@@ -837,6 +869,7 @@ void Player::PlayerAction()
 	}
 	if ( isRightAtFlag == true )
 	{
+		Obj_->wtf.rotation.z = 0.0f;
 		rightAtTimer++;
 		bikSpinTimer = 6;
 	}
@@ -946,6 +979,15 @@ void Player::PlayerAction()
 		isboostFlag = 0;
 	}
 
+	if ( input_->PushKey(DIK_W) && isRightAtFlag == false && isLeftAtFlag == false )
+	{
+		isAccelFlag = true;
+	}
+	else
+	{
+		isAccelFlag = false;
+	}
+
 	//移動(レティクル)
 	if ( input_->PushKey(DIK_UP) || input_->StickInput(R_UP) )
 	{
@@ -1028,10 +1070,15 @@ void Player::EffUpdate()
 	}
 	if ( bulletEffTimer_ <= 20 && bulletEffTimer_ >= 1 )
 	{
+		//通常
 		EffSummary(Vector3( Obj_->wtf.position.x - 0.15f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 1.5f));
 		EffSummary2(Vector3(Obj_->wtf.position.x + 0.13f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 1.5f));
-		EffSummary3(Vector3(Obj_->wtf.position.x - 0.15f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 2.5f));
-		EffSummary4(Vector3(Obj_->wtf.position.x + 0.13f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 2.5f));
+		//加速
+		EffSummaryAccelR(Vector3(Obj_->wtf.position.x - 0.15f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 2.5f));
+		EffSummaryAccelL(Vector3(Obj_->wtf.position.x + 0.13f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 2.5f));
+		//減速
+		EffSummaryDecelR(Vector3(Obj_->wtf.position.x - 0.15f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 1.5f));
+		EffSummaryDecelL(Vector3(Obj_->wtf.position.x + 0.13f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 1.5f));
 	}
 	if ( bulletEffTimer_ >= 20 )
 	{
@@ -1116,7 +1163,7 @@ void Player::EffSummary2(Vector3 bulletpos2)
 
 }
 
-void Player::EffSummary3(Vector3 bulletpos3)
+void Player::EffSummaryAccelR(Vector3 bulletpos3)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < 5; i++ )
@@ -1146,15 +1193,15 @@ void Player::EffSummary3(Vector3 bulletpos3)
 		acc3G.y = ( float ) rand() / RAND_MAX * rnd_acc3G - rnd_acc3G / 2.0f;
 
 		//追加
-		gasParticle3->Add(60,pos3G,vel3G,acc3G,0.05f,0.0f);
+		gasParticleAccelR->Add(60,pos3G,vel3G,acc3G,0.05f,0.0f);
 
-		gasParticle3->Update();
+		gasParticleAccelR->Update();
 
 	}
 
 }
 
-void Player::EffSummary4(Vector3 bulletpos4)
+void Player::EffSummaryAccelL(Vector3 bulletpos4)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < 5; i++ )
@@ -1184,12 +1231,86 @@ void Player::EffSummary4(Vector3 bulletpos4)
 		acc4G.y = ( float ) rand() / RAND_MAX * rnd_acc4G - rnd_acc4G / 2.0f;
 
 		//追加
-		gasParticle4->Add(60,pos4G,vel4G,acc4G,0.05f,0.0f);
+		gasParticleAccelL->Add(60,pos4G,vel4G,acc4G,0.05f,0.0f);
 
-		gasParticle4->Update();
+		gasParticleAccelL->Update();
 
 	}
 
+}
+
+void Player::EffSummaryDecelR(Vector3 bulletpos3)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 5; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_posD = 0.0f;
+		const float rnd_posDy = 0.0f;
+		const float rnd_posDz = 0.0f;
+		Vector3 posD{};
+		posD.x += ( float ) rand() / RAND_MAX * rnd_posD -  rnd_posD / 2.0f;
+		posD.y += ( float ) rand() / RAND_MAX * rnd_posDy - rnd_posDy / 2.0f;
+		posD.z += ( float ) rand() / RAND_MAX * rnd_posDz - rnd_posDz / 2.0f;
+		posD += bulletpos3;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_velD = 0.0f;
+		const float rnd_velDy = 0.0f;
+		const float rnd_velDz = 0.05f;
+		Vector3 velD{};
+		velD.x = ( float ) rand() / RAND_MAX * rnd_velD - rnd_velD / 2.0f;
+		velD.y = ( float ) rand() / RAND_MAX * rnd_velDy - rnd_velDy / 2.0f;
+		velD.z = ( float ) rand() / RAND_MAX * rnd_velDz - rnd_velDz / 0.05f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_accD = 0.000001f;
+		Vector3 accD{};
+		accD.x = ( float ) rand() / RAND_MAX * rnd_accD - rnd_accD / 2.0f;
+		accD.y = ( float ) rand() / RAND_MAX * rnd_accD - rnd_accD / 2.0f;
+
+		//追加
+		gasParticleDecelR->Add(60,posD,velD,accD,0.05f,0.0f);
+
+		gasParticleDecelR->Update();
+
+	}
+}
+
+void Player::EffSummaryDecelL(Vector3 bulletpos4)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 5; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_posD2 = 0.0f;
+		const float rnd_posD2y = 0.0f;
+		const float rnd_posD2z = 0.0f;
+		Vector3 posD2{};
+		posD2.x += ( float ) rand() / RAND_MAX * rnd_posD2 -  rnd_posD2 / 2.0f;
+		posD2.y += ( float ) rand() / RAND_MAX * rnd_posD2y - rnd_posD2y / 2.0f;
+		posD2.z += ( float ) rand() / RAND_MAX * rnd_posD2z - rnd_posD2z / 2.0f;
+		posD2 += bulletpos4;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_velD2 = 0.0f;
+		const float rnd_velD2y = 0.0f;
+		const float rnd_velD2z = 0.05f;
+		Vector3 velD2{};
+		velD2.x = ( float ) rand() / RAND_MAX * rnd_velD2 -  rnd_velD2 / 2.0f;
+		velD2.y = ( float ) rand() / RAND_MAX * rnd_velD2y - rnd_velD2y / 2.0f;
+		velD2.z = ( float ) rand() / RAND_MAX * rnd_velD2z - rnd_velD2z / 0.05f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_accD2 = 0.000001f;
+		Vector3 accD2{};
+		accD2.x = ( float ) rand() / RAND_MAX * rnd_accD2 - rnd_accD2 / 2.0f;
+		accD2.y = ( float ) rand() / RAND_MAX * rnd_accD2 - rnd_accD2 / 2.0f;
+
+		//追加
+		gasParticleDecelL->Add(60,posD2,velD2,accD2,0.05f,0.0f);
+
+		gasParticleDecelL->Update();
+
+	}
 }
 
 void Player::EffDraw()
@@ -1203,8 +1324,13 @@ void Player::EffDraw()
 		}
 		else if ( isboostFlag == 1 )
 		{
-			gasParticle3->Draw();
-			gasParticle4->Draw();
+			gasParticleAccelR->Draw();
+			gasParticleAccelL->Draw();
+		}
+		else if ( isboostFlag == 2 )
+		{
+			/*gasParticleDecelR->Draw();
+			gasParticleDecelL->Draw();*/
 		}
 	}
 }
