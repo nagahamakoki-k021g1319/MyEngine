@@ -180,7 +180,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 		if ( isAliveFlag_[ i ] == 0 ){
 			if ( isMoveFlag_[ i ] == 0 )
 			{
-				if ( isGameStartTimer >= 200 )
+				if ( isGameStartTimer >= 280 && player_->isOperationFlag == true)
 				{
 					Obj_[ i ]->wtf.position.z += 0.7f;
 				}
@@ -317,7 +317,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	{
 		if ( isAliveFlag_[ i ] == 0 )
 		{
-			if ( isGameStartTimer >= 200 && isShootFlag_[ i ] == 0 )
+			if ( isGameStartTimer >= 280 && isShootFlag_[ i ] == 0 && player_->isOperationFlag == true )
 			{
 				if ( isAliveFlag_[ i ] == 0 )
 				{
