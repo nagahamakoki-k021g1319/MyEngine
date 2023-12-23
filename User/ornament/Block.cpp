@@ -83,7 +83,7 @@ void Block::Update(Vector3 playerPos)
 	isGameStartTimer++;
 
 	//ゲームが始まったら全て障害物が迫る
-	if ( isGameStartTimer >= 240){
+	if ( isGameStartTimer >= 280 && player_->isOperationFlag == true ){
 		//木箱
 		for ( int i = 0; i < 12; i++ )
 		{
@@ -203,7 +203,7 @@ void Block::Update(Vector3 playerPos)
 
 void Block::Draw()
 {
-	if ( isGameStartTimer >= 240 )
+	if ( isGameStartTimer >= 280 )
 	{
 	//木箱
 		for ( int i = 0; i < 12; i++ )

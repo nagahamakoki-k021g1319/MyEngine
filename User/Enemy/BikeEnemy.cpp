@@ -800,7 +800,7 @@ void BikeEnemy::BikeEnemyEntry()
 	//バイク兵のエントリー(ラウンド1)
 	if ( isBackEntryFlag_[ 0 ] == 0 )
 	{
-		if ( isGameStartTimer >= 220 )
+		if ( isGameStartTimer >= 280 && player_->isOperationFlag == true )
 		{
 			Obj_[ 0 ]->wtf.position.z += 0.5f;
 		}
@@ -812,7 +812,7 @@ void BikeEnemy::BikeEnemyEntry()
 	}
 	if ( isBackEntryFlag_[ 1 ] == 0 )
 	{
-		if ( isGameStartTimer >= 220 )
+		if ( isGameStartTimer >= 280 && player_->isOperationFlag == true )
 		{
 			Obj_[ 1 ]->wtf.position.z += 0.5f;
 		}
@@ -831,7 +831,7 @@ void BikeEnemy::BikeEnemyEntry()
 		{
 			if ( isBackEntryFlag_[ 2 ] == 0 )
 			{
-				if ( isGameStartTimer >= 220 )
+				if ( isGameStartTimer >= 280 )
 				{
 					Obj_[ 2 ]->wtf.position.z += 0.5f;
 				}
@@ -846,7 +846,7 @@ void BikeEnemy::BikeEnemyEntry()
 		{
 			if ( isBackEntryFlag_[ 3 ] == 0 )
 			{
-				if ( isGameStartTimer >= 220 )
+				if ( isGameStartTimer >= 280 )
 				{
 					Obj_[ 3 ]->wtf.position.z += 0.5f;
 				}
@@ -868,7 +868,7 @@ void BikeEnemy::BikeEnemyEntry()
 		{
 			if ( isBackEntryFlag_[ 4 ] == 0 )
 			{
-				if ( isGameStartTimer >= 220 )
+				if ( isGameStartTimer >= 280 )
 				{
 					Obj_[ 4 ]->wtf.position.z += 0.5f;
 				}
@@ -884,7 +884,7 @@ void BikeEnemy::BikeEnemyEntry()
 		{
 			if ( isBackEntryFlag_[ 5 ] == 0 )
 			{
-				if ( isGameStartTimer >= 220 )
+				if ( isGameStartTimer >= 280 )
 				{
 					Obj_[ 5 ]->wtf.position.z += 0.5f;
 				}
@@ -900,7 +900,7 @@ void BikeEnemy::BikeEnemyEntry()
 		{
 			if ( isBackEntryFlag_[ 6 ] == 0 )
 			{
-				if ( isGameStartTimer >= 220 )
+				if ( isGameStartTimer >= 280 )
 				{
 					Obj_[ 6 ]->wtf.position.z += 1.0f;
 				}
@@ -921,7 +921,7 @@ void BikeEnemy::BikeEnemyEntry()
 		{
 			if ( isBackEntryFlag_[ 7 ] == 0 )
 			{
-				if ( isGameStartTimer >= 220 )
+				if ( isGameStartTimer >= 280 )
 				{
 					Obj_[ 7 ]->wtf.position.z += 0.5f;
 				}
@@ -937,7 +937,7 @@ void BikeEnemy::BikeEnemyEntry()
 		{
 			if ( isBackEntryFlag_[ 8 ] == 0 )
 			{
-				if ( isGameStartTimer >= 220 )
+				if ( isGameStartTimer >= 280 )
 				{
 					Obj_[ 8 ]->wtf.position.z += 0.5f;
 				}
