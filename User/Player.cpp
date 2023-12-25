@@ -128,7 +128,7 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 
 	//近接攻撃(左側)
 	Modelbiksword0_ = Model::LoadFromOBJ("bikswordAt");
-	Modelbiksword1_ = Model::LoadFromOBJ("bikswordAt");
+	Modelbiksword1_ = Model::LoadFromOBJ("bikswordAt2");
 
 	//自機
 	Obj_ = Object3d::Create();
@@ -873,7 +873,7 @@ void Player::PlayerAction()
 	}
 	if ( leftAtTimer >= 1 && leftAtTimer < 30 ){	
 		Obj_->SetModel(Modelbiksword0_);
-		Obj_->wtf.rotation.y += 0.25f;
+		Obj_->wtf.rotation.y += 0.32f;
 	}
 	else if ( leftAtTimer >= 30 )
 	{
@@ -902,7 +902,7 @@ void Player::PlayerAction()
 	if ( rightAtTimer >= 1 && rightAtTimer < 30 )
 	{
 		Obj_->SetModel(Modelbiksword1_);
-		Obj_->wtf.rotation.y -= 0.25f;
+		Obj_->wtf.rotation.y -= 0.32f;
 	}
 	else if ( rightAtTimer >= 30 )
 	{
