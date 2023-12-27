@@ -800,7 +800,7 @@ void BikeEnemy::BikeEnemyEntry()
 	//バイク兵のエントリー(ラウンド1)
 	if ( isBackEntryFlag_[ 0 ] == 0 )
 	{
-		if ( isGameStartTimer >= 280 && player_->isOperationFlag == true )
+		if ( isGameStartTimer >= 280)
 		{
 			Obj_[ 0 ]->wtf.position.z += 0.5f;
 		}
@@ -812,7 +812,7 @@ void BikeEnemy::BikeEnemyEntry()
 	}
 	if ( isBackEntryFlag_[ 1 ] == 0 )
 	{
-		if ( isGameStartTimer >= 280 && player_->isOperationFlag == true )
+		if ( isGameStartTimer >= 280)
 		{
 			Obj_[ 1 ]->wtf.position.z += 0.5f;
 		}

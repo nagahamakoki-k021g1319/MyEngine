@@ -132,30 +132,12 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 			collObj_[i]->Update();
 			collObj_[i]->wtf.position = {Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + 1.0f,Obj_[i]->wtf.position.z};
 			bulletObj_[i]->Update();
-			if ( isSmoEffFlag_ == 0 )
-			{
-				
-			}
 		}
 	}
 	collObj3_->Update();
 	collObj3_->wtf.position = { playerPos };
 	EffUpdate();
 	isGameStartTimer++;
-
-	if ( input_->PushKey(DIK_J) )
-	{
-		for ( int i = 0; i < 4; i++ ){
-			if ( isSmoEffFlag_[ i ] == 0 )
-			{
-				isSmoEffFlag_[ i ] = 1;
-			}
-		}
-	}
-	if ( input_->PushKey(DIK_L) )
-	{
-		Obj_[ 0 ]->wtf.rotation.y -= 0.01f;
-	}
 
 	//魔導兵が一定距離進むとこっちを向く
 	for ( int i = 0; i < 4; i++ )
@@ -176,53 +158,39 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 
 
 	//魔導兵が後ろから登場(ラウンド1)
-	for ( int i = 0; i < 2; i++ ){
-		if ( isAliveFlag_[ i ] == 0 ){
-			if ( isMoveFlag_[ i ] == 0 )
-			{
-				if ( isGameStartTimer >= 280 && player_->isOperationFlag == true)
-				{
-					Obj_[ i ]->wtf.position.z += 0.7f;
-				}
-				if ( Obj_[ i ]->wtf.position.z <= 20.0f && Obj_[ i ]->wtf.position.z >= 15.0f )
-				{
-					BulletCoolTime_[ i ] = -50 + i * -20;
-				}
-				if ( Obj_[ i ]->wtf.position.z >= 35.0f )
-				{
-					Obj_[ i ]->wtf.position.z = 35.0f;
-					isMoveFlag_[ i ] = 1;
-				}
-			}
-		}
-	}
-
-	//魔導兵が後ろから登場(ラウンド2)
-	if ( player_->isRoundFlag == 0 )
+	for ( int i = 0; i < 2; i++ )
 	{
-		BulletCoolTime_[ 2 ] = 0;
-	}
-	if ( player_->isRoundFlag == 1 ){
-		//ここで描画させるタイマーの起動
-		AliveR2Timer++;
-		if( AliveR2Timer >= 1 && AliveR2Timer <= 2){
-			isAliveFlag_[ 2 ] = 0;
+		if ( player_->isRoundFlag == 0 )
+		{
+			BulletCoolTime_[i] = 0;
 		}
+		if ( player_->isRoundFlag == 1 )
+		{
+			//ここで描画させるタイマーの起動
+			AliveR2Timer++;
+			if ( AliveR2Timer >= 1 && AliveR2Timer <= 2 )
+			{
+				isAliveFlag_[i] = 0;
+			}
 
-		//後ろから登場して左右移動
-		if ( isAliveFlag_[2] == 0 ){
-			if ( isMoveFlag_[ 2 ] == 0 ){
-				if ( isGameStartTimer >= 200 ){
-					Obj_[ 2 ]->wtf.position.z += 1.0f;
-				}
-				if ( Obj_[ 2 ]->wtf.position.z <= 20.0f && Obj_[ 2 ]->wtf.position.z >= 15.0f && player_->isRoundFlag == 1 )
+			//後ろから登場して左右移動
+			if ( isAliveFlag_[i] == 0 )
+			{
+				if ( isMoveFlag_[i] == 0 )
 				{
-					BulletCoolTime_[ 2 ] = -50;
-				}
-				if ( Obj_[ 2 ]->wtf.position.z >= 35.0f )
-				{
-					Obj_[ 2 ]->wtf.position.z = 35.0f;
-					isMoveFlag_[ 2 ] = 1;
+					if ( isGameStartTimer >= 200 )
+					{
+						Obj_[i]->wtf.position.z += 1.0f;
+					}
+					if ( Obj_[i]->wtf.position.z <= 20.0f && Obj_[i]->wtf.position.z >= 15.0f && player_->isRoundFlag == 1 )
+					{
+						BulletCoolTime_[i] = -50;
+					}
+					if ( Obj_[i]->wtf.position.z >= 35.0f )
+					{
+						Obj_[i]->wtf.position.z = 35.0f;
+						isMoveFlag_[i] = 1;
+					}
 				}
 			}
 		}
@@ -231,38 +199,73 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	//魔導兵が後ろから登場(ラウンド3)
 	if ( player_->isRoundFlag <= 2 )
 	{
-		BulletCoolTime_[ 3 ] = 0;
+		BulletCoolTime_[2] = 0;
 	}
 	if ( player_->isRoundFlag == 3 ){
 		//ここで描画させるタイマーの起動
 		AliveR3Timer++;
 		if ( AliveR3Timer >= 1 && AliveR3Timer <= 2 )
 		{
-			isAliveFlag_[ 3 ] = 0;
+			isAliveFlag_[2] = 0;
 		}
 
 		//後ろから登場して左右移動
-		if ( isAliveFlag_[ 3 ] == 0 )
+		if ( isAliveFlag_[2] == 0 )
 		{
-			if ( isMoveFlag_[ 3 ] == 0 )
+			if ( isMoveFlag_[2] == 0 )
 			{
 				if ( isGameStartTimer >= 200 )
 				{
-					Obj_[ 3 ]->wtf.position.z += 1.0f;
+					Obj_[ 2]->wtf.position.z += 1.0f;
 				}
-				if ( Obj_[ 3 ]->wtf.position.z <= 20.0f && Obj_[ 3 ]->wtf.position.z >= 15.0f && player_->isRoundFlag == 3 )
+				if ( Obj_[ 2]->wtf.position.z <= 20.0f && Obj_[ 2]->wtf.position.z >= 15.0f && player_->isRoundFlag == 3 )
 				{
-					BulletCoolTime_[ 3 ] = -50;
+					BulletCoolTime_[ 2] = -50;
 				}
-				if ( Obj_[ 3 ]->wtf.position.z >= 35.0f )
+				if ( Obj_[ 2]->wtf.position.z >= 35.0f )
 				{
-					Obj_[ 3 ]->wtf.position.z = 35.0f;
-					isMoveFlag_[ 3 ] = 1;
+					Obj_[ 2]->wtf.position.z = 35.0f;
+					isMoveFlag_[ 2] = 1;
 				}
 			}
 		}
 	}
 
+	//魔導兵が後ろから登場(ラウンド4)
+	if ( player_->isRoundFlag <= 4 )
+	{
+		BulletCoolTime_[3] = 0;
+	}
+	if ( player_->isRoundFlag == 5 )
+	{
+		//ここで描画させるタイマーの起動
+		AliveR4Timer++;
+		if ( AliveR4Timer >= 1 && AliveR4Timer <= 2 )
+		{
+			isAliveFlag_[3] = 0;
+		}
+
+		//後ろから登場して左右移動
+		if ( isAliveFlag_[3] == 0 )
+		{
+			if ( isMoveFlag_[3] == 0 )
+			{
+				if ( isGameStartTimer >= 200 )
+				{
+					Obj_[3]->wtf.position.z += 1.0f;
+				}
+				if ( Obj_[3]->wtf.position.z <= 20.0f && Obj_[3]->wtf.position.z >= 15.0f && player_->isRoundFlag == 3 )
+				{
+					BulletCoolTime_[3] = -50;
+				}
+				if ( Obj_[3]->wtf.position.z >= 35.0f )
+				{
+					Obj_[3]->wtf.position.z = 35.0f;
+					isMoveFlag_[3] = 1;
+				}
+			}
+		}
+	}
 
 	//自機の加減速でバイク兵のZ軸移動
 	for ( int i = 0; i < 4; i++ ){
@@ -317,7 +320,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	{
 		if ( isAliveFlag_[ i ] == 0 )
 		{
-			if ( isGameStartTimer >= 280 && isShootFlag_[ i ] == 0 && player_->isOperationFlag == true )
+			if ( isGameStartTimer >= 280 && isShootFlag_[ i ] == 0)
 			{
 				if ( isAliveFlag_[ i ] == 0 )
 				{
