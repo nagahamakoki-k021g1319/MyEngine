@@ -90,7 +90,7 @@ Player::~Player() {
 	delete entryani1UI;
 	delete entryani2UI;
 
-	delete operationUI;
+	/*delete operationUI;*/
 }
 
 void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
@@ -265,14 +265,14 @@ void Player::Update() {
 	GameStartMovie();
 
 
-	//操作説明
-	if ( input_->TriggerKey(DIK_1) )
-	{
-		if ( isOperationFlag == false)
-		{
-			isOperationFlag = true;
-		}
-	}
+	////操作説明
+	//if ( input_->TriggerKey(DIK_1) )
+	//{
+	//	if ( isOperationFlag == false)
+	//	{
+	//		isOperationFlag = true;
+	//	}
+	//}
 	//ダメージを受けた時のHP減少
 	//if ( input_->TriggerKey(DIK_4) ){
 	//	hpgreenPosition.x -= 20.0f;
@@ -393,17 +393,17 @@ void Player::Update() {
 	}
 
 	//ラウンド変化(2ラウンド目)
-	if ( isDeadEnemy == 4 ){
+	if ( isDeadEnemy == 2 ){
 		isRoundFlag = 1;
 	}
 
 	//ラウンド変化(3ラウンド目)
-	if ( isDeadEnemy == 7 ){
+	if ( isDeadEnemy == 6 ){
 		isRoundFlag = 3;
 	}
 
-	//ラウンド変化(3ラウンド目)
-	if ( isDeadEnemy == 11 )
+	//ラウンド変化(4ラウンド目)
+	if ( isDeadEnemy == 9 )
 	{
 		isRoundFlag = 5;
 	}
@@ -642,11 +642,11 @@ void Player::UIInitialize()
 	entryani2UI->SetPozition(entryani2Position);
 	entryani2UI->SetSize({ 1280.0f, 720.0f });
 
-	//操作説明
-	operationUI = new Sprite();
-	operationUI->Initialize(spriteCommon);
-	operationUI->SetPozition({ 0,0 });
-	operationUI->SetSize({ 1280.0f, 720.0f });
+	////操作説明
+	//operationUI = new Sprite();
+	//operationUI->Initialize(spriteCommon);
+	//operationUI->SetPozition({ 0,0 });
+	//operationUI->SetSize({ 1280.0f, 720.0f });
 
 	//画像読み込み
 	//HPゲージ
@@ -735,9 +735,9 @@ void Player::UIInitialize()
 	spriteCommon->LoadTexture(32,"entryani2.png");
 	entryani2UI->SetTextureIndex(32);
 
-	//操作説明
-	spriteCommon->LoadTexture(33,"sousa.png");
-	operationUI->SetTextureIndex(33);
+	////操作説明
+	//spriteCommon->LoadTexture(33,"sousa.png");
+	//operationUI->SetTextureIndex(33);
 }
 
 void Player::UIDraw()
@@ -753,11 +753,11 @@ void Player::UIDraw()
 		hpFlameUI->Draw();
 	}
 
-	//HP関連
-	if ( isGameStartTimer >= 270 && isOperationFlag == false)
-	{
-		operationUI->Draw();
-	}
+	////HP関連
+	//if ( isGameStartTimer >= 270 && isOperationFlag == false)
+	//{
+	//	operationUI->Draw();
+	//}
 
 }
 

@@ -70,9 +70,10 @@ private:
 
 
 	//敵の生存フラグ(0 生きる,1 死亡)
-	int isAliveFlag_[4] = {0,0,1,1};
+	int isAliveFlag_[4] = {1,1,1,1};
 	int AliveR2Timer = 0;
 	int AliveR3Timer = 0;
+	int AliveR4Timer = 0;
 
 	//死んだときにタイマー動す
 	int deathTimer_[4] = { 0 };
