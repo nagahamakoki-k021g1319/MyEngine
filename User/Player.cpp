@@ -90,7 +90,7 @@ Player::~Player() {
 	delete entryani1UI;
 	delete entryani2UI;
 
-	/*delete operationUI;*/
+	delete operationUI;
 }
 
 void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
@@ -355,7 +355,7 @@ void Player::Update() {
 	//ボス登場時のカメラ
 	if ( input_->TriggerKey(DIK_4) ){isCameraBehavior = 1;}
 	if ( isCameraBehavior == 1 ){CameraBehaviorTimer++;}
-	if ( isCameraBehavior == 1 && isRoundFlag >= 5 )
+	if ( isCameraBehavior == 1)
 	{
 		if ( CameraBehaviorTimer <= 70 ){
 			camera->wtf.position.z -= 0.2f;
@@ -370,7 +370,7 @@ void Player::Update() {
 			isCameraBehavior = 2;
 		}
 	}
-	if ( isCameraBehavior == 2 && isRoundFlag >= 5 ){
+	if ( isCameraBehavior == 2){
 		CameraBehaviorTimer2++;
 		if ( CameraBehaviorTimer2 >= 80)
 		{
@@ -398,14 +398,26 @@ void Player::Update() {
 	}
 
 	//ラウンド変化(3ラウンド目)
-	if ( isDeadEnemy == 6 ){
+	if ( isDeadEnemy == 4 ){
 		isRoundFlag = 3;
 	}
 
 	//ラウンド変化(4ラウンド目)
-	if ( isDeadEnemy == 9 )
+	if ( isDeadEnemy == 7 )
 	{
 		isRoundFlag = 5;
+	}
+
+	//ラウンド変化(5ラウンド目)
+	if ( isDeadEnemy == 11 )
+	{
+		isRoundFlag = 7;
+	}
+
+	//ラウンド変化(6ラウンド目)
+	if ( isDeadEnemy == 13 )
+	{
+		isRoundFlag = 9;
 	}
 
 	//敵が自機より後ろにいるときカメラを少し下げる
@@ -642,11 +654,11 @@ void Player::UIInitialize()
 	entryani2UI->SetPozition(entryani2Position);
 	entryani2UI->SetSize({ 1280.0f, 720.0f });
 
-	////操作説明
-	//operationUI = new Sprite();
-	//operationUI->Initialize(spriteCommon);
-	//operationUI->SetPozition({ 0,0 });
-	//operationUI->SetSize({ 1280.0f, 720.0f });
+	//操作説明
+	operationUI = new Sprite();
+	operationUI->Initialize(spriteCommon);
+	operationUI->SetPozition({ 0,0 });
+	operationUI->SetSize({ 1280.0f, 720.0f });
 
 	//画像読み込み
 	//HPゲージ
@@ -735,9 +747,9 @@ void Player::UIInitialize()
 	spriteCommon->LoadTexture(32,"entryani2.png");
 	entryani2UI->SetTextureIndex(32);
 
-	////操作説明
-	//spriteCommon->LoadTexture(33,"sousa.png");
-	//operationUI->SetTextureIndex(33);
+	//操作説明
+	spriteCommon->LoadTexture(33,"sousa.png");
+	operationUI->SetTextureIndex(33);
 }
 
 void Player::UIDraw()
@@ -751,13 +763,10 @@ void Player::UIDraw()
 		hpredUI->Draw();
 		hpgreenUI->Draw();
 		hpFlameUI->Draw();
+		operationUI->Draw();
 	}
 
-	////HP関連
-	//if ( isGameStartTimer >= 270 && isOperationFlag == false)
-	//{
-	//	operationUI->Draw();
-	//}
+	
 
 }
 

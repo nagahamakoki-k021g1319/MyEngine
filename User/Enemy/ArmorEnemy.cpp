@@ -157,7 +157,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	}
 
 
-	//魔導兵が後ろから登場(ラウンド1)
+	//魔導兵が後ろから登場(ラウンド2)
 	for ( int i = 0; i < 2; i++ )
 	{
 		if ( player_->isRoundFlag == 0 )
