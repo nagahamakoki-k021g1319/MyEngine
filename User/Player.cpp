@@ -765,9 +765,6 @@ void Player::UIDraw()
 		hpFlameUI->Draw();
 		operationUI->Draw();
 	}
-
-	
-
 }
 
 void Player::PlayerAction()
