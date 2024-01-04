@@ -354,6 +354,6 @@ public:
 	int moveCamera = 0;
 
 	//操作説明
-	/*Sprite* operationUI = nullptr;
-	bool isOperationFlag = false;*/
+	Sprite* operationUI = nullptr;
+	bool isOperationFlag = false;
 };

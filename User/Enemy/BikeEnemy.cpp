@@ -823,8 +823,8 @@ void BikeEnemy::BikeEnemyEntry()
 		}
 	}
 
-	//バイク兵のエントリー(ラウンド2)
-	if ( player_->isRoundFlag == 1 )
+	//バイク兵のエントリー(ラウンド3)
+	if ( player_->isRoundFlag == 3 )
 	{
 		AliveR2Timer++;
 		if ( AliveR2Timer >= 5 )
@@ -860,8 +860,8 @@ void BikeEnemy::BikeEnemyEntry()
 
 	}
 
-	//バイク兵のエントリー(ラウンド3)
-	if ( player_->isRoundFlag == 3 )
+	//バイク兵のエントリー(ラウンド4)
+	if ( player_->isRoundFlag == 5 )
 	{
 		AliveR3Timer++;
 		if ( AliveR3Timer >= 5 )
@@ -913,8 +913,8 @@ void BikeEnemy::BikeEnemyEntry()
 		}
 	}
 
-	//バイク兵のエントリー(ラウンド4)
-	if ( player_->isRoundFlag == 5 )
+	//バイク兵のエントリー(ラウンド5)
+	if ( player_->isRoundFlag == 7 )
 	{
 		AliveR4Timer++;
 		if ( AliveR4Timer >= 5 )
