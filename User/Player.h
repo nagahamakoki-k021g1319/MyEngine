@@ -354,6 +354,17 @@ public:
 	int moveCamera = 0;
 
 	//操作説明
+	//1ステージ
 	Sprite* operationUI = nullptr;
+	Sprite* operationbbUI = nullptr;
 	bool isOperationFlag = false;
+	int OperationbbTimer = 0;
+
+	//2ステージ
+	Sprite* operation2UI = nullptr;
+	Sprite* operationbb2UI = nullptr;
+	bool isOperationFlag2 = false;
+	bool isOperationFlag3 = false;
+	int OperationbbTimer2 = 0;
+
 };

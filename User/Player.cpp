@@ -91,6 +91,11 @@ Player::~Player() {
 	delete entryani2UI;
 
 	delete operationUI;
+	delete operationbbUI;
+
+	delete operation2UI;
+	delete operationbb2UI;
+
 }
 
 void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
@@ -265,14 +270,35 @@ void Player::Update() {
 	GameStartMovie();
 
 
-	////操作説明
-	//if ( input_->TriggerKey(DIK_1) )
-	//{
-	//	if ( isOperationFlag == false)
-	//	{
-	//		isOperationFlag = true;
-	//	}
-	//}
+	//操作説明(1ステの視線誘導)
+	if ( isGameStartTimer >= 310){OperationbbTimer++;}
+	if ( OperationbbTimer >= 1 && OperationbbTimer <= 60){isOperationFlag = true;}
+	else{isOperationFlag = false;}
+
+	if ( input_->PushKey(DIK_2) )
+	{
+		if ( isOperationFlag2 == false )
+		{
+			isOperationFlag2 = true;
+		}
+	}
+	else
+	{
+		isOperationFlag2 = false;
+	}
+
+	if ( input_->PushKey(DIK_3) )
+	{
+		if ( isOperationFlag3 == false )
+		{
+			isOperationFlag3 = true;
+		}
+	}
+	else
+	{
+		isOperationFlag3 = false;
+	}
+
 	//ダメージを受けた時のHP減少
 	//if ( input_->TriggerKey(DIK_4) ){
 	//	hpgreenPosition.x -= 20.0f;
@@ -487,7 +513,7 @@ void Player::Draw() {
 	}
 
 	if ( retdisplay == true && isClearFlag == false ){
-		/*retObj_->Draw();*/
+		retObj_->Draw();
 		retVisualObj_->Draw();
 	}
 
@@ -655,10 +681,28 @@ void Player::UIInitialize()
 	entryani2UI->SetSize({ 1280.0f, 720.0f });
 
 	//操作説明
+	//1ステージ
 	operationUI = new Sprite();
 	operationUI->Initialize(spriteCommon);
 	operationUI->SetPozition({ 0,0 });
 	operationUI->SetSize({ 1280.0f, 720.0f });
+	//視線誘導(1ステージ)
+	operationbbUI = new Sprite();
+	operationbbUI->Initialize(spriteCommon);
+	operationbbUI->SetPozition({ 0,0 });
+	operationbbUI->SetSize({ 1280.0f, 720.0f });
+
+	//2ステージ
+	operation2UI = new Sprite();
+	operation2UI->Initialize(spriteCommon);
+	operation2UI->SetPozition({ 0,0 });
+	operation2UI->SetSize({ 1280.0f, 720.0f });
+	//視線誘導(2ステージ)
+	operationbb2UI = new Sprite();
+	operationbb2UI->Initialize(spriteCommon);
+	operationbb2UI->SetPozition({ 0,0 });
+	operationbb2UI->SetSize({ 1280.0f, 720.0f });
+
 
 	//画像読み込み
 	//HPゲージ
@@ -750,6 +794,15 @@ void Player::UIInitialize()
 	//操作説明
 	spriteCommon->LoadTexture(33,"sousa.png");
 	operationUI->SetTextureIndex(33);
+
+	spriteCommon->LoadTexture(34,"sousabb.png");
+	operationbbUI->SetTextureIndex(34);
+
+	spriteCommon->LoadTexture(35,"sousa2.png");
+	operation2UI->SetTextureIndex(35);
+
+	spriteCommon->LoadTexture(36,"sousa2bb.png");
+	operationbb2UI->SetTextureIndex(36);
 }
 
 void Player::UIDraw()
@@ -763,8 +816,28 @@ void Player::UIDraw()
 		hpredUI->Draw();
 		hpgreenUI->Draw();
 		hpFlameUI->Draw();
-		operationUI->Draw();
 	}
+
+	//操作説明関連
+	if ( isGameStartTimer >= 310 )
+	{
+		operationUI->Draw();
+		if ( isOperationFlag == true )
+		{
+			operationbbUI->Draw();
+		}
+		if ( isOperationFlag2 == true )
+		{
+			operation2UI->Draw();
+		}
+		if ( isOperationFlag3 == true )
+		{
+			operationbb2UI->Draw();
+		}
+
+	}
+
+
 }
 
 void Player::PlayerAction()
