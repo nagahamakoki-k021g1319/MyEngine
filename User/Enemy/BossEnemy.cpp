@@ -129,7 +129,7 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 
 	
 	//ボス登場
-	if ( player_->isCameraBehavior >= 2 ){
+	if ( player_->isCameraBehavior == 2 ){
 		isBesideFlag = 1;
 		Obj_->wtf.position.z += 0.6f;
 	}

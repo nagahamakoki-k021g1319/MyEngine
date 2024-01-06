@@ -62,6 +62,7 @@ GameScene::~GameScene() {
 	delete bbout2;
 	delete bbout3;
 	delete st;
+	delete xboxCon;
 	delete block_;
 	delete slipModel_;
 	delete slipObj_;
@@ -118,6 +119,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	st->SetPozition({ 0,0 });
 	st->SetSize({ 1280.0f, 720.0f });
 
+	xboxCon = new Sprite();
+	xboxCon->Initialize(spriteCommon);
+	xboxCon->SetPozition({ 0,0 });
+	xboxCon->SetSize({ 1280.0f, 720.0f });
+
 	spriteCommon->LoadTexture(0,"tt.png");
 	TitleSprite->SetTextureIndex(0);
 
@@ -135,6 +141,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 	spriteCommon->LoadTexture(36,"st.png");
 	st->SetTextureIndex(36);
+
+	spriteCommon->LoadTexture(37,"cont.png");
+	xboxCon->SetTextureIndex(37);
 
 	// カメラ生成
 	mainCamera = new Camera(WinApp::window_width, WinApp::window_height);
@@ -599,8 +608,11 @@ void GameScene::Draw() {
 
 	//3Dオブジェクト描画後処理
 	Object3d::PostDraw();
+
+
 	if (sceneNo_ == SceneNo::Title) {
 		TitleSprite->Draw();
+		xboxCon->Draw();
 		if ( stTimer >= 1 && stTimer <= 35 )
 		{
 			st->Draw();
