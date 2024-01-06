@@ -156,6 +156,11 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 		}
 	}
 
+	//順番にエントリーさせる
+	if ( player_->isRoundFlag >= 3 )
+	{
+		entryTimer++;
+	}
 
 	//魔導兵が後ろから登場(ラウンド2)
 	for ( int i = 0; i < 2; i++ )
@@ -208,6 +213,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 		{
 			isAliveFlag_[2] = 0;
 		}
+		
 
 		//後ろから登場して左右移動
 		if ( isAliveFlag_[2] == 0 )
@@ -231,12 +237,11 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 		}
 	}
 
-	//魔導兵が後ろから登場(ラウンド4)
-	if ( player_->isRoundFlag <= 4 )
+	if ( entryTimer <= 399 )
 	{
 		BulletCoolTime_[3] = 0;
 	}
-	if ( player_->isRoundFlag == 5 )
+	if ( entryTimer >= 400 )
 	{
 		//ここで描画させるタイマーの起動
 		AliveR4Timer++;
@@ -439,6 +444,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 	}
 
 	ImGui::Begin("ArmorEnemy");
+	ImGui::Text("entryTimer:%d",entryTimer);
 	ImGui::Text("position_:%f,%f,%f",Obj_[ 0 ]->wtf.rotation.x,Obj_[ 0 ]->wtf.rotation.y,Obj_[ 0 ]->wtf.rotation.z);
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
 	ImGui::Text("BulletCoolTime:%d",BulletCoolTime_[2]);

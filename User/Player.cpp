@@ -274,25 +274,15 @@ void Player::Update() {
 	if ( isGameStartTimer >= 310){OperationbbTimer++;}
 	if ( OperationbbTimer >= 1 && OperationbbTimer <= 60){isOperationFlag = true;}
 	else{isOperationFlag = false;}
-
-	if ( input_->PushKey(DIK_2) )
+	//操作説明(2ステの視線誘導)
+	if ( waveTimer2 >= 100 )
 	{
-		if ( isOperationFlag2 == false )
-		{
-			isOperationFlag2 = true;
-		}
+		OperationbbTimer2++;
+		isOperationFlag2 = true;
 	}
-	else
+	if ( OperationbbTimer2 >= 1 && OperationbbTimer2 <= 60 )
 	{
-		isOperationFlag2 = false;
-	}
-
-	if ( input_->PushKey(DIK_3) )
-	{
-		if ( isOperationFlag3 == false )
-		{
-			isOperationFlag3 = true;
-		}
+		isOperationFlag3 = true;
 	}
 	else
 	{
@@ -379,7 +369,12 @@ void Player::Update() {
 	if ( isclearFlagTimer >= 100 ){isclearFlagTimer = 100;}
 
 	//ボス登場時のカメラ
-	if ( input_->TriggerKey(DIK_4) ){isCameraBehavior = 1;}
+	if ( isRoundFlag == 9 ){
+		if ( isCameraBehavior == 0 )
+		{
+			isCameraBehavior = 1;
+		}
+	}
 	if ( isCameraBehavior == 1 ){CameraBehaviorTimer++;}
 	if ( isCameraBehavior == 1)
 	{
@@ -414,13 +409,14 @@ void Player::Update() {
 		if ( camera->wtf.rotation.y <= 0.0f )
 		{
 			camera->wtf.rotation.y = 0.0f;
-			isCameraBehavior = 0;
+			isCameraBehavior = 3;
 		}
 	}
 
 	//ラウンド変化(2ラウンド目)
 	if ( isDeadEnemy == 2 ){
 		isRoundFlag = 1;
+		waveTimer2++;
 	}
 
 	//ラウンド変化(3ラウンド目)
@@ -429,13 +425,13 @@ void Player::Update() {
 	}
 
 	//ラウンド変化(4ラウンド目)
-	if ( isDeadEnemy == 7 )
+	if ( isDeadEnemy == 6 )
 	{
 		isRoundFlag = 5;
 	}
 
 	//ラウンド変化(5ラウンド目)
-	if ( isDeadEnemy == 11 )
+	if ( isDeadEnemy == 9 )
 	{
 		isRoundFlag = 7;
 	}
@@ -467,8 +463,12 @@ void Player::Update() {
 		}
 	}
 	
-
+	
 	ImGui::Begin("Player");
+	ImGui::Text("waveTimer2:%d",waveTimer2);
+	ImGui::Text("isCameraBehavior:%d",isCameraBehavior);
+	ImGui::Text("CameraBehaviorTimer:%d",CameraBehaviorTimer);
+	ImGui::Text("CameraBehaviorTimer2:%d",CameraBehaviorTimer2);
 	ImGui::Text("isDeadEnemy:%d",isDeadEnemy);
 	ImGui::Text("Position:%f,%f,%f",camera->wtf.position.x,camera->wtf.position.y,camera->wtf.position.z);
 	ImGui::Text("isboostFlag:%d",isboostFlag);
@@ -512,7 +512,7 @@ void Player::Draw() {
 		shootStObj_->Draw();
 	}
 
-	if ( retdisplay == true && isClearFlag == false ){
+	if ( retdisplay == true && isClearFlag == false && OperationbbTimer2 >= 60 ){
 		retObj_->Draw();
 		retVisualObj_->Draw();
 	}
@@ -821,6 +821,7 @@ void Player::UIDraw()
 	//操作説明関連
 	if ( isGameStartTimer >= 310 )
 	{
+		//1ウェーブ目
 		operationUI->Draw();
 		if ( isOperationFlag == true )
 		{

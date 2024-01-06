@@ -82,6 +82,9 @@ private:
 	int isRotFlag_[ 4 ] = { 0 };
 	int RotTimer_[ 4 ] = { 0 };
 
+	//順番に登場
+	int entryTimer = 0;
+	
 	//当たり判定のモデル
 	Object3d* collObj_[ 4 ] = {nullptr};
 	Model* collModel_[ 4 ] = { nullptr };

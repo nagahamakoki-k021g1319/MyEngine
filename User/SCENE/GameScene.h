@@ -155,6 +155,7 @@ private:	//メンバ変数
 	Model* floorTitMD_[ 3 ] = { 0 };
 	Sprite* st = nullptr;
 	int stTimer = 0;
+	Sprite* xboxCon = nullptr;
 
 	//タイトルのプレイヤー
 	Object3d* standObj_ = nullptr;

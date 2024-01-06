@@ -365,6 +365,7 @@ public:
 	Sprite* operationbb2UI = nullptr;
 	bool isOperationFlag2 = false;
 	bool isOperationFlag3 = false;
+	int waveTimer2 = 0;
 	int OperationbbTimer2 = 0;
 
 };
