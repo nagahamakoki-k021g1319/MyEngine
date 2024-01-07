@@ -525,7 +525,7 @@ void GameScene::Update() {
 		mainCamera->wtf.rotation.y = 0.0f;
 		mainCamera->wtf.rotation.z = 0.0f;
 		mainCamera->wtf.position.z = 0.0f;
-		if ( input_->TriggerKey(DIK_Q) || input_->PButtonTrigger(B) ){
+		if ( input_->TriggerKey(DIK_Q) /*|| input_->PButtonTrigger(B)*/ ){
 			sceneNo_ = SceneNo::Title;
 		}
 	}
