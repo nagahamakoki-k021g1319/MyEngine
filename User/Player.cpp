@@ -513,7 +513,7 @@ void Player::Draw() {
 	}
 
 	if ( retdisplay == true && isClearFlag == false && OperationbbTimer2 >= 60 ){
-		retObj_->Draw();
+		/*retObj_->Draw();*/
 		retVisualObj_->Draw();
 	}
 
@@ -925,7 +925,7 @@ void Player::PlayerAction()
 
 	//自機の攻撃モーション(射撃)
 	if ( isAtTimerFlag == false ){
-		if ( input_->TriggerKey(DIK_SPACE) ){isAtTimerFlag = true;}
+		if ( input_->TriggerKey(DIK_SPACE) || input_->PButtonTrigger(RT) ){isAtTimerFlag = true;}
 	}
 	if ( isAtTimerFlag == true ){
 		AtTimer++;
@@ -941,7 +941,7 @@ void Player::PlayerAction()
 
 	//自機の攻撃モーション(左近接攻撃)
 	if ( isLeftAtFlag == false ){
-		if ( input_->TriggerKey(DIK_Q)){
+		if ( input_->TriggerKey(DIK_Q) || input_->PButtonTrigger(LB) ){
 			isLeftAtFlag = true;
 			isCollSWFlag = true;
 		}
@@ -967,7 +967,7 @@ void Player::PlayerAction()
 	//自機の攻撃モーション(右近接攻撃)
 	if ( isRightAtFlag == false )
 	{
-		if ( input_->TriggerKey(DIK_E) )
+		if ( input_->TriggerKey(DIK_E) || input_->PButtonTrigger(RB) )
 		{
 			isRightAtFlag = true;
 			isCollSWRightFlag = true;
@@ -996,11 +996,11 @@ void Player::PlayerAction()
 
 
 	//自機が左右に動いたらモデルも傾く
-	if ( input_->PushKey(DIK_D) ){
+	if ( input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT) ){
 		Obj_->wtf.rotation.z -= 0.03f;
 		if( Obj_->wtf.rotation.z <= -0.4f){Obj_->wtf.rotation.z = -0.4f;}
 	}
-	else if ( input_->PushKey(DIK_A) ){
+	else if ( input_->PushKey(DIK_A) || input_->StickInput(L_LEFT) ){
 		Obj_->wtf.rotation.z += 0.03f;
 		if ( Obj_->wtf.rotation.z >= 0.4f ){Obj_->wtf.rotation.z = 0.4f;}
 	}
@@ -1033,7 +1033,7 @@ void Player::PlayerAction()
 	//移動(自機)
 	if ( isJumpFlag == false && isVertFlag == false )
 	{
-		if ( input_->TriggerKey(DIK_Z) || input_->StickInput(L_UP) ){isJumpFlag = true;}
+		if ( input_->TriggerKey(DIK_Z) ){isJumpFlag = true;}
 	}
 	if ( input_->PushKey(DIK_A) || input_->StickInput(L_LEFT) ){
 		if ( limitmove == true ){
@@ -1068,13 +1068,13 @@ void Player::PlayerAction()
 		}
 	}
 
-	if ( input_->PushKey(DIK_W) )
+	if ( input_->PushKey(DIK_W) || input_->StickInput(L_UP) )
 	{
 		limitmove = false;
 		limitmove2 = false;
 		isboostFlag = 1;
 	}
-	else if ( input_->PushKey(DIK_S) )
+	else if ( input_->PushKey(DIK_S) || input_->StickInput(L_DOWN) )
 	{
 		limitmove = false;
 		limitmove2 = false;
@@ -1085,7 +1085,7 @@ void Player::PlayerAction()
 		isboostFlag = 0;
 	}
 
-	if ( input_->PushKey(DIK_W) && isRightAtFlag == false && isLeftAtFlag == false && isAtTimerFlag == false )
+	if ( input_->PushKey(DIK_W) || input_->StickInput(L_UP) && isRightAtFlag == false && isLeftAtFlag == false && isAtTimerFlag == false )
 	{
 		isAccelFlag = true;
 	}
@@ -1118,7 +1118,7 @@ void Player::PlayerAction()
 
 	//弾発射(弱)
 	float ShortSpeed = 0.01f;
-	if ( input_->TriggerKey(DIK_SPACE) || input_->ButtonInput(RT) ){
+	if ( input_->TriggerKey(DIK_SPACE) || input_->PButtonTrigger(RT) ){
 		if ( isShootFlag == false){isShootFlag = true;}
 	}
 	if ( BulletCoolTime == 0)

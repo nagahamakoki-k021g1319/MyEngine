@@ -362,11 +362,11 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	{
 		if ( isBackEntryFlag_[ i ] == 1 )
 		{
-			if ( input_->PushKey(DIK_W) )
+			if ( input_->PushKey(DIK_W) || input_->StickInput(L_UP) )
 			{
 				Obj_[ i ]->wtf.position.z -= 0.06f;
 			}
-			else if ( input_->PushKey(DIK_S) )
+			else if ( input_->PushKey(DIK_S) || input_->StickInput(L_DOWN) )
 			{
 				Obj_[ i ]->wtf.position.z += 0.06f;
 			}
