@@ -400,33 +400,41 @@ void GameScene::Update() {
 		lamp_->Update();
 		block_->Update(player_->GetWorldPosition());
 
+		const float stSpeed = 10.0f;
+		const float stLimit = -20000.0f;
+		const float stReset = 40000.0f;
 		//地面
 		for ( int i = 0; i < 3; i++ ){
 			floorTit_[ i ]->Update();
-			floorTit_[ i ]->wtf.position.z -= 10.0f;
-			if ( floorTit_[ i ]->wtf.position.z <= -20000.0f )
+			floorTit_[ i ]->wtf.position.z -= stSpeed;
+			if ( floorTit_[ i ]->wtf.position.z <= stLimit )
 			{
-				floorTit_[ i ]->wtf.position.z = 40000.0f;
+				floorTit_[ i ]->wtf.position.z = stReset;
 			}
 		}
 
+		const float wallLimit = -4600.0f;
+		const float wallReset = 18400.0f;
 		//両壁
 		for ( int i = 0; i < 100; i++ ){
 			floor_[ i ]->Update();
-			floor_[ i ]->wtf.position.z -= 10.0f;
-			if ( floor_[ i ]->wtf.position.z <= -4600.0f ){floor_[ i ]->wtf.position.z = 18400.0f;}
+			floor_[ i ]->wtf.position.z -= stSpeed;
+			if ( floor_[ i ]->wtf.position.z <= wallLimit ){floor_[ i ]->wtf.position.z = wallReset;}
 			floor2_[ i ]->Update();
-			floor2_[ i ]->wtf.position.z -= 10.0f;
-			if ( floor2_[ i ]->wtf.position.z <= -4600.0f ){floor2_[ i ]->wtf.position.z = 18400.0f;}
+			floor2_[ i ]->wtf.position.z -= stSpeed;
+			if ( floor2_[ i ]->wtf.position.z <= wallLimit ){floor2_[ i ]->wtf.position.z = wallReset;}
 
 			
 		}
+
+		const float ceilLimit = -2000.0f;
+		const float ceilReset = 8000.0f;
 		//天井
 		for ( int i = 0; i < 100; i++ )
 		{
 			floor3_[ i ]->Update();
-			floor3_[ i ]->wtf.position.z -= 10.0f;
-			if ( floor3_[ i ]->wtf.position.z <= -2000.0f ){floor3_[ i ]->wtf.position.z = 8000.0f;}
+			floor3_[ i ]->wtf.position.z -= stSpeed;
+			if ( floor3_[ i ]->wtf.position.z <= ceilLimit ){floor3_[ i ]->wtf.position.z = ceilReset;}
 
 		}
 		//奥壁

@@ -177,17 +177,23 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 
 	//バイクの車輪が動き出す
 	bikstSpinTimer++;
-	if ( bikstSpinTimer > 10 )
+	const float SpinTimerLimit = 10.0f;
+	const float SpinTimerReset = 0.0f;
+	if ( bikstSpinTimer > SpinTimerLimit )
 	{
-		bikstSpinTimer = 0;
+		bikstSpinTimer = SpinTimerReset;
 	}
 	for ( int i = 0; i < 9; i++ )
 	{
-		if ( bikstSpinTimer >= 1 && bikstSpinTimer <= 5 )
+		const float SpinAdjust = 1.0f;
+		const float SpinMax = 5.0f;
+		const float SpinAdjust2 = 6.0f;
+		const float SpinMax2 = 10.0f;
+		if ( bikstSpinTimer >= SpinAdjust && bikstSpinTimer <= SpinMax )
 		{
 			Obj_[ i ]->SetModel(Model_[ i ]);
 		}
-		else if ( bikstSpinTimer >= 6 && bikstSpinTimer <= 10 )
+		else if ( bikstSpinTimer >= SpinAdjust2 && bikstSpinTimer <= SpinMax2 )
 		{
 			Obj_[ i ]->SetModel(Model2_[ i ]);
 		}
@@ -236,16 +242,21 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	{
 		if ( isRushFlag_[ i ] == 1 )
 		{
-			Obj_[ i ]->wtf.position.x -= 0.08f;
-			if ( Obj_[ i ]->wtf.position.x <= -3.0f )
+			const float bikeSpeed = 0.08f;
+			const float posLimit = -3.0f;
+			const float rotaSpeed = 0.03f;
+			const float rotaLimit = 0.45f;
+			const float damage = 10.0f;
+			Obj_[ i ]->wtf.position.x -= bikeSpeed;
+			if ( Obj_[ i ]->wtf.position.x <= posLimit )
 			{
-				Obj_[ i ]->wtf.position.x = -3.0f;
+				Obj_[ i ]->wtf.position.x = posLimit;
 				isRushFlag_[ i ] = 3;
 			}
-			Obj_[ i ]->wtf.rotation.z += 0.03f;
-			if ( Obj_[ i ]->wtf.rotation.z >= 0.45f )
+			Obj_[ i ]->wtf.rotation.z += rotaSpeed;
+			if ( Obj_[ i ]->wtf.rotation.z >= rotaLimit )
 			{
-				Obj_[ i ]->wtf.rotation.z = 0.45f;
+				Obj_[ i ]->wtf.rotation.z = rotaLimit;
 			}
 			//突進中に自機と当たったらフラグ切り替え
 			if ( coll.CircleCollision(playerRPos,collLeftObj_[ i ]->wtf.position,0.6f,0.6f) )
@@ -254,7 +265,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 				player_->isKnockbackFlag = true;
 				player_->isCamShake = 1;
 				player_->camShakeTimer = player_->camShakeLimit;
-				player_->hpgreenPosition.x -= 10.0f;//倍ダメ
+				player_->hpgreenPosition.x -= damage;//倍ダメ
 				player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
 			}
 		}
@@ -267,15 +278,19 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		//タイマー起動時元の位置に戻る
 		if ( rushKnockbackTimer_[ i ] >= 1 )
 		{
-			Obj_[ i ]->wtf.rotation.z -= 0.03f;
-			if ( Obj_[ i ]->wtf.rotation.z <= 0.0f )
+			const float posSpeed = 0.03f;
+			const float posLimit = 4.0f;
+			const float rotaSpeed = 0.03f;
+			const float rotaLimit = 0.0f;
+			Obj_[ i ]->wtf.rotation.z -= rotaSpeed;
+			if ( Obj_[ i ]->wtf.rotation.z <= rotaLimit )
 			{
-				Obj_[ i ]->wtf.rotation.z = 0.0f;
+				Obj_[ i ]->wtf.rotation.z = rotaLimit;
 			}
-			Obj_[ i ]->wtf.position.x += 0.03f;
-			if ( Obj_[ i ]->wtf.position.x >= 4.0f )
+			Obj_[ i ]->wtf.position.x += posSpeed;
+			if ( Obj_[ i ]->wtf.position.x >= posLimit )
 			{
-				Obj_[ i ]->wtf.position.x = 4.0f;
+				Obj_[ i ]->wtf.position.x = posLimit;
 				isRushFlag_[ i ] = 3;
 				isRushKnockbackFlag_[ i ] = 0;
 				rushKnockbackTimer_[ i ] = 0;
@@ -284,10 +299,12 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		//突進後クールタイム
 		if ( isRushFlag_[ i ] == 3 )
 		{
-			Obj_[ i ]->wtf.rotation.z -= 0.03f;
-			if ( Obj_[ i ]->wtf.rotation.z <= 0.0f )
+			const float rotaSpeed = 0.03f;
+			const float rotaLimit = 0.0f;
+			Obj_[ i ]->wtf.rotation.z -= rotaSpeed;
+			if ( Obj_[ i ]->wtf.rotation.z <= rotaLimit )
 			{
-				Obj_[ i ]->wtf.rotation.z = 0.0f;
+				Obj_[ i ]->wtf.rotation.z = rotaLimit;
 			}
 			rushCoolTimer_[ i ]++;
 		}
@@ -295,16 +312,21 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		//突進攻撃の当たり判定(左の敵と自機)
 		if ( isRushFlag_[ i ] == 4 )
 		{
-			Obj_[ i ]->wtf.position.x += 0.08f;
-			if ( Obj_[ i ]->wtf.position.x >= 3.0f )
+			const float bikeSpeed = 0.08f;
+			const float posLimit = -3.0f;
+			const float rotaSpeed = 0.03f;
+			const float rotaLimit = -0.45f;
+			const float damage = 10.0f;
+			Obj_[ i ]->wtf.position.x += bikeSpeed;
+			if ( Obj_[ i ]->wtf.position.x >= posLimit )
 			{
-				Obj_[ i ]->wtf.position.x = 3.0f;
+				Obj_[ i ]->wtf.position.x = posLimit;
 				isRushFlag_[ i ] = 5;
 			}
-			Obj_[ i ]->wtf.rotation.z -= 0.03f;
-			if ( Obj_[ i ]->wtf.rotation.z <= -0.45f )
+			Obj_[ i ]->wtf.rotation.z -= rotaSpeed;
+			if ( Obj_[ i ]->wtf.rotation.z <= rotaLimit )
 			{
-				Obj_[ i ]->wtf.rotation.z = -0.45f;
+				Obj_[ i ]->wtf.rotation.z = rotaLimit;
 			}
 			//突進中に自機と当たったらフラグ切り替え
 			if ( coll.CircleCollision(playerLPos,collRightObj_[ i ]->wtf.position,0.6f,0.6f) )
@@ -313,7 +335,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 				player_->isKnockbackFlagL = true;
 				player_->isCamShake = 1;
 				player_->camShakeTimer = player_->camShakeLimit;
-				player_->hpgreenPosition.x -= 10.0f;//倍ダメ
+				player_->hpgreenPosition.x -= damage;//倍ダメ
 				player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
 			}
 		}
@@ -326,15 +348,19 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		//タイマー起動時元の位置に戻る
 		if ( rushKnockbackTimerR_[ i ] >= 1 )
 		{
-			Obj_[ i ]->wtf.rotation.z += 0.03f;
-			if ( Obj_[ i ]->wtf.rotation.z >= 0.0f )
+			const float posSpeed = 0.03f;
+			const float posLimit = -4.0f;
+			const float rotaSpeed = 0.03f;
+			const float rotaLimit = 0.0f;
+			Obj_[ i ]->wtf.rotation.z += rotaSpeed;
+			if ( Obj_[ i ]->wtf.rotation.z >= rotaLimit )
 			{
-				Obj_[ i ]->wtf.rotation.z = 0.0f;
+				Obj_[ i ]->wtf.rotation.z = rotaLimit;
 			}
-			Obj_[ i ]->wtf.position.x -= 0.03f;
-			if ( Obj_[ i ]->wtf.position.x <= -4.0f )
+			Obj_[ i ]->wtf.position.x -= posSpeed;
+			if ( Obj_[ i ]->wtf.position.x <= posLimit )
 			{
-				Obj_[ i ]->wtf.position.x = -4.0f;
+				Obj_[ i ]->wtf.position.x = posLimit;
 				isRushFlag_[ i ] = 5;
 				isRushKnockbackFlag_[ i ] = 0;
 				rushKnockbackTimerR_[ i ] = 0;
@@ -343,14 +369,20 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		//突進後クールタイム
 		if ( isRushFlag_[ i ] == 5 )
 		{
-			Obj_[ i ]->wtf.rotation.z += 0.03f;
-			if ( Obj_[ i ]->wtf.rotation.z >= 0.0f )
+			const float rotaSpeed = 0.03f;
+			const float rotaLimit = 0.0f;
+			
+
+			Obj_[ i ]->wtf.rotation.z += rotaSpeed;
+			if ( Obj_[ i ]->wtf.rotation.z >= rotaLimit )
 			{
-				Obj_[ i ]->wtf.rotation.z = 0.0f;
+				Obj_[ i ]->wtf.rotation.z = rotaLimit;
 			}
 			rushCoolTimer_[ i ]++;
 		}
-		if ( rushCoolTimer_[ i ] >= 200 )
+
+		const float rushLimit = 200.0f;
+		if ( rushCoolTimer_[ i ] >= rushLimit )
 		{
 			isRushFlag_[ i ] = 0;
 			rushCoolTimer_[ i ] = 0;
@@ -362,18 +394,23 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	{
 		if ( isBackEntryFlag_[ i ] == 1 )
 		{
+			const float posSpeed = 0.06f;
+			const float posSpeed2 = 0.07f;
+			const float timerAdjust = 1.0f;
+			const float timerMax = 29.0f;
+
 			if ( input_->PushKey(DIK_W) || input_->StickInput(L_UP) )
 			{
-				Obj_[ i ]->wtf.position.z -= 0.06f;
+				Obj_[ i ]->wtf.position.z -= posSpeed;
 			}
 			else if ( input_->PushKey(DIK_S) || input_->StickInput(L_DOWN) )
 			{
-				Obj_[ i ]->wtf.position.z += 0.06f;
+				Obj_[ i ]->wtf.position.z += posSpeed;
 			}
 			//自機が障害物と当たった時
-			if ( player_->backTimer >= 1 && player_->backTimer <= 29 )
+			if ( player_->backTimer >= timerAdjust && player_->backTimer <= timerMax )
 			{
-				Obj_[ i ]->wtf.position.z += 0.07f;
+				Obj_[ i ]->wtf.position.z += posSpeed2;
 			}
 
 		}
@@ -426,12 +463,16 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		{
 			knockbackTimer2_[ i ]++;
 		}
-		if ( knockbackTimer2_[ i ] >= 1 && knockbackTimer2_[ i ] <= 10 )
+		const float KbAdjust = 1.0f;
+		const float KbMax = 10.0f;
+		if ( knockbackTimer2_[ i ] >= KbAdjust && knockbackTimer2_[ i ] <= KbMax )
 		{
 			//右側にノックバック
-			Obj_[ i ]->wtf.position.x -= 0.03f;
+			const float posSpeed = 0.03f;
+			Obj_[ i ]->wtf.position.x -= posSpeed;
 		}
-		if ( knockbackTimer2_[ i ] >= 11 )
+		const float Kb2Over = 10.0f;
+		if ( knockbackTimer2_[ i ] >= Kb2Over )
 		{
 			player_->limitmove = false;
 			limitRightmove_[ i ] = 0;
@@ -456,10 +497,12 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		}
 		if ( knockbackTimer_[ i ] >= 1 && knockbackTimer_[ i ] <= 10 )
 		{
-//右側にノックバック
-			Obj_[ i ]->wtf.position.x += 0.03f;
+			//右側にノックバック
+			const float posSpeed = 0.03f;
+			Obj_[ i ]->wtf.position.x += posSpeed;
 		}
-		if ( knockbackTimer_[ i ] >= 11 )
+		const float KbOver = 11.0f;
+		if ( knockbackTimer_[ i ] >= KbOver )
 		{
 			player_->limitmove2 = false;
 			limitLeftmove_[ i ] = 0;
@@ -495,22 +538,28 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		{
 			if ( isBikclushFlag_[ i ] == 1 )
 			{
-				Obj_[ i ]->wtf.position.z += 0.5f;
-				bikclushObj_[ i ]->wtf.position.z += 0.5f;
-				bikclushObj_[ i ]->wtf.rotation.z += 0.1f;
+				const float posSpeed = 0.5f;
+				const float rotaSpeed = 0.1f;
+				
+				Obj_[ i ]->wtf.position.z += posSpeed;
+				bikclushObj_[ i ]->wtf.position.z += posSpeed;
+				bikclushObj_[ i ]->wtf.rotation.z += rotaSpeed;
 				deathTimer_[i]++;
 			}
-			if ( bikclushObj_[ i ]->wtf.rotation.z >= 1.5f )
+			const float rotaLimit = 1.5f;
+			if ( bikclushObj_[ i ]->wtf.rotation.z >= rotaLimit )
 			{
-				bikclushObj_[ i ]->wtf.rotation.z = 1.5f;
+				bikclushObj_[ i ]->wtf.rotation.z = rotaLimit;
 				isBikSpinFlag_[ i ] = 1;
 			}
 			//バイクが倒れて後ろに行く
 			if ( isBikSpinFlag_[ i ] == 1 )
 			{
-				Obj_[ i ]->wtf.position.z -= 0.8f;
-				bikclushObj_[ i ]->wtf.position.z -= 0.8f;
-				bikclushObj_[ i ]->wtf.rotation.x -= 0.1f;
+				const float posSpeed = 0.8f;
+				const float rotaSpeed = 0.1f;
+				Obj_[ i ]->wtf.position.z -= posSpeed;
+				bikclushObj_[ i ]->wtf.position.z -= posSpeed;
+				bikclushObj_[ i ]->wtf.rotation.x -= rotaSpeed;
 			}
 		}
 	}
