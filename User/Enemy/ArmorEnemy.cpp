@@ -194,8 +194,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 					const float posAdjust = 15.0f;
 					if ( Obj_[i]->wtf.position.z <= posMax && Obj_[i]->wtf.position.z >= posAdjust && player_->isRoundFlag == 1 )
 					{
-						const float timeReset = -50.0f;
-						BulletCoolTime_[i] = timeReset;
+						BulletCoolTime_[i] = -50;
 					}
 					const float posMax2 = 35.0f;
 					if ( Obj_[i]->wtf.position.z >= posMax2 )
@@ -236,8 +235,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 				}
 				if ( Obj_[ 2]->wtf.position.z <= posMax && Obj_[ 2]->wtf.position.z >= posAdjust && player_->isRoundFlag == 3 )
 				{
-					const float timerReset = -50.0f;
-					BulletCoolTime_[ 2] = timerReset;
+					BulletCoolTime_[ 2] = -50;
 				}
 				const float posReset = 35.0f;
 				if ( Obj_[ 2]->wtf.position.z >= posReset )
@@ -276,8 +274,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 				const float posMax = 20.0f;
 				if ( Obj_[3]->wtf.position.z <= posMax && Obj_[3]->wtf.position.z >= posAdjust && player_->isRoundFlag == 3 )
 				{
-					const float timerReset = -50.0f;
-					BulletCoolTime_[3] = timerReset;
+					BulletCoolTime_[3] = -50;
 				}
 				const float posLimit = 35.0f;
 				if ( Obj_[3]->wtf.position.z >= posLimit )
