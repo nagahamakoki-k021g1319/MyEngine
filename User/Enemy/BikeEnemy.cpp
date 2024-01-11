@@ -177,11 +177,9 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 
 	//バイクの車輪が動き出す
 	bikstSpinTimer++;
-	const float SpinTimerLimit = 10.0f;
-	const float SpinTimerReset = 0.0f;
-	if ( bikstSpinTimer > SpinTimerLimit )
+	if ( bikstSpinTimer > 10.0f )
 	{
-		bikstSpinTimer = SpinTimerReset;
+		bikstSpinTimer = 0;
 	}
 	for ( int i = 0; i < 9; i++ )
 	{
@@ -313,7 +311,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		if ( isRushFlag_[ i ] == 4 )
 		{
 			const float bikeSpeed = 0.08f;
-			const float posLimit = -3.0f;
+			const float posLimit = 3.0f;
 			const float rotaSpeed = 0.03f;
 			const float rotaLimit = -0.45f;
 			const float damage = 10.0f;
@@ -468,7 +466,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		if ( knockbackTimer2_[ i ] >= KbAdjust && knockbackTimer2_[ i ] <= KbMax )
 		{
 			//右側にノックバック
-			const float posSpeed = 0.03f;
+			const float posSpeed = 0.04f;
 			Obj_[ i ]->wtf.position.x -= posSpeed;
 		}
 		const float Kb2Over = 10.0f;
@@ -498,7 +496,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		if ( knockbackTimer_[ i ] >= 1 && knockbackTimer_[ i ] <= 10 )
 		{
 			//右側にノックバック
-			const float posSpeed = 0.03f;
+			const float posSpeed = 0.04f;
 			Obj_[ i ]->wtf.position.x += posSpeed;
 		}
 		const float KbOver = 11.0f;
@@ -1008,27 +1006,26 @@ void BikeEnemy::BikeEnemyAction()
 	{
 		if ( isBackEntryFlag_[ i ] == 1 && isBikclushFlag_[ i ] == 0 )
 		{
-			if ( standardPos == i )
+			if ( player_->standardCamera == 0 )
 			{
-				if ( player_->standardCamera == 0 )
+				if ( Obj_[ i ]->wtf.position.z <= -3.0f )
 				{
-					if ( Obj_[ i ]->wtf.position.z <= -3.0f )
-					{
-						player_->standardCamera = 1;
-					}
-
+					player_->standardCamera = 1;
 				}
 
-				if ( player_->standardCamera == 1 )
+			}
+
+			if ( player_->standardCamera == 1 )
+			{
+				if ( Obj_[ i ]->wtf.position.z >= 3.0f )
 				{
-					if ( Obj_[ i ]->wtf.position.z >= 3.0f )
-					{
-						player_->standardCamera = 0;
-					}
+					player_->standardCamera = 0;
 				}
 			}
+			
 		}
-		//移動制限
+		
+		//移動制限(上下)
 		if ( isBackEntryFlag_[ i ] == 1 && isBikclushFlag_[ i ] == 0 )
 		{
 			if ( Obj_[ i ]->wtf.position.z <= -8.0f )
@@ -1040,12 +1037,31 @@ void BikeEnemy::BikeEnemyAction()
 				Obj_[ i ]->wtf.position.z = 10.0f;
 			}
 		}
-		//ウェーブの一番自機に近いやつがカメラの主導権を握る
-		if ( isBikclushFlag_[ i ] == 1 )
+		//カメラが寄ってる時の移動制限(左右)
+		if ( player_->standardCamera == 0 )
 		{
-			standardPos = i + 1;
-			player_->standardCamera = 0;
+			if ( Obj_[ i ]->wtf.position.x <= -5.0f )
+			{
+				Obj_[ i ]->wtf.position.x = -5.0f;
+			}
+			if ( Obj_[ i ]->wtf.position.x >= 5.0f )
+			{
+				Obj_[ i ]->wtf.position.x = 5.0f;
+			}
 		}
+		//カメラが離れている時の移動制限(左右)
+		if ( player_->standardCamera == 0 )
+		{
+			if ( Obj_[ i ]->wtf.position.x <= -8.0f )
+			{
+				Obj_[ i ]->wtf.position.x = -8.0f;
+			}
+			if ( Obj_[ i ]->wtf.position.x >= 8.0f )
+			{
+				Obj_[ i ]->wtf.position.x = 8.0f;
+			}
+		}
+		
 	}
 
 

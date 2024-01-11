@@ -513,7 +513,7 @@ void Player::Draw() {
 	}
 
 	if ( retdisplay == true && isClearFlag == false && OperationbbTimer2 >= 60 ){
-		/*retObj_->Draw();*/
+		retObj_->Draw();
 		retVisualObj_->Draw();
 	}
 
@@ -1085,8 +1085,9 @@ void Player::PlayerAction()
 		isboostFlag = 0;
 	}
 
-	if ( input_->PushKey(DIK_W) || input_->StickInput(L_UP) && isRightAtFlag == false && isLeftAtFlag == false && isAtTimerFlag == false )
+	if ( input_->PushKey(DIK_W) && isRightAtFlag == false && isLeftAtFlag == false && isAtTimerFlag == false )
 	{
+		/*&& input_->StickInput(L_UP)*/
 		isAccelFlag = true;
 	}
 	else
