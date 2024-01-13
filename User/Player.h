@@ -352,7 +352,8 @@ public:
 	//敵が自機より後ろにいるときカメラを少し下げる
 	int standardCamera = 0;
 	int moveCamera = 0;
-
+	int cameraResetTimer = 0;
+	int BossCameraResetTimer = 0;
 	//操作説明
 	//1ステージ
 	Sprite* operationUI = nullptr;
