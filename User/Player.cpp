@@ -369,7 +369,7 @@ void Player::Update() {
 	if ( isclearFlagTimer >= 100 ){isclearFlagTimer = 100;}
 
 	//ボス登場時のカメラ
-	if ( isRoundFlag == 9 ){
+	if ( BossCameraResetTimer == 80 ){
 		if ( isCameraBehavior == 0 )
 		{
 			isCameraBehavior = 1;
@@ -413,8 +413,42 @@ void Player::Update() {
 		}
 	}
 
+	//カメラリセット(最初のチュートリアル)
+	if ( isDeadEnemy >= 2 )
+	{
+		cameraResetTimer++;
+		if ( cameraResetTimer >= 1 && cameraResetTimer <= 2 )
+		{
+			if ( standardCamera == 1 )
+			{
+				standardCamera = 0;
+			}
+		}
+		if ( cameraResetTimer <= 3 )
+		{
+			cameraResetTimer = 3;
+		}
+	}
+	//カメラリセット(ボス前)
+	if ( isRoundFlag == 9 )
+	{
+		BossCameraResetTimer++;
+		if ( BossCameraResetTimer >= 1 && BossCameraResetTimer <= 2 )
+		{
+			if ( standardCamera == 1 )
+			{
+				standardCamera = 0;
+			}
+		}
+		if ( BossCameraResetTimer >= 80 )
+		{
+			BossCameraResetTimer = 80;
+		}
+	}
+
 	//ラウンド変化(2ラウンド目)
 	if ( isDeadEnemy == 2 ){
+		
 		isRoundFlag = 1;
 		waveTimer2++;
 	}
