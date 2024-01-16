@@ -547,7 +547,7 @@ void Player::Draw() {
 	}
 
 	if ( retdisplay == true && isClearFlag == false && OperationbbTimer2 >= 60 ){
-		retObj_->Draw();
+		/*retObj_->Draw();*/
 		retVisualObj_->Draw();
 	}
 
@@ -1307,7 +1307,7 @@ void Player::EffSummary2(Vector3 bulletpos2)
 void Player::EffSummaryAccelR(Vector3 bulletpos3)
 {
 	//パーティクル範囲
-	for ( int i = 0; i < 5; i++ )
+	for ( int i = 0; i < 50; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
 		const float rnd_pos3G = 0.0f;
@@ -1345,7 +1345,7 @@ void Player::EffSummaryAccelR(Vector3 bulletpos3)
 void Player::EffSummaryAccelL(Vector3 bulletpos4)
 {
 	//パーティクル範囲
-	for ( int i = 0; i < 5; i++ )
+	for ( int i = 0; i < 50; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
 		const float rnd_pos4G = 0.0f;
