@@ -32,6 +32,8 @@ public:
 	void EffSummary(Vector3 bulletpos,int num);
 	void DamageLeftSummary(Vector3 firepos,int num);
 	void DamageRightSummary(Vector3 firepos,int num);
+	void DamageSmokeSummary(Vector3 smokepos);
+
 	//エフェクトの描画
 	void EffDraw();
 
@@ -155,5 +157,9 @@ private:
 	int DamageRightEffTimer_[ 9 ] = { 0 };
 	int isDamageRightEffFlag_[ 9 ] = { 0 };
 
+	//体力少ないときに煙出る
+	std::unique_ptr<ParticleManager> smokeParticle_;
+	int smokeEffTimer_ = 0;
+	int isSmokeEffFlag_ = 0;
 };
 
