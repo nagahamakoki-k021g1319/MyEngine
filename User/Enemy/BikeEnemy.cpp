@@ -144,7 +144,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	//煙
 	smokeParticle_ = std::make_unique<ParticleManager>();
 	smokeParticle_.get()->Initialize();
-	smokeParticle_->LoadTexture("gas.png");
+	smokeParticle_->LoadTexture("blaze.png");
 	smokeParticle_->Update();
 
 }
@@ -696,7 +696,8 @@ void BikeEnemy::EffUpdate()
 	}
 	if ( smokeEffTimer_ <= 10 && smokeEffTimer_ >= 0 )
 	{
-		DamageSmokeSummary(Vector3(Obj_[0]->wtf.position.x - 2.0f,Obj_[0]->wtf.position.y + 0.5f,Obj_[0]->wtf.position.z - 0.2f));
+		/*float posX = 0.0f;*/
+		DamageSmokeSummary(Vector3(Obj_[0]->wtf.position.x,Obj_[0]->wtf.position.y + 0.7f,Obj_[0]->wtf.position.z - 1.0f));
 	}
 	if ( smokeEffTimer_ >= 10 )
 	{
@@ -821,12 +822,12 @@ void BikeEnemy::DamageRightSummary(Vector3 firepos,int num)
 void BikeEnemy::DamageSmokeSummary(Vector3 smokepos)
 {
 	//パーティクル範囲
-	for ( int i = 0; i < 100; i++ )
+	for ( int i = 0; i < 200; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_posG = 0.0f;
-		const float rnd_posGy = 0.0f;
-		const float rnd_posGz = 0.0f;
+		const float rnd_posG  = 0.1f;
+		const float rnd_posGy = 0.1f;
+		const float rnd_posGz = 0.1f;
 		Vector3 posG{};
 		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
 		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
@@ -835,7 +836,7 @@ void BikeEnemy::DamageSmokeSummary(Vector3 smokepos)
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 		const float rnd_velG = 0.0f;
-		const float rnd_velGy = -0.07f;
+		const float rnd_velGy = -0.04f;
 		const float rnd_velGz = 0.0f;
 		Vector3 velG{};
 		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
