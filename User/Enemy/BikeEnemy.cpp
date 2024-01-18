@@ -141,11 +141,29 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		DamageRightParticle_[ i ]->LoadTexture("fire.png");
 		DamageRightParticle_[ i ]->Update();
 	}
-	//煙
+
+	//煙(体力半分)
 	smokeParticle_ = std::make_unique<ParticleManager>();
 	smokeParticle_.get()->Initialize();
-	smokeParticle_->LoadTexture("blaze.png");
+	smokeParticle_->LoadTexture("gas.png");
 	smokeParticle_->Update();
+
+	//煙(体力ミリ)
+	blazeParticle_ = std::make_unique<ParticleManager>();
+	blazeParticle_.get()->Initialize();
+	blazeParticle_->LoadTexture("blaze.png");
+	blazeParticle_->Update();
+
+	blazeSmokeParticle_ = std::make_unique<ParticleManager>();
+	blazeSmokeParticle_.get()->Initialize();
+	blazeSmokeParticle_->LoadTexture("gas.png");
+	blazeSmokeParticle_->Update();
+
+	//やられた時の炎
+	heatParticle_ = std::make_unique<ParticleManager>();
+	heatParticle_.get()->Initialize();
+	heatParticle_->LoadTexture("blaze.png");
+	heatParticle_->Update();
 
 }
 
@@ -532,7 +550,21 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 			isbulletEffFlag_[ i ] = 1;
 		}
 	}
-	isSmokeEffFlag_ = 1;
+
+	if ( HP_[0] <= 0 )
+	{
+		isHeatEffFlag_ = 1;
+	}
+
+
+	if ( isHit_[ 0 ] >= 5 && isHit_[ 0 ] <= 10 )
+	{
+		isSmokeEffFlag_ = 1;
+	}
+	if ( isHit_[ 0 ] >= 10 && isHit_[ 0 ] >= 19 )
+	{
+		isBlazeEffFlag_ = 1;
+	}
 
 	//バイクが前進しながら倒れる
 	for ( int i = 0; i < 9; i++ )
@@ -590,6 +622,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	}
 
 	ImGui::Begin("bikeEnemy");
+	ImGui::Text("isHit_[0]:%d",isHit_[0]);
 	ImGui::Text("position_:%f,%f,%f",Obj_[ 1 ]->wtf.position.x,Obj_[ 1 ]->wtf.position.y,Obj_[ 1 ]->wtf.position.z);
 	ImGui::End();
 	/*ImGui::Text("HP:%d",HP_[ 0 ]);
@@ -690,19 +723,91 @@ void BikeEnemy::EffUpdate()
 		}
 	}
 	//煙
-	if ( isSmokeEffFlag_ == 1 )
-	{
-		smokeEffTimer_++;
-	}
+	if ( isSmokeEffFlag_ == 1 ){smokeEffTimer_++;}
 	if ( smokeEffTimer_ <= 10 && smokeEffTimer_ >= 0 )
 	{
-		/*float posX = 0.0f;*/
-		DamageSmokeSummary(Vector3(Obj_[0]->wtf.position.x,Obj_[0]->wtf.position.y + 0.7f,Obj_[0]->wtf.position.z - 1.0f));
+		
+		if ( isRushFlag_[0] == 1 ){
+			//右に突進
+			smokePosX = collRightObj_[ 0 ]->wtf.position.x - 0.4f;
+		}
+		else if ( isRushFlag_[ 0 ] == 4 ){
+			//左に突進
+			smokePosX = collLeftObj_[0]->wtf.position.x + 0.4f;
+		}
+		else{
+			smokePosX = Obj_[ 0 ]->wtf.position.x;
+		}
+
+		DamageSmokeSummary(Vector3(smokePosX,Obj_[0]->wtf.position.y + 0.7f,Obj_[0]->wtf.position.z - 1.0f));
 	}
 	if ( smokeEffTimer_ >= 10 )
 	{
 		isSmokeEffFlag_ = 0;
 		smokeEffTimer_ = 0;
+	}
+
+	//煙(体力ミリ)
+	if ( isBlazeEffFlag_ == 1 )
+	{
+		blazeEffTimer_++;
+	}
+	if ( blazeEffTimer_ <= 10 && blazeEffTimer_ >= 0 )
+	{
+
+		if ( isRushFlag_[ 0 ] == 1 )
+		{
+			//右に突進
+			blazePosX = collRightObj_[ 0 ]->wtf.position.x - 0.4f;
+		}
+		else if ( isRushFlag_[ 0 ] == 4 )
+		{
+			//左に突進
+			blazePosX = collLeftObj_[ 0 ]->wtf.position.x + 0.4f;
+		}
+		else
+		{
+			blazePosX = Obj_[ 0 ]->wtf.position.x;
+		}
+
+		DamageBlazeSummary(Vector3(blazePosX,Obj_[ 0 ]->wtf.position.y + 0.7f,Obj_[ 0 ]->wtf.position.z - 1.0f));
+		DamageBlazeSmokeSummary(Vector3(blazePosX,Obj_[ 0 ]->wtf.position.y + 0.7f,Obj_[ 0 ]->wtf.position.z - 1.0f));
+	}
+	if ( blazeEffTimer_ >= 10 )
+	{
+		isBlazeEffFlag_ = 0;
+		blazeEffTimer_ = 0;
+	}
+
+	//やられた時の炎
+	if ( isHeatEffFlag_ == 1 )
+	{
+		heatEffTimer_++;
+	}
+	if ( heatEffTimer_ <= 10 && heatEffTimer_ >= 0 )
+	{
+
+		if ( isRushFlag_[ 0 ] == 1 )
+		{
+			//右に突進
+			heatPosX = collRightObj_[ 0 ]->wtf.position.x - 0.4f;
+		}
+		else if ( isRushFlag_[ 0 ] == 4 )
+		{
+			//左に突進
+			heatPosX = collLeftObj_[ 0 ]->wtf.position.x + 0.4f;
+		}
+		else
+		{
+			heatPosX = Obj_[ 0 ]->wtf.position.x;
+		}
+
+		DamageHeatSummary(Vector3(heatPosX,Obj_[ 0 ]->wtf.position.y,Obj_[ 0 ]->wtf.position.z));
+	}
+	if ( heatEffTimer_ >= 10 )
+	{
+		isHeatEffFlag_ = 0;
+		heatEffTimer_ = 0;
 	}
 
 
@@ -836,7 +941,7 @@ void BikeEnemy::DamageSmokeSummary(Vector3 smokepos)
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 		const float rnd_velG = 0.0f;
-		const float rnd_velGy = -0.04f;
+		const float rnd_velGy = -0.03f;
 		const float rnd_velGz = 0.0f;
 		Vector3 velG{};
 		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
@@ -854,6 +959,119 @@ void BikeEnemy::DamageSmokeSummary(Vector3 smokepos)
 		smokeParticle_->Update();
 
 	}
+}
+
+void BikeEnemy::DamageBlazeSummary(Vector3 blazepos)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 200; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_posG = 0.05f;
+		const float rnd_posGy = 0.05f;
+		const float rnd_posGz = 0.05f;
+		Vector3 posG{};
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG += blazepos;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_velG = 0.0f;
+		const float rnd_velGy = -0.03f;
+		const float rnd_velGz = 0.0f;
+		Vector3 velG{};
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 1.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_accG = 0.000001f;
+		Vector3 accG{};
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+
+		//追加
+		blazeParticle_->Add(60,posG,velG,accG,0.1f,0.0f);
+
+		blazeParticle_->Update();
+
+	}
+}
+
+void BikeEnemy::DamageBlazeSmokeSummary(Vector3 blazesmokepos)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 200; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_posG = 0.1f;
+		const float rnd_posGy = 0.1f;
+		const float rnd_posGz = 0.1f;
+		Vector3 posG{};
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG += blazesmokepos;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_velG = 0.0f;
+		const float rnd_velGy = -0.04f;
+		const float rnd_velGz = 0.0f;
+		Vector3 velG{};
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 1.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_accG = 0.000001f;
+		Vector3 accG{};
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+
+		//追加
+		blazeSmokeParticle_->Add(60,posG,velG,accG,0.2f,0.0f);
+
+		blazeSmokeParticle_->Update();
+
+	}
+
+}
+
+void BikeEnemy::DamageHeatSummary(Vector3 heatpos)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 200; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_posG = 0.3f;
+		const float rnd_posGy = 0.3f;
+		const float rnd_posGz = 0.3f;
+		Vector3 posG{};
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG += heatpos;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_velG = 0.0f;
+		const float rnd_velGy = -0.07f;
+		const float rnd_velGz = 0.0f;
+		Vector3 velG{};
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 1.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_accG = 0.000001f;
+		Vector3 accG{};
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+
+		//追加
+		heatParticle_->Add(60,posG,velG,accG,0.4f,0.0f);
+
+		heatParticle_->Update();
+
+	}
+
 }
 
 void BikeEnemy::EffDraw()
@@ -883,12 +1101,24 @@ void BikeEnemy::EffDraw()
 		}
 	}
 
-	//火花(左側)
+	//煙(体力半分)
 	if ( isSmokeEffFlag_ == 1 && smokeEffTimer_ <= 10 && smokeEffTimer_ >= 1 )
 	{
 		smokeParticle_->Draw();
 	}
 
+	//煙(体力ミリ)
+	if ( isBlazeEffFlag_ == 1 && blazeEffTimer_ <= 10 && blazeEffTimer_ >= 1 )
+	{
+		blazeSmokeParticle_->Draw();
+		blazeParticle_->Draw();
+	}
+
+	//やられた時の炎
+	if ( isHeatEffFlag_ == 1 && heatEffTimer_ <= 10 && heatEffTimer_ >= 1 )
+	{
+		heatParticle_->Draw();
+	}
 }
 
 Vector3 BikeEnemy::GetWorldPosition()

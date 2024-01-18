@@ -33,6 +33,9 @@ public:
 	void DamageLeftSummary(Vector3 firepos,int num);
 	void DamageRightSummary(Vector3 firepos,int num);
 	void DamageSmokeSummary(Vector3 smokepos);
+	void DamageBlazeSummary(Vector3 blazepos);
+	void DamageBlazeSmokeSummary(Vector3 blazesmokepos);
+	void DamageHeatSummary(Vector3 heatpos);
 
 	//エフェクトの描画
 	void EffDraw();
@@ -157,9 +160,25 @@ private:
 	int DamageRightEffTimer_[ 9 ] = { 0 };
 	int isDamageRightEffFlag_[ 9 ] = { 0 };
 
-	//体力少ないときに煙出る
+	//体力少ないときに煙出る(体力半分)
 	std::unique_ptr<ParticleManager> smokeParticle_;
 	int smokeEffTimer_ = 0;
 	int isSmokeEffFlag_ = 0;
+	float smokePosX = 0.0f;
+
+	//体力少ないときに煙出る(体力ミリ)
+	std::unique_ptr<ParticleManager> blazeParticle_;
+	std::unique_ptr<ParticleManager> blazeSmokeParticle_;
+	int blazeEffTimer_ = 0;
+	int isBlazeEffFlag_ = 0;
+	float blazePosX = 0.0f;
+
+	//やられたときにでる炎
+	std::unique_ptr<ParticleManager> heatParticle_;
+	int heatEffTimer_ = 0;
+	int isHeatEffFlag_ = 0;
+	float heatPosX = 0.0f;
+
+
 };
 
