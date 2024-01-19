@@ -561,7 +561,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	{
 		isSmokeEffFlag_ = 1;
 	}
-	if ( isHit_[ 0 ] >= 10 && isHit_[ 0 ] >= 19 )
+	else if ( isHit_[ 0 ] >= 11 && isHit_[ 0 ] <= 19 )
 	{
 		isBlazeEffFlag_ = 1;
 	}
