@@ -1246,7 +1246,7 @@ void Player::EffSummary(Vector3 bulletpos)
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 		const float rnd_velG = 0.0f;
 		const float rnd_velGy = 0.0f;
-		const float rnd_velGz = 0.05f;
+		const float rnd_velGz = 0.02f;
 		Vector3 velG{};
 		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
 		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
@@ -1284,7 +1284,7 @@ void Player::EffSummary2(Vector3 bulletpos2)
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 		const float rnd_vel2 = 0.0f;
 		const float rnd_vely2 = 0.0f;
-		const float rnd_velz2 = 0.05f;
+		const float rnd_velz2 = 0.02f;
 		Vector3 vel2{};
 		vel2.x = ( float ) rand() / RAND_MAX * rnd_vel2 - rnd_vel2 / 2.0f;
 		vel2.y = ( float ) rand() / RAND_MAX * rnd_vely2 - rnd_vely2 / 2.0f;
@@ -1334,7 +1334,7 @@ void Player::EffSummaryAccelR(Vector3 bulletpos3)
 		acc3G.y = ( float ) rand() / RAND_MAX * rnd_acc3G - rnd_acc3G / 2.0f;
 
 		//追加
-		gasParticleAccelR->Add(60,pos3G,vel3G,acc3G,0.05f,0.0f);
+		gasParticleAccelR->Add(60,pos3G,vel3G,acc3G,0.07f,0.0f);
 
 		gasParticleAccelR->Update();
 
@@ -1372,7 +1372,7 @@ void Player::EffSummaryAccelL(Vector3 bulletpos4)
 		acc4G.y = ( float ) rand() / RAND_MAX * rnd_acc4G - rnd_acc4G / 2.0f;
 
 		//追加
-		gasParticleAccelL->Add(60,pos4G,vel4G,acc4G,0.05f,0.0f);
+		gasParticleAccelL->Add(60,pos4G,vel4G,acc4G,0.07f,0.0f);
 
 		gasParticleAccelL->Update();
 
