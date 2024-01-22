@@ -142,7 +142,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		DamageRightParticle_[ i ]->Update();
 
 
-	//煙(体力半分)
+		//煙(体力半分)
 		smokeParticle_[ i ] = std::make_unique<ParticleManager>();
 		smokeParticle_[ i ].get()->Initialize();
 		smokeParticle_[ i ]->LoadTexture("gas.png");
@@ -170,7 +170,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 }
 
-void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRightPos,bool isCollSWRightFlag,Vector3 playerRPos,Vector3 playerLPos)
+void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRightPos,bool isCollSWRightFlag,Vector3 playerRPos,Vector3 playerLPos,Vector3 BlockPos)
 {
 	for ( int i = 0; i < 9; i++ )
 	{

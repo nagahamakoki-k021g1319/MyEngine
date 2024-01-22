@@ -22,7 +22,7 @@ public:
 	~BikeEnemy();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
-	void Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRightPos,bool isCollSWRightFlag,Vector3 playerRPos,Vector3 playerLPos);
+	void Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRightPos,bool isCollSWRightFlag,Vector3 playerRPos,Vector3 playerLPos,Vector3 BlockPos);
 
 	void Draw();
 
@@ -145,6 +145,10 @@ private:
 
 	//生きているバイク兵で後ろに近いやつを基準にカメラを少し下げる(数字はバイク兵の番号)
 	int standardPos = 0;
+
+	//障害物用に当たり判定
+	Object3d* collBlockObj_[20] = { 0 };
+	Model* collBlockModel_[20] = { 0 };
 
 	//パーティクル
 	//地面のズサ
