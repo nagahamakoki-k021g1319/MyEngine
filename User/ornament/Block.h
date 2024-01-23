@@ -15,6 +15,8 @@
 #include "ImGuiManager.h"
 
 class Player;
+class BikeEnemy;
+
 
 class Block
 {
@@ -41,8 +43,14 @@ public:
 	//障害物の初期値
 	void InitialPosition();
 
+	Vector3 GetWorldPosition();
+
 	void SetPlayer(Player* player) {
 		player_ = player;
+	};
+
+	void SetBikeEnemy(BikeEnemy* bikeEnemy) {
+		bikeEnemy_ = bikeEnemy;
 	};
 
 private:
@@ -53,6 +61,7 @@ private:
 	SpriteCommon* spriteCommon = nullptr;
 	Collision coll;
 	Player* player_ = nullptr;
+	BikeEnemy* bikeEnemy_ = nullptr;
 
 	int isGameStartTimer = 0;
 
@@ -60,20 +69,21 @@ private:
 	Object3d* collObj_ = nullptr;
 	Model* collModel_ = nullptr;
 
+
 	//木箱
 	Object3d* boxObj_[12] = {0};
 	Model* boxModel_[12] = { 0 };
-	//障害物に当たった時に散らばるフラグ
-	//木箱
-	int isBoxScatterFlag_[12] = { 0 };
-	//木箱散らばるタイマー
-	int boxScattertimer_[12] = { 0 };
 
 	//三角コーン
 	Object3d* konObj_[8] = { 0 };
 	Model* konModel_[8] = { 0 };
 
+public:
 	//障害物に当たった時に散らばるフラグ
+	//木箱
+	int isBoxScatterFlag_[ 12 ] = { 0 };
+	//木箱散らばるタイマー
+	int boxScattertimer_[ 12 ] = { 0 };
 	//三角コーン
 	int isKonScatterFlag_[8] = { 0 };
 	//三角コーン散らばるタイマー

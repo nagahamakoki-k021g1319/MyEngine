@@ -287,6 +287,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	bikeEnemy_ = new BikeEnemy();
 	bikeEnemy_->Initialize(dxCommon,input);
 	bikeEnemy_->SetPlayer(player_);
+	bikeEnemy_->SetBlock(block_);
 
 	bossEnemy_ = new BossEnemy();
 	bossEnemy_->Initialize(dxCommon,input);
@@ -300,6 +301,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	block_ = new Block();
 	block_->Initialize(dxCommon,input);
 	block_->SetPlayer(player_);
+	block_->SetBikeEnemy(bikeEnemy_);
 	//--------------------//
 
 
@@ -318,6 +320,7 @@ void GameScene::Reset() {
 void GameScene::Update() {
 	mainCamera->Update();
 	/*light->Update();*/
+
 	if (sceneNo_ == SceneNo::Title) {
 		spintimer++;
 		stTimer++;
@@ -393,7 +396,9 @@ void GameScene::Update() {
 		bikeEnemy_->Update(
 			player_->GetSwordLeftWorldPosition(),player_->isCollSWFlag,
 			player_->GetSwordRightWorldPosition(),player_->isCollSWRightFlag,
-			player_->GetCollRightWorldPosition(),player_->GetCollLeftWorldPosition());
+			player_->GetCollRightWorldPosition(),player_->GetCollLeftWorldPosition(),
+			block_->GetWorldPosition()
+		);
 		bossEnemy_->Update( player_->GetWorldPosition(), player_->GetBulletWorldPosition());
 
 		skydome->Update();

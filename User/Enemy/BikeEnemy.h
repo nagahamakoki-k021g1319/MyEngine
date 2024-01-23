@@ -11,9 +11,11 @@
 #include "ParticleManager.h"
 #include "Audio.h"
 
+
 #include "ImGuiManager.h"
 
 class Player;
+class Block;
 
 class BikeEnemy
 {
@@ -56,12 +58,17 @@ public:
 		player_ = player;
 	};
 
+	void SetBlock(Block* block) {
+		block_ = block;
+	};
+
 private:
 	const float PI = 3.141592f;
 	Input* input_ = nullptr;
 	DirectXCommon* dxCommon_ = nullptr;
 	Audio* audio = nullptr;
 	Player* player_ = nullptr;
+	Block* block_ = nullptr;
 	SpriteCommon* spriteCommon = nullptr;
 	Collision coll;
 
@@ -146,10 +153,6 @@ private:
 	//生きているバイク兵で後ろに近いやつを基準にカメラを少し下げる(数字はバイク兵の番号)
 	int standardPos = 0;
 
-	//障害物用に当たり判定
-	Object3d* collBlockObj_[20] = { 0 };
-	Model* collBlockModel_[20] = { 0 };
-
 	//パーティクル
 	//地面のズサ
 	std::unique_ptr<ParticleManager> gasParticle_[ 9 ];
@@ -184,5 +187,17 @@ private:
 	int heatEffTimer_[ 9 ] = { 0 };
 	int isHeatEffFlag_[ 9 ] = { 0 };
 	float heatPosX_[ 9 ] = {0.0f};
+
+
+public:
+	//障害物用に当たり判定(判定を少し前に出す)
+	//箱
+	Object3d* collBoxObj_[ 3 ] = { 0 };
+	Model* collBlockModel_ = nullptr;
+	int isBoxFlag_[3] = {0};
+	//コーン
+	Object3d* collKonObj_[ 2 ] = { 0 };
+
+
 
 };
