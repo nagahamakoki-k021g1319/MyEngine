@@ -1,5 +1,6 @@
 #include "Block.h"
 #include "Player.h"
+#include "Enemy/BikeEnemy.h"
 
 Block::Block()
 {
@@ -153,6 +154,13 @@ void Block::Update(Vector3 playerPos)
 		}
 	}
 
+	for ( int i = 0; i < 3; i++ )
+	{
+		if ( bikeEnemy_->isBoxFlag_[i] == 1 )
+		{
+			isBoxScatterFlag_[i] = 1;
+		}
+	}
 
 	//三角コーンが散らばる
 	for ( int i = 0; i < 8; i++ )
@@ -227,8 +235,8 @@ void Block::InitialPosition()
 	boxObj_[ 1 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x + 0.3f,-2.0f,boxObj_[ 0 ]->wtf.position.z };
 	boxObj_[ 2 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x -0.3f,-2.0f,boxObj_[ 0 ]->wtf.position.z };
 
-	konObj_[ 0 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x +0.5f, -2.0f,boxObj_[ 0 ]->wtf.position.z - 1.0f };
-	konObj_[ 1 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x -0.5f,-2.0f, boxObj_[ 0 ]->wtf.position.z - 1.0f };
+	konObj_[ 0 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x + 0.5f, -2.0f,boxObj_[ 0 ]->wtf.position.z - 1.0f };
+	konObj_[ 1 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x - 0.5f,-2.0f, boxObj_[ 0 ]->wtf.position.z - 1.0f };
 
 	//2番目の障害物
 	boxObj_[ 3 ]->wtf.position = { 1.5f,-1.5f,201.0f };
@@ -254,4 +262,18 @@ void Block::InitialPosition()
 	konObj_[ 6 ]->wtf.position = { boxObj_[ 9 ]->wtf.position.x + 0.5f,-2.0f,boxObj_[ 9 ]->wtf.position.z - 1.0f };
 	konObj_[ 7 ]->wtf.position = { boxObj_[ 9 ]->wtf.position.x -0.5f,-2.0f,boxObj_[ 9 ]->wtf.position.z - 1.0f };
 
+}
+
+Vector3 Block::GetWorldPosition()
+{
+	//ワールド座標を入れる変数
+	Vector3 worldPos;
+
+	boxObj_[ 0 ]->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	worldPos.x = boxObj_[ 0 ]->wtf.matWorld.m[ 3 ][ 0 ];
+	worldPos.y = boxObj_[ 0 ]->wtf.matWorld.m[ 3 ][ 1 ];
+	worldPos.z = boxObj_[ 0 ]->wtf.matWorld.m[ 3 ][ 2 ];
+
+	return worldPos;
 }
