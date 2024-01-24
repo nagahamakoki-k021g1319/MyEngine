@@ -154,13 +154,7 @@ void Block::Update(Vector3 playerPos)
 		}
 	}
 
-	for ( int i = 0; i < 3; i++ )
-	{
-		if ( bikeEnemy_->isBoxFlag_[i] == 1 )
-		{
-			isBoxScatterFlag_[i] = 1;
-		}
-	}
+	
 
 	//三角コーンが散らばる
 	for ( int i = 0; i < 8; i++ )
@@ -205,7 +199,22 @@ void Block::Update(Vector3 playerPos)
 		}
 	}
 
+	//当たり判定
+	for ( int i = 0; i < 3; i++ )
+	{
+		if ( bikeEnemy_->isBoxFlag_[ i ] == 1 )
+		{
+			isBoxScatterFlag_[ i ] = 1;
+		}
+	}
 
+	for ( int i = 0; i < 2; i++ )
+	{
+		if ( bikeEnemy_->isKonFlag_[ i ] == 1 )
+		{
+			isKonScatterFlag_[ i ] = 1;
+		}
+	}
 
 }
 
