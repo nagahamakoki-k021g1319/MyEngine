@@ -37,7 +37,7 @@ BikeEnemy::~BikeEnemy()
 
 	//木箱の当たり判定モデル
 	delete collBlockModel_;
-	for ( int i = 0; i < 3; i++ )
+	for ( int i = 0; i < 12; i++ )
 	{
 		delete collBoxObj_[i];
 	}
@@ -185,7 +185,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 	//障害物用の当たり判定モデル
 	collBlockModel_ = Model::LoadFromOBJ("collboll");
-	for ( int i = 0; i < 3; i++ )
+	for ( int i = 0; i < 12; i++ )
 	{
 		collBoxObj_[ i ] = Object3d::Create();
 		collBoxObj_[ i ]->SetModel(collBlockModel_);
@@ -227,13 +227,20 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		collRushObjL_[ i ]->wtf.position = { playerRPos.x - i + 0.5f,playerRPos.y - 0.5f,playerRPos.z };
 	}
 	//木箱用当たり判定モデル
-	for ( int i = 0; i < 3; i++ )
+	for ( int i = 0; i < 12; i++ )
 	{
 		collBoxObj_[ i ]->Update();
 		collBoxObj_[i]->wtf.position = { BlockPos };
 	}
 	collBoxObj_[ 1 ]->wtf.position = { collBoxObj_[0]->wtf.position.x + 0.3f, collBoxObj_[ 0 ]->wtf.position.y-0.5f, collBoxObj_[ 0 ]->wtf.position.z};
 	collBoxObj_[ 2 ]->wtf.position = { collBoxObj_[0]->wtf.position.x - 0.3f, collBoxObj_[ 0 ]->wtf.position.y - 0.5f, collBoxObj_[ 0 ]->wtf.position.z };
+
+	collBoxObj_[3]->wtf.position = { collBoxObj_[ 0 ]->wtf.position.x + 1.5f, collBoxObj_[ 0 ]->wtf.position.y, collBoxObj_[ 0 ]->wtf.position.z + 100.0f};
+	collBoxObj_[4]->wtf.position = { collBoxObj_[3]->wtf.position.x + 0.3f, collBoxObj_[3]->wtf.position.y - 0.5f, collBoxObj_[3]->wtf.position.z };
+	collBoxObj_[5]->wtf.position = { collBoxObj_[3]->wtf.position.x - 0.3f, collBoxObj_[3]->wtf.position.y - 0.5f, collBoxObj_[3]->wtf.position.z };
+
+	collBoxObj_[6]->wtf.position = { collBoxObj_[ 0 ]->wtf.position.x + 1.5f, collBoxObj_[ 0 ]->wtf.position.y, collBoxObj_[ 0 ]->wtf.position.z + 100.0f };
+
 	//コーン用当たり判定モデル
 	for ( int i = 0; i < 2; i++ )
 	{
@@ -603,6 +610,15 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 					isBoxFlag_[j] = 1;
 				}
 			}
+
+			for ( int k = 0; k < 2; k++ )
+			{
+				if ( coll.CircleCollision(collKonObj_[k]->wtf.position,collFrontObj_[ i ]->wtf.position,0.6f,0.6f) )
+				{
+					isKonFlag_[k] = 1;
+				}
+			}
+
 		}
 	}
 

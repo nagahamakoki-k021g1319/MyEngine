@@ -192,12 +192,12 @@ private:
 public:
 	//障害物用に当たり判定(判定を少し前に出す)
 	//箱
-	Object3d* collBoxObj_[ 3 ] = { 0 };
+	Object3d* collBoxObj_[12] = { 0 };
 	Model* collBlockModel_ = nullptr;
-	int isBoxFlag_[3] = {0};
+	int isBoxFlag_[12] = {0};
 	//コーン
 	Object3d* collKonObj_[ 2 ] = { 0 };
-
+	int isKonFlag_[ 2 ] = { 0 };
 
 
 };
