@@ -24,7 +24,7 @@ public:
 	~BikeEnemy();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
-	void Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRightPos,bool isCollSWRightFlag,Vector3 playerRPos,Vector3 playerLPos,Vector3 BlockPos);
+	void Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollSWRFlag,Vector3 pRPos,Vector3 pLPos,Vector3 BPos,Vector3 BPos2,Vector3 BPos3,Vector3 BPos4);
 
 	void Draw();
 
@@ -188,16 +188,16 @@ private:
 	int isHeatEffFlag_[ 9 ] = { 0 };
 	float heatPosX_[ 9 ] = {0.0f};
 
-
-public:
 	//障害物用に当たり判定(判定を少し前に出す)
 	//箱
-	Object3d* collBoxObj_[12] = { 0 };
+	Object3d* collBoxObj_[ 12 ] = { 0 };
 	Model* collBlockModel_ = nullptr;
-	int isBoxFlag_[12] = {0};
+
 	//コーン
-	Object3d* collKonObj_[ 2 ] = { 0 };
-	int isKonFlag_[ 2 ] = { 0 };
+	Object3d* collKonObj_[ 8 ] = { 0 };
 
-
+public:
+	
+	int isBoxFlag_[ 12 ] = { 0 };
+	int isKonFlag_[ 8 ] = { 0 };
 };

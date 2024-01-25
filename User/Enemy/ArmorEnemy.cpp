@@ -118,6 +118,12 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		smokeParticle_[ i ].get()->Initialize();
 		smokeParticle_[ i ]->LoadTexture("smo.png");
 		smokeParticle_[ i ]->Update();
+
+		//たいりょく半分以下の煙
+		fumeParticle_[ i ] = std::make_unique<ParticleManager>();
+		fumeParticle_[ i ].get()->Initialize();
+		fumeParticle_[ i ]->LoadTexture("blaze.png");
+		fumeParticle_[ i ]->Update();
 	}
 
 	
@@ -331,6 +337,17 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 				isgasEffFlag_[ i ] = 0;
 				gasEffTimer_[ i ] = 0;
 			}
+
+			if ( HP_[ i ] >= 1 && HP_[ i ] <= 6 )
+			{
+				isFumeEffFlag_[ i ] = 1;
+			}
+			else
+			{
+				isFumeEffFlag_[ i ] = 0;
+			}
+
+
 		}
 	}
 
@@ -511,6 +528,22 @@ void ArmorEnemy::EffUpdate()
 			isgasEffFlag_[ i ] = 0;
 			gasEffTimer_[ i ] = 0;
 		}
+
+		//体力半分以下の煙
+		if ( isFumeEffFlag_[ i ] == 1 )
+		{
+			fumeEffTimer_[ i ]++;
+		}
+		if ( fumeEffTimer_[ i ] <= 10 && fumeEffTimer_[ i ] >= 0 )
+		{
+			DamagefumeSummary(Vector3(Obj_[ i ]->wtf.position.x + 0.5f,Obj_[ i ]->wtf.position.y + 2.5f,Obj_[ i ]->wtf.position.z),i);
+		}
+		if ( fumeEffTimer_[ i ] >= 10 )
+		{
+			isFumeEffFlag_[ i ] = 0;
+			fumeEffTimer_[ i ] = 0;
+		}
+
 
 		//ダメージ
 		if ( isdamEffFlag_[ i ] == 1 )
@@ -755,6 +788,43 @@ void ArmorEnemy::smokeSummary(Vector3 EnePos,int eneNum)
 	}
 }
 
+void ArmorEnemy::DamagefumeSummary(Vector3 fumepos,int num)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 10; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_posG = 0.1f;
+		const float rnd_posGy = 0.1f;
+		const float rnd_posGz = 0.1f;
+		Vector3 posG{};
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG += fumepos;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_velG = 0.0f;
+		const float rnd_velGy = -0.1f;
+		const float rnd_velGz = 0.0f;
+		Vector3 velG{};
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 1.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_accG = 0.000001f;
+		Vector3 accG{};
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+
+		//追加
+		fumeParticle_[ num ]->Add(60,posG,velG,accG,0.4f,0.0f);
+
+		fumeParticle_[ num ]->Update();
+
+	}
+}
+
 void ArmorEnemy::EffDraw()
 {
 	if ( isGameStartTimer >= 200 ){
@@ -780,6 +850,13 @@ void ArmorEnemy::EffDraw()
 			{
 				smokeParticle_[i]->Draw();
 			}
+
+			//体力半分以下の煙
+			if ( isFumeEffFlag_[ i ] == 1 && fumeEffTimer_[ i ] <= 10 && fumeEffTimer_[ i ] >= 1 )
+			{
+				fumeParticle_[ i ]->Draw();
+			}
+
 		}
 		
 	}

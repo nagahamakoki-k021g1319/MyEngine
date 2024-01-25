@@ -397,7 +397,7 @@ void GameScene::Update() {
 			player_->GetSwordLeftWorldPosition(),player_->isCollSWFlag,
 			player_->GetSwordRightWorldPosition(),player_->isCollSWRightFlag,
 			player_->GetCollRightWorldPosition(),player_->GetCollLeftWorldPosition(),
-			block_->GetWorldPosition()
+			block_->GetWorldPosition(),block_->GetWorldPosition2(),block_->GetWorldPosition3(),block_->GetWorldPosition4()
 		);
 		bossEnemy_->Update( player_->GetWorldPosition(), player_->GetBulletWorldPosition());
 

@@ -42,7 +42,7 @@ BikeEnemy::~BikeEnemy()
 		delete collBoxObj_[i];
 	}
 	//コーンの当たり判定モデル
-	for ( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 8; i++ )
 	{
 		delete collKonObj_[ i ];
 	}
@@ -191,7 +191,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		collBoxObj_[ i ]->SetModel(collBlockModel_);
 		collBoxObj_[ i ]->wtf.scale = { 0.4f,0.4f,0.4f };
 	}
-	for ( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 8; i++ )
 	{
 		collKonObj_[ i ] = Object3d::Create();
 		collKonObj_[ i ]->SetModel(collBlockModel_);
@@ -200,7 +200,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 }
 
-void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRightPos,bool isCollSWRightFlag,Vector3 playerRPos,Vector3 playerLPos,Vector3 BlockPos)
+void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollSWRFlag,Vector3 pRPos,Vector3 pLPos,Vector3 BPos,Vector3 BPos2,Vector3 BPos3,Vector3 BPos4)
 {
 	for ( int i = 0; i < 9; i++ )
 	{
@@ -222,32 +222,47 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	for ( int i = 0; i < 5; i++ )
 	{
 		collRushObj_[ i ]->Update();
-		collRushObj_[ i ]->wtf.position = { playerRPos.x + i + 0.5f,playerRPos.y - 0.5f,playerRPos.z };
+		collRushObj_[ i ]->wtf.position = { pRPos.x + i + 0.5f,pRPos.y - 0.5f,pRPos.z };
 		collRushObjL_[ i ]->Update();
-		collRushObjL_[ i ]->wtf.position = { playerRPos.x - i + 0.5f,playerRPos.y - 0.5f,playerRPos.z };
+		collRushObjL_[ i ]->wtf.position = { pRPos.x - i + 0.5f,pRPos.y - 0.5f,pRPos.z };
 	}
 	//木箱用当たり判定モデル
 	for ( int i = 0; i < 12; i++ )
 	{
 		collBoxObj_[ i ]->Update();
-		collBoxObj_[i]->wtf.position = { BlockPos };
 	}
-	collBoxObj_[ 1 ]->wtf.position = { collBoxObj_[0]->wtf.position.x + 0.3f, collBoxObj_[ 0 ]->wtf.position.y-0.5f, collBoxObj_[ 0 ]->wtf.position.z};
+	collBoxObj_[ 0 ]->wtf.position = { BPos };
+	collBoxObj_[ 1 ]->wtf.position = { collBoxObj_[0]->wtf.position.x + 0.3f, collBoxObj_[ 0 ]->wtf.position.y - 0.5f, collBoxObj_[ 0 ]->wtf.position.z};
 	collBoxObj_[ 2 ]->wtf.position = { collBoxObj_[0]->wtf.position.x - 0.3f, collBoxObj_[ 0 ]->wtf.position.y - 0.5f, collBoxObj_[ 0 ]->wtf.position.z };
 
-	collBoxObj_[3]->wtf.position = { collBoxObj_[ 0 ]->wtf.position.x + 1.5f, collBoxObj_[ 0 ]->wtf.position.y, collBoxObj_[ 0 ]->wtf.position.z + 100.0f};
+	collBoxObj_[3]->wtf.position = { BPos2 };
 	collBoxObj_[4]->wtf.position = { collBoxObj_[3]->wtf.position.x + 0.3f, collBoxObj_[3]->wtf.position.y - 0.5f, collBoxObj_[3]->wtf.position.z };
 	collBoxObj_[5]->wtf.position = { collBoxObj_[3]->wtf.position.x - 0.3f, collBoxObj_[3]->wtf.position.y - 0.5f, collBoxObj_[3]->wtf.position.z };
 
-	collBoxObj_[6]->wtf.position = { collBoxObj_[ 0 ]->wtf.position.x + 1.5f, collBoxObj_[ 0 ]->wtf.position.y, collBoxObj_[ 0 ]->wtf.position.z + 100.0f };
+	collBoxObj_[6]->wtf.position = { BPos3 };
+	collBoxObj_[7]->wtf.position = { collBoxObj_[6]->wtf.position.x + 0.3f, collBoxObj_[ 6 ]->wtf.position.y - 0.5f, collBoxObj_[ 6 ]->wtf.position.z };
+	collBoxObj_[8]->wtf.position = { collBoxObj_[6]->wtf.position.x - 0.3f, collBoxObj_[ 6 ]->wtf.position.y - 0.5f, collBoxObj_[ 6 ]->wtf.position.z };
+
+	collBoxObj_[ 9 ]->wtf.position = { BPos4 };
+	collBoxObj_[ 10 ]->wtf.position = { collBoxObj_[9]->wtf.position.x + 0.3f, collBoxObj_[9]->wtf.position.y - 0.5f, collBoxObj_[9]->wtf.position.z };
+	collBoxObj_[ 11 ]->wtf.position = { collBoxObj_[9]->wtf.position.x - 0.3f, collBoxObj_[9]->wtf.position.y - 0.5f, collBoxObj_[9]->wtf.position.z };
 
 	//コーン用当たり判定モデル
-	for ( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 8; i++ )
 	{
 		collKonObj_[ i ]->Update();
 	}
-	collKonObj_[0]->wtf.position = { BlockPos.x + 0.5f,BlockPos.y - 0.5f,BlockPos.z - 1.0f };
-	collKonObj_[1]->wtf.position = { BlockPos.x - 0.5f,BlockPos.y - 0.5f,BlockPos.z - 1.0f };
+	collKonObj_[0]->wtf.position = { BPos.x + 0.5f,BPos.y - 0.5f,BPos.z - 1.0f };
+	collKonObj_[1]->wtf.position = { BPos.x - 0.5f,BPos.y - 0.5f,BPos.z - 1.0f };
+
+	collKonObj_[ 2 ]->wtf.position = { BPos2.x + 0.5f,BPos2.y - 0.5f,BPos2.z - 1.0f };
+	collKonObj_[ 3 ]->wtf.position = { BPos2.x - 0.5f,BPos2.y - 0.5f,BPos2.z - 1.0f };
+
+	collKonObj_[ 4 ]->wtf.position = { BPos3.x + 0.5f,BPos3.y - 0.5f,BPos3.z - 1.0f };
+	collKonObj_[ 5 ]->wtf.position = { BPos3.x - 0.5f,BPos3.y - 0.5f,BPos3.z - 1.0f };
+
+	collKonObj_[ 6 ]->wtf.position = { BPos4.x + 0.5f,BPos4.y - 0.5f,BPos4.z - 1.0f };
+	collKonObj_[ 7 ]->wtf.position = { BPos4.x - 0.5f,BPos4.y - 0.5f,BPos4.z - 1.0f };
 
 	EffUpdate();
 	isGameStartTimer++;
@@ -288,14 +303,14 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	//バイク兵の挙動と自機より後ろにいるときカメラを少し下げる
 	BikeEnemyAction();
 
-	if ( input_->PushKey(DIK_H))
+	/*if ( input_->PushKey(DIK_H))
 	{
 		Obj_[ 2 ]->wtf.position.x -= 0.05f;
 	}
 	if ( input_->PushKey(DIK_K) )
 	{
 		Obj_[ 2 ]->wtf.position.x += 0.05f;
-	}
+	}*/
 
 	//突進攻撃の当たり判定
 	for ( int i = 0; i < 5; i++ )
@@ -342,7 +357,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 				Obj_[ i ]->wtf.rotation.z = rotaLimit;
 			}
 			//突進中に自機と当たったらフラグ切り替え
-			if ( coll.CircleCollision(playerRPos,collLeftObj_[ i ]->wtf.position,0.6f,0.6f) )
+			if ( coll.CircleCollision(pRPos,collLeftObj_[ i ]->wtf.position,0.6f,0.6f) )
 			{
 				isRushKnockbackFlag_[ i ] = 1;
 				player_->isKnockbackFlag = true;
@@ -412,7 +427,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 				Obj_[ i ]->wtf.rotation.z = rotaLimit;
 			}
 			//突進中に自機と当たったらフラグ切り替え
-			if ( coll.CircleCollision(playerLPos,collRightObj_[ i ]->wtf.position,0.6f,0.6f) )
+			if ( coll.CircleCollision(pLPos,collRightObj_[ i ]->wtf.position,0.6f,0.6f) )
 			{
 				isRushKnockbackFlag_[ i ] = 2;
 				player_->isKnockbackFlagL = true;
@@ -505,9 +520,9 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		//自機の左攻撃の当たり判定
 		if ( HP_[ i ] >= 1 )
 		{
-			if ( isCollSWFlag == true )
+			if ( CollSWFlag == true )
 			{
-				if ( coll.CircleCollision(playerSWPos,collObj_[ i ]->wtf.position,0.6f,0.6f) )
+				if ( coll.CircleCollision(pSWPos,collObj_[ i ]->wtf.position,0.6f,0.6f) )
 				{
 					HP_[ i ]--;
 				}
@@ -517,9 +532,9 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		//自機の右攻撃の当たり判定
 		if ( HP_[ i ] >= 1 )
 		{
-			if ( isCollSWRightFlag == true )
+			if ( CollSWRFlag == true )
 			{
-				if ( coll.CircleCollision(playerSWRightPos,collObj_[ i ]->wtf.position,0.6f,0.6f) )
+				if ( coll.CircleCollision(pSWRPos,collObj_[ i ]->wtf.position,0.6f,0.6f) )
 				{
 					HP_[ i ]--;
 				}
@@ -531,7 +546,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		//自機が左にいるバイク兵に対して衝突するとき
 		if ( HP_[ i ] >= 1 )
 		{
-			if ( coll.CircleCollision(playerLPos,collRightObj_[ i ]->wtf.position,0.6f,0.6f) )
+			if ( coll.CircleCollision(pLPos,collRightObj_[ i ]->wtf.position,0.6f,0.6f) )
 			{
 				player_->limitmove = true;
 				limitRightmove_[ i ] = 1;
@@ -563,7 +578,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 		//自機が右にいるバイク兵に対して衝突するとき
 		if ( HP_[ i ] >= 1 )
 		{
-			if ( coll.CircleCollision(playerRPos,collLeftObj_[ i ]->wtf.position,0.6f,0.6f) )
+			if ( coll.CircleCollision(pRPos,collLeftObj_[ i ]->wtf.position,0.6f,0.6f) )
 			{
 				player_->limitmove2 = true;
 				limitLeftmove_[ i ] = 1;
@@ -603,7 +618,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 	{
 		if ( HP_[ i ] >= 1 )
 		{
-			for ( int j = 0; j < 3; j++ )
+			for ( int j = 0; j < 12; j++ )
 			{
 				if ( coll.CircleCollision(collBoxObj_[j]->wtf.position,collFrontObj_[ i ]->wtf.position,0.6f,0.6f) )
 				{
@@ -611,7 +626,7 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 				}
 			}
 
-			for ( int k = 0; k < 2; k++ )
+			for ( int k = 0; k < 8; k++ )
 			{
 				if ( coll.CircleCollision(collKonObj_[k]->wtf.position,collFrontObj_[ i ]->wtf.position,0.6f,0.6f) )
 				{
@@ -621,7 +636,6 @@ void BikeEnemy::Update(Vector3 playerSWPos,bool isCollSWFlag,Vector3 playerSWRig
 
 		}
 	}
-
 
 	//バイク兵のガス噴射
 	for ( int i = 0; i < 9; i++ )
@@ -760,13 +774,13 @@ void BikeEnemy::Draw()
 			collRushObjL_[ i ]->Draw();*/
 		}
 
-		for ( int i = 0; i < 3; i++ )
+		for ( int i = 0; i < 12; i++ )
 		{
 			collBoxObj_[ i ]->Draw();
 		}
 
 		//コーンモデル
-		for ( int i = 0; i < 2; i++ )
+		for ( int i = 0; i < 8; i++ )
 		{
 			collKonObj_[ i ]->Draw();
 		}
@@ -823,7 +837,7 @@ void BikeEnemy::EffUpdate()
 			DamageRightEffTimer_[ i ] = 0;
 		}
 
-			//煙
+		//煙
 		if ( isSmokeEffFlag_[ i ] == 1 )
 		{
 			smokeEffTimer_[ i ]++;

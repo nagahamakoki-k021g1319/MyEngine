@@ -53,8 +53,8 @@ Player::~Player() {
 	delete Bullet5mUI;
 
 	delete Bullet6dUI;
-	delete Bullet6fUI;
-	delete Bullet6mUI;
+	delete metaUI;
+	delete arrowUI;
 
 	delete Obj_;
 	delete Model_;
@@ -290,11 +290,37 @@ void Player::Update() {
 	}
 
 	//ダメージを受けた時のHP減少
-	//if ( input_->TriggerKey(DIK_4) ){
-	//	hpgreenPosition.x -= 20.0f;
-	//	hpgreenUI->SetPozition(hpgreenPosition);
-	//}
+	if ( input_->PushKey(DIK_4) ){
+		arrowPosition.x += 5.0f;
+		arrowUI->SetPozition(arrowPosition);
+	}
+	if ( input_->PushKey(DIK_3) )
+	{
+		arrowPosition.x -= 5.0f;
+		arrowUI->SetPozition(arrowPosition);
+	}
 
+	if ( input_->PushKey(DIK_5) )
+	{
+		arrowPosition.y -= 5.0f;
+		arrowUI->SetPozition(arrowPosition);
+	}
+	if ( input_->PushKey(DIK_6) )
+	{
+		arrowPosition.y += 5.0f;
+		arrowUI->SetPozition(arrowPosition);
+	}
+
+	if ( input_->PushKey(DIK_1) )
+	{
+		arrowRotation.x += 2.0f;
+		arrowUI->SetRotation(arrowRotation.x);
+	}
+	if ( input_->PushKey(DIK_2) )
+	{
+		arrowRotation.x -= 2.0f;
+		arrowUI->SetRotation(arrowRotation.x);
+	}
 
 	//プレイヤーの行動一覧
 	PlayerAction();
@@ -499,8 +525,8 @@ void Player::Update() {
 	
 	
 	ImGui::Begin("Player");
-	ImGui::Text("waveTimer2:%d",waveTimer2);
-	ImGui::Text("isCameraBehavior:%d",isCameraBehavior);
+	ImGui::Text("arrowPosition:%f,%f",arrowPosition.x,arrowPosition.y);
+	ImGui::Text("arrowRotation:%f",arrowRotation.x);
 	ImGui::Text("CameraBehaviorTimer:%d",CameraBehaviorTimer);
 	ImGui::Text("CameraBehaviorTimer2:%d",CameraBehaviorTimer2);
 	ImGui::Text("isDeadEnemy:%d",isDeadEnemy);
@@ -654,15 +680,21 @@ void Player::UIInitialize()
 	Bullet6dUI->SetPozition({ 0,0 });
 	Bullet6dUI->SetSize({ 1280.0f, 720.0f });
 
-	Bullet6fUI = new Sprite();
-	Bullet6fUI->Initialize(spriteCommon);
-	Bullet6fUI->SetPozition({ 0,0 });
-	Bullet6fUI->SetSize({ 1280.0f, 720.0f });
+	metaUI = new Sprite();
+	metaUI->Initialize(spriteCommon);
+	metaUI->SetPozition({ 0,0 });
+	metaUI->SetSize({ 1280.0f, 720.0f });
 
-	Bullet6mUI = new Sprite();
-	Bullet6mUI->Initialize(spriteCommon);
-	Bullet6mUI->SetPozition({ 0,0 });
-	Bullet6mUI->SetSize({ 1280.0f, 720.0f });
+	arrowUI = new Sprite();
+	arrowUI->Initialize(spriteCommon);
+	arrowPosition = arrowUI->GetPosition();
+	arrowPosition.x = 1245;
+	arrowPosition.y = 700;
+	arrowUI->SetPozition(arrowPosition);
+	arrowRotation.x = arrowUI->GetRotation();
+	arrowRotation.x = -190;
+	arrowUI->SetRotation(arrowRotation.x);
+	arrowUI->SetSize({ 80.0f, 20.0f });
 
 	//自機のHPのUI
 	hpgageUI = new Sprite();
@@ -788,10 +820,14 @@ void Player::UIInitialize()
 	//6発目
 	spriteCommon->LoadTexture(23,"ff6d.png");
 	Bullet6dUI->SetTextureIndex(23);
-	spriteCommon->LoadTexture(24,"ff6f.png");
-	Bullet6fUI->SetTextureIndex(24);
-	spriteCommon->LoadTexture(25,"ff6m.png");
-	Bullet6mUI->SetTextureIndex(25);
+
+	//メーター
+	spriteCommon->LoadTexture(24,"meta.png");
+	metaUI->SetTextureIndex(24);
+
+	//矢印
+	spriteCommon->LoadTexture(25,"arrow.png");
+	arrowUI->SetTextureIndex(25);
 
 	//被弾エフェクト
 	spriteCommon->LoadTexture(14,"blood.png");
@@ -850,6 +886,10 @@ void Player::UIDraw()
 		hpredUI->Draw();
 		hpgreenUI->Draw();
 		hpFlameUI->Draw();
+
+		
+		metaUI->Draw();
+		arrowUI->Draw();
 	}
 
 	//操作説明関連
@@ -1212,14 +1252,14 @@ void Player::EffUpdate()
 	if ( bulletEffTimer_ <= 20 && bulletEffTimer_ >= 1 )
 	{
 		//通常
-		EffSummary(Vector3( Obj_->wtf.position.x - 0.15f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 1.5f));
+		EffSummary(Vector3(Obj_->wtf.position.x - 0.15f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 1.5f));
 		EffSummary2(Vector3(Obj_->wtf.position.x + 0.13f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 1.5f));
 		//加速
 		EffSummaryAccelR(Vector3(Obj_->wtf.position.x - 0.15f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 2.5f));
 		EffSummaryAccelL(Vector3(Obj_->wtf.position.x + 0.13f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 2.5f));
 		//減速
-		EffSummaryDecelR(Vector3(Obj_->wtf.position.x - 0.15f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 1.5f));
-		EffSummaryDecelL(Vector3(Obj_->wtf.position.x + 0.13f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 1.5f));
+		EffSummaryDecelR(Vector3(Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z));
+		EffSummaryDecelL(Vector3(Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z));
 	}
 	if ( bulletEffTimer_ >= 20 )
 	{
@@ -1231,7 +1271,7 @@ void Player::EffUpdate()
 void Player::EffSummary(Vector3 bulletpos)
 {
 	//パーティクル範囲
-	for( int i = 0; i < 5; i++ )
+	for( int i = 0; i < 20; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
 		const float rnd_posG = 0.0f;
@@ -1269,7 +1309,7 @@ void Player::EffSummary(Vector3 bulletpos)
 void Player::EffSummary2(Vector3 bulletpos2)
 {
 	//パーティクル範囲
-	for ( int i = 0; i < 5; i++ )
+	for ( int i = 0; i < 20; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
 		const float rnd_pos2 = 0.0f;
