@@ -1,4 +1,4 @@
-<ins>**NKENGINE**</ins>
+<ins>**NK ENGINE**</ins>
 
 **使用している外部ライブラリ**
 
