@@ -44,6 +44,9 @@ public:
 	void InitialPosition();
 
 	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition2();
+	Vector3 GetWorldPosition3();
+	Vector3 GetWorldPosition4();
 
 	void SetPlayer(Player* player) {
 		player_ = player;

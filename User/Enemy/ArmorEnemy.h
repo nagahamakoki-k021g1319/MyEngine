@@ -42,7 +42,8 @@ public:
 	void DamageSummary(Vector3 EnePos, int eneNum);
 	//エフェクトの情報(発砲するときの硝煙)
 	void smokeSummary(Vector3 EnePos,int eneNum);
-
+	//エフェクトの情報(体力半分になった時にでる煙)
+	void DamagefumeSummary(Vector3 fumepos,int num);
 
 	//エフェクトの描画
 	void EffDraw();
@@ -137,7 +138,10 @@ private:
 	std::unique_ptr<ParticleManager> smokeParticle_[4];
 	int smoEffTimer_[ 4 ] = { 0 };
 	int isSmoEffFlag_[ 4 ] = { 0 };
-
+	//体力少ないときに煙出る(体力半分)
+	std::unique_ptr<ParticleManager> fumeParticle_[ 4 ];
+	int fumeEffTimer_[ 4 ] = { 0 };
+	int isFumeEffFlag_[ 4 ] = { 0 };
 };
 
 

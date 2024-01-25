@@ -271,8 +271,10 @@ private:
 	Sprite* Bullet5mUI = nullptr;
 
 	Sprite* Bullet6dUI = nullptr;
-	Sprite* Bullet6fUI = nullptr;
-	Sprite* Bullet6mUI = nullptr;
+	Sprite* metaUI = nullptr;
+	Sprite* arrowUI = nullptr;
+	Vector2 arrowPosition;
+	Vector2 arrowRotation;
 
 	const float moveSpeed_ = 0.1f;
 	const float rotaSpeed_ = 0.1f;
@@ -355,13 +357,13 @@ public:
 	int cameraResetTimer = 0;
 	int BossCameraResetTimer = 0;
 	//操作説明
-	//1ステージ
+	//1ウェーブ
 	Sprite* operationUI = nullptr;
 	Sprite* operationbbUI = nullptr;
 	bool isOperationFlag = false;
 	int OperationbbTimer = 0;
 
-	//2ステージ
+	//2ウェーブ
 	Sprite* operation2UI = nullptr;
 	Sprite* operationbb2UI = nullptr;
 	bool isOperationFlag2 = false;

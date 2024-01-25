@@ -200,7 +200,7 @@ void Block::Update(Vector3 playerPos)
 	}
 
 	//当たり判定
-	for ( int i = 0; i < 3; i++ )
+	for ( int i = 0; i < 12; i++ )
 	{
 		if ( bikeEnemy_->isBoxFlag_[ i ] == 1 )
 		{
@@ -208,7 +208,7 @@ void Block::Update(Vector3 playerPos)
 		}
 	}
 
-	for ( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 8; i++ )
 	{
 		if ( bikeEnemy_->isKonFlag_[ i ] == 1 )
 		{
@@ -285,4 +285,46 @@ Vector3 Block::GetWorldPosition()
 	worldPos.z = boxObj_[ 0 ]->wtf.matWorld.m[ 3 ][ 2 ];
 
 	return worldPos;
+}
+
+Vector3 Block::GetWorldPosition2()
+{
+	//ワールド座標を入れる変数
+	Vector3 worldPos2;
+
+	boxObj_[ 3 ]->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	worldPos2.x = boxObj_[ 3 ]->wtf.matWorld.m[ 3 ][ 0 ];
+	worldPos2.y = boxObj_[ 3 ]->wtf.matWorld.m[ 3 ][ 1 ];
+	worldPos2.z = boxObj_[ 3 ]->wtf.matWorld.m[ 3 ][ 2 ];
+
+	return worldPos2;
+}
+
+Vector3 Block::GetWorldPosition3()
+{
+	//ワールド座標を入れる変数
+	Vector3 worldPos3;
+
+	boxObj_[ 6 ]->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	worldPos3.x = boxObj_[ 6 ]->wtf.matWorld.m[ 3 ][ 0 ];
+	worldPos3.y = boxObj_[ 6 ]->wtf.matWorld.m[ 3 ][ 1 ];
+	worldPos3.z = boxObj_[ 6 ]->wtf.matWorld.m[ 3 ][ 2 ];
+
+	return worldPos3;
+}
+
+Vector3 Block::GetWorldPosition4()
+{
+	//ワールド座標を入れる変数
+	Vector3 worldPos4;
+
+	boxObj_[ 9 ]->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	worldPos4.x = boxObj_[ 9 ]->wtf.matWorld.m[ 3 ][ 0 ];
+	worldPos4.y = boxObj_[ 9 ]->wtf.matWorld.m[ 3 ][ 1 ];
+	worldPos4.z = boxObj_[ 9 ]->wtf.matWorld.m[ 3 ][ 2 ];
+
+	return worldPos4;
 }
