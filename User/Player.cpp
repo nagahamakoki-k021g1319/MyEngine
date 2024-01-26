@@ -141,35 +141,38 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	Obj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	Obj_->wtf.position = { 0.0f,-2.0f,-20.0f };
 
+	const float addPos = 0.5f;
+	const float addPosZ = -1.0f;
 	//自機の当たり判定のモデル
 	collModel_ = Model::LoadFromOBJ("collboll");
 	collObj_ = Object3d::Create();
 	collObj_->SetModel(collModel_);
-	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 0.5f,-1.0f };
+	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + addPos,addPosZ };
 
 	//自機の近接攻撃判定のモデル(左)
 	collSWModel_ = Model::LoadFromOBJ("collboll");
 	collSWObj_ = Object3d::Create();
 	collSWObj_->SetModel(collSWModel_);
-	collSWObj_->wtf.position = { Obj_->wtf.position.x - 0.5f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	collSWObj_->wtf.position = { Obj_->wtf.position.x - addPos,Obj_->wtf.position.y + addPos,addPosZ };
 
 	//自機の近接攻撃判定のモデル(左)
 	collSWRightModel_ = Model::LoadFromOBJ("collboll");
 	collSWRightObj_ = Object3d::Create();
 	collSWRightObj_->SetModel(collSWRightModel_);
-	collSWRightObj_->wtf.position = { Obj_->wtf.position.x + 0.5f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	collSWRightObj_->wtf.position = { Obj_->wtf.position.x + addPos,Obj_->wtf.position.y + addPos,addPosZ };
 
+	const float addPosX = 0.1f;
 	//自機が衝突した時用のモデル
 	//右
 	extrusionRightModel_ = Model::LoadFromOBJ("collboll");
 	extrusionRightObj_ = Object3d::Create();
 	extrusionRightObj_->SetModel(extrusionRightModel_);
-	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + 0.1f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + addPosX,Obj_->wtf.position.y + addPos,addPosZ };
 	//左
 	extrusionLeftModel_ = Model::LoadFromOBJ("collboll");
 	extrusionLeftObj_ = Object3d::Create();
 	extrusionLeftObj_->SetModel(extrusionLeftModel_);
-	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - 0.1f,Obj_->wtf.position.y + 0.5f,-1.0f };
+	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - addPosX,Obj_->wtf.position.y + addPos,addPosZ };
 
 	//自機の弾(弱)
 	shootModel_ = Model::LoadFromOBJ("boll2");
@@ -244,25 +247,30 @@ void Player::Update() {
 	camera->Update();
 	shootObj_->Update();
 	shootStObj_->Update();
+	const float addRetPos = 50.0f;
 	retObj_->Update();
-	retObj_->wtf.position.z = Obj_->wtf.position.z + 50.0f;
+	retObj_->wtf.position.z = Obj_->wtf.position.z + addRetPos;
 
 	enemylen2 = retObj_->wtf.position - shootStObj_->wtf.position;
 	enemylen2.nomalize();
+	const float addRetVPos = 15.0f;
 	retVisualObj_->Update();
-	retVisualObj_->wtf.position.z = Obj_->wtf.position.z + 15.0f;
+	retVisualObj_->wtf.position.z = Obj_->wtf.position.z + addRetVPos;
 	Obj_->Update();
 	EffUpdate();
 	collObj_->Update();
-	if ( isGameStartTimer >= 180 ){collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z - 1.0f };}
+	const float addPosX = 0.1f;
+	const float addPos = 0.5f;
+	const float addPosZ = 1.0f;
+	if ( isGameStartTimer >= 180 ){collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z - addPosZ };}
 	collSWObj_->Update();
-	collSWObj_->wtf.position = { Obj_->wtf.position.x - 1.0f,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z-1.0f };
+	collSWObj_->wtf.position = { Obj_->wtf.position.x - addPosZ,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z- addPosZ };
 	collSWRightObj_->Update();
-	collSWRightObj_->wtf.position = { Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z -1.0f };
+	collSWRightObj_->wtf.position = { Obj_->wtf.position.x + addPosZ,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z - addPosZ };
 	extrusionRightObj_->Update();
-	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + 0.1f,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z -1.0f };
+	extrusionRightObj_->wtf.position = { Obj_->wtf.position.x + addPosX,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z - addPosZ };
 	extrusionLeftObj_->Update();
-	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - 0.1f,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z -1.0f };
+	extrusionLeftObj_->wtf.position = { Obj_->wtf.position.x - addPosX,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z - addPosZ };
 
 	isGameStartFlag = true;
 
@@ -289,8 +297,8 @@ void Player::Update() {
 		isOperationFlag3 = false;
 	}
 
-	//ダメージを受けた時のHP減少
-	if ( input_->PushKey(DIK_4) ){
+	//エンジンメーター手動
+	/*if ( input_->PushKey(DIK_4) ){
 		arrowPosition.x += 5.0f;
 		arrowUI->SetPozition(arrowPosition);
 	}
@@ -320,7 +328,7 @@ void Player::Update() {
 	{
 		arrowRotation.x -= 2.0f;
 		arrowUI->SetRotation(arrowRotation.x);
-	}
+	}*/
 
 	//プレイヤーの行動一覧
 	PlayerAction();
@@ -389,7 +397,8 @@ void Player::Update() {
 
 	//ゲームクリア時に自機が前に進む
 	if ( isClearFlag == true ){
-		Obj_->wtf.position.z += 0.5f;
+		const float addObjPosZ = 0.5f;
+		Obj_->wtf.position.z += addObjPosZ;
 		isclearFlagTimer++;
 	}
 	if ( isclearFlagTimer >= 100 ){isclearFlagTimer = 100;}
@@ -405,10 +414,12 @@ void Player::Update() {
 	if ( isCameraBehavior == 1)
 	{
 		if ( CameraBehaviorTimer <= 70 ){
-			camera->wtf.position.z -= 0.2f;
+			const float addcameraPosZ = 0.2f;
+			camera->wtf.position.z -= addcameraPosZ;
 		}
 		if ( CameraBehaviorTimer >= 20 ){
-			camera->wtf.rotation.y += 0.05f;
+			const float addcameraPosY = 0.05f;
+			camera->wtf.rotation.y += addcameraPosY;
 		}
 
 		if ( camera->wtf.position.z <= -14.0f){camera->wtf.position.z = -14.0f;}
@@ -421,11 +432,13 @@ void Player::Update() {
 		CameraBehaviorTimer2++;
 		if ( CameraBehaviorTimer2 >= 80)
 		{
-			camera->wtf.position.z += 0.2f;
+			const float addcameraPosZ = 0.2f;
+			camera->wtf.position.z += addcameraPosZ;
 		}
 		if ( CameraBehaviorTimer2 >= 100 )
 		{
-			camera->wtf.rotation.y -= 0.05f;
+			const float addcameraPosY = 0.05f;
+			camera->wtf.rotation.y -= addcameraPosY;
 		}
 
 		if ( camera->wtf.position.z >= 10.0f )
@@ -507,7 +520,8 @@ void Player::Update() {
 	{
 		if ( standardCamera == 0 )
 		{
-			camera->wtf.position.z += 0.1f;
+			const float addcameraPosZ = 0.1f;
+			camera->wtf.position.z += addcameraPosZ;
 			if ( camera->wtf.position.z >= 0.0f )
 			{
 				camera->wtf.position.z = 0.0f;
@@ -515,7 +529,8 @@ void Player::Update() {
 		}
 		if ( standardCamera == 1 )
 		{
-			camera->wtf.position.z -= 0.1f;
+			const float addcameraPosZ = 0.1f;
+			camera->wtf.position.z -= addcameraPosZ;
 			if ( camera->wtf.position.z <= -10.0f )
 			{
 				camera->wtf.position.z = -10.0f;
@@ -888,8 +903,8 @@ void Player::UIDraw()
 		hpFlameUI->Draw();
 
 		
-		metaUI->Draw();
-		arrowUI->Draw();
+		/*metaUI->Draw();
+		arrowUI->Draw();*/
 	}
 
 	//操作説明関連
@@ -918,10 +933,10 @@ void Player::UIDraw()
 void Player::PlayerAction()
 {
 	//自機とレティクルの速度
-	float playerSpeed = 0.08f;
-	float playerSpeed2 = 0.06f;
-	float retSpeed = 0.08f;
-	float retSpeed2 = 0.20f;
+	const float playerSpeed = 0.08f;
+	const float playerSpeed2 = 0.06f;
+	const float retSpeed = 0.08f;
+	const float retSpeed2 = 0.20f;
 	////自機とレティクルの画面制限
 	//float playerLimitX = 0.6f;
 	//float playerLimitY = 0.19f;
@@ -938,11 +953,13 @@ void Player::PlayerAction()
 		//減速で自機も少し後ろに下がる
 		if ( backTimer >= 1 && backTimer <= 30 )
 		{
-			Obj_->wtf.position.z -= 0.07f;
+			const float backSpeed = 0.07f;
+			Obj_->wtf.position.z -= backSpeed;
 		}
 		if ( backTimer >= 31 && backTimer <= 90 )
 		{
-			Obj_->wtf.position.z += 0.03f;
+			const float backSpeedZ = 0.03f;
+			Obj_->wtf.position.z += backSpeedZ;
 			if ( Obj_->wtf.position.z >= -0.3f )
 			{
 				Obj_->wtf.position.z = -0.3f;
@@ -958,44 +975,44 @@ void Player::PlayerAction()
 
 
 
-	//自機のジャンプの挙動とモデル変更
-	if ( isJumpFlag == true ){
-		Obj_->wtf.rotation.x = -0.5f;
-		Obj_->wtf.position.y += 0.2f;
-	}
-	if ( Obj_->wtf.position.y >= 1.0f ){
-		isJumpFlag = false;
-		isVertFlag = true;
-	}
-	if ( isVertFlag == true ){
-		Obj_->wtf.rotation.x = -0.5f;
-		isSlowlyDownFlag = true;
-		
-	}
-	if ( isSlowlyDownFlag == true){
-		SlowlyDownTimer++;
-	}
+	////自機のジャンプの挙動とモデル変更
+	//if ( isJumpFlag == true ){
+	//	Obj_->wtf.rotation.x = -0.5f;
+	//	Obj_->wtf.position.y += 0.2f;
+	//}
+	//if ( Obj_->wtf.position.y >= 1.0f ){
+	//	isJumpFlag = false;
+	//	isVertFlag = true;
+	//}
+	//if ( isVertFlag == true ){
+	//	Obj_->wtf.rotation.x = -0.5f;
+	//	isSlowlyDownFlag = true;
+	//	
+	//}
+	//if ( isSlowlyDownFlag == true){
+	//	SlowlyDownTimer++;
+	//}
 
-	//最初はゆっくり落ちて途中から普通に落下
-	if (SlowlyDownTimer <= 10 ){
-		Obj_->wtf.position.y -= 0.05f;
-	}
-	else if (SlowlyDownTimer > 10)
-	{
-		SlowlyDownTimer = 10;
-		Obj_->wtf.position.y -= 0.2f;
-	}
+	////最初はゆっくり落ちて途中から普通に落下
+	//if (SlowlyDownTimer <= 10 ){
+	//	Obj_->wtf.position.y -= 0.05f;
+	//}
+	//else if (SlowlyDownTimer > 10)
+	//{
+	//	SlowlyDownTimer = 10;
+	//	Obj_->wtf.position.y -= 0.2f;
+	//}
 
-	//着地したらまたジャンプ出来る
-	if ( Obj_->wtf.position.y <= -2.0f ){
-		isSlowlyDownFlag = false;
-		SlowlyDownTimer = 0;
-		Obj_->wtf.rotation.x = 0.0f;
-		isVertFlag = false;
-	}
-	//自機の上下移動の制限
-	if ( Obj_->wtf.position.y >= 1.0f ){Obj_->wtf.position.y = 1.0f;}
-	if ( Obj_->wtf.position.y <= -2.0f ){Obj_->wtf.position.y = -2.0f;}
+	////着地したらまたジャンプ出来る
+	//if ( Obj_->wtf.position.y <= -2.0f ){
+	//	isSlowlyDownFlag = false;
+	//	SlowlyDownTimer = 0;
+	//	Obj_->wtf.rotation.x = 0.0f;
+	//	isVertFlag = false;
+	//}
+	////自機の上下移動の制限
+	//if ( Obj_->wtf.position.y >= 1.0f ){Obj_->wtf.position.y = 1.0f;}
+	//if ( Obj_->wtf.position.y <= -2.0f ){Obj_->wtf.position.y = -2.0f;}
 
 	//自機の攻撃モーション(射撃)
 	if ( isAtTimerFlag == false ){
@@ -1027,7 +1044,8 @@ void Player::PlayerAction()
 	}
 	if ( leftAtTimer >= 1 && leftAtTimer < 30 ){	
 		Obj_->SetModel(Modelbiksword0_);
-		Obj_->wtf.rotation.y += 0.32f;
+		const float LeftAtSpeed = 0.32f;
+		Obj_->wtf.rotation.y += LeftAtSpeed;
 	}
 	else if ( leftAtTimer >= 30 )
 	{
@@ -1056,7 +1074,8 @@ void Player::PlayerAction()
 	if ( rightAtTimer >= 1 && rightAtTimer < 30 )
 	{
 		Obj_->SetModel(Modelbiksword1_);
-		Obj_->wtf.rotation.y -= 0.32f;
+		const float rightAtSpeed = 0.32f;
+		Obj_->wtf.rotation.y -= rightAtSpeed;
 	}
 	else if ( rightAtTimer >= 30 )
 	{
@@ -1071,37 +1090,39 @@ void Player::PlayerAction()
 
 	//自機が左右に動いたらモデルも傾く
 	if ( input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT) ){
-		Obj_->wtf.rotation.z -= 0.03f;
+		const float Speed = 0.03f;
+		Obj_->wtf.rotation.z -= Speed;
 		if( Obj_->wtf.rotation.z <= -0.4f){Obj_->wtf.rotation.z = -0.4f;}
 	}
 	else if ( input_->PushKey(DIK_A) || input_->StickInput(L_LEFT) ){
-		Obj_->wtf.rotation.z += 0.03f;
+		const float Speed = 0.03f;
+		Obj_->wtf.rotation.z += Speed;
 		if ( Obj_->wtf.rotation.z >= 0.4f ){Obj_->wtf.rotation.z = 0.4f;}
 	}
 	else{
 		Obj_->wtf.rotation.z = 0.0f;
 	}
 
-	//自機のスライディング
-	if ( isbikslidFlag == false )
-	{
-		if (input_->TriggerKey(DIK_X) ){isbikslidFlag = true;}
-	}
-	if ( isbikslidFlag == true ){
-		bikslidTimer++;
-		bikSpinTimer = 6;
-	}
-	if ( bikslidTimer >= 1 && bikslidTimer <= 30 ){
-		Obj_->wtf.rotation.y = -1.5f;
-		Obj_->wtf.rotation.x = -1.0f;
-	}
-	if ( bikslidTimer >= 31 ){
-		Obj_->wtf.rotation.y = 0.0f;
-		Obj_->wtf.rotation.x = 0.0f;
-		bikslidTimer = 0;
-		bikSpinTimer++;
-		isbikslidFlag = false;
-	}
+	////自機のスライディング
+	//if ( isbikslidFlag == false )
+	//{
+	//	if (input_->TriggerKey(DIK_X) ){isbikslidFlag = true;}
+	//}
+	//if ( isbikslidFlag == true ){
+	//	bikslidTimer++;
+	//	bikSpinTimer = 6;
+	//}
+	//if ( bikslidTimer >= 1 && bikslidTimer <= 30 ){
+	//	Obj_->wtf.rotation.y = -1.5f;
+	//	Obj_->wtf.rotation.x = -1.0f;
+	//}
+	//if ( bikslidTimer >= 31 ){
+	//	Obj_->wtf.rotation.y = 0.0f;
+	//	Obj_->wtf.rotation.x = 0.0f;
+	//	bikslidTimer = 0;
+	//	bikSpinTimer++;
+	//	isbikslidFlag = false;
+	//}
 
 
 	//移動(自機)
@@ -1251,12 +1272,17 @@ void Player::EffUpdate()
 	}
 	if ( bulletEffTimer_ <= 20 && bulletEffTimer_ >= 1 )
 	{
+		const float gasLPosX = 0.15f;
+		const float gasRPosX = 0.13f;
+		const float gasAddPosY = 0.2f;
+		const float gasLPosZ = 1.5f;
+		const float gasRPosZ = 2.5f;
 		//通常
-		EffSummary(Vector3(Obj_->wtf.position.x - 0.15f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 1.5f));
-		EffSummary2(Vector3(Obj_->wtf.position.x + 0.13f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 1.5f));
+		EffSummary(Vector3(Obj_->wtf.position.x - gasLPosX,Obj_->wtf.position.y + gasAddPosY,Obj_->wtf.position.z - gasLPosZ));
+		EffSummary2(Vector3(Obj_->wtf.position.x + gasRPosX,Obj_->wtf.position.y + gasAddPosY,Obj_->wtf.position.z - gasLPosZ));
 		//加速
-		EffSummaryAccelR(Vector3(Obj_->wtf.position.x - 0.15f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 2.5f));
-		EffSummaryAccelL(Vector3(Obj_->wtf.position.x + 0.13f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z - 2.5f));
+		EffSummaryAccelR(Vector3(Obj_->wtf.position.x - gasLPosX,Obj_->wtf.position.y + gasAddPosY,Obj_->wtf.position.z - gasRPosZ));
+		EffSummaryAccelL(Vector3(Obj_->wtf.position.x + gasRPosX,Obj_->wtf.position.y + gasAddPosY,Obj_->wtf.position.z - gasRPosZ));
 		//減速
 		EffSummaryDecelR(Vector3(Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z));
 		EffSummaryDecelL(Vector3(Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z));
@@ -1650,7 +1676,8 @@ void Player::GameStartMovie()
 
 	if ( acflag == true )
 	{
-		Obj_->wtf.position.z += 0.3f;
+		const float PosSpeed = 0.3f;
+		Obj_->wtf.position.z += PosSpeed;
 	}
 
 	if ( isGameStartTimer >= 60 )
@@ -1660,11 +1687,13 @@ void Player::GameStartMovie()
 
 	if ( isGameStartTimer <= 180 && rotaflag == true )
 	{
-		camera->wtf.rotation.y -= 0.05f;
+		const float RotSpeed = 0.05f;
+		camera->wtf.rotation.y -= RotSpeed;
 	}
 
 	if ( isGameStartTimer <= 180 && camera->wtf.rotation.y <= 0.2f && rotaflag == true ){
-		camera->wtf.rotation.y = 0.2f;
+		const float RotSpeed = 0.2f;
+		camera->wtf.rotation.y = RotSpeed;
 		rotaflag = false;
 	}
 
@@ -1674,7 +1703,8 @@ void Player::GameStartMovie()
 	if ( isGameStartTimer >= 180 )
 	{
 		acflag = false;
-		Obj_->wtf.position.z -= 0.3f;
+		const float PosSpeed = 0.3f;
+		Obj_->wtf.position.z -= PosSpeed;
 		retdisplay = true;
 		
 	}
@@ -1711,25 +1741,27 @@ void Player::DamageCamShake()
 	//画面シェイク
 	if ( isCamShake == 1 )
 	{
+		const float shakePos = 0.2f;
+		const float shakePosY = 0.1f;
 		camShakeTimer--;
 		if ( camShakeTimer <= camShakeLimit && camShakeTimer > camShakeLimit * 3 / 4 )
 		{
-			camera->wtf.position.y += 0.1f;
+			camera->wtf.position.y += shakePosY;
 			/*camera->wtf.position.z += 0.1f;*/
 		}
 		else if ( camShakeTimer <= camShakeLimit * 3 / 4 && camShakeTimer > camShakeLimit * 2 / 4 )
 		{
-			camera->wtf.position.y -= 0.2f;
+			camera->wtf.position.y -= shakePos;
 			/*camera->wtf.position.z -= 0.1f;*/
 		}
 		else if ( camShakeTimer <= camShakeLimit * 2 / 4 && camShakeTimer > camShakeLimit * 1 / 4 )
 		{
-			camera->wtf.position.y += 0.2f;
+			camera->wtf.position.y += shakePos;
 			/*camera->wtf.position.z += 0.1f;*/
 		}
 		else if ( camShakeTimer <= camShakeLimit * 1 / 4 && camShakeTimer > 0 )
 		{
-			camera->wtf.position.y -= 0.2f;
+			camera->wtf.position.y -= shakePos;
 			/*camera->wtf.position.z -= 0.1f;*/
 		}
 		else if ( camShakeTimer <= 0 ){

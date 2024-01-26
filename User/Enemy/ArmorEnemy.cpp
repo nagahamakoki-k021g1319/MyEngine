@@ -62,21 +62,24 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 	//大砲の弾
 	for ( int i = 0; i < 4; i++ ){
+		const float addPosY = 2.5f;
+		const float addPosZ = 3.0f;
 		bulletModel_[i] = Model::LoadFromOBJ("eneboll");
 		bulletObj_[i] = Object3d::Create();
 		bulletObj_[i]->SetModel(bulletModel_[i]);
-		bulletObj_[i]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + 2.5f,Obj_[i]->wtf.position.z - 3.0f };
+		bulletObj_[i]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + addPosY,Obj_[i]->wtf.position.z - addPosZ };
 	}
 
 	
 
 	//当たり判定のモデル
 	for ( int i = 0; i < 4; i++ ){
+		const float addPosY = 1.0f;
 		collModel_[i] = Model::LoadFromOBJ("collboll");
 		collObj_[i] = Object3d::Create();
 		collObj_[i]->SetModel(collModel_[i]);
 		collObj_[i]->wtf.scale = { 2.0f,2.0f,2.0f };
-		collObj_[i]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + 1.0f,Obj_[i]->wtf.position.z };
+		collObj_[i]->wtf.position = { Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + addPosY,Obj_[i]->wtf.position.z };
 	}
 
 	//自機の当たり判定
@@ -134,9 +137,10 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 {
 	for ( int i = 0; i < 4; i++ ){
 		if ( isAliveFlag_[ i ] == 0 ){
+			const float addPosY = 1.0f;
 			Obj_[ i ]->Update();
 			collObj_[i]->Update();
-			collObj_[i]->wtf.position = {Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + 1.0f,Obj_[i]->wtf.position.z};
+			collObj_[i]->wtf.position = {Obj_[i]->wtf.position.x,Obj_[i]->wtf.position.y + addPosY,Obj_[i]->wtf.position.z};
 			bulletObj_[i]->Update();
 		}
 	}
@@ -468,7 +472,8 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 				isShootFlag_[ i ] = 0;
 				player_->isCamShake = 1;
 				player_->camShakeTimer = player_->camShakeLimit;
-				player_->hpgreenPosition.x -= 10.0f;//倍ダメ
+				const float damage = 10.0f;
+				player_->hpgreenPosition.x -= damage;//倍ダメ
 				player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
 			}
 		}
@@ -518,10 +523,15 @@ void ArmorEnemy::EffUpdate()
 		}
 		if ( gasEffTimer_[ i ] <= 20 && gasEffTimer_[ i ] >= 1 )
 		{
-			EffSummary(Vector3( Obj_[i]->wtf.position.x + 1.0f,Obj_[i]->wtf.position.y - 1.5f,Obj_[i]->wtf.position.z),i);
-			EffSummary2(Vector3(Obj_[i]->wtf.position.x - 1.0f,Obj_[i]->wtf.position.y - 1.5f,Obj_[i]->wtf.position.z),i);
-			EffSummary3(Vector3(Obj_[i]->wtf.position.x + 0.3f,Obj_[i]->wtf.position.y + 1.8f,Obj_[i]->wtf.position.z + 2.0f),i);
-			EffSummary4(Vector3(Obj_[i]->wtf.position.x - 0.3f,Obj_[i]->wtf.position.y + 1.8f,Obj_[i]->wtf.position.z + 2.0f),i);
+			const float addPosX = 1.0f;
+			const float addPosY = 1.5f;
+			const float addGasPosX = 0.3f;
+			const float addGasPosY = 1.8f;
+			const float addGasPosZ = 2.0f;
+			EffSummary(Vector3( Obj_[i]->wtf.position.x + addPosX,Obj_[i]->wtf.position.y - addPosY,Obj_[i]->wtf.position.z),i);
+			EffSummary2(Vector3(Obj_[i]->wtf.position.x - addPosX,Obj_[i]->wtf.position.y - addPosY,Obj_[i]->wtf.position.z),i);
+			EffSummary3(Vector3(Obj_[i]->wtf.position.x + addGasPosX,Obj_[i]->wtf.position.y + addGasPosY,Obj_[i]->wtf.position.z +addGasPosZ),i);
+			EffSummary4(Vector3(Obj_[i]->wtf.position.x - addGasPosX,Obj_[i]->wtf.position.y + addGasPosY,Obj_[i]->wtf.position.z +addGasPosZ),i);
 		}
 		if ( gasEffTimer_[ i ] >= 20 )
 		{
@@ -536,7 +546,9 @@ void ArmorEnemy::EffUpdate()
 		}
 		if ( fumeEffTimer_[ i ] <= 10 && fumeEffTimer_[ i ] >= 0 )
 		{
-			DamagefumeSummary(Vector3(Obj_[ i ]->wtf.position.x + 0.5f,Obj_[ i ]->wtf.position.y + 2.5f,Obj_[ i ]->wtf.position.z),i);
+			const float addPosX = 0.5f;
+			const float addPosY = 2.5f;
+			DamagefumeSummary(Vector3(Obj_[ i ]->wtf.position.x + addPosX,Obj_[ i ]->wtf.position.y + addPosY,Obj_[ i ]->wtf.position.z),i);
 		}
 		if ( fumeEffTimer_[ i ] >= 10 )
 		{
@@ -564,7 +576,9 @@ void ArmorEnemy::EffUpdate()
 		}
 		if ( smoEffTimer_[ i ] <= 5 && smoEffTimer_[ i ] >= 0 )
 		{
-			smokeSummary(Vector3(Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y + 3.0f,Obj_[ i ]->wtf.position.z - 4.0f),i);
+			const float addPosY = 3.0f;
+			const float addPosZ = 4.0f;
+			smokeSummary(Vector3(Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y + addPosY,Obj_[ i ]->wtf.position.z - addPosZ),i);
 		}
 		if ( smoEffTimer_[ i ] >= 6 )
 		{

@@ -35,7 +35,7 @@ BikeEnemy::~BikeEnemy()
 		delete collRushModel_[ i ];
 	}
 
-	//木箱の当たり判定モデル
+	//木箱の当たり判定モデル(判定を少し前に出したやつ)
 	delete collBlockModel_;
 	for ( int i = 0; i < 12; i++ )
 	{
@@ -91,30 +91,33 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		collModel_[ i ] = Model::LoadFromOBJ("collboll");
 		collObj_[ i ] = Object3d::Create();
 		collObj_[ i ]->SetModel(collModel_[ i ]);
-		collObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
+		const float addPosZ = 1.0f;
+		collObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - addPosZ };
 		//ここでHP設定
 		HP_[ i ] = 1;
 	}
 	//当たり判定のモデル(左右の衝突してノックバックする用)
 	for ( int i = 0; i < 9; i++ )
 	{
+		const float addPosX = 0.1f;
+		const float addPosZ = 1.0f;
 		collLRModel_[ i ] = Model::LoadFromOBJ("collboll");
 		//右
 		collRightObj_[ i ] = Object3d::Create();
 		collRightObj_[ i ]->SetModel(collLRModel_[ i ]);
-		collRightObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x + 0.1f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
+		collRightObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x + addPosX ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - addPosZ };
 		//左
 		collLeftObj_[ i ] = Object3d::Create();
 		collLeftObj_[ i ]->SetModel(collLRModel_[ i ]);
-		collLeftObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x - 0.1f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
+		collLeftObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x - addPosX ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - addPosZ };
 		//前
 		collFrontObj_[ i ] = Object3d::Create();
 		collFrontObj_[ i ]->SetModel(collLRModel_[ i ]);
-		collFrontObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z + 1.0f };
+		collFrontObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z + addPosZ };
 		//後
 		collBackObj_[ i ] = Object3d::Create();
 		collBackObj_[ i ]->SetModel(collLRModel_[ i ]);
-		collBackObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
+		collBackObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - addPosZ };
 
 	}
 
@@ -204,65 +207,75 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 {
 	for ( int i = 0; i < 9; i++ )
 	{
+		const float posX = 0.1f;
+		const float posY = 0.5f;
+		const float posZ = 1.0f;
 		Obj_[ i ]->Update();
 		collObj_[ i ]->Update();
-		collObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y + 0.5f,Obj_[ i ]->wtf.position.z - 1.0f };
+		collObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y + posY,Obj_[ i ]->wtf.position.z - posZ };
 		bikclushObj_[ i ]->Update();
 		bikclushObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z };
 		collRightObj_[ i ]->Update();
-		collRightObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x + 0.1f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
+		collRightObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x + posX ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - posZ };
 		collLeftObj_[ i ]->Update();
-		collLeftObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x - 0.1f ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
+		collLeftObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x - posX ,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - posZ };
 		collFrontObj_[ i ]->Update();
-		collFrontObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z + 1.0f };
+		collFrontObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z + posZ };
 		collBackObj_[ i ]->Update();
-		collBackObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - 1.0f };
+		collBackObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - posZ };
 	}
 	//自機から横に出ているモデル
 	for ( int i = 0; i < 5; i++ )
 	{
+		const float extend = 0.5f;
 		collRushObj_[ i ]->Update();
-		collRushObj_[ i ]->wtf.position = { pRPos.x + i + 0.5f,pRPos.y - 0.5f,pRPos.z };
+		collRushObj_[ i ]->wtf.position = { pRPos.x + i + extend,pRPos.y - extend,pRPos.z };
 		collRushObjL_[ i ]->Update();
-		collRushObjL_[ i ]->wtf.position = { pRPos.x - i + 0.5f,pRPos.y - 0.5f,pRPos.z };
+		collRushObjL_[ i ]->wtf.position = { pRPos.x - i + extend,pRPos.y - extend,pRPos.z };
 	}
 	//木箱用当たり判定モデル
 	for ( int i = 0; i < 12; i++ )
 	{
 		collBoxObj_[ i ]->Update();
 	}
+	const float extendBoxPosX = 0.3f;
+	const float extendBoxPosY = 0.5f;
+	
+
 	collBoxObj_[ 0 ]->wtf.position = { BPos };
-	collBoxObj_[ 1 ]->wtf.position = { collBoxObj_[0]->wtf.position.x + 0.3f, collBoxObj_[ 0 ]->wtf.position.y - 0.5f, collBoxObj_[ 0 ]->wtf.position.z};
-	collBoxObj_[ 2 ]->wtf.position = { collBoxObj_[0]->wtf.position.x - 0.3f, collBoxObj_[ 0 ]->wtf.position.y - 0.5f, collBoxObj_[ 0 ]->wtf.position.z };
+	collBoxObj_[ 1 ]->wtf.position = { collBoxObj_[0]->wtf.position.x + extendBoxPosX, collBoxObj_[ 0 ]->wtf.position.y - extendBoxPosY, collBoxObj_[ 0 ]->wtf.position.z};
+	collBoxObj_[ 2 ]->wtf.position = { collBoxObj_[0]->wtf.position.x - extendBoxPosX, collBoxObj_[ 0 ]->wtf.position.y - extendBoxPosY, collBoxObj_[ 0 ]->wtf.position.z };
 
 	collBoxObj_[3]->wtf.position = { BPos2 };
-	collBoxObj_[4]->wtf.position = { collBoxObj_[3]->wtf.position.x + 0.3f, collBoxObj_[3]->wtf.position.y - 0.5f, collBoxObj_[3]->wtf.position.z };
-	collBoxObj_[5]->wtf.position = { collBoxObj_[3]->wtf.position.x - 0.3f, collBoxObj_[3]->wtf.position.y - 0.5f, collBoxObj_[3]->wtf.position.z };
+	collBoxObj_[4]->wtf.position = { collBoxObj_[3]->wtf.position.x + extendBoxPosX, collBoxObj_[3]->wtf.position.y - extendBoxPosY, collBoxObj_[3]->wtf.position.z };
+	collBoxObj_[5]->wtf.position = { collBoxObj_[3]->wtf.position.x - extendBoxPosX, collBoxObj_[3]->wtf.position.y - extendBoxPosY, collBoxObj_[3]->wtf.position.z };
 
 	collBoxObj_[6]->wtf.position = { BPos3 };
-	collBoxObj_[7]->wtf.position = { collBoxObj_[6]->wtf.position.x + 0.3f, collBoxObj_[ 6 ]->wtf.position.y - 0.5f, collBoxObj_[ 6 ]->wtf.position.z };
-	collBoxObj_[8]->wtf.position = { collBoxObj_[6]->wtf.position.x - 0.3f, collBoxObj_[ 6 ]->wtf.position.y - 0.5f, collBoxObj_[ 6 ]->wtf.position.z };
+	collBoxObj_[7]->wtf.position = { collBoxObj_[6]->wtf.position.x + extendBoxPosX, collBoxObj_[ 6 ]->wtf.position.y - extendBoxPosY, collBoxObj_[ 6 ]->wtf.position.z };
+	collBoxObj_[8]->wtf.position = { collBoxObj_[6]->wtf.position.x - extendBoxPosX, collBoxObj_[ 6 ]->wtf.position.y - extendBoxPosY, collBoxObj_[ 6 ]->wtf.position.z };
 
 	collBoxObj_[ 9 ]->wtf.position = { BPos4 };
-	collBoxObj_[ 10 ]->wtf.position = { collBoxObj_[9]->wtf.position.x + 0.3f, collBoxObj_[9]->wtf.position.y - 0.5f, collBoxObj_[9]->wtf.position.z };
-	collBoxObj_[ 11 ]->wtf.position = { collBoxObj_[9]->wtf.position.x - 0.3f, collBoxObj_[9]->wtf.position.y - 0.5f, collBoxObj_[9]->wtf.position.z };
+	collBoxObj_[ 10 ]->wtf.position = { collBoxObj_[9]->wtf.position.x + extendBoxPosX, collBoxObj_[9]->wtf.position.y - extendBoxPosY, collBoxObj_[9]->wtf.position.z };
+	collBoxObj_[ 11 ]->wtf.position = { collBoxObj_[9]->wtf.position.x - extendBoxPosX, collBoxObj_[9]->wtf.position.y - extendBoxPosY, collBoxObj_[9]->wtf.position.z };
 
 	//コーン用当たり判定モデル
 	for ( int i = 0; i < 8; i++ )
 	{
 		collKonObj_[ i ]->Update();
 	}
-	collKonObj_[0]->wtf.position = { BPos.x + 0.5f,BPos.y - 0.5f,BPos.z - 1.0f };
-	collKonObj_[1]->wtf.position = { BPos.x - 0.5f,BPos.y - 0.5f,BPos.z - 1.0f };
+	const float extendBoxPos = 0.5f;
+	const float extendBoxPosZ = 1.0f;
+	collKonObj_[0]->wtf.position = { BPos.x + extendBoxPos,BPos.y - extendBoxPos,BPos.z - extendBoxPosZ };
+	collKonObj_[1]->wtf.position = { BPos.x - extendBoxPos,BPos.y - extendBoxPos,BPos.z - extendBoxPosZ };
 
-	collKonObj_[ 2 ]->wtf.position = { BPos2.x + 0.5f,BPos2.y - 0.5f,BPos2.z - 1.0f };
-	collKonObj_[ 3 ]->wtf.position = { BPos2.x - 0.5f,BPos2.y - 0.5f,BPos2.z - 1.0f };
+	collKonObj_[ 2 ]->wtf.position = { BPos2.x + extendBoxPos,BPos2.y - extendBoxPos,BPos2.z - extendBoxPosZ };
+	collKonObj_[ 3 ]->wtf.position = { BPos2.x - extendBoxPos,BPos2.y - extendBoxPos,BPos2.z - extendBoxPosZ };
 
-	collKonObj_[ 4 ]->wtf.position = { BPos3.x + 0.5f,BPos3.y - 0.5f,BPos3.z - 1.0f };
-	collKonObj_[ 5 ]->wtf.position = { BPos3.x - 0.5f,BPos3.y - 0.5f,BPos3.z - 1.0f };
+	collKonObj_[ 4 ]->wtf.position = { BPos3.x + extendBoxPos,BPos3.y - extendBoxPos,BPos3.z - extendBoxPosZ };
+	collKonObj_[ 5 ]->wtf.position = { BPos3.x - extendBoxPos,BPos3.y - extendBoxPos,BPos3.z - extendBoxPosZ };
 
-	collKonObj_[ 6 ]->wtf.position = { BPos4.x + 0.5f,BPos4.y - 0.5f,BPos4.z - 1.0f };
-	collKonObj_[ 7 ]->wtf.position = { BPos4.x - 0.5f,BPos4.y - 0.5f,BPos4.z - 1.0f };
+	collKonObj_[ 6 ]->wtf.position = { BPos4.x + extendBoxPos,BPos4.y - extendBoxPos,BPos4.z - extendBoxPosZ };
+	collKonObj_[ 7 ]->wtf.position = { BPos4.x - extendBoxPos,BPos4.y - extendBoxPos,BPos4.z - extendBoxPosZ };
 
 	EffUpdate();
 	isGameStartTimer++;
@@ -750,7 +763,7 @@ void BikeEnemy::Draw()
 			/*	collObj_[i]->Draw();
 				collRightObj_[ i ]->Draw();
 				collLeftObj_[ i ]->Draw();*/
-				collFrontObj_[ i ]->Draw();
+				/*collFrontObj_[ i ]->Draw();*/
 				/*collBackObj_[ i ]->Draw(); */
 
 			}
@@ -774,16 +787,16 @@ void BikeEnemy::Draw()
 			collRushObjL_[ i ]->Draw();*/
 		}
 
-		for ( int i = 0; i < 12; i++ )
-		{
-			collBoxObj_[ i ]->Draw();
-		}
+		//for ( int i = 0; i < 12; i++ )
+		//{
+		//	collBoxObj_[ i ]->Draw();
+		//}
 
-		//コーンモデル
-		for ( int i = 0; i < 8; i++ )
-		{
-			collKonObj_[ i ]->Draw();
-		}
+		////コーンモデル
+		//for ( int i = 0; i < 8; i++ )
+		//{
+		//	collKonObj_[ i ]->Draw();
+		//}
 
 	}
 
@@ -800,7 +813,9 @@ void BikeEnemy::EffUpdate()
 		}
 		if ( bulletEffTimer_[ i ] <= 20 && bulletEffTimer_[ i ] >= 1 )
 		{
-			EffSummary(Vector3(Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y - 0.2f,Obj_[ i ]->wtf.position.z - 1.3f),i);
+			const float extendGasPosY = 0.2f;
+			const float extendGasPosZ = 1.3f;
+			EffSummary(Vector3(Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y - extendGasPosY,Obj_[ i ]->wtf.position.z - extendGasPosZ),i);
 		}
 		if ( bulletEffTimer_[ i ] >= 20 )
 		{
@@ -809,13 +824,16 @@ void BikeEnemy::EffUpdate()
 		}
 
 		//火花(左側)
+		const float extendDamagePosX = 0.1f;
+		const float extendDamagePosY = 0.6f;
+		const float extendDamagePosZ = 0.2f;
 		if ( isDamageLeftEffFlag_[ i ] == 1 )
 		{
 			DamageLeftEffTimer_[ i ]++;
 		}
 		if ( DamageLeftEffTimer_[ i ] <= 10 && DamageLeftEffTimer_[ i ] >= 0 )
 		{
-			DamageLeftSummary(Vector3(collLeftObj_[ i ]->wtf.position.x - 0.1f,collLeftObj_[ i ]->wtf.position.y + 0.6f,collLeftObj_[ i ]->wtf.position.z - 0.2f),i);
+			DamageLeftSummary(Vector3(collLeftObj_[ i ]->wtf.position.x - extendDamagePosX,collLeftObj_[ i ]->wtf.position.y + extendDamagePosY,collLeftObj_[ i ]->wtf.position.z - extendDamagePosZ),i);
 		}
 		if ( DamageLeftEffTimer_[ i ] >= 10 )
 		{
@@ -829,7 +847,7 @@ void BikeEnemy::EffUpdate()
 		}
 		if ( DamageRightEffTimer_[ i ] <= 10 && DamageRightEffTimer_[ i ] >= 0 )
 		{
-			DamageRightSummary(Vector3(collRightObj_[ i ]->wtf.position.x + 0.1f,collRightObj_[ i ]->wtf.position.y + 0.6f,collRightObj_[ i ]->wtf.position.z - 0.2f),i);
+			DamageRightSummary(Vector3(collRightObj_[ i ]->wtf.position.x + extendDamagePosX,collRightObj_[ i ]->wtf.position.y + extendDamagePosY,collRightObj_[ i ]->wtf.position.z - extendDamagePosZ),i);
 		}
 		if (DamageRightEffTimer_[ i ] >= 10 )
 		{
@@ -838,29 +856,31 @@ void BikeEnemy::EffUpdate()
 		}
 
 		//煙
+		const float extendSmokePosX = 0.4f;
+		const float extendSmokePosY = 0.7f;
+		const float extendSmokePosZ = 1.0f;
 		if ( isSmokeEffFlag_[ i ] == 1 )
 		{
 			smokeEffTimer_[ i ]++;
 		}
 		if ( smokeEffTimer_[ i ] <= 10 && smokeEffTimer_[ i ] >= 0 )
 		{
-
 			if ( isRushFlag_[ i ] == 1 )
 			{
 				//右に突進
-				smokePosX_[ i ] = collRightObj_[ i ]->wtf.position.x - 0.4f;
+				smokePosX_[ i ] = collRightObj_[ i ]->wtf.position.x - extendSmokePosX;
 			}
 			else if ( isRushFlag_[ i ] == 4 )
 			{
 				//左に突進
-				smokePosX_[ i ] = collLeftObj_[ i ]->wtf.position.x + 0.4f;
+				smokePosX_[ i ] = collLeftObj_[ i ]->wtf.position.x + extendSmokePosX;
 			}
 			else
 			{
 				smokePosX_[ i ] = Obj_[ i ]->wtf.position.x;
 			}
 
-			DamageSmokeSummary(Vector3(smokePosX_[ i ],Obj_[ i ]->wtf.position.y + 0.7f,Obj_[ i ]->wtf.position.z - 1.0f),i);
+			DamageSmokeSummary(Vector3(smokePosX_[ i ],Obj_[ i ]->wtf.position.y + extendSmokePosY,Obj_[ i ]->wtf.position.z - extendSmokePosZ),i);
 		}
 		if ( smokeEffTimer_[ i ] >= 10 )
 		{
@@ -879,20 +899,20 @@ void BikeEnemy::EffUpdate()
 			if ( isRushFlag_[ i ] == 1 )
 			{
 				//右に突進
-				blazePosX_[ i ] = collRightObj_[ i ]->wtf.position.x - 0.4f;
+				blazePosX_[ i ] = collRightObj_[ i ]->wtf.position.x - extendSmokePosX;
 			}
 			else if ( isRushFlag_[ i ] == 4 )
 			{
 				//左に突進
-				blazePosX_[ i ] = collLeftObj_[ i ]->wtf.position.x + 0.4f;
+				blazePosX_[ i ] = collLeftObj_[ i ]->wtf.position.x + extendSmokePosX;
 			}
 			else
 			{
 				blazePosX_[ i ] = Obj_[ i ]->wtf.position.x;
 			}
 
-			DamageBlazeSummary(Vector3(blazePosX_[ i ],Obj_[ i ]->wtf.position.y + 0.7f,Obj_[ i ]->wtf.position.z - 1.0f),i);
-			DamageBlazeSmokeSummary(Vector3(blazePosX_[ i ],Obj_[ i ]->wtf.position.y + 0.7f,Obj_[ i ]->wtf.position.z - 1.0f),i);
+			DamageBlazeSummary(Vector3(blazePosX_[ i ],Obj_[ i ]->wtf.position.y + extendSmokePosY,Obj_[ i ]->wtf.position.z - extendSmokePosZ),i);
+			DamageBlazeSmokeSummary(Vector3(blazePosX_[ i ],Obj_[ i ]->wtf.position.y + extendSmokePosY,Obj_[ i ]->wtf.position.z - extendSmokePosZ),i);
 		}
 		if ( blazeEffTimer_[ i ] >= 10 )
 		{
@@ -911,12 +931,12 @@ void BikeEnemy::EffUpdate()
 			if ( isRushFlag_[ i ] == 1 )
 			{
 				//右に突進
-				heatPosX_[ i ] = collRightObj_[ i ]->wtf.position.x - 0.4f;
+				heatPosX_[ i ] = collRightObj_[ i ]->wtf.position.x - extendSmokePosX;
 			}
 			else if ( isRushFlag_[ i ] == 4 )
 			{
 				//左に突進
-				heatPosX_[ i ] = collLeftObj_[ i ]->wtf.position.x + 0.4f;
+				heatPosX_[ i ] = collLeftObj_[ i ]->wtf.position.x + extendSmokePosX;
 			}
 			else
 			{
@@ -1513,8 +1533,9 @@ void BikeEnemy::BiketoBikeColl()
 	}
 	if ( eachKnockbackTimer_ >= 1 && eachKnockbackTimer_ <= 20 )
 	{
-		Obj_[ 1 ]->wtf.position.z += 0.15f;
-		Obj_[ 0 ]->wtf.position.z -= 0.15f;
+		const float extendSmokePosZ = 0.15f;
+		Obj_[ 1 ]->wtf.position.z += extendSmokePosZ;
+		Obj_[ 0 ]->wtf.position.z -= extendSmokePosZ;
 	}
 	if ( eachKnockbackTimer_ >= 21 )
 	{

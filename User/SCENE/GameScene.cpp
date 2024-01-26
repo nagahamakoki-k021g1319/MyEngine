@@ -327,7 +327,8 @@ void GameScene::Update() {
 		if (input_->TriggerKey(DIK_SPACE) || input_->PButtonTrigger(B)) {isbboutFlag = true;}
 		if ( isbboutFlag == true ){
 			bboutTimer++;
-			standObj_->wtf.position.z += 0.3f;
+			const float speed = 0.3f;
+			standObj_->wtf.position.z += speed;
 		}
 		if ( bboutTimer >= 30 ){
 			mainCamera->wtf.rotation.y = 2.5f;
@@ -342,24 +343,32 @@ void GameScene::Update() {
 		//地面
 		for ( int i = 0; i < 3; i++ ){
 			floorTit_[i]->Update();
-			floorTit_[i]->wtf.position.z -= 10.0f;
-			if ( floorTit_[ i ]->wtf.position.z <= -20000.0f ){floorTit_[ i ]->wtf.position.z = 40000.0f;}
+			const float speed = 10.0f;
+			const float floorLimit = -20000.0f;
+			const float floorReset = 40000.0f;
+			floorTit_[i]->wtf.position.z -= speed;
+			if ( floorTit_[ i ]->wtf.position.z <= floorLimit ){floorTit_[ i ]->wtf.position.z = floorReset;}
 			
 		}
 
 		//両壁
 		for ( int i = 0; i < 100; i++ ){
 			floor_[i]->Update();
-			floor_[ i ]->wtf.position.z -= 10.0f;
-			if ( floor_[ i ]->wtf.position.z <= -4600.0f ){floor_[ i ]->wtf.position.z = 18400.0f;}
+			float speed = 10.0f;
+			float limit = -4600.0f;
+			float posReset = 18400.0f;
+
+			floor_[ i ]->wtf.position.z -= speed;
+			if ( floor_[ i ]->wtf.position.z <= limit ){floor_[ i ]->wtf.position.z = posReset;}
 			floor2_[i]->Update();
-			floor2_[ i ]->wtf.position.z -= 10.0f;
-			if ( floor2_[ i ]->wtf.position.z <= -4600.0f ){floor2_[ i ]->wtf.position.z = 18400.0f;}
+			floor2_[ i ]->wtf.position.z -= speed;
+			if ( floor2_[ i ]->wtf.position.z <= limit ){floor2_[ i ]->wtf.position.z = posReset;}
 		}
 		//天井
 		for ( int i = 0; i < 100; i++ ){
 			floor3_[ i ]->Update();
-			floor3_[ i ]->wtf.position.z -= 10.0f;
+			const float speed = 10.0f;
+			floor3_[ i ]->wtf.position.z -= speed;
 			if ( floor3_[ i ]->wtf.position.z <= -2000.0f )
 			{
 				floor3_[ i ]->wtf.position.z = 8000.0f;
@@ -458,25 +467,30 @@ void GameScene::Update() {
 		clearTimer++;
 		skydome->Update();
 		slipObj_->Update();
+		const float Slipspeed = 0.1f;
+
 		if ( clearTimer <= 100 && clearTimer >= 1 )
 		{
-			slipObj_->wtf.position.z += 0.1f;
+			slipObj_->wtf.position.z += Slipspeed;
 		}
 		if ( clearTimer >= 20 )
 		{
 			//横向く
-			slipObj_->wtf.rotation.y -= 0.1f;
-			if ( slipObj_->wtf.rotation.y <= -1.5f )
+			slipObj_->wtf.rotation.y -= Slipspeed;
+			const float rotLimit = -1.5F;
+			if ( slipObj_->wtf.rotation.y <= rotLimit )
 			{
-				slipObj_->wtf.rotation.y = -1.5f;
+				slipObj_->wtf.rotation.y = rotLimit;
 			}
 			//ある程度横向いたらスライディング
 			if ( slipObj_->wtf.rotation.y <= -0.8f )
 			{
-				slipObj_->wtf.rotation.x -= 0.07f;
-				if ( slipObj_->wtf.rotation.x <= -0.7f )
+				const float Srispeed = 0.07f;
+				slipObj_->wtf.rotation.x -= Srispeed;
+				const float rotSLimit = -0.7f;
+				if ( slipObj_->wtf.rotation.x <= rotSLimit )
 				{
-					slipObj_->wtf.rotation.x = -0.7f;
+					slipObj_->wtf.rotation.x = rotSLimit;
 				}
 			}
 			
@@ -489,7 +503,8 @@ void GameScene::Update() {
 			floorTit_[ i ]->Update();
 			if ( clearTimer <= 100)
 			{
-				floorTit_[ i ]->wtf.position.z -= 10.0f;
+				const float speed = 10.0f;
+				floorTit_[ i ]->wtf.position.z -= speed;
 			}
 			if ( floorTit_[ i ]->wtf.position.z <= -20000.0f )
 			{
@@ -501,9 +516,10 @@ void GameScene::Update() {
 		for ( int i = 0; i < 100; i++ )
 		{
 			floor_[ i ]->Update();
+			const float posSpeed = 10.0f;
 			if ( clearTimer <= 100 )
 			{
-				floor_[ i ]->wtf.position.z -= 10.0f;
+				floor_[ i ]->wtf.position.z -= posSpeed;
 			}
 			if ( floor_[ i ]->wtf.position.z <= -4600.0f )
 			{
@@ -512,7 +528,7 @@ void GameScene::Update() {
 			floor2_[ i ]->Update();
 			if ( clearTimer <= 100 )
 			{
-				floor2_[ i ]->wtf.position.z -= 10.0f;
+				floor2_[ i ]->wtf.position.z -= posSpeed;
 			}
 			if ( floor2_[ i ]->wtf.position.z <= -4600.0f )
 			{
@@ -526,7 +542,8 @@ void GameScene::Update() {
 		{
 			if ( clearTimer <= 100 )
 			{
-				floor4_[ i ]->wtf.position.z -= 10.0f;
+				const float speed = 10.0f;
+				floor4_[ i ]->wtf.position.z -= speed;
 			}
 			floor4_[ i ]->Update();
 		}
