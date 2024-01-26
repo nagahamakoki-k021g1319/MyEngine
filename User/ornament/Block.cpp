@@ -82,18 +82,20 @@ void Block::Update(Vector3 playerPos)
 
 
 	isGameStartTimer++;
-
+	
 	//ゲームが始まったら全て障害物が迫る
 	if ( isGameStartTimer >= 280 && player_->isRoundFlag >= 3 ){
 		//木箱
 		for ( int i = 0; i < 12; i++ )
 		{
-			boxObj_[ i ]->wtf.position.z -= 0.3f;
+			const float posSpeed = 0.3f;
+			boxObj_[ i ]->wtf.position.z -= posSpeed;
 		}
 		//三角コーン
 		for ( int i = 0; i < 8; i++ )
 		{
-			konObj_[ i ]->wtf.position.z -= 0.3f;
+			const float posSpeed = 0.3f;
+			konObj_[ i ]->wtf.position.z -= posSpeed;
 		}
 
 	}
@@ -107,14 +109,18 @@ void Block::Update(Vector3 playerPos)
 
 			if ( boxScattertimer_[ i ] >= 1 && boxScattertimer_[ i ] <= 10 )
 			{
-				boxObj_[i]->wtf.position.z += 3.0f;
+				const float posSpeed = 3.0f;
+				boxObj_[i]->wtf.position.z += posSpeed;
 			}
 			if ( boxScattertimer_[ i ] >= 11 )
 			{
-				boxObj_[i]->wtf.position.z -= 0.4f;
+				const float posSpeed = 0.4f;
+				boxObj_[i]->wtf.position.z -= posSpeed;
 			}
-			boxObj_[i]->wtf.rotation.x += 0.06f;
-			boxObj_[i]->wtf.rotation.z += 0.1f;
+			const float RotposX = 0.06f;
+			const float RotposZ = 0.1f;
+			boxObj_[i]->wtf.rotation.x += RotposX;
+			boxObj_[i]->wtf.rotation.z += RotposZ;
 
 		}
 	}
@@ -125,14 +131,18 @@ void Block::Update(Vector3 playerPos)
 
 		if ( boxScattertimer_[0] >= 1 && boxScattertimer_[0] <= 10 )
 		{
-			boxObj_[0]->wtf.position.z += 3.5f;
+			const float speedPosZ = 3.5f;
+			boxObj_[0]->wtf.position.z += speedPosZ;
 		}
 		if ( boxScattertimer_[0] >= 11 )
 		{
-			boxObj_[0]->wtf.position.z -= 0.4f;
+			const float speedPosZ = 0.4f;
+			boxObj_[0]->wtf.position.z -= speedPosZ;
 		}
-		boxObj_[0]->wtf.rotation.x += 0.06f;
-		boxObj_[0]->wtf.rotation.z += 0.1f;
+		const float rotSpeedX = 0.06f;
+		const float rotSpeedZ = 0.1f;
+		boxObj_[0]->wtf.rotation.x += rotSpeedX;
+		boxObj_[0]->wtf.rotation.z += rotSpeedZ;
 
 	}
 
@@ -165,18 +175,23 @@ void Block::Update(Vector3 playerPos)
 
 			if ( konScattertimer_[ i ] >= 1 && konScattertimer_[ i ] <= 10 )
 			{
-				konObj_[i]->wtf.position.z += 3.5f;
+				const float posSpeedZ = 3.5f;
+				konObj_[i]->wtf.position.z += posSpeedZ;
 			}
 			if ( konScattertimer_[ i ] >= 11 )
 			{
-				konObj_[ i ]->wtf.position.z -= 0.4f;
-				konObj_[ i ]->wtf.position.y += 0.02f;
-				konObj_[ i ]->wtf.scale.x -= 0.002f;
-				konObj_[ i ]->wtf.scale.y -= 0.002f;
-				konObj_[ i ]->wtf.scale.z -= 0.002f;
+				const float posSpeedZ = 0.4f;
+				const float posSpeedY = 0.02f;
+				const float scaledownPos = 0.002f;
+				konObj_[ i ]->wtf.position.z -= posSpeedZ;
+				konObj_[ i ]->wtf.position.y += posSpeedY;
+				konObj_[ i ]->wtf.scale.x -= scaledownPos;
+				konObj_[ i ]->wtf.scale.y -= scaledownPos;
+				konObj_[ i ]->wtf.scale.z -= scaledownPos;
 			}
-			konObj_[ i ]->wtf.rotation.x += 0.1f;
-			konObj_[ i ]->wtf.rotation.z += 0.1f;
+			const float rotPos = 0.1f;
+			konObj_[ i ]->wtf.rotation.x += rotPos;
+			konObj_[ i ]->wtf.rotation.z += rotPos;
 
 
 		}
@@ -239,37 +254,47 @@ void Block::Draw()
 
 void Block::InitialPosition()
 {
-	//1番目の障害物
-	boxObj_[ 0 ]->wtf.position = { 0.0f,-1.5f,101.0f };
-	boxObj_[ 1 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x + 0.3f,-2.0f,boxObj_[ 0 ]->wtf.position.z };
-	boxObj_[ 2 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x -0.3f,-2.0f,boxObj_[ 0 ]->wtf.position.z };
+	//木箱
+	const float box1WPosX = 0.0f;
+	const float box1WPosY = -1.5f;
+	const float box1WPosZ = 101.1f;
+	const float boxaddPosX = 0.3f;
+	const float boxaddPosY = -2.0f;
+	//コーン
+	const float konaddPosX = 0.5f;
+	const float konaddPosZ = 1.0f;
 
-	konObj_[ 0 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x + 0.5f, -2.0f,boxObj_[ 0 ]->wtf.position.z - 1.0f };
-	konObj_[ 1 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x - 0.5f,-2.0f, boxObj_[ 0 ]->wtf.position.z - 1.0f };
+	//1番目の障害物
+	boxObj_[ 0 ]->wtf.position = { box1WPosX,-box1WPosY,box1WPosZ };
+	boxObj_[ 1 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x + boxaddPosX,boxaddPosY,boxObj_[ 0 ]->wtf.position.z };
+	boxObj_[ 2 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x - boxaddPosX,boxaddPosY,boxObj_[ 0 ]->wtf.position.z };
+
+	konObj_[ 0 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x + konaddPosX,boxaddPosY,boxObj_[ 0 ]->wtf.position.z - konaddPosZ };
+	konObj_[ 1 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x - konaddPosX,boxaddPosY, boxObj_[ 0 ]->wtf.position.z - konaddPosZ };
 
 	//2番目の障害物
 	boxObj_[ 3 ]->wtf.position = { 1.5f,-1.5f,201.0f };
-	boxObj_[ 4 ]->wtf.position = { boxObj_[ 3 ]->wtf.position.x + 0.3f,-2.0f,boxObj_[ 3 ]->wtf.position.z };
-	boxObj_[ 5 ]->wtf.position = { boxObj_[ 3 ]->wtf.position.x -0.3f,-2.0f,boxObj_[ 3 ]->wtf.position.z };
+	boxObj_[ 4 ]->wtf.position = { boxObj_[ 3 ]->wtf.position.x + boxaddPosX,boxaddPosY,boxObj_[ 3 ]->wtf.position.z };
+	boxObj_[ 5 ]->wtf.position = { boxObj_[ 3 ]->wtf.position.x - boxaddPosX,boxaddPosY,boxObj_[ 3 ]->wtf.position.z };
 
-	konObj_[ 2 ]->wtf.position = { boxObj_[ 3 ]->wtf.position.x + 0.5f,-2.0f,boxObj_[ 3 ]->wtf.position.z - 1.0f };
-	konObj_[ 3 ]->wtf.position = { boxObj_[ 3 ]->wtf.position.x -0.5f,-2.0f,boxObj_[ 3 ]->wtf.position.z - 1.0f };
+	konObj_[ 2 ]->wtf.position = { boxObj_[ 3 ]->wtf.position.x + konaddPosX,boxaddPosY,boxObj_[ 3 ]->wtf.position.z - konaddPosZ };
+	konObj_[ 3 ]->wtf.position = { boxObj_[ 3 ]->wtf.position.x - konaddPosX,boxaddPosY,boxObj_[ 3 ]->wtf.position.z - konaddPosZ };
 
 	//3番目の障害物
 	boxObj_[ 6 ]->wtf.position = { 2.5f,-1.5f,251.0f };
-	boxObj_[ 7 ]->wtf.position = { boxObj_[ 6 ]->wtf.position.x + 0.3f,-2.0f,boxObj_[ 6 ]->wtf.position.z };
-	boxObj_[ 8 ]->wtf.position = { boxObj_[ 6 ]->wtf.position.x -0.3f,-2.0f,boxObj_[ 6 ]->wtf.position.z };
+	boxObj_[ 7 ]->wtf.position = { boxObj_[ 6 ]->wtf.position.x + boxaddPosX,boxaddPosY,boxObj_[ 6 ]->wtf.position.z };
+	boxObj_[ 8 ]->wtf.position = { boxObj_[ 6 ]->wtf.position.x - boxaddPosX,boxaddPosY,boxObj_[ 6 ]->wtf.position.z };
 
-	konObj_[ 4 ]->wtf.position = { boxObj_[ 6 ]->wtf.position.x + 0.5f,-2.0f,boxObj_[ 6 ]->wtf.position.z -1.0f };
-	konObj_[ 5 ]->wtf.position = { boxObj_[ 6 ]->wtf.position.x -0.5f,-2.0f,boxObj_[ 6 ]->wtf.position.z - 1.0f };
+	konObj_[ 4 ]->wtf.position = { boxObj_[ 6 ]->wtf.position.x + konaddPosX,boxaddPosY,boxObj_[ 6 ]->wtf.position.z - konaddPosZ };
+	konObj_[ 5 ]->wtf.position = { boxObj_[ 6 ]->wtf.position.x - konaddPosX,boxaddPosY,boxObj_[ 6 ]->wtf.position.z - konaddPosZ };
 
 	//4番目の障害物
 	boxObj_[ 9 ]->wtf.position = { -1.5f,-1.5f,351.0f };
-	boxObj_[ 10 ]->wtf.position = { boxObj_[ 9 ]->wtf.position.x + 0.3f,-2.0f,boxObj_[ 9 ]->wtf.position.z };
-	boxObj_[ 11 ]->wtf.position = { boxObj_[ 9 ]->wtf.position.x -0.3f,-2.0f,boxObj_[ 9 ]->wtf.position.z };
+	boxObj_[ 10 ]->wtf.position = { boxObj_[ 9 ]->wtf.position.x + boxaddPosX,boxaddPosY,boxObj_[ 9 ]->wtf.position.z };
+	boxObj_[ 11 ]->wtf.position = { boxObj_[ 9 ]->wtf.position.x - boxaddPosX,boxaddPosY,boxObj_[ 9 ]->wtf.position.z };
 
-	konObj_[ 6 ]->wtf.position = { boxObj_[ 9 ]->wtf.position.x + 0.5f,-2.0f,boxObj_[ 9 ]->wtf.position.z - 1.0f };
-	konObj_[ 7 ]->wtf.position = { boxObj_[ 9 ]->wtf.position.x -0.5f,-2.0f,boxObj_[ 9 ]->wtf.position.z - 1.0f };
+	konObj_[ 6 ]->wtf.position = { boxObj_[ 9 ]->wtf.position.x + konaddPosX,boxaddPosY,boxObj_[ 9 ]->wtf.position.z - konaddPosZ };
+	konObj_[ 7 ]->wtf.position = { boxObj_[ 9 ]->wtf.position.x - konaddPosX,boxaddPosY,boxObj_[ 9 ]->wtf.position.z - konaddPosZ };
 
 }
 
