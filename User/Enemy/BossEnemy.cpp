@@ -322,9 +322,9 @@ void BossEnemy::UIDraw()
 	//HP関連
 	if ( isGameStartTimer >= 180 ){
 		if ( isBesideFlag >= 4 ){
-			hpbUI->Draw();
+			/*hpbUI->Draw();
 			hpUI->Draw();
-			hpFlameUI->Draw();
+			hpFlameUI->Draw();*/
 		}
 	}
 }
