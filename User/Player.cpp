@@ -235,6 +235,12 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	gasParticleDecelL->LoadTexture("gas.png");
 	gasParticleDecelL->Update();
 
+	//剣チャージ
+	swordchageParticle = std::make_unique<ParticleManager>();
+	swordchageParticle.get()->Initialize();
+	swordchageParticle->LoadTexture("gas.png");
+	swordchageParticle->Update();
+
 	//UIの初期化(枚数が多いため)
 	UIInitialize();
 
@@ -298,7 +304,7 @@ void Player::Update() {
 	}
 
 	//エンジンメーター手動
-	/*if ( input_->PushKey(DIK_4) ){
+	if ( input_->PushKey(DIK_4) ){
 		arrowPosition.x += 5.0f;
 		arrowUI->SetPozition(arrowPosition);
 	}
@@ -328,7 +334,9 @@ void Player::Update() {
 	{
 		arrowRotation.x -= 2.0f;
 		arrowUI->SetRotation(arrowRotation.x);
-	}*/
+	}
+
+	isswordchageEffFlag_ = 1;
 
 	//プレイヤーの行動一覧
 	PlayerAction();
@@ -903,8 +911,8 @@ void Player::UIDraw()
 		hpFlameUI->Draw();
 
 		
-		/*metaUI->Draw();
-		arrowUI->Draw();*/
+		metaUI->Draw();
+		arrowUI->Draw();
 	}
 
 	//操作説明関連
@@ -1292,6 +1300,31 @@ void Player::EffUpdate()
 		isbulletEffFlag_ = 0;
 		bulletEffTimer_ = 0;
 	}
+
+	if ( isswordchageEffFlag_ == 1 )
+	{
+		swordchageEffTimer_++;
+	}
+	if ( swordchageEffTimer_ <= 20 && swordchageEffTimer_ >= 1 )
+	{
+		/*const float gasLPosX = 0.15f;
+		const float gasRPosX = 0.13f;
+		const float gasAddPosY = 0.2f;
+		const float gasLPosZ = 1.5f;
+		const float gasRPosZ = 2.5f;*/
+		
+
+		//剣(チャージ)
+		EffSummarySwordchage(Vector3(Obj_->wtf.position.x - 0.3f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z));
+	}
+	if ( swordchageEffTimer_ >= 20 )
+	{
+		isswordchageEffFlag_ = 0;
+		swordchageEffTimer_ = 0;
+	}
+
+
+
 }
 
 void Player::EffSummary(Vector3 bulletpos)
@@ -1520,6 +1553,43 @@ void Player::EffSummaryDecelL(Vector3 bulletpos4)
 	}
 }
 
+void Player::EffSummarySwordchage(Vector3 pos)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 20; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_posG = 0.02f;
+		const float rnd_posGy = 0.02f;
+		const float rnd_posGz = 0.0f;
+		Vector3 posG{};
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG += pos;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_velG = 0.01f;
+		const float rnd_velGy = 0.01f;
+		const float rnd_velGz = 0.0f;
+		Vector3 velG{};
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / -3.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 0.2f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_accG = 0.000001f;
+		Vector3 accG{};
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+
+		//追加
+		swordchageParticle->Add(60,posG,velG,accG,0.1f,0.0f);
+
+		swordchageParticle->Update();
+
+	}
+}
+
 void Player::EffDraw()
 {
 	if ( isbulletEffFlag_ == 1 )
@@ -1540,6 +1610,12 @@ void Player::EffDraw()
 			gasParticleDecelL->Draw();*/
 		}
 	}
+	
+	if ( isswordchageEffFlag_ == 1)
+	{
+		/*swordchageParticle->Draw();*/
+	}
+
 }
 
 Vector3 Player::bVelocity(Vector3& velocity,Transform& worldTransform)

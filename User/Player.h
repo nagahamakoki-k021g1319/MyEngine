@@ -47,6 +47,8 @@ public:
 	void EffSummaryDecelR(Vector3 bulletpos3);
 	//エフェクトの情報(減速ガス左)
 	void EffSummaryDecelL(Vector3 bulletpos4);
+	//エフェクトの情報(剣チャージ)
+	void EffSummarySwordchage(Vector3 pos);
 	//エフェクトの描画
 	void EffDraw();
 
@@ -238,6 +240,10 @@ private:
 	int isbulletEffFlag_ = 0;
 	//自機のバイクのブーストフラグ(0 通常,1 加速,2 減速)
 	int isboostFlag = 0;
+	//剣(チャージ)
+	std::unique_ptr<ParticleManager> swordchageParticle;
+	int swordchageEffTimer_ = 0;
+	int isswordchageEffFlag_ = 0;
 
 
 	//ダメージを受けた時のフラグ
