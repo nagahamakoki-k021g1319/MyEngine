@@ -325,15 +325,46 @@ void Player::Update() {
 		arrowUI->SetPozition(arrowPosition);
 	}
 
+	arrowTimer++;
+	if ( arrowTimer >= 6)
+	{
+		arrowTimer = 0;
+	}
+
+	if ( arrowTimer >= 0 && arrowTimer <= 3)
+	{
+		arrowRotation.x += 1.0f;
+		arrowUI->SetRotation(arrowRotation.x);
+	}
+
+	if ( arrowTimer >= 4 && arrowTimer <= 6 )
+	{
+		arrowRotation.x -= 2.0f;
+		arrowUI->SetRotation(arrowRotation.x);
+	}
+
 	if ( input_->PushKey(DIK_1) )
 	{
-		arrowRotation.x += 2.0f;
+		arrowRotation.x = -145.0f;
 		arrowUI->SetRotation(arrowRotation.x);
 	}
 	if ( input_->PushKey(DIK_2) )
 	{
+		arrowRotation.x += 2.0f;
+		arrowUI->SetRotation(arrowRotation.x);
+		if ( arrowRotation.x >= -85.0f)
+		{
+			arrowRotation.x = -85.0f;
+		}
+	}
+	if ( input_->PushKey(DIK_X) )
+	{
 		arrowRotation.x -= 2.0f;
 		arrowUI->SetRotation(arrowRotation.x);
+		if ( arrowRotation.x <= -190.0f )
+		{
+			arrowRotation.x = -190.0f;
+		}
 	}
 
 	isswordchageEffFlag_ = 1;
@@ -715,7 +746,7 @@ void Player::UIInitialize()
 	arrowPosition.y = 700;
 	arrowUI->SetPozition(arrowPosition);
 	arrowRotation.x = arrowUI->GetRotation();
-	arrowRotation.x = -190;
+	arrowRotation.x = -145;
 	arrowUI->SetRotation(arrowRotation.x);
 	arrowUI->SetSize({ 80.0f, 20.0f });
 
@@ -905,10 +936,10 @@ void Player::UIDraw()
 
 	//HP関連
 	if ( isGameStartTimer >= 180 ){
-		hpbUI->Draw();
+		/*hpbUI->Draw();
 		hpredUI->Draw();
 		hpgreenUI->Draw();
-		hpFlameUI->Draw();
+		hpFlameUI->Draw();*/
 
 		
 		metaUI->Draw();
