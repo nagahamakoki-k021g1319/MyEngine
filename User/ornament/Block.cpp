@@ -265,7 +265,7 @@ void Block::InitialPosition()
 	const float konaddPosZ = 1.0f;
 
 	//1番目の障害物
-	boxObj_[ 0 ]->wtf.position = { box1WPosX,-box1WPosY,box1WPosZ };
+	boxObj_[ 0 ]->wtf.position = { box1WPosX,box1WPosY,box1WPosZ };
 	boxObj_[ 1 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x + boxaddPosX,boxaddPosY,boxObj_[ 0 ]->wtf.position.z };
 	boxObj_[ 2 ]->wtf.position = { boxObj_[ 0 ]->wtf.position.x - boxaddPosX,boxaddPosY,boxObj_[ 0 ]->wtf.position.z };
 

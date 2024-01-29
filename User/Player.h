@@ -281,6 +281,7 @@ private:
 	Sprite* arrowUI = nullptr;
 	Vector2 arrowPosition;
 	Vector2 arrowRotation;
+	int arrowTimer = 0;
 
 	const float moveSpeed_ = 0.1f;
 	const float rotaSpeed_ = 0.1f;
