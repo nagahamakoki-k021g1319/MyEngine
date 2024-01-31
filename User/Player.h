@@ -283,6 +283,10 @@ private:
 	Vector2 arrowRotation;
 	int arrowTimer = 0;
 
+	//エンジンメーターのフラグ
+	bool isArrowUpFlag = false;
+	bool isArrowDwonFlag = false;
+
 	const float moveSpeed_ = 0.1f;
 	const float rotaSpeed_ = 0.1f;
 

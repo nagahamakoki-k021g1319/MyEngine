@@ -238,7 +238,7 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	//剣チャージ
 	swordchageParticle = std::make_unique<ParticleManager>();
 	swordchageParticle.get()->Initialize();
-	swordchageParticle->LoadTexture("gas.png");
+	swordchageParticle->LoadTexture("swordchage.png");
 	swordchageParticle->Update();
 
 	//UIの初期化(枚数が多いため)
@@ -303,69 +303,8 @@ void Player::Update() {
 		isOperationFlag3 = false;
 	}
 
-	//エンジンメーター手動
-	if ( input_->PushKey(DIK_4) ){
-		arrowPosition.x += 5.0f;
-		arrowUI->SetPozition(arrowPosition);
-	}
-	if ( input_->PushKey(DIK_3) )
-	{
-		arrowPosition.x -= 5.0f;
-		arrowUI->SetPozition(arrowPosition);
-	}
 
-	if ( input_->PushKey(DIK_5) )
-	{
-		arrowPosition.y -= 5.0f;
-		arrowUI->SetPozition(arrowPosition);
-	}
-	if ( input_->PushKey(DIK_6) )
-	{
-		arrowPosition.y += 5.0f;
-		arrowUI->SetPozition(arrowPosition);
-	}
-
-	arrowTimer++;
-	if ( arrowTimer >= 6)
-	{
-		arrowTimer = 0;
-	}
-
-	if ( arrowTimer >= 0 && arrowTimer <= 3)
-	{
-		arrowRotation.x += 1.0f;
-		arrowUI->SetRotation(arrowRotation.x);
-	}
-
-	if ( arrowTimer >= 4 && arrowTimer <= 6 )
-	{
-		arrowRotation.x -= 2.0f;
-		arrowUI->SetRotation(arrowRotation.x);
-	}
-
-	if ( input_->PushKey(DIK_1) )
-	{
-		arrowRotation.x = -145.0f;
-		arrowUI->SetRotation(arrowRotation.x);
-	}
-	if ( input_->PushKey(DIK_2) )
-	{
-		arrowRotation.x += 2.0f;
-		arrowUI->SetRotation(arrowRotation.x);
-		if ( arrowRotation.x >= -85.0f)
-		{
-			arrowRotation.x = -85.0f;
-		}
-	}
-	if ( input_->PushKey(DIK_X) )
-	{
-		arrowRotation.x -= 2.0f;
-		arrowUI->SetRotation(arrowRotation.x);
-		if ( arrowRotation.x <= -190.0f )
-		{
-			arrowRotation.x = -190.0f;
-		}
-	}
+	
 
 	isswordchageEffFlag_ = 1;
 
@@ -1207,16 +1146,20 @@ void Player::PlayerAction()
 		limitmove = false;
 		limitmove2 = false;
 		isboostFlag = 1;
+		isArrowUpFlag = true;
 	}
 	else if ( input_->PushKey(DIK_S) || input_->StickInput(L_DOWN) )
 	{
 		limitmove = false;
 		limitmove2 = false;
 		isboostFlag = 2;
+		isArrowDwonFlag = true;
 	}
 	else
 	{
 		isboostFlag = 0;
+		isArrowUpFlag = false;
+		isArrowDwonFlag = false;
 	}
 
 	if ( input_->PushKey(DIK_W) && isRightAtFlag == false && isLeftAtFlag == false && isAtTimerFlag == false )
@@ -1299,6 +1242,65 @@ void Player::PlayerAction()
 	{
 		knockbackTimerL = 0;
 		isKnockbackFlagL = false;
+	}
+
+	//エンジンブルブルする
+	arrowTimer++;
+	if ( arrowTimer >= 6 )
+	{
+		arrowTimer = 0;
+	}
+	if ( arrowTimer >= 0 && arrowTimer <= 3 )
+	{
+		arrowRotation.x += 1.0f;
+		arrowUI->SetRotation(arrowRotation.x);
+	}
+	if ( arrowTimer >= 4 && arrowTimer <= 6 )
+	{
+		arrowRotation.x -= 2.0f;
+		arrowUI->SetRotation(arrowRotation.x);
+	}
+	//エンジン動く
+	if ( isArrowUpFlag == true )
+	{
+		arrowRotation.x += 1.0f;
+		arrowUI->SetRotation(arrowRotation.x);
+		if ( arrowRotation.x >= -85.0f )
+		{
+			arrowRotation.x = -85.0f;
+		}
+	}
+	if ( isArrowDwonFlag == true )
+	{
+		arrowRotation.x -= 1.0f;
+		arrowUI->SetRotation(arrowRotation.x);
+		if ( arrowRotation.x <= -190.0f )
+		{
+			arrowRotation.x = -190.0f;
+		}
+	}
+	if ( isArrowUpFlag == false && isArrowDwonFlag == false )
+	{
+		if ( arrowRotation.x >= -146.0f )
+		{
+			arrowRotation.x -= 0.4f;
+			arrowUI->SetRotation(arrowRotation.x);
+			if ( arrowRotation.x <= -145.0f )
+			{
+				arrowRotation.x = -145.0f;
+			}
+		}
+
+		if ( arrowRotation.x <= -144.0f )
+		{
+			arrowRotation.x += 0.4f;
+			arrowUI->SetRotation(arrowRotation.x);
+			if ( arrowRotation.x >= -145.0f )
+			{
+				arrowRotation.x = -145.0f;
+			}
+		}
+
 	}
 
 }
@@ -1587,11 +1589,11 @@ void Player::EffSummaryDecelL(Vector3 bulletpos4)
 void Player::EffSummarySwordchage(Vector3 pos)
 {
 	//パーティクル範囲
-	for ( int i = 0; i < 20; i++ )
+	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_posG = 0.02f;
-		const float rnd_posGy = 0.02f;
+		const float rnd_posG = 0.1f;
+		const float rnd_posGy = 0.1f;
 		const float rnd_posGz = 0.0f;
 		Vector3 posG{};
 		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
@@ -1600,13 +1602,13 @@ void Player::EffSummarySwordchage(Vector3 pos)
 		posG += pos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_velG = 0.01f;
-		const float rnd_velGy = 0.01f;
+		const float rnd_velG = 0.05f;
+		const float rnd_velGy = 0.05f;
 		const float rnd_velGz = 0.0f;
 		Vector3 velG{};
 		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
-		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / -3.0f;
-		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 0.2f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
 		const float rnd_accG = 0.000001f;
 		Vector3 accG{};
@@ -1614,7 +1616,7 @@ void Player::EffSummarySwordchage(Vector3 pos)
 		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 
 		//追加
-		swordchageParticle->Add(60,posG,velG,accG,0.1f,0.0f);
+		swordchageParticle->Add(60,posG,velG,accG,0.06f,0.0f);
 
 		swordchageParticle->Update();
 
