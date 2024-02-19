@@ -20,9 +20,10 @@ BossEnemy::~BossEnemy()
 	delete  guidbulletObj_;
 	delete	guidbulletModel_;
 
-	for ( int i = 0; i < 5; i++ ){
+	for ( int i = 0; i < 5; i++ )
+	{
 		delete linkagebulletObj_[ i ];
-		delete linkagebulletModel_[i];
+		delete linkagebulletModel_[ i ];
 	}
 
 	for ( int i = 0; i < 5; i++ )
@@ -66,7 +67,7 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	collObj_->SetModel(collModel_);
 	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z - 1.0f };
 
-	
+
 	//誘導弾
 	guidbulletModel_ = Model::LoadFromOBJ("collboll");
 	guidbulletObj_ = Object3d::Create();
@@ -75,12 +76,13 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	guidbulletObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 1.0f,Obj_->wtf.position.z };
 
 	//5連誘導弾
-	for ( int i = 0; i < 5; i++ ){
-		linkagebulletModel_[i] = Model::LoadFromOBJ("collboll");
-		linkagebulletObj_[i] = Object3d::Create();
-		linkagebulletObj_[i]->SetModel(linkagebulletModel_[i]);
-		linkagebulletObj_[i]->wtf.scale = { 1.0f,1.0f,1.0f };
-		linkagebulletObj_[i]->wtf.position = {Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z};
+	for ( int i = 0; i < 5; i++ )
+	{
+		linkagebulletModel_[ i ] = Model::LoadFromOBJ("collboll");
+		linkagebulletObj_[ i ] = Object3d::Create();
+		linkagebulletObj_[ i ]->SetModel(linkagebulletModel_[ i ]);
+		linkagebulletObj_[ i ]->wtf.scale = { 1.0f,1.0f,1.0f };
+		linkagebulletObj_[ i ]->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z };
 	}
 
 
@@ -91,7 +93,7 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		MeteorObj_[ i ] = Object3d::Create();
 		MeteorObj_[ i ]->SetModel(linkagebulletModel_[ i ]);
 		MeteorObj_[ i ]->wtf.scale = { 1.0f,1.0f,1.0f };
-		MeteorObj_[ i ]->wtf.position = { -6.0f + i * 3.0f,-1,30};
+		MeteorObj_[ i ]->wtf.position = { -6.0f + i * 3.0f,-1,30 };
 	}
 
 	//自機の当たり判定
@@ -104,6 +106,24 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	gasParticle->LoadTexture("gas.png");
 	gasParticle->Update();
 
+	for ( int i = 0; i < 5; i++ )
+	{
+		linkageParticle_[ i ] = std::make_unique<ParticleManager>();
+		linkageParticle_[ i ].get()->Initialize();
+		linkageParticle_[ i ]->LoadTexture("swordchage.png");
+		linkageParticle_[ i ]->Update();
+
+		meteorParticle_[ i ] = std::make_unique<ParticleManager>();
+		meteorParticle_[ i ].get()->Initialize();
+		meteorParticle_[ i ]->LoadTexture("swordchage.png");
+		meteorParticle_[ i ]->Update();
+	}
+
+	damageParticle = std::make_unique<ParticleManager>();
+	damageParticle.get()->Initialize();
+	damageParticle->LoadTexture("fire.png");
+	damageParticle->Update();
+
 	//UIの初期化(枚数が多いため)
 	UIInitialize();
 }
@@ -114,22 +134,38 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 	collObj_->Update();
 	collObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 0.5f,Obj_->wtf.position.z - 1.0f };
 	guidbulletObj_->Update();
-	for ( int i = 0; i < 5; i++ ){linkagebulletObj_[ i ]->Update();}
-	for ( int i = 0; i < 5; i++ ){MeteorObj_[ i ]->Update();}
+	for ( int i = 0; i < 5; i++ )
+	{
+		linkagebulletObj_[ i ]->Update();
+	}
+	for ( int i = 0; i < 5; i++ )
+	{
+		MeteorObj_[ i ]->Update();
+	}
 	collPlayerObj_->Update();
-	collPlayerObj_->wtf.position = { playerPos};
+	collPlayerObj_->wtf.position = { playerPos };
 	EffUpdate();
 	isGameStartTimer++;
 
 	bikSpinTimer++;
 	//バイクの車輪が動き出す(抜刀)
-	if ( bikSpinTimer > 10 ){bikSpinTimer = 0;}
-	if ( bikSpinTimer >= 1 && bikSpinTimer <= 5 ){Obj_->SetModel(Model2_);}
-	else if ( bikSpinTimer >= 6 && bikSpinTimer <= 10 ){Obj_->SetModel(Model_);}
+	if ( bikSpinTimer > 10 )
+	{
+		bikSpinTimer = 0;
+	}
+	if ( bikSpinTimer >= 1 && bikSpinTimer <= 5 )
+	{
+		Obj_->SetModel(Model2_);
+	}
+	else if ( bikSpinTimer >= 6 && bikSpinTimer <= 10 )
+	{
+		Obj_->SetModel(Model_);
+	}
 
-	
-	//ボス登場
-	if ( player_->isCameraBehavior == 2 ){
+
+//ボス登場
+	if ( player_->isCameraBehavior == 2 )
+	{
 		isBesideFlag = 1;
 		Obj_->wtf.position.z += 0.6f;
 	}
@@ -141,36 +177,45 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 	//5連誘導弾
 	inductionAttack();
 
-	if ( isBesideFlag >= 4 ){
+	if ( isBesideFlag >= 4 )
+	{
 		SwAtTimer++;
 	}
 	//ボス登場からの攻撃
-	if ( isBesideFlag == 6){
-		//簡単な移動
-		if (isMoveFlag_ == 0){
+	if ( isBesideFlag == 6 )
+	{
+//簡単な移動
+		if ( isMoveFlag_ == 0 )
+		{
 			Obj_->wtf.position.x -= 0.04f;
-			if ( Obj_->wtf.position.x <= -10.0f ){
+			if ( Obj_->wtf.position.x <= -10.0f )
+			{
 				Obj_->wtf.position.x = -10.0f;
 				isMoveFlag_ = 1;
 			}
 		}
-		else if ( isMoveFlag_ == 1 ){
+		else if ( isMoveFlag_ == 1 )
+		{
 			Obj_->wtf.position.x += 0.04f;
-			if ( Obj_->wtf.position.x >= 10.0f ){
+			if ( Obj_->wtf.position.x >= 10.0f )
+			{
 				Obj_->wtf.position.x = 10.0f;
 				isMoveFlag_ = 0;
 			}
 		}
 
-		//攻撃1
-		if ( SwAtTimer >= 100 && SwAtTimer <= 130 ){
-			if ( hpPosition.x <= 279 ){
+		//攻撃1(5連攻撃)
+		if ( SwAtTimer >= 100 && SwAtTimer <= 130 )
+		{
+			if ( hpPosition.x <= 279 )
+			{
 				Obj_->SetModel(ModelAt_);
 				bikSpinTimer = 6;
 				isdurationShootFlag = 1;
 			}
 		}
-		else{
+		else
+		{
 			bikSpinTimer++;
 		}
 
@@ -189,7 +234,7 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 			bikSpinTimer++;
 		}
 
-		//攻撃3
+		//攻撃3(メテオフォール)
 		if ( SwAtTimer >= 560 && SwAtTimer <= 590 )
 		{
 			if ( hpPosition.x <= 279 )
@@ -204,21 +249,32 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 			bikSpinTimer++;
 		}
 
-		if ( SwAtTimer >= 1100 ){SwAtTimer = 0;}
+
+
+		if ( SwAtTimer >= 1100 )
+		{
+			SwAtTimer = 0;
+		}
 
 	}
 
 	//当たり判定(プレイヤー弾からボス)
-	if ( hpPosition.x <= 279 ){
-		if ( coll.CircleCollision(playerBpos,Obj_->wtf.position,1.0f,1.0f) ){
-			hpPosition.x += 30.0f;//4倍ダメ
+	if ( hpPosition.x <= 279 )
+	{
+		if ( coll.CircleCollision(playerBpos,Obj_->wtf.position,1.0f,1.0f) )
+		{
+			hpPosition.x += 15.0f;//4倍ダメ
 			hpUI->SetPozition(hpPosition);
+			isdamageEffFlag_ = 1;
 		}
 	}
 	//当たり判定(誘導弾からプレイヤー)
-	if ( hpPosition.x <= 279 ){
-		for ( int i = 0; i < 5; i++ ){
-			if ( coll.CircleCollision(linkagebulletObj_[ i ]->wtf.position,collPlayerObj_->wtf.position,0.6f,0.6f) ){
+	if ( hpPosition.x <= 279 )
+	{
+		for ( int i = 0; i < 5; i++ )
+		{
+			if ( coll.CircleCollision(linkagebulletObj_[ i ]->wtf.position,collPlayerObj_->wtf.position,0.6f,0.6f) )
+			{
 				player_->isCamShake = 1;
 				player_->camShakeTimer = player_->camShakeLimit;
 				player_->hpgreenPosition.x -= 10.0f;//倍ダメ
@@ -241,16 +297,22 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 		}
 	}
 
-
-
+	if ( input_->PushKey(DIK_P) )
+	{
+		isdamageEffFlag_ = 1;
+	}
 
 	//ボスが死んだらゲームクリア
-	if ( hpPosition.x >= 280 ){player_->isClearFlag = true;}
+	if ( hpPosition.x >= 280 )
+	{
+		player_->isClearFlag = true;
+	}
 
 
 	ImGui::Begin("BossEnemy");
 
 	ImGui::Text("isGameStartTimer:%d",isGameStartTimer);
+	ImGui::Text("Position:%f,%f,%f",Obj_->wtf.rotation.x,Obj_->wtf.rotation.y,Obj_->wtf.rotation.z);
 	ImGui::Text("HPPosion:%f,%f",hpPosition.x,hpPosition.y);
 	ImGui::Text("MeteorCoolTime:%d",MeteorCoolTime);
 	ImGui::Text("linkageCoolTimer_:%d",linkageCoolTimer_);
@@ -262,22 +324,25 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 void BossEnemy::Draw()
 {
 	/*collPlayerObj_->Draw();*/
-	if ( isGameStartTimer >= 200 ){
-		if ( hpPosition.x <= 279 ){
+	if ( isGameStartTimer >= 200 )
+	{
+		if ( hpPosition.x <= 279 )
+		{
 			Obj_->Draw();
-			for ( int i = 0; i < 5; i++ ){
-				if ( isdurationShootFlag == 1 ){linkagebulletObj_[ i ]->Draw();}
+			for ( int i = 0; i < 5; i++ )
+			{
+				/*if ( isdurationShootFlag == 1 ){linkagebulletObj_[ i ]->Draw();}*/
 			}
 			for ( int i = 0; i < 5; i++ )
 			{
 				if ( isMeteorFlag == true )
 				{
-					MeteorObj_[ i ]->Draw();
+					/*MeteorObj_[ i ]->Draw();*/
 				}
 			}
 		}
-		
-		
+
+
 	}
 
 }
@@ -320,11 +385,13 @@ void BossEnemy::UIInitialize()
 void BossEnemy::UIDraw()
 {
 	//HP関連
-	if ( isGameStartTimer >= 180 ){
-		if ( isBesideFlag >= 4 ){
-			/*hpbUI->Draw();
-			hpUI->Draw();
-			hpFlameUI->Draw();*/
+	if ( isGameStartTimer >= 180 )
+	{
+		if ( isBesideFlag >= 4 )
+		{
+/*hpbUI->Draw();
+hpUI->Draw();
+hpFlameUI->Draw();*/
 		}
 	}
 }
@@ -344,6 +411,55 @@ void BossEnemy::EffUpdate()
 		isbulletEffFlag_ = 0;
 		bulletEffTimer_ = 0;
 	}
+
+	for ( int i = 0; i < 5; i++ )
+	{
+		//5連攻撃
+		if ( islinkageEffFlag_[ i ] == 1 )
+		{
+			linkageEffTimer_[ i ]++;
+		}
+		if ( linkageEffTimer_[ i ] <= 20 && linkageEffTimer_[ i ] >= 1 )
+		{
+			EfflinkageSummary(Vector3(linkagebulletObj_[ i ]->wtf.position.x,linkagebulletObj_[ i ]->wtf.position.y + 0.5f,linkagebulletObj_[ i ]->wtf.position.z),i);
+		}
+		if ( linkageEffTimer_[ i ] >= 20 )
+		{
+			islinkageEffFlag_[ i ] = 0;
+			linkageEffTimer_[ i ] = 0;
+		}
+
+		//メテオフォール
+		if ( ismeteorEffFlag_[ i ] == 1 )
+		{
+			meteorEffTimer_[ i ]++;
+		}
+		if ( meteorEffTimer_[ i ] <= 20 && meteorEffTimer_[ i ] >= 1 )
+		{
+			EffmeteorSummary(Vector3(MeteorObj_[ i ]->wtf.position.x,MeteorObj_[ i ]->wtf.position.y + 0.5f,MeteorObj_[ i ]->wtf.position.z),i);
+		}
+		if ( meteorEffTimer_[ i ] >= 20 )
+		{
+			ismeteorEffFlag_[ i ] = 0;
+			meteorEffTimer_[ i ] = 0;
+		}
+	}
+
+	if ( isdamageEffFlag_ == 1 )
+	{
+		damageEffTimer_++;
+	}
+	if ( damageEffTimer_ <= 10 && damageEffTimer_ >= 0 )
+	{
+		EffdamageSummary(Vector3(Obj_->wtf.position.x,Obj_->wtf.position.y + 2.0f,Obj_->wtf.position.z - 3.5f));
+	}
+	if ( damageEffTimer_ >= 10 )
+	{
+		isdamageEffFlag_ = 0;
+		damageEffTimer_ = 0;
+	}
+
+
 }
 
 void BossEnemy::EffSummary(Vector3 bulletpos)
@@ -383,8 +499,148 @@ void BossEnemy::EffSummary(Vector3 bulletpos)
 	}
 }
 
+void BossEnemy::EfflinkageSummary(Vector3 bulletpos,int num)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 5; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_posG = 0.03f;
+		const float rnd_posGy = 0.03f;
+		const float rnd_posGz = 0.03f;
+		Vector3 posG{};
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG += bulletpos;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_velG = 0.01f;
+		const float rnd_velGy = 0.01f;
+		const float rnd_velGz = 0.01f;
+		Vector3 velG{};
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_accG = 0.000001f;
+		Vector3 accG{};
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+
+		//追加
+		linkageParticle_[ num ]->Add(60,posG,velG,accG,0.3f,0.0f);
+
+		linkageParticle_[ num ]->Update();
+
+	}
+}
+
+void BossEnemy::EffmeteorSummary(Vector3 bulletpos,int num)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 5; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_posG = 0.03f;
+		const float rnd_posGy = 0.03f;
+		const float rnd_posGz = 0.03f;
+		Vector3 posG{};
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG += bulletpos;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_velG = 0.01f;
+		const float rnd_velGy = 0.01f;
+		const float rnd_velGz = 0.01f;
+		Vector3 velG{};
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_accG = 0.000001f;
+		Vector3 accG{};
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+
+		//追加
+		meteorParticle_[ num ]->Add(60,posG,velG,accG,0.3f,0.0f);
+
+		meteorParticle_[ num ]->Update();
+
+	}
+}
+
+void BossEnemy::EffdamageSummary(Vector3 bulletpos)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 5; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_posG = 0.02f;
+		const float rnd_posGy = 0.02f;
+		const float rnd_posGz = 0.02f;
+		Vector3 posG{};
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG += bulletpos;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_velG = 0.04f;
+		const float rnd_velGy = 0.04f;
+		const float rnd_velGz = 0.0f;
+		Vector3 velG{};
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 0.5f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_accG = 0.000001f;
+		Vector3 accG{};
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+
+		//追加
+		damageParticle->Add(60,posG,velG,accG,0.4f,0.0f);
+
+		damageParticle->Update();
+
+	}
+
+}
+
 void BossEnemy::EffDraw()
 {
+	for ( int i = 0; i < 5; i++ )
+	{
+		if ( hpPosition.x <= 279 )
+		{
+			if ( linkageCoolTimer_ >= 1 )
+			{
+				if ( isdurationShootFlag == 1 )
+				{
+					linkageParticle_[ i ]->Draw();
+				}
+			}
+
+
+
+			if ( ismeteorEffFlag_[ i ] == 1 )
+			{
+				if ( isMeteorFlag == true )
+				{
+					meteorParticle_[ i ]->Draw();
+				}
+			}
+		}
+	}
+
+	if ( isdamageEffFlag_ == 1 && damageEffTimer_ <= 10 && damageEffTimer_ >= 1 )
+	{
+		damageParticle->Draw();
+	}
 
 }
 
@@ -395,11 +651,23 @@ Vector3 BossEnemy::GetWorldPosition()
 
 void BossEnemy::inductionAttack()
 {
-	if ( isdurationShootFlag == 1 ){linkageCoolTimer_++;}
+	if ( isdurationShootFlag == 1 )
+	{
+		linkageCoolTimer_++;
+	}
+
+	for ( int i = 0; i < 5; i++ )
+	{
+		if ( linkageCoolTimer_ >= 1 )
+		{
+			islinkageEffFlag_[ i ] = 1;
+		}
+	}
 
 	//誘導弾の攻撃前の拡散
-	if ( linkageCoolTimer_ >= 1 && linkageCoolTimer_ <= 30 ){
-		//1発目の誘導弾(一番上)
+	if ( linkageCoolTimer_ >= 1 && linkageCoolTimer_ <= 30 )
+	{
+//1発目の誘導弾(一番上)
 		linkagebulletObj_[ 0 ]->wtf.position.y += 0.3f;
 		if ( linkagebulletObj_[ 0 ]->wtf.position.y >= Obj_->wtf.position.y + 3.0f )
 		{
@@ -535,6 +803,7 @@ void BossEnemy::MeteorAttack()
 	{
 		if ( isMeteorFlag == true )
 		{
+			ismeteorEffFlag_[ i ] = 1;
 			MeteorObj_[ i ]->wtf.position.z += 10.0f;
 			if ( MeteorObj_[ i ]->wtf.position.z >= 300.0f )
 			{
@@ -542,7 +811,13 @@ void BossEnemy::MeteorAttack()
 				MeteorObj_[ i ]->wtf.position.z = 300.0f;
 			}
 		}
+		else
+		{
+			ismeteorEffFlag_[ i ] = 0;
+		}
 	}
+
+
 
 	if ( isFollFlag == true )
 	{

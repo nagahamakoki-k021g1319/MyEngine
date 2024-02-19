@@ -33,6 +33,9 @@ public:
 	void EffUpdate();
 	//エフェクトの情報
 	void EffSummary(Vector3 bulletpos);
+	void EfflinkageSummary(Vector3 bulletpos,int num);
+	void EffmeteorSummary(Vector3 bulletpos,int num);
+	void EffdamageSummary(Vector3 bulletpos);
 	//エフェクトの描画
 	void EffDraw();
 
@@ -70,7 +73,6 @@ private:
 	Model* Model_ = nullptr;
 	Model* Model2_ = nullptr;
 
-	int HP = 1;
 	//バイクの車輪動かす
 	int bikSpinTimer = 0;
 	//ボスの攻撃時モデル
@@ -96,19 +98,19 @@ private:
 	int BulletdurationTime = 0;
 
 	//5連誘導弾のモデル
-	Object3d* linkagebulletObj_[ 5 ] = {0};
-	Model* linkagebulletModel_[ 5 ] = {0};
-	Vector3 playerlen_[5];
-	Vector3 bitweenlen_[5];
-	int islinkageShootFlag_[ 5 ] = {0,0,0,0,0};
-	int linkageBulletdurationTime_[ 5 ] = {0,0,0,0,0};
+	Object3d* linkagebulletObj_[ 5 ] = { 0 };
+	Model* linkagebulletModel_[ 5 ] = { 0 };
+	Vector3 playerlen_[ 5 ];
+	Vector3 bitweenlen_[ 5 ];
+	int islinkageShootFlag_[ 5 ] = { 0,0,0,0,0 };
+	int linkageBulletdurationTime_[ 5 ] = { 0,0,0,0,0 };
 	int linkageCoolTimer_ = 0;
 	int isLinkageMoveFlag = 0;
 	int isdurationShootFlag = 0;
 
 	//メテオフォールのモデル
-	Object3d* MeteorObj_[ 5 ] = {0};
-	Model* MeteorModel_[ 5 ] = {0};
+	Object3d* MeteorObj_[ 5 ] = { 0 };
+	Model* MeteorModel_[ 5 ] = { 0 };
 	bool isMeteorFlag = false;
 	int MeteorCoolTime = 0;
 	bool isFollFlag = false;
@@ -123,6 +125,21 @@ private:
 	std::unique_ptr<ParticleManager> gasParticle;
 	int bulletEffTimer_ = 0;
 	int isbulletEffFlag_ = 0;
+
+	//5連攻撃
+	std::unique_ptr<ParticleManager> linkageParticle_[ 5 ];
+	int linkageEffTimer_[ 5 ] = { 0 };
+	int islinkageEffFlag_[ 5 ] = { 0 };
+
+	//メテオフォール
+	std::unique_ptr<ParticleManager> meteorParticle_[ 5 ];
+	int meteorEffTimer_[ 5 ] = { 0 };
+	int ismeteorEffFlag_[ 5 ] = { 0 };
+
+	//くらった時のエフェクト
+	std::unique_ptr<ParticleManager> damageParticle;
+	int damageEffTimer_ = 0;
+	int isdamageEffFlag_ = 0;
 
 	//HPフレームゲージ
 	Sprite* hpFlameUI = nullptr;

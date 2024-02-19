@@ -49,6 +49,12 @@ public:
 	void EffSummaryDecelL(Vector3 bulletpos4);
 	//エフェクトの情報(剣チャージ)
 	void EffSummarySwordchage(Vector3 pos);
+	//エフェクトの情報(弾)
+	void EffSummaryBullet(Vector3 bulletpos);
+	//エフェクトの情報(右スピン)
+	void EffSummaryRSpin(Vector3 pos);
+	//エフェクトの情報(左スピン)
+	void EffSummaryLSpin(Vector3 pos);
 	//エフェクトの描画
 	void EffDraw();
 
@@ -153,6 +159,15 @@ private:
 	Model* extrusionLeftModel_ = nullptr;
 	Object3d* extrusionLeftObj_ = nullptr;
 
+	//自機が回転攻撃したときに動くモデル(エフェクト用)
+	Model* slashModel_ = nullptr;
+	//右
+	Object3d* slashRObj_ = nullptr;
+	bool spineRffflag = false;
+	//左
+	Object3d* slashLObj_ = nullptr;
+	bool spineLffflag = false;
+
 	//自機の納刀モデルから抜刀モデルに切り替え
 	int isBikswordstyFlag = 0;
 	int BikswordstyTimer = 0;
@@ -177,6 +192,9 @@ private:
 	Model* collModel_ = nullptr;
 	float collpos = 0.0f;
 
+	//バイクの残骸
+	Model* debrisModel_ = nullptr;
+	Object3d* debrisObj_ = nullptr;
 
 
 	//自機の生存フラグ
@@ -244,6 +262,18 @@ private:
 	std::unique_ptr<ParticleManager> swordchageParticle;
 	int swordchageEffTimer_ = 0;
 	int isswordchageEffFlag_ = 0;
+	//弾飛ばし
+	std::unique_ptr<ParticleManager> ballisticParticle;
+	int ballisticEffTimer_ = 0;
+	int isBallisticEffFlag_ = 0;
+	//右スピンエフェクト
+	std::unique_ptr<ParticleManager> RSpinParticle;
+	int RSpinEffTimer_ = 0;
+	int isRSpinEffFlag_ = 0;
+	//左スピンエフェクト
+	std::unique_ptr<ParticleManager> LSpinParticle;
+	int LSpinEffTimer_ = 0;
+	int isLSpinEffFlag_ = 0;
 
 
 	//ダメージを受けた時のフラグ
@@ -315,6 +345,9 @@ public:
 	//左から敵が突進
 	bool isKnockbackFlagL = false;
 	int knockbackTimerL = 0;
+
+	//バイクの残骸が後ろに散らばる
+	bool isScatterFlag = false;
 
 	//弾発射(弱)
 	Object3d* shootObj_ = nullptr;

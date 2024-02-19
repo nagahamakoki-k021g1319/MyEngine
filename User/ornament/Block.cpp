@@ -85,16 +85,15 @@ void Block::Update(Vector3 playerPos)
 	
 	//ゲームが始まったら全て障害物が迫る
 	if ( isGameStartTimer >= 280 && player_->isRoundFlag >= 3 ){
+		const float posSpeed = 1.0f;
 		//木箱
 		for ( int i = 0; i < 12; i++ )
 		{
-			const float posSpeed = 0.3f;
 			boxObj_[ i ]->wtf.position.z -= posSpeed;
 		}
 		//三角コーン
 		for ( int i = 0; i < 8; i++ )
 		{
-			const float posSpeed = 0.3f;
 			konObj_[ i ]->wtf.position.z -= posSpeed;
 		}
 
