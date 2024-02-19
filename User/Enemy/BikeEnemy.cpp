@@ -448,6 +448,10 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 				player_->camShakeTimer = player_->camShakeLimit;
 				player_->hpgreenPosition.x -= damage;//倍ダメ
 				player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
+				if (player_->isScatterFlag == false )
+				{
+					player_->isScatterFlag = true;
+				}
 			}
 		}
 		//当たったらノックバックタイマー起動
@@ -629,24 +633,28 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 	//木箱とバイク兵
 	for ( int i = 0; i < 9; i++ )
 	{
-		if ( HP_[ i ] >= 1 )
+		
+		if ( isBackEntryFlag_[ i ] == 1 )
 		{
-			for ( int j = 0; j < 12; j++ )
+			if ( HP_[ i ] >= 1 )
 			{
-				if ( coll.CircleCollision(collBoxObj_[j]->wtf.position,collFrontObj_[ i ]->wtf.position,0.6f,0.6f) )
+				for ( int j = 0; j < 12; j++ )
 				{
-					isBoxFlag_[j] = 1;
+					if ( coll.CircleCollision(collBoxObj_[ j ]->wtf.position,collFrontObj_[ i ]->wtf.position,0.6f,0.6f) )
+					{
+						isBoxFlag_[ j ] = 1;
+					}
 				}
-			}
 
-			for ( int k = 0; k < 8; k++ )
-			{
-				if ( coll.CircleCollision(collKonObj_[k]->wtf.position,collFrontObj_[ i ]->wtf.position,0.6f,0.6f) )
+				for ( int k = 0; k < 8; k++ )
 				{
-					isKonFlag_[k] = 1;
+					if ( coll.CircleCollision(collKonObj_[ k ]->wtf.position,collFrontObj_[ i ]->wtf.position,0.6f,0.6f) )
+					{
+						isKonFlag_[ k ] = 1;
+					}
 				}
-			}
 
+			}
 		}
 	}
 

@@ -16,7 +16,8 @@
 class Player;
 
 
-class ArmorEnemy{
+class ArmorEnemy
+{
 public:
 	ArmorEnemy();
 	~ArmorEnemy();
@@ -31,28 +32,32 @@ public:
 	//エフェクトの更新処理
 	void EffUpdate();
 	//エフェクトの情報(地面のズサ)
-	void EffSummary(Vector3 bulletpos,int num);
+	void EffSummary(Vector3 bulletpos,const int& num);
 	//エフェクトの情報(地面のズサ)
-	void EffSummary2(Vector3 bulletpos2,int num2);
+	void EffSummary2(Vector3 bulletpos2,const int& num2);
 	//エフェクトの情報(背中の噴射ガス)
-	void EffSummary3(Vector3 bulletpos3,int num3);
+	void EffSummary3(Vector3 bulletpos3,const int& num3);
 	//エフェクトの情報(背中の噴射ガス)
-	void EffSummary4(Vector3 bulletpos4,int num4);
+	void EffSummary4(Vector3 bulletpos4,const int& num4);
 	//エフェクトの情報(ダメージ受けた時の火花)
-	void DamageSummary(Vector3 EnePos, int eneNum);
+	void DamageSummary(Vector3 EnePos,const int& eneNum);
 	//エフェクトの情報(発砲するときの硝煙)
-	void smokeSummary(Vector3 EnePos,int eneNum);
+	void smokeSummary(Vector3 EnePos,const int& eneNum);
 	//エフェクトの情報(体力半分になった時にでる煙)
-	void DamagefumeSummary(Vector3 fumepos,int num);
+	void DamagefumeSummary(Vector3 fumepos,const int& num);
+	//発砲時の弾速エフェクト
+	void ballisticfumeSummary(Vector3 bulletpos,const int& num);
 
 	//エフェクトの描画
 	void EffDraw();
 
-	void SetPlayer(Player* player) {player_ = player;};
+	void SetPlayer(Player* player) {
+		player_ = player;
+	};
 
-	
+
 private:
-	const float PI = 3.141592f;
+	const float PI = 3;
 	Input* input_ = nullptr;
 	DirectXCommon* dxCommon_ = nullptr;
 	Audio* audio = nullptr;
@@ -64,20 +69,20 @@ private:
 
 	//待機(魔導兵)
 	//maehito usirohito
-	Object3d* Obj_[ 4 ] = { nullptr};
+	Object3d* Obj_[ 4 ] = { nullptr };
 	Model* Model_[ 4 ] = { nullptr };
 	Model* Modelst_[ 4 ] = { nullptr };
 
 
 
 	//敵の生存フラグ(0 生きる,1 死亡)
-	int isAliveFlag_[4] = {1,1,1,1};
+	int isAliveFlag_[ 4 ] = { 1,1,1,1 };
 	int AliveR2Timer = 0;
 	int AliveR3Timer = 0;
 	int AliveR4Timer = 0;
 
 	//死んだときにタイマー動す
-	int deathTimer_[4] = { 0 };
+	int deathTimer_[ 4 ] = { 0 };
 
 	//定位置についてからこっちをむくフラグ
 	int isRotFlag_[ 4 ] = { 0 };
@@ -85,63 +90,68 @@ private:
 
 	//順番に登場
 	int entryTimer = 0;
-	
+
 	//当たり判定のモデル
-	Object3d* collObj_[ 4 ] = {nullptr};
+	Object3d* collObj_[ 4 ] = { nullptr };
 	Model* collModel_[ 4 ] = { nullptr };
-	int isCollFlag_[ 4 ] = {0};
+	int isCollFlag_[ 4 ] = { 0 };
 	//ポリゴン爆さん
 	int isExpolFlag_[ 4 ] = { 0 };
 	float ExpolTimer_[ 4 ] = { 0 };
-	float ExpolMT_[ 4 ] = { 40,40,40,40};
+	float ExpolMT_[ 4 ] = { 40,40,40,40 };
 	float polygon_[ 4 ];
 
 	//体力(一旦0で初期化のタイミングで設定する)
-	int HP_[4] = {0};
+	int HP_[ 4 ] = { 0 };
 
 	//大砲の弾
-	Object3d* bulletObj_[ 4 ] = {0};
+	Object3d* bulletObj_[ 4 ] = { 0 };
 	Model* bulletModel_[ 4 ] = { 0 };
 	int isShootFlag_[ 4 ] = { 0 };
 	int BulletdurationTime_[ 4 ] = { 0 };
 	int BulletCoolTime_[ 4 ] = { 0 };
-	Vector3 playerlen_[4];
-	Vector3 bitweenlen_[4];
+	Vector3 playerlen_[ 4 ];
+	Vector3 bitweenlen_[ 4 ];
 
 	//魔導兵の移動
-	int isMoveFlag_[ 4] = {0};
-	int isbesideFlag_[ 4 ] = {0};
+	int isMoveFlag_[ 4 ] = { 0 };
+	int isbesideFlag_[ 4 ] = { 0 };
 
 	//移動制限
 	//右
-	int moveRLimit_[ 4 ] = {10,0,10,0};
+	int moveRLimit_[ 4 ] = { 10,0,10,0 };
 	//左
-	int moveLLimit_[ 4 ] = {3,-5,-3,-5};
+	int moveLLimit_[ 4 ] = { 3,-5,-3,-5 };
 
 	//自機の当たり判定
 	Object3d* collObj3_ = nullptr;
 
 	//パーティクル
 	//地面のズサ
-	std::unique_ptr<ParticleManager> gasParticle_[4];
-	std::unique_ptr<ParticleManager> gasParticle2_[4];
+	std::unique_ptr<ParticleManager> gasParticle_[ 4 ];
+	std::unique_ptr<ParticleManager> gasParticle2_[ 4 ];
 	//背中の噴射ガス
-	std::unique_ptr<ParticleManager> gasParticle3_[4];
-	std::unique_ptr<ParticleManager> gasParticle4_[4];
-	int gasEffTimer_[4] = { 0 };
-	int isgasEffFlag_[4] = { 0 };
+	std::unique_ptr<ParticleManager> gasParticle3_[ 4 ];
+	std::unique_ptr<ParticleManager> gasParticle4_[ 4 ];
+	int gasEffTimer_[ 4 ] = { 0 };
+	int isgasEffFlag_[ 4 ] = { 0 };
 	//攻撃受けた時の火花のパーティクル
-	std::unique_ptr<ParticleManager> DamageParticle_[4];
+	std::unique_ptr<ParticleManager> DamageParticle_[ 4 ];
 	int damEffTimer_[ 4 ] = { 0 };
 	int isdamEffFlag_[ 4 ] = { 0 };
 	//発砲するときの硝煙
-	std::unique_ptr<ParticleManager> smokeParticle_[4];
+	std::unique_ptr<ParticleManager> smokeParticle_[ 4 ];
 	int smoEffTimer_[ 4 ] = { 0 };
 	int isSmoEffFlag_[ 4 ] = { 0 };
 	//体力少ないときに煙出る(体力半分)
 	std::unique_ptr<ParticleManager> fumeParticle_[ 4 ];
 	int fumeEffTimer_[ 4 ] = { 0 };
 	int isFumeEffFlag_[ 4 ] = { 0 };
+	//発砲時の弾速エフェクト
+	std::unique_ptr<ParticleManager> ballisticParticle_[ 4 ];
+	int ballisticEffTimer_[ 4 ] = { 0 };
+	int isballisticEffFlag_[ 4 ] = { 0 };
+
 };
 
 
