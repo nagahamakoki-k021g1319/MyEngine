@@ -9,8 +9,10 @@ Player::Player() {
 
 Player::~Player() {
 	delete spriteCommon;
-	//FBXオブジェクト解放
-	delete shootObj_;
+	for ( int i = 0; i < 3; i++ )
+	{
+		delete shootObj_[i];
+	}
 	delete shootModel_;
 	delete shootStObj_;
 	delete shootStModel_;
@@ -195,10 +197,16 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 
 	//自機の弾(弱)
 	shootModel_ = Model::LoadFromOBJ("boll2");
-	shootObj_ = Object3d::Create();
-	shootObj_->SetModel(shootModel_);
-	shootObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z };
-	shootObj_->wtf.scale = { 5.0f,5.0f,5.0f };
+	for ( int i = 0; i < 3; i++ )
+	{
+		shootObj_[i] = Object3d::Create();
+		shootObj_[i]->SetModel(shootModel_);
+		shootObj_[i]->wtf.scale = { 5.0f,5.0f,5.0f };
+	}
+	shootObj_[0]->wtf.position = {Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z};
+	shootObj_[1]->wtf.position = {Obj_->wtf.position.x - 0.5f,Obj_->wtf.position.y - 0.2f, Obj_->wtf.position.z - 0.5f};
+	shootObj_[2]->wtf.position = {Obj_->wtf.position.x + 0.5f,Obj_->wtf.position.y - 0.4f, Obj_->wtf.position.z - 1.0f};
+
 
 	//自機の弾(強)
 	shootStModel_ = Model::LoadFromOBJ("boll");
@@ -294,14 +302,15 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 
 void Player::Update() {
 	camera->Update();
-	shootObj_->Update();
+	for ( int i = 0; i < 3; i++ )
+	{
+		shootObj_[i]->Update();
+	}
 	shootStObj_->Update();
 	const float addRetPos = 50.0f;
 	retObj_->Update();
 	retObj_->wtf.position.z = Obj_->wtf.position.z + addRetPos;
 
-	enemylen2 = retObj_->wtf.position - shootStObj_->wtf.position;
-	enemylen2.nomalize();
 	const float addRetVPos = 15.0f;
 	retVisualObj_->Update();
 	retVisualObj_->wtf.position.z = Obj_->wtf.position.z + addRetVPos;
@@ -358,7 +367,7 @@ void Player::Update() {
 	{
 		isOperationFlag = false;
 	}
-//操作説明(2ステの視線誘導)
+	//操作説明(2ステの視線誘導)
 	if ( waveTimer2 >= 100 )
 	{
 		OperationbbTimer2++;
@@ -457,7 +466,7 @@ void Player::Update() {
 		DamageCamShake();
 	}
 
-//ゲームクリア時に自機が前に進む
+	//ゲームクリア時に自機が前に進む
 	if ( isClearFlag == true )
 	{
 		const float addObjPosZ = 0.5f;
@@ -662,6 +671,10 @@ collObj_->Draw();*/
 	if ( isShootFlag == true )
 	{
 		/*shootObj_->Draw();*/
+	}
+	for ( int i = 0; i < 3; i++ )
+	{
+		/*shootObj_[i]->Draw();*/
 	}
 
 	if ( isShootStFlag == true )
@@ -1330,28 +1343,53 @@ void Player::PlayerAction()
 	}
 	if ( BulletCoolTime == 0 )
 	{
-		enemylen = retObj_->wtf.position - shootObj_->wtf.position;
-		enemylen.nomalize();
+		bulletlen_[0] = retObj_->wtf.position - shootObj_[0]->wtf.position;
+		bulletlen_[0].nomalize();
+
+		bulletlen_[1] = retObj_->wtf.position - shootObj_[ 1 ]->wtf.position;
+		bulletlen_[1].nomalize();
+
+		bulletlen_[2] = retObj_->wtf.position - shootObj_[ 2 ]->wtf.position;
+		bulletlen_[2].nomalize();
+
 	}
 	if ( isShootFlag == true )
 	{
 		BulletCoolTime++;
-		shootObj_->wtf.rotation.z += 0.2f;
-		shootObj_->wtf.position += enemylen;
-		len = enemylen;
-		len *= ShortSpeed;
+		
+		shootObj_[0]->wtf.rotation.z += 0.2f;
+		shootObj_[0]->wtf.position += bulletlen_[0];
+		len_[0] = bulletlen_[ 0 ];
+		len_[0] *= ShortSpeed;
+
+		if ( BulletCoolTime >= 10)
+		{
+			shootObj_[1]->wtf.rotation.z += 0.2f;
+			shootObj_[1]->wtf.position += bulletlen_[1];
+			len_[1] = bulletlen_[1];
+			len_[1] *= ShortSpeed;
+		}
+
+		if ( BulletCoolTime >= 20 )
+		{
+			shootObj_[2]->wtf.rotation.z += 0.2f;
+			shootObj_[2]->wtf.position += bulletlen_[2];
+			len_[2] = bulletlen_[2];
+			len_[2] *= ShortSpeed;
+		}
+
 		isBallisticEffFlag_ = 1;
 	}
 	else
 	{
-		shootObj_->wtf.position = {
-			   Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z };
+		shootObj_[0]->wtf.position = {Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z};
+		shootObj_[1]->wtf.position = { Obj_->wtf.position.x - 1.0f,Obj_->wtf.position.y - 0.4f, Obj_->wtf.position.z};
+		shootObj_[2]->wtf.position = { Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y - 0.8f, Obj_->wtf.position.z};
 		isBallisticEffFlag_ = 0;
 	}
 	if ( BulletCoolTime >= 45.0f )
 	{
 		BulletCoolTime = 0;
-		shootObj_->wtf.rotation.z = 0.0f;
 		isShootFlag = false;
 		isBallisticEffFlag_ = 0;
 	}
@@ -1505,7 +1543,10 @@ void Player::EffUpdate()
 	}
 	if ( ballisticEffTimer_ <= 10 && ballisticEffTimer_ >= 0 )
 	{
-		EffSummaryBullet(Vector3(shootObj_->wtf.position.x,shootObj_->wtf.position.y + 0.5f,shootObj_->wtf.position.z));
+		for ( int i = 0; i < 3; i++ )
+		{
+			EffSummaryBullet(Vector3(shootObj_[i]->wtf.position.x,shootObj_[ i ]->wtf.position.y + 0.5f,shootObj_[ i ]->wtf.position.z));
+		}
 	}
 	if ( ballisticEffTimer_ >= 10 )
 	{
@@ -1999,11 +2040,11 @@ Vector3 Player::GetBulletWorldPosition()
 	//ワールド座標を入れる変数
 	Vector3 BulletWorldPos;
 
-	shootObj_->wtf.UpdateMat();
+	shootObj_[0]->wtf.UpdateMat();
 	//ワールド行列の平行移動成分
-	BulletWorldPos.x = shootObj_->wtf.matWorld.m[ 3 ][ 0 ];
-	BulletWorldPos.y = shootObj_->wtf.matWorld.m[ 3 ][ 1 ];
-	BulletWorldPos.z = shootObj_->wtf.matWorld.m[ 3 ][ 2 ];
+	BulletWorldPos.x = shootObj_[0]->wtf.matWorld.m[ 3 ][ 0 ];
+	BulletWorldPos.y = shootObj_[0]->wtf.matWorld.m[ 3 ][ 1 ];
+	BulletWorldPos.z = shootObj_[0]->wtf.matWorld.m[ 3 ][ 2 ];
 
 	return BulletWorldPos;
 }
