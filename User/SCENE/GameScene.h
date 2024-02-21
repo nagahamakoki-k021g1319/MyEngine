@@ -95,6 +95,7 @@ private:	//メンバ変数
 	//シーン切り替え
 	enum class SceneNo {
 		Title, //タイトル
+
 		Game, //射撃
 		Clear, //ゲームクリア
 		Over  //ゲームオーバー 

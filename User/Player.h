@@ -349,13 +349,16 @@ public:
 	//バイクの残骸が後ろに散らばる
 	bool isScatterFlag = false;
 
-	//弾発射(弱)
-	Object3d* shootObj_ = nullptr;
+	//弾発射(3発)
+	Object3d* shootObj_[ 3 ] = {0};
 	Model* shootModel_ = nullptr;
 	bool isShootFlag = false;
 	int BulletCoolTime = 0;
-	Vector3 enemylen;
-	Vector3 len;
+	Vector3 bulletlen_[3];
+	Vector3 len_[3];
+
+
+
 
 	//自機の近接攻撃判定がでるフラグ
 	//左

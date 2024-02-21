@@ -485,7 +485,6 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 				{
 					HP_[ i ]--;
 					isdamEffFlag_[ i ] = 1;
-					playerShootFlag = false;
 				}
 			}
 		}
