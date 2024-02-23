@@ -26,11 +26,11 @@ Player::~Player() {
 
 	delete BloodUI;
 
-	delete hpgageUI;
-	delete hp3UI;
-	delete hp2UI;
-	delete hp1UI;
-	delete overUI;
+	delete bullet1UI;
+	delete bullet2UI;
+	delete bullet3UI;
+	delete gageMaxUI;
+	delete underBlackUI;
 
 	delete hpFlameUI;
 
@@ -54,7 +54,7 @@ Player::~Player() {
 	delete Bullet5fUI;
 	delete Bullet5mUI;
 
-	delete Bullet6dUI;
+	delete bulletEnptyUI;
 	delete metaUI;
 	delete arrowUI;
 
@@ -89,8 +89,8 @@ Player::~Player() {
 	delete extrusionLeftModel_;
 	delete extrusionLeftObj_;
 
-	delete entryani1UI;
-	delete entryani2UI;
+	delete bulletUI;
+	delete bulletgageUI;
 
 	delete operationUI;
 	delete operationbbUI;
@@ -275,10 +275,13 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	swordchageParticle->Update();
 
 	//弾
-	ballisticParticle = std::make_unique<ParticleManager>();
-	ballisticParticle.get()->Initialize();
-	ballisticParticle->LoadTexture("bulletchage.png");
-	ballisticParticle->Update();
+	for ( int i = 0; i < 3; i++ )
+	{
+		ballisticParticle_[i] = std::make_unique<ParticleManager>();
+		ballisticParticle_[i].get()->Initialize();
+		ballisticParticle_[i]->LoadTexture("bulletchage.png");
+		ballisticParticle_[i]->Update();
+	}
 
 	//右スピンエフェクト
 	RSpinParticle = std::make_unique<ParticleManager>();
@@ -348,6 +351,9 @@ void Player::Update() {
 	{
 		debrisObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 0.7f,Obj_->wtf.position.z };
 	}
+
+
+	
 
 	isGameStartFlag = true;
 
@@ -574,7 +580,6 @@ void Player::Update() {
 	//ラウンド変化(2ラウンド目)
 	if ( isDeadEnemy == 2 )
 	{
-
 		isRoundFlag = 1;
 		waveTimer2++;
 	}
@@ -629,8 +634,8 @@ void Player::Update() {
 
 	ImGui::Begin("Player");
 	ImGui::Text("Position:%f,%f,%f",slashRObj_->wtf.position.x,slashRObj_->wtf.position.y,slashRObj_->wtf.position.z);
-	ImGui::Text("arrowPosition:%f,%f",arrowPosition.x,arrowPosition.y);
-	ImGui::Text("arrowRotation:%f",arrowRotation.x);
+	ImGui::Text("bulletgagePosition.x:%f",bulletgagePosition.x);
+	ImGui::Text("gageCount:%d",gageCount);
 	ImGui::Text("CameraBehaviorTimer:%d",CameraBehaviorTimer);
 	ImGui::Text("CameraBehaviorTimer2:%d",CameraBehaviorTimer2);
 	ImGui::Text("isDeadEnemy:%d",isDeadEnemy);
@@ -792,10 +797,10 @@ void Player::UIInitialize()
 	Bullet5mUI->SetSize({ 1280.0f, 720.0f });
 
 	//6発目
-	Bullet6dUI = new Sprite();
-	Bullet6dUI->Initialize(spriteCommon);
-	Bullet6dUI->SetPozition({ 0,0 });
-	Bullet6dUI->SetSize({ 1280.0f, 720.0f });
+	bulletEnptyUI = new Sprite();
+	bulletEnptyUI->Initialize(spriteCommon);
+	bulletEnptyUI->SetPozition({ 0,0 });
+	bulletEnptyUI->SetSize({ 1280.0f, 720.0f });
 
 	metaUI = new Sprite();
 	metaUI->Initialize(spriteCommon);
@@ -814,34 +819,34 @@ void Player::UIInitialize()
 	arrowUI->SetSize({ 80.0f, 20.0f });
 
 	//自機のHPのUI
-	hpgageUI = new Sprite();
-	hpgageUI->Initialize(spriteCommon);
-	hpgageUI->SetPozition({ 0,0 });
-	hpgageUI->SetSize({ 1280.0f, 720.0f });
+	bullet1UI = new Sprite();
+	bullet1UI->Initialize(spriteCommon);
+	bullet1UI->SetPozition({ 0,0 });
+	bullet1UI->SetSize({ 1280.0f, 720.0f });
 
 	//自機のHP(ハート3)
-	hp3UI = new Sprite();
-	hp3UI->Initialize(spriteCommon);
-	hp3UI->SetPozition({ 0,0 });
-	hp3UI->SetSize({ 1280.0f, 720.0f });
+	bullet2UI = new Sprite();
+	bullet2UI->Initialize(spriteCommon);
+	bullet2UI->SetPozition({ 0,0 });
+	bullet2UI->SetSize({ 1280.0f, 720.0f });
 
 	//自機のHP(ハート2)
-	hp2UI = new Sprite();
-	hp2UI->Initialize(spriteCommon);
-	hp2UI->SetPozition({ 0,0 });
-	hp2UI->SetSize({ 1280.0f, 720.0f });
+	bullet3UI = new Sprite();
+	bullet3UI->Initialize(spriteCommon);
+	bullet3UI->SetPozition({ 0,0 });
+	bullet3UI->SetSize({ 1280.0f, 720.0f });
 
 	//自機のHP(ハート1)
-	hp1UI = new Sprite();
-	hp1UI->Initialize(spriteCommon);
-	hp1UI->SetPozition({ 0,0 });
-	hp1UI->SetSize({ 1280.0f, 720.0f });
+	gageMaxUI = new Sprite();
+	gageMaxUI->Initialize(spriteCommon);
+	gageMaxUI->SetPozition({ 0,0 });
+	gageMaxUI->SetSize({ 1280.0f, 720.0f });
 
 	//自機のHP(ハート0)
-	overUI = new Sprite();
-	overUI->Initialize(spriteCommon);
-	overUI->SetPozition({ 0,0 });
-	overUI->SetSize({ 1280.0f, 720.0f });
+	underBlackUI = new Sprite();
+	underBlackUI->Initialize(spriteCommon);
+	underBlackUI->SetPozition({ 0,0 });
+	underBlackUI->SetSize({ 1280.0f, 720.0f });
 
 	//被弾時エフェクト
 	BloodUI = new Sprite();
@@ -849,19 +854,20 @@ void Player::UIInitialize()
 	BloodUI->SetPozition({ 0,0 });
 	BloodUI->SetSize({ 1280.0f, 720.0f });
 
-	//最初の登場アニメーション上
-	entryani1UI = new Sprite();
-	entryani1UI->Initialize(spriteCommon);
-	entryani1Position = entryani1UI->GetPosition();
-	entryani1UI->SetPozition(entryani1Position);
-	entryani1UI->SetSize({ 1280.0f, 720.0f });
+	//遠距離攻撃のUI
+	bulletUI = new Sprite();
+	bulletUI->Initialize(spriteCommon);
+	bulletPosition = bulletUI->GetPosition();
+	bulletUI->SetPozition(bulletPosition);
+	bulletUI->SetSize({ 1280.0f, 720.0f });
 
-	//最初の登場アニメーション下
-	entryani2UI = new Sprite();
-	entryani2UI->Initialize(spriteCommon);
-	entryani2Position = entryani2UI->GetPosition();
-	entryani2UI->SetPozition(entryani2Position);
-	entryani2UI->SetSize({ 1280.0f, 720.0f });
+	//遠距離攻撃のゲージ
+	bulletgageUI = new Sprite();
+	bulletgageUI->Initialize(spriteCommon);
+	bulletgagePosition = bulletgageUI->GetPosition();
+	bulletgagePosition.x = -187.0f;
+	bulletgageUI->SetPozition(bulletgagePosition);
+	bulletgageUI->SetSize({ 1280.0f, 720.0f });
 
 	//操作説明
 	//1ステージ
@@ -934,9 +940,6 @@ void Player::UIInitialize()
 	spriteCommon->LoadTexture(22,"ff5m.png");
 	Bullet5mUI->SetTextureIndex(22);
 
-	//6発目
-	spriteCommon->LoadTexture(23,"ff6d.png");
-	Bullet6dUI->SetTextureIndex(23);
 
 	//メーター
 	spriteCommon->LoadTexture(24,"meta.png");
@@ -950,33 +953,29 @@ void Player::UIInitialize()
 	spriteCommon->LoadTexture(14,"blood.png");
 	BloodUI->SetTextureIndex(14);
 
-	//自機のHPのUI
-	spriteCommon->LoadTexture(15,"hpgage.png");
-	hpgageUI->SetTextureIndex(15);
+	//遠距離攻撃の弾表示
+	spriteCommon->LoadTexture(23,"bulletenp.png");
+	bulletEnptyUI->SetTextureIndex(23);
+	spriteCommon->LoadTexture(15,"bullet1.png");
+	bullet1UI->SetTextureIndex(15);
+	spriteCommon->LoadTexture(16,"bullet2.png");
+	bullet2UI->SetTextureIndex(16);
+	spriteCommon->LoadTexture(17,"bullet3.png");
+	bullet3UI->SetTextureIndex(17);
 
-	//自機のHP(ハート3)
-	spriteCommon->LoadTexture(16,"hp3.png");
-	hp3UI->SetTextureIndex(16);
+	//ゲージMAXの時のUI
+	spriteCommon->LoadTexture(18,"gagemax.png");
+	gageMaxUI->SetTextureIndex(18);
+	spriteCommon->LoadTexture(19,"gageblack.png");
+	underBlackUI->SetTextureIndex(19);
 
-	//自機のHP(ハート2)
-	spriteCommon->LoadTexture(17,"hp2.png");
-	hp2UI->SetTextureIndex(17);
+	//遠距離攻撃のUI
+	spriteCommon->LoadTexture(31,"bulletgage.png");
+	bulletUI->SetTextureIndex(31);
 
-	//自機のHP(ハート1)
-	spriteCommon->LoadTexture(18,"hp1.png");
-	hp1UI->SetTextureIndex(18);
-
-	//自機のHP(ハート0)
-	spriteCommon->LoadTexture(19,"over.png");
-	overUI->SetTextureIndex(19);
-
-	//最初の登場シーン(上の魔法陣)
-	spriteCommon->LoadTexture(31,"entryani1.png");
-	entryani1UI->SetTextureIndex(31);
-
-	//最初の登場シーン(下の魔法陣)
-	spriteCommon->LoadTexture(32,"entryani2.png");
-	entryani2UI->SetTextureIndex(32);
+	//遠距離攻撃のゲージ
+	spriteCommon->LoadTexture(32,"bluegage.png");
+	bulletgageUI->SetTextureIndex(32);
 
 	//操作説明
 	spriteCommon->LoadTexture(33,"sousa.png");
@@ -1007,7 +1006,32 @@ void Player::UIDraw()
 hpredUI->Draw();
 hpgreenUI->Draw();
 hpFlameUI->Draw();*/
+		if ( OperationbbTimer2 >= 60 )
+		{
+			underBlackUI->Draw();
+			bulletgageUI->Draw();
+			bulletUI->Draw();
 
+			if ( gageCount == 0 )
+			{
+				bulletEnptyUI->Draw();
+			}
+			if ( gageCount == 1 )
+			{
+				bullet1UI->Draw();
+			}
+			if ( gageCount == 2 )
+			{
+				bullet2UI->Draw();
+			}
+			if ( gageCount >= 3 )
+			{
+				bullet3UI->Draw();
+				gageMaxUI->Draw();
+			}
+		}
+
+		
 
 		metaUI->Draw();
 		arrowUI->Draw();
@@ -1339,6 +1363,7 @@ void Player::PlayerAction()
 		if ( isShootFlag == false )
 		{
 			isShootFlag = true;
+			isgageStopFlag = true;
 		}
 	}
 	if ( BulletCoolTime == 0 )
@@ -1356,43 +1381,85 @@ void Player::PlayerAction()
 	if ( isShootFlag == true )
 	{
 		BulletCoolTime++;
-		
-		shootObj_[0]->wtf.rotation.z += 0.2f;
-		shootObj_[0]->wtf.position += bulletlen_[0];
-		len_[0] = bulletlen_[ 0 ];
-		len_[0] *= ShortSpeed;
+		if ( BulletCount >= 1 )
+		{
+			shootObj_[ 0 ]->wtf.rotation.z += 0.2f;
+			shootObj_[ 0 ]->wtf.position += bulletlen_[ 0 ];
+			len_[ 0 ] = bulletlen_[ 0 ];
+			len_[ 0 ] *= ShortSpeed;
+		}
 
 		if ( BulletCoolTime >= 10)
 		{
-			shootObj_[1]->wtf.rotation.z += 0.2f;
-			shootObj_[1]->wtf.position += bulletlen_[1];
-			len_[1] = bulletlen_[1];
-			len_[1] *= ShortSpeed;
+			if ( BulletCount >= 2 )
+			{
+				shootObj_[ 1 ]->wtf.rotation.z += 0.2f;
+				shootObj_[ 1 ]->wtf.position += bulletlen_[ 1 ];
+				len_[ 1 ] = bulletlen_[ 1 ];
+				len_[ 1 ] *= ShortSpeed;
+			}
 		}
 
 		if ( BulletCoolTime >= 20 )
 		{
-			shootObj_[2]->wtf.rotation.z += 0.2f;
-			shootObj_[2]->wtf.position += bulletlen_[2];
-			len_[2] = bulletlen_[2];
-			len_[2] *= ShortSpeed;
+			if ( BulletCount >= 3 )
+			{
+				shootObj_[ 2 ]->wtf.rotation.z += 0.2f;
+				shootObj_[ 2 ]->wtf.position += bulletlen_[ 2 ];
+				len_[ 2 ] = bulletlen_[ 2 ];
+				len_[ 2 ] *= ShortSpeed;
+			}
 		}
 
 		isBallisticEffFlag_ = 1;
 	}
 	else
-	{
-		shootObj_[0]->wtf.position = {Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z};
-		shootObj_[1]->wtf.position = { Obj_->wtf.position.x - 1.0f,Obj_->wtf.position.y - 0.4f, Obj_->wtf.position.z};
-		shootObj_[2]->wtf.position = { Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y - 0.8f, Obj_->wtf.position.z};
+	{ 
+		shootObj_[0]->wtf.position = {Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z +1.0f};
+		shootObj_[1]->wtf.position = { Obj_->wtf.position.x - 1.0f,Obj_->wtf.position.y - 0.4f, Obj_->wtf.position.z+1.0f};
+		shootObj_[2]->wtf.position = { Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y - 0.8f, Obj_->wtf.position.z+1.0f};
 		isBallisticEffFlag_ = 0;
 	}
-	if ( BulletCoolTime >= 45.0f )
+	if ( BulletCoolTime >= 55.0f )
 	{
 		BulletCoolTime = 0;
 		isShootFlag = false;
 		isBallisticEffFlag_ = 0;
+		isgageStopFlag = false;
+		gageCount = 1;
+		BulletCount = 1;
 	}
+
+	//残り残数のUI表示
+	if ( isgageStopFlag == true )
+	{
+		gageCount = 0;
+		bulletgagePosition.x = -187.0f;
+		bulletgageUI->SetPozition(bulletgagePosition);
+	}
+	else
+	{
+		if ( OperationbbTimer2 >= 60 )
+		{
+			bulletgagePosition.x += 0.8f;
+			bulletgageUI->SetPozition(bulletgagePosition);
+		}
+	}
+	if ( bulletgagePosition.x >= 0.0f )
+	{
+		gageCount++;
+		BulletCount++;
+		bulletgagePosition.x = -187.0f;
+		bulletgageUI->SetPozition(bulletgagePosition);
+	}
+	if ( gageCount >= 3 )
+	{
+		gageCount = 3;
+		bulletgagePosition.x = 0.0f;
+		bulletgageUI->SetPozition(bulletgagePosition);
+	}
+
+
 
 	//突進を受けた時にノックバック(右からの突進)
 	if ( isKnockbackFlag == true )
@@ -1543,10 +1610,9 @@ void Player::EffUpdate()
 	}
 	if ( ballisticEffTimer_ <= 10 && ballisticEffTimer_ >= 0 )
 	{
-		for ( int i = 0; i < 3; i++ )
-		{
-			EffSummaryBullet(Vector3(shootObj_[i]->wtf.position.x,shootObj_[ i ]->wtf.position.y + 0.5f,shootObj_[ i ]->wtf.position.z));
-		}
+		EffSummaryBullet(Vector3(shootObj_[0]->wtf.position.x,shootObj_[0]->wtf.position.y + 0.5f,shootObj_[0]->wtf.position.z));
+		EffSummaryBullet2(Vector3(shootObj_[1]->wtf.position.x,shootObj_[1]->wtf.position.y + 0.5f,shootObj_[1]->wtf.position.z));
+		EffSummaryBullet3(Vector3(shootObj_[2]->wtf.position.x,shootObj_[2]->wtf.position.y + 0.5f,shootObj_[2]->wtf.position.z));
 	}
 	if ( ballisticEffTimer_ >= 10 )
 	{
@@ -1878,9 +1944,83 @@ void Player::EffSummaryBullet(Vector3 bulletpos)
 		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 
 		//追加
-		ballisticParticle->Add(60,posG,velG,accG,0.5f,0.0f);
+		ballisticParticle_[0]->Add(60,posG,velG,accG,0.5f,0.0f);
 
-		ballisticParticle->Update();
+		ballisticParticle_[ 0 ]->Update();
+
+	}
+}
+
+void Player::EffSummaryBullet2(Vector3 bulletpos)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 5; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_posG = 0.03f;
+		const float rnd_posGy = 0.03f;
+		const float rnd_posGz = 0.03f;
+		Vector3 posG{};
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG += bulletpos;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_velG = 0.01f;
+		const float rnd_velGy = 0.01f;
+		const float rnd_velGz = 0.01f;
+		Vector3 velG{};
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_accG = 0.000001f;
+		Vector3 accG{};
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+
+		//追加
+		ballisticParticle_[ 1 ]->Add(60,posG,velG,accG,0.5f,0.0f);
+
+		ballisticParticle_[ 1 ]->Update();
+
+	}
+}
+
+void Player::EffSummaryBullet3(Vector3 bulletpos)
+{
+	//パーティクル範囲
+	for ( int i = 0; i < 5; i++ )
+	{
+		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+		const float rnd_posG = 0.03f;
+		const float rnd_posGy = 0.03f;
+		const float rnd_posGz = 0.03f;
+		Vector3 posG{};
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG += bulletpos;
+		//速度
+		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+		const float rnd_velG = 0.01f;
+		const float rnd_velGy = 0.01f;
+		const float rnd_velGz = 0.01f;
+		Vector3 velG{};
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		const float rnd_accG = 0.000001f;
+		Vector3 accG{};
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+
+		//追加
+		ballisticParticle_[ 2 ]->Add(60,posG,velG,accG,0.5f,0.0f);
+
+		ballisticParticle_[ 2 ]->Update();
 
 	}
 }
@@ -1987,7 +2127,15 @@ void Player::EffDraw()
 
 	if ( isBallisticEffFlag_ == 1 )
 	{
-		ballisticParticle->Draw();
+		ballisticParticle_[ 0 ]->Draw();
+		if ( BulletCount >= 2 )
+		{
+			ballisticParticle_[ 1 ]->Draw();
+		}
+		if ( BulletCount >= 3 )
+		{
+			ballisticParticle_[ 2 ]->Draw();
+		}
 	}
 
 	if ( isRSpinEffFlag_ == 1 && RSpinEffTimer_ <= 10 && RSpinEffTimer_ >= 1 )
@@ -2047,6 +2195,34 @@ Vector3 Player::GetBulletWorldPosition()
 	BulletWorldPos.z = shootObj_[0]->wtf.matWorld.m[ 3 ][ 2 ];
 
 	return BulletWorldPos;
+}
+
+Vector3 Player::GetBulletWorldPosition2()
+{
+	//ワールド座標を入れる変数
+	Vector3 BulletWorldPos1;
+
+	shootObj_[ 1 ]->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	BulletWorldPos1.x = shootObj_[ 1 ]->wtf.matWorld.m[ 3 ][ 0 ];
+	BulletWorldPos1.y = shootObj_[ 1 ]->wtf.matWorld.m[ 3 ][ 1 ];
+	BulletWorldPos1.z = shootObj_[ 1 ]->wtf.matWorld.m[ 3 ][ 2 ];
+
+	return BulletWorldPos1;
+}
+
+Vector3 Player::GetBulletWorldPosition3()
+{
+	//ワールド座標を入れる変数
+	Vector3 BulletWorldPos2;
+
+	shootObj_[ 2 ]->wtf.UpdateMat();
+	//ワールド行列の平行移動成分
+	BulletWorldPos2.x = shootObj_[ 2 ]->wtf.matWorld.m[ 3 ][ 0 ];
+	BulletWorldPos2.y = shootObj_[ 2 ]->wtf.matWorld.m[ 3 ][ 1 ];
+	BulletWorldPos2.z = shootObj_[ 2 ]->wtf.matWorld.m[ 3 ][ 2 ];
+
+	return BulletWorldPos2;
 }
 
 Vector3 Player::GetSwordLeftWorldPosition()

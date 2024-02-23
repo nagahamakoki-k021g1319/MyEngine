@@ -23,7 +23,7 @@ public:
 	~ArmorEnemy();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
-	void Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFlag);
+	void Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos,Vector3 playerB3pos, bool playerShootFlag);
 
 	void Draw();
 

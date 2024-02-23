@@ -22,7 +22,7 @@ public:
 	~BossEnemy();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
-	void Update(Vector3 playerPos,Vector3 playerBpos);
+	void Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos,Vector3 playerB3pos);
 
 	void Draw();
 

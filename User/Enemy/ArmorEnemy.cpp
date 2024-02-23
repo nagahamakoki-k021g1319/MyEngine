@@ -144,7 +144,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 }
 
-void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFlag)
+void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos,Vector3 playerB3pos,bool playerShootFlag)
 {
 	for ( int i = 0; i < 4; i++ )
 	{
@@ -486,6 +486,19 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,bool playerShootFla
 					HP_[ i ]--;
 					isdamEffFlag_[ i ] = 1;
 				}
+
+				if ( coll.CircleCollision(playerB2pos,collObj_[ i ]->wtf.position,1.0f,1.0f) )
+				{
+					HP_[ i ]--;
+					isdamEffFlag_[ i ] = 1;
+				}
+
+				if ( coll.CircleCollision(playerB3pos,collObj_[ i ]->wtf.position,1.0f,1.0f) )
+				{
+					HP_[ i ]--;
+					isdamEffFlag_[ i ] = 1;
+				}
+
 			}
 		}
 	}
