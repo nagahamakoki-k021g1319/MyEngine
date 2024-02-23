@@ -401,14 +401,17 @@ void GameScene::Update() {
 		}
 		
 		player_->Update();
-		armorEnemy_->Update(player_->GetWorldPosition(),player_->GetBulletWorldPosition(),player_->isShootFlag);
+		armorEnemy_->Update(player_->GetWorldPosition(),player_->GetBulletWorldPosition(),
+			player_->GetBulletWorldPosition2(),
+			player_->GetBulletWorldPosition3(),
+			player_->isShootFlag);
 		bikeEnemy_->Update(
 			player_->GetSwordLeftWorldPosition(),player_->isCollSWFlag,
 			player_->GetSwordRightWorldPosition(),player_->isCollSWRightFlag,
 			player_->GetCollRightWorldPosition(),player_->GetCollLeftWorldPosition(),
 			block_->GetWorldPosition(),block_->GetWorldPosition2(),block_->GetWorldPosition3(),block_->GetWorldPosition4()
 		);
-		bossEnemy_->Update( player_->GetWorldPosition(), player_->GetBulletWorldPosition());
+		bossEnemy_->Update( player_->GetWorldPosition(), player_->GetBulletWorldPosition(),player_->GetBulletWorldPosition2(),player_->GetBulletWorldPosition3());
 
 		skydome->Update();
 		lamp_->Update();

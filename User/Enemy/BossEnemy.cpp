@@ -128,7 +128,7 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	UIInitialize();
 }
 
-void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
+void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos,Vector3 playerB3pos)
 {
 	Obj_->Update();
 	collObj_->Update();
@@ -267,6 +267,21 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos)
 			hpUI->SetPozition(hpPosition);
 			isdamageEffFlag_ = 1;
 		}
+
+		if ( coll.CircleCollision(playerB2pos,Obj_->wtf.position,1.0f,1.0f) )
+		{
+			hpPosition.x += 15.0f;//4倍ダメ
+			hpUI->SetPozition(hpPosition);
+			isdamageEffFlag_ = 1;
+		}
+
+		if ( coll.CircleCollision(playerB3pos,Obj_->wtf.position,1.0f,1.0f) )
+		{
+			hpPosition.x += 15.0f;//4倍ダメ
+			hpUI->SetPozition(hpPosition);
+			isdamageEffFlag_ = 1;
+		}
+
 	}
 	//当たり判定(誘導弾からプレイヤー)
 	if ( hpPosition.x <= 279 )

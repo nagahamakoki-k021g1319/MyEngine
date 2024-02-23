@@ -51,6 +51,8 @@ public:
 	void EffSummarySwordchage(Vector3 pos);
 	//エフェクトの情報(弾)
 	void EffSummaryBullet(Vector3 bulletpos);
+	void EffSummaryBullet2(Vector3 bulletpos);
+	void EffSummaryBullet3(Vector3 bulletpos);
 	//エフェクトの情報(右スピン)
 	void EffSummaryRSpin(Vector3 pos);
 	//エフェクトの情報(左スピン)
@@ -64,6 +66,8 @@ public:
 	Vector3 GetWorldPosition();
 	//ワールド座標を取得(弾)
 	Vector3 GetBulletWorldPosition();
+	Vector3 GetBulletWorldPosition2();
+	Vector3 GetBulletWorldPosition3();
 	//ワールド座標を取得(近接攻撃)
 	Vector3 GetSwordLeftWorldPosition();
 	Vector3 GetSwordRightWorldPosition();
@@ -201,21 +205,26 @@ private:
 	bool isAliveFlag = true;
 	//自機のHP表示
 	int playerHP = 3;
+	
+
+
+	//遠距離攻撃のUIとゲージ
+	Sprite* bulletUI = nullptr;
+	Vector2 bulletPosition;
+	Sprite* bulletgageUI = nullptr;
+	Vector2 bulletgagePosition;
+	Sprite* gageMaxUI = nullptr;
+	Sprite* underBlackUI = nullptr;
+	bool isgageUPFlag = false;
+	bool isgageStopFlag = false;
+	int gageCount = 1;
+	int BulletCount = 1;
+
 	//自機のHP表示(スプライト)
-	Sprite* hpgageUI = nullptr;
-	Sprite* hp3UI = nullptr;
-	Sprite* hp2UI = nullptr;
-	Sprite* hp1UI = nullptr;
-	Sprite* overUI = nullptr;
-
-	//登場演出
-	Sprite* entryani1UI = nullptr;
-	Vector2 entryani1Position;
-	Sprite* entryani2UI = nullptr;
-	Vector2 entryani2Position;
-	bool isEntryFlag = false;
-	int entryTimer = 0;
-
+	Sprite* bulletEnptyUI = nullptr;
+	Sprite* bullet1UI = nullptr;
+	Sprite* bullet2UI = nullptr;
+	Sprite* bullet3UI = nullptr;
 
 	//レティクル
 	Object3d* retObj_ = nullptr;
@@ -263,7 +272,7 @@ private:
 	int swordchageEffTimer_ = 0;
 	int isswordchageEffFlag_ = 0;
 	//弾飛ばし
-	std::unique_ptr<ParticleManager> ballisticParticle;
+	std::unique_ptr<ParticleManager> ballisticParticle_[3];
 	int ballisticEffTimer_ = 0;
 	int isBallisticEffFlag_ = 0;
 	//右スピンエフェクト
@@ -306,7 +315,7 @@ private:
 	Sprite* Bullet5fUI = nullptr;
 	Sprite* Bullet5mUI = nullptr;
 
-	Sprite* Bullet6dUI = nullptr;
+	
 	Sprite* metaUI = nullptr;
 	Sprite* arrowUI = nullptr;
 	Vector2 arrowPosition;
