@@ -66,6 +66,7 @@ GameScene::~GameScene() {
 	delete block_;
 	delete slipModel_;
 	delete slipObj_;
+	delete loadSprite;
 	// ライslipObj_ トの解放
 	/*delete light;*/
 
@@ -124,6 +125,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	xboxCon->SetPozition({ 0,0 });
 	xboxCon->SetSize({ 1280.0f, 720.0f });
 
+	loadSprite = new Sprite();
+	loadSprite->Initialize(spriteCommon);
+	loadSprite->SetPozition({ 0,0 });
+	loadSprite->SetSize({ 1280.0f, 720.0f });
+
 	spriteCommon->LoadTexture(0,"tt.png");
 	TitleSprite->SetTextureIndex(0);
 
@@ -144,6 +150,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 
 	spriteCommon->LoadTexture(37,"cont.png");
 	xboxCon->SetTextureIndex(37);
+
+	spriteCommon->LoadTexture(38,"load.png");
+	loadSprite->SetTextureIndex(38);
 
 	// カメラ生成
 	mainCamera = new Camera(WinApp::window_width, WinApp::window_height);
@@ -332,7 +341,7 @@ void GameScene::Update() {
 		}
 		if ( bboutTimer >= 30 ){
 			mainCamera->wtf.rotation.y = 2.5f;
-			sceneNo_ = SceneNo::Game;
+			sceneNo_ = SceneNo::Load;
 		}
 		if ( stTimer >= 50 )
 		{
@@ -395,6 +404,15 @@ void GameScene::Update() {
 		ImGui::End();
 	}
 
+	if ( sceneNo_ == SceneNo::Load )
+	{
+		loadTimer++;
+		if ( loadTimer >= 100)
+		{
+			loadTimer = 100;
+			sceneNo_ = SceneNo::Game;
+		}
+	}
 	if (sceneNo_ == SceneNo::Game) {
 		if (player_->isclearFlagTimer >= 100){
 			sceneNo_ = SceneNo::Clear;
@@ -599,6 +617,11 @@ void GameScene::Draw() {
 		}
 		standObj_->Draw();
 		lamp_->Draw();
+	}
+
+	if ( sceneNo_ == SceneNo::Load )
+	{
+		loadSprite->Draw();
 	}
 
 	if (sceneNo_ == SceneNo::Game) {
