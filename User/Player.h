@@ -21,9 +21,11 @@ class Player
 public:
 	Player();
 	~Player();
+	
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
 	void UIInitialize();
+
 	void Update();
 
 	void Draw();

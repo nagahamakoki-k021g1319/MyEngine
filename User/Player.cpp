@@ -106,6 +106,10 @@ Player::~Player() {
 	delete slashLObj_;
 }
 
+
+
+
+
 void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	// nullptrチェック
 	assert(dxCommon);
@@ -990,6 +994,9 @@ void Player::UIInitialize()
 	spriteCommon->LoadTexture(36,"sousa2bb.png");
 	operationbb2UI->SetTextureIndex(36);
 }
+
+
+
 
 void Player::UIDraw()
 {

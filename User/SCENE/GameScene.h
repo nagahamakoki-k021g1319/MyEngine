@@ -95,7 +95,7 @@ private:	//メンバ変数
 	//シーン切り替え
 	enum class SceneNo {
 		Title, //タイトル
-
+		Load, //ロード画面
 		Game, //射撃
 		Clear, //ゲームクリア
 		Over  //ゲームオーバー 
@@ -170,6 +170,10 @@ private:	//メンバ変数
 	Sprite* bbout3 = nullptr;
 	int bboutTimer = 0;
 	bool isbboutFlag = false;
+
+	//ロード画面
+	Sprite* loadSprite = nullptr;
+	int loadTimer = 0;
 
 	//ゲームクリア
 	Sprite* ClearSprite = nullptr;
