@@ -27,6 +27,16 @@ Block::~Block()
 
 }
 
+void Block::BlockReset()
+{
+	/*isGameStartTimer = 0;
+	isBoxScatterFlag_[ 12 ] = { 0 };
+	boxScattertimer_[ 12 ] = { 0 };
+	isKonScatterFlag_[ 8 ] = { 0 };
+	konScattertimer_[ 8 ] = { 0 };
+	InitialPosition();*/
+}
+
 void Block::Initialize(DirectXCommon* dxCommon,Input* input)
 {
 	// nullptrチェック

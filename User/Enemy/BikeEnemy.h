@@ -23,6 +23,8 @@ public:
 	BikeEnemy();
 	~BikeEnemy();
 
+	void BEReset();
+
 	void Initialize(DirectXCommon* dxCommon,Input* input);
 	void Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollSWRFlag,Vector3 pRPos,Vector3 pLPos,Vector3 BPos,Vector3 BPos2,Vector3 BPos3,Vector3 BPos4);
 

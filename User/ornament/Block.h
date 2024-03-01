@@ -24,6 +24,7 @@ public:
 	Block();
 	~Block();
 
+	void BlockReset();
 
 	///< summary>
 	///初期化

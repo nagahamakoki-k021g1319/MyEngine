@@ -407,9 +407,15 @@ void GameScene::Update() {
 	if ( sceneNo_ == SceneNo::Load )
 	{
 		loadTimer++;
-		if ( loadTimer >= 100)
+		player_->Reset();
+		bikeEnemy_->BEReset();
+		armorEnemy_->AEReset();
+		bossEnemy_->BossReset();
+		block_->BlockReset();
+
+		if ( loadTimer >= 10)
 		{
-			loadTimer = 100;
+			loadTimer = 10;
 			sceneNo_ = SceneNo::Game;
 		}
 	}

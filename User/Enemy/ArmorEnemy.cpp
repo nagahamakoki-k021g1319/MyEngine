@@ -23,6 +23,33 @@ ArmorEnemy::~ArmorEnemy()
 
 }
 
+void ArmorEnemy::AEReset()
+{
+	/*isGameStartTimer = 0;
+	isAliveFlag_[ 4 ] = {1};
+	AliveR2Timer = 0;
+	AliveR3Timer = 0;
+	AliveR4Timer = 0;
+	deathTimer_[ 4 ] = { 0 };
+	isRotFlag_[ 4 ] = { 0 };
+	RotTimer_[ 4 ] = { 0 };
+	entryTimer = 0;
+	isExpolFlag_[ 4 ] = { 0 };
+	ExpolTimer_[ 4 ] = { 0 };
+	polygon_[ 4 ];
+	isMoveFlag_[ 4 ] = { 0 };
+	isbesideFlag_[ 4 ] = { 0 };
+
+	for ( int i = 0; i < 4; i++ )
+	{
+		HP_[i] = 12;
+	}
+	Obj_[ 0 ]->wtf.position = { 10.0f,-2.0f,-10.0f };
+	Obj_[ 1 ]->wtf.position = { -10.0f,-2.0f,-10.0f };
+	Obj_[ 2 ]->wtf.position = { 10.0f,-2.0f,-20.0f };
+	Obj_[ 3 ]->wtf.position = { -10.0f,-2.0f,-20.0f };*/
+}
+
 void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 {
 	// nullptrチェック

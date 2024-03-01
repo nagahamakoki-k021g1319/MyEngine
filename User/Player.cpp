@@ -106,6 +106,46 @@ Player::~Player() {
 	delete slashLObj_;
 }
 
+void Player::Reset()
+{
+	/*isGameStartFlag = false;
+	isGameStartTimer = 0;
+	acflag = false;
+	rotaflag = false;
+	camerasetFlag = false;
+
+	isClearFlag = false;
+	isclearFlagTimer = 0;
+
+	gageCount = 1;
+	BulletCount = 1;
+
+	isCameraBehavior = 0;
+	CameraBehaviorTimer = 0;
+	CameraBehaviorTimer2 = 0;
+	
+	isRoundFlag = 0;
+	isDeadEnemy = 0;
+	
+	standardCamera = 0;
+	moveCamera = 0;
+	cameraResetTimer = 0;
+	BossCameraResetTimer = 0;
+
+	isOperationFlag = false;
+	OperationbbTimer = 0;
+
+	isOperationFlag2 = false;
+	isOperationFlag3 = false;
+	waveTimer2 = 0;
+	OperationbbTimer2 = 0;
+
+	isScatterFlag = false;
+
+	Obj_->wtf.position = { 0.0f,-2.0f,-20.0f };*/
+
+}
+
 
 
 
