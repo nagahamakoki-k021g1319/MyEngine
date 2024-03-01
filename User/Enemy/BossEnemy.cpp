@@ -39,6 +39,24 @@ BossEnemy::~BossEnemy()
 	delete hpbUI;
 }
 
+void BossEnemy::BossReset()
+{
+	/*isGameStartTimer = 0;
+	SwAtTimer = -60;
+	isShootFlag = false;
+	BulletdurationTime = 0;
+	linkageCoolTimer_ = 0;
+	isLinkageMoveFlag = 0;
+	isdurationShootFlag = 0;
+	MeteorCoolTime = 0;
+	isMoveFlag_ = 0;
+	isBesideFlag = 0;
+	isUpFlag = 0;
+
+	hpUI->SetPozition({0,0});
+	Obj_->wtf.position = { 0.0f,-2.0f,-50.0f };*/
+}
+
 void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 {
 	// nullptrチェック

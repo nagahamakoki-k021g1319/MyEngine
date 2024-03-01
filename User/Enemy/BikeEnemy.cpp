@@ -49,6 +49,47 @@ BikeEnemy::~BikeEnemy()
 
 }
 
+void BikeEnemy::BEReset()
+{
+	//isGameStartTimer = 0;
+	//isAliveFlag_[ 9 ] = { 0 };
+	//AliveR2Timer = 0;
+	//AliveR3Timer = 0;
+	//AliveR4Timer = 0;
+	//actionTimer_[ 9 ] = { 0 };
+	//isMoveFlag_[ 9 ] = { 0 };
+	//stopTimer_[ 9 ] = { 0 };
+	//stopTimerR_[ 9 ] = { 0 };
+
+
+	//for ( int i = 0; i < 9; i++ )
+	//{
+	//	HP_[ i ] = 1;
+	//}
+
+	//isBackEntryFlag_[ 9 ] = { 0 };
+	//standardPos = 0;
+
+	//isBoxFlag_[ 12 ] = { 0 };
+	//isKonFlag_[ 8 ] = { 0 };
+
+
+	////ラウンド1
+	//Obj_[ 0 ]->wtf.position = { -3.0f,-2.0f,-30.0f };
+	//Obj_[ 1 ]->wtf.position = { 3.0f,-2.0f,-20.0f };
+	////ラウンド2
+	//Obj_[ 2 ]->wtf.position = { -3.0f,-2.0f,-20.0f };
+	//Obj_[ 3 ]->wtf.position = { 3.0f,-2.0f,-20.0f };
+	////ラウンド3
+	//Obj_[ 4 ]->wtf.position = { -3.0f,-2.0f,-20.0f };
+	//Obj_[ 5 ]->wtf.position = { 3.0f,-2.0f,-20.0f };
+	//Obj_[ 6 ]->wtf.position = { 5.0f,-2.0f,-20.0f };
+	////ラウンド4
+	//Obj_[ 7 ]->wtf.position = { -6.0f,-2.0f,-20.0f };
+	//Obj_[ 8 ]->wtf.position = { -3.0f,-2.0f,-20.0f };
+
+}
+
 void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 {
 	// nullptrチェック

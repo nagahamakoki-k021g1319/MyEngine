@@ -21,7 +21,7 @@ class Player
 public:
 	Player();
 	~Player();
-	
+	void Reset();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
 	void UIInitialize();

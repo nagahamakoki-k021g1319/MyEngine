@@ -21,6 +21,7 @@ class ArmorEnemy
 public:
 	ArmorEnemy();
 	~ArmorEnemy();
+	void AEReset();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
 	void Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos,Vector3 playerB3pos, bool playerShootFlag);
