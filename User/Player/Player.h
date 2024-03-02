@@ -13,6 +13,8 @@
 
 #include "ImGuiManager.h"
 
+#include "PlayerEffect.h"
+
 class Enemy;
 class ArmorEnemy;
 
@@ -286,6 +288,8 @@ private:
 	int LSpinEffTimer_ = 0;
 	int isLSpinEffFlag_ = 0;
 
+
+	/*std::unique_ptr<PlayerEffect>playerEffect;*/
 
 	//ダメージを受けた時のフラグ
 	bool isDamageFlag = false;

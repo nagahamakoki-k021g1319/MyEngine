@@ -112,6 +112,12 @@
     <Filter Include="Engine\ヘッダーファイル\3D\Light">
       <UniqueIdentifier>{55f4ff8c-a92a-4c0a-b825-f036c154994a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="user\ソース\Player">
+      <UniqueIdentifier>{79fb2e38-e1d0-49d3-9a25-802c51bd4e4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="user\ヘッダー\Player">
+      <UniqueIdentifier>{e3c10d6c-901b-482f-af6b-5e9cbe3dc78d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -187,9 +193,6 @@
     <ClCompile Include="Engine\input\Controller.cpp">
       <Filter>Engine\ソースファイル\INPUT</Filter>
     </ClCompile>
-    <ClCompile Include="User\Player.cpp">
-      <Filter>user\ソース</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\3D\FbxLoader.cpp">
       <Filter>Engine\ソースファイル\3D</Filter>
     </ClCompile>
@@ -228,6 +231,15 @@
     </ClCompile>
     <ClCompile Include="Engine\base\Framework.cpp">
       <Filter>Engine\ソースファイル\BASE</Filter>
+    </ClCompile>
+    <ClCompile Include="User\Player\Player.cpp">
+      <Filter>user\ソース\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="User\Player\PlayerBasicParticle.cpp">
+      <Filter>user\ソース\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="User\Player\PlayerEffect.cpp">
+      <Filter>user\ソース\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -300,9 +312,6 @@
     <ClInclude Include="Engine\input\Controller.h">
       <Filter>Engine\ヘッダーファイル\INPUT</Filter>
     </ClInclude>
-    <ClInclude Include="User\Player.h">
-      <Filter>user\ヘッダー</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\3D\FbxLoader.h">
       <Filter>Engine\ヘッダーファイル\3D</Filter>
     </ClInclude>
@@ -356,6 +365,15 @@
     </ClInclude>
     <ClInclude Include="Engine\base\Framework.h">
       <Filter>Engine\ヘッダーファイル\BASE</Filter>
+    </ClInclude>
+    <ClInclude Include="User\Player\Player.h">
+      <Filter>user\ヘッダー\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="User\Player\PlayerBasicParticle.h">
+      <Filter>user\ヘッダー\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="User\Player\PlayerEffect.h">
+      <Filter>user\ヘッダー\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

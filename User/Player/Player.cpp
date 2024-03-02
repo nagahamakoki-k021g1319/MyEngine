@@ -339,6 +339,8 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	LSpinParticle->LoadTexture("fire.png");
 	LSpinParticle->Update();
 
+	/*playerEffect = std::make_unique<PlayerEffect>();*/
+
 	//UIの初期化(枚数が多いため)
 	UIInitialize();
 
@@ -1667,6 +1669,18 @@ void Player::EffUpdate()
 		ballisticEffTimer_ = 0;
 	}
 
+	/*playerEffect->SetBallisticPoss(
+		{ {Vector3(shootObj_[ 0 ]->wtf.position.x,shootObj_[ 0 ]->wtf.position.y + 0.5f,shootObj_[ 0 ]->wtf.position.z),
+			Vector3(shootObj_[ 1 ]->wtf.position.x,shootObj_[ 1 ]->wtf.position.y + 0.5f,shootObj_[ 1 ]->wtf.position.z),
+			Vector3(shootObj_[ 2 ]->wtf.position.x,shootObj_[ 2 ]->wtf.position.y + 0.5f,shootObj_[ 2 ]->wtf.position.z)
+			}
+		}
+	);*/
+
+	/*playerEffect->SetBulletCount(BulletCount);*/
+
+	/*playerEffect->Update();*/
+
 	//スピン
 	if ( isRSpinEffFlag_ == 1 )
 	{
@@ -2184,6 +2198,8 @@ void Player::EffDraw()
 			ballisticParticle_[ 2 ]->Draw();
 		}
 	}
+
+	/*playerEffect->Draw();*/
 
 	if ( isRSpinEffFlag_ == 1 && RSpinEffTimer_ <= 10 && RSpinEffTimer_ >= 1 )
 	{
