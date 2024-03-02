@@ -14,7 +14,7 @@
 
 #include "ParticleManager.h"
 
-#include "Player.h"
+#include "Player/Player.h"
 #include "Enemy.h"
 #include "Enemy/ArmorEnemy.h"
 #include "Enemy/BikeEnemy.h"
