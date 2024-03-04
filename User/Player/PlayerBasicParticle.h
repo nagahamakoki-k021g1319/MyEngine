@@ -12,7 +12,7 @@ struct ParticleSetting
 	int num;
 };
 
-class BasicParticle
+class PlayerBasicParticle
 {
 private:
 
@@ -29,7 +29,7 @@ public:
 
 	void Draw();
 
-	BasicParticle() = default;
-	~BasicParticle() = default;
+	PlayerBasicParticle() = default;
+	~PlayerBasicParticle() = default;
 };
 
