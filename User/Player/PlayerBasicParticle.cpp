@@ -1,6 +1,6 @@
 #include "PlayerBasicParticle.h"
 
-void BasicParticle::Initialize(const std::string& fileName,const ParticleSetting& set)
+void PlayerBasicParticle::Initialize(const std::string& fileName,const ParticleSetting& set)
 {
 	setting = set;
 
@@ -9,7 +9,7 @@ void BasicParticle::Initialize(const std::string& fileName,const ParticleSetting
 	particle->LoadTexture(fileName);
 }
 
-void BasicParticle::Add(const Vector3& pos)
+void PlayerBasicParticle::Add(const Vector3& pos)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < setting.num; i++ )
@@ -36,12 +36,12 @@ void BasicParticle::Add(const Vector3& pos)
 	}
 }
 
-void BasicParticle::Update()
+void PlayerBasicParticle::Update()
 {
 	particle->Update();
 }
 
-void BasicParticle::Draw()
+void PlayerBasicParticle::Draw()
 {
 	particle->Draw();
 }

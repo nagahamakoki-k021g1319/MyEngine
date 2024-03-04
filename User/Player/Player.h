@@ -39,28 +39,6 @@ public:
 
 	//エフェクトの更新処理
 	void EffUpdate();
-	//エフェクトの情報(通常ガス右)
-	void EffSummary(Vector3 bulletpos);
-	//エフェクトの情報(通常ガス左)
-	void EffSummary2(Vector3 bulletpos2);
-	//エフェクトの情報(加速ガス右)
-	void EffSummaryAccelR(Vector3 bulletpos3);
-	//エフェクトの情報(加速ガス左)
-	void EffSummaryAccelL(Vector3 bulletpos4);
-	//エフェクトの情報(減速ガス右)
-	void EffSummaryDecelR(Vector3 bulletpos3);
-	//エフェクトの情報(減速ガス左)
-	void EffSummaryDecelL(Vector3 bulletpos4);
-	//エフェクトの情報(剣チャージ)
-	void EffSummarySwordchage(Vector3 pos);
-	//エフェクトの情報(弾)
-	void EffSummaryBullet(Vector3 bulletpos);
-	void EffSummaryBullet2(Vector3 bulletpos);
-	void EffSummaryBullet3(Vector3 bulletpos);
-	//エフェクトの情報(右スピン)
-	void EffSummaryRSpin(Vector3 pos);
-	//エフェクトの情報(左スピン)
-	void EffSummaryLSpin(Vector3 pos);
 	//エフェクトの描画
 	void EffDraw();
 
@@ -257,39 +235,9 @@ private:
 	int EffTimer = 0;
 	int isEffFlag = 0;
 
-	//パーティクル
-	//ガス(通常)
-	std::unique_ptr<ParticleManager> gasParticle;
-	std::unique_ptr<ParticleManager> gasParticle2;
-	//ガス(加速)
-	std::unique_ptr<ParticleManager> gasParticleAccelR;
-	std::unique_ptr<ParticleManager> gasParticleAccelL;
-	//ガス(減速)
-	std::unique_ptr<ParticleManager> gasParticleDecelR;
-	std::unique_ptr<ParticleManager> gasParticleDecelL;
-	int bulletEffTimer_ = 0;
-	int isbulletEffFlag_ = 0;
-	//自機のバイクのブーストフラグ(0 通常,1 加速,2 減速)
-	int isboostFlag = 0;
-	//剣(チャージ)
-	std::unique_ptr<ParticleManager> swordchageParticle;
-	int swordchageEffTimer_ = 0;
-	int isswordchageEffFlag_ = 0;
-	//弾飛ばし
-	std::unique_ptr<ParticleManager> ballisticParticle_[3];
-	int ballisticEffTimer_ = 0;
-	int isBallisticEffFlag_ = 0;
-	//右スピンエフェクト
-	std::unique_ptr<ParticleManager> RSpinParticle;
-	int RSpinEffTimer_ = 0;
-	int isRSpinEffFlag_ = 0;
-	//左スピンエフェクト
-	std::unique_ptr<ParticleManager> LSpinParticle;
-	int LSpinEffTimer_ = 0;
-	int isLSpinEffFlag_ = 0;
 
 
-	/*std::unique_ptr<PlayerEffect>playerEffect;*/
+	std::unique_ptr<PlayerEffect>playerEffect;
 
 	//ダメージを受けた時のフラグ
 	bool isDamageFlag = false;
