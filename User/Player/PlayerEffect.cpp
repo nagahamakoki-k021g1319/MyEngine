@@ -25,54 +25,35 @@ void PlayerEffect::Initialize()
 	set.scale = { 0.5f,0.0f };
 	LSpinParticle->Initialize("fire.png",set);
 
-	//右スピンエフェクト
-	RSpinParticle = std::make_unique<PlayerBasicParticle>();
-	RSpinParticle->Initialize("fire.png",set);
+}
 
-	//通常ガス
-	for ( size_t i = 0; i < 2; i++ )
-	{
-		gasParticles[ i ] = std::make_unique<PlayerBasicParticle>();
-		set.life = 60;
-		set.pos = { 0.0f ,0.0f ,0.0f };
-		set.vel = { 0.0f ,0.0f ,0.02f };
-		set.num = 20;
-		set.acc = 0.000001f;
-		set.scale = { 0.05f,0.0f };
-		gasParticles[ i ]->Initialize("gas.png",set);
-	}
-
-	//ガス(加速)
-	gasParticleAccelR = std::make_unique<PlayerBasicParticle>();
-	set.life = 60;
-	set.pos = { 0.0f ,0.0f ,0.0f };
-	set.vel = { 0.0f ,0.0f ,0.02f };
-	set.num = 50;
-	set.acc = 0.000001f;
-	set.scale = { 0.07f,0.0f };
-	gasParticleAccelR->Initialize("gas1.png",set);
-
-	gasParticleAccelL = std::make_unique<PlayerBasicParticle>();
-	gasParticleAccelL->Initialize("gas1.png",set);
-
-	gasParticleDecelR = std::make_unique<PlayerBasicParticle>();
-	set.life = 60;
-	set.pos = { 0.0f ,0.0f ,0.0f };
-	set.vel = { 0.0f ,0.0f ,0.05f };
-	set.num = 5;
-	set.acc = 0.000001f;
-	set.scale = { 0.05f,0.0f };
-	gasParticleDecelR->Initialize("gas.png",set);
-
-	gasParticleDecelL = std::make_unique<PlayerBasicParticle>();
-	gasParticleDecelL->Initialize("gas.png",set);
-
+void PlayerEffect::summary()
+{
+	//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+	const float rnd_posG = 0.0f;
+	const float rnd_posGy = 0.0f;
+	const float rnd_posGz = 0.0f;
+	posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
+	posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
+	posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+	//速度
+	//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
+	const float rnd_velG = 0.0f;
+	const float rnd_velGy = 0.0f;
+	const float rnd_velGz = 0.02f;
+	velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
+	velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
+	velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 0.2f;
+	//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+	const float rnd_accG = 0.000001f;
+	accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+	accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 
 }
 
 void PlayerEffect::BallisticUpdate()
 {
-	if (isBallisticEffFlag_ == 1)
+	if (isBallisticEffFlag_ == true)
 	{
 		ballisticEffTimer_++;
 	}
@@ -85,7 +66,7 @@ void PlayerEffect::BallisticUpdate()
 	}
 	if (ballisticEffTimer_ >= 10)
 	{
-		isBallisticEffFlag_ = 0;
+		isBallisticEffFlag_ = false;
 		ballisticEffTimer_ = 0;
 	}
 }
@@ -110,19 +91,19 @@ void PlayerEffect::SetBulletCount(int BulletCount)
 	bulletCount = BulletCount;
 }
 
-void PlayerEffect::LSpinUpdate()
+void PlayerEffect::LSpinUpdate(Vector3 pos)
 {
-	if ( isLSpinEffFlag_ )
+	if ( isLSpinEffFlag_ == 1 )
 	{
 		LSpinEffTimer_++;
 	}
 	if ( LSpinEffTimer_ <= 10 && LSpinEffTimer_ >= 0 )
 	{
-		LSpinParticle->Add(LSpinPos);
+		LSpinParticle->Add(pos);
 	}
 	if ( LSpinEffTimer_ >= 10 )
 	{
-		isLSpinEffFlag_ = false;
+		isLSpinEffFlag_ = 0;
 		LSpinEffTimer_ = 0;
 	}
 }
@@ -142,140 +123,15 @@ void PlayerEffect::LSpinStop()
 	isLSpinEffFlag_ = false;
 }
 
-void PlayerEffect::RSpinUpdate()
-{
-	if ( isRSpinEffFlag_ == 1)
-	{
-		RSpinEffTimer_++;
-	}
-	if ( RSpinEffTimer_ <= 10 && RSpinEffTimer_ >= 0 )
-	{
-		RSpinParticle->Add(LSpinPos);
-	}
-	if ( RSpinEffTimer_ >= 10 )
-	{
-		isRSpinEffFlag_ = false;
-		RSpinEffTimer_ = 0;
-	}
-}
-
-void PlayerEffect::SetRSpinPos(const Vector3& pos)
-{
-	RSpinPos = pos;
-}
-
-void PlayerEffect::RSpinEmit()
-{
-	isRSpinEffFlag_ = true;
-}
-
-void PlayerEffect::RSpinStop()
-{
-	isRSpinEffFlag_ = false;
-}
-
-void PlayerEffect::GasParticleUpdate()
-{
-	//バイクのエンジン
-	if ( isbulletEffFlag_ == 1)
-	{
-		bulletEffTimer_++;
-	}
-	if ( bulletEffTimer_ <= 20 && bulletEffTimer_ >= 1 )
-	{
-		for ( size_t i = 0; i < 2; i++ )
-		{
-			gasParticles[ i ]->Add(gasParticlePoss[ 0 ]);
-		}
-
-		gasParticleAccelL->Add(gasParticleAccelPoss[ 0 ]);
-		gasParticleAccelR->Add(gasParticleAccelPoss[ 1 ]);
-
-		gasParticleDecelL->Add(gasParticleDecelPoss[ 0 ]);
-		gasParticleDecelL->Add(gasParticleDecelPoss[ 1 ]);
-	}
-	if ( bulletEffTimer_ >= 20 )
-	{
-		isbulletEffFlag_ = 0;
-		bulletEffTimer_ = 0;
-	}
-}
-
-void PlayerEffect::SetLGasParticlePos(const Vector3& pos)
-{
-	gasParticlePoss[ 0 ] = pos;
-}
-
-void PlayerEffect::SetRGasParticlePos(const Vector3& pos)
-{
-	gasParticlePoss[ 1 ] = pos;
-}
-
-void PlayerEffect::SetLGasParticleAccelPos(const Vector3& pos)
-{
-	gasParticleAccelPoss[ 0 ] = pos;
-}
-
-void PlayerEffect::SetRGasParticleAccelPos(const Vector3& pos)
-{
-	gasParticleAccelPoss[ 1 ] = pos;
-}
-
-void PlayerEffect::SetLGasParticleDecelPos(const Vector3& pos)
-{
-	gasParticleDecelPoss[ 0 ] = pos;
-}
-
-void PlayerEffect::SetRGasParticleDecelPos(const Vector3& pos)
-{
-	gasParticleDecelPoss[ 1 ] = pos;
-}
-
-void PlayerEffect::GasParticleEmit()
-{
-	isbulletEffFlag_ = true;
-}
-
-void PlayerEffect::GasParticleStop()
-{
-	isbulletEffFlag_ = false;
-	bulletEffTimer_ = 0;
-}
-
-void PlayerEffect::SetNormal()
-{
-	isboostFlag = NORMAL;
-}
-
-void PlayerEffect::SetAcceleration()
-{
-	isboostFlag = ACCELERATION;
-}
-
-void PlayerEffect::SetDeceleration()
-{
-	isboostFlag = DECELERATION;
-}
-
 void PlayerEffect::Update()
 {
 	//弾
 	BallisticUpdate();
-	//左スピン
-	LSpinUpdate();
-
-	//右スピン
-	RSpinUpdate();
-
-	//エフェクトの情報(通常ガス右)
-	//エフェクトの情報(通常ガス左)
-	GasParticleUpdate();
-
 }
 
 void PlayerEffect::Draw()
 {
-	if (isBallisticEffFlag_ == 1)
+	if (isBallisticEffFlag_ == true)
 	{
 		ballisticParticles_[0]->Draw();
 		if (bulletCount >= 2)
@@ -287,38 +143,10 @@ void PlayerEffect::Draw()
 			ballisticParticles_[2]->Draw();
 		}
 	}
-
 	//左スピン
-	if ( isLSpinEffFlag_ && LSpinEffTimer_ <= 10 && LSpinEffTimer_ >= 1 )
+	if ( isLSpinEffFlag_ == 1 && LSpinEffTimer_ <= 100 && LSpinEffTimer_ >= 1 )
 	{
 		LSpinParticle->Draw();
 	}
-
-	//右スピンエフェクト
-	if ( isRSpinEffFlag_ && RSpinEffTimer_ <= 10 && RSpinEffTimer_ >= 1 )
-	{
-		RSpinParticle->Draw();
-	}
-
-	if ( isbulletEffFlag_ == 1 )
-	{
-		if ( isboostFlag == 0 )
-		{
-			for ( size_t i = 0; i < 2; i++ )
-			{
-				gasParticles[ i ]->Draw();
-			}
-		}
-		else if ( isboostFlag == 1 )
-		{
-			gasParticleAccelR->Draw();
-			gasParticleAccelL->Draw();
-		}
-		else if ( isboostFlag == 2 )
-		{
-			/*gasParticleDecelR->Draw();
-			gasParticleDecelL->Draw();*/
-		}
-	}
-
+	
 }
