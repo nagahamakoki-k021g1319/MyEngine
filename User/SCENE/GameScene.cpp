@@ -696,7 +696,6 @@ void GameScene::Draw() {
 
 	if (sceneNo_ == SceneNo::Game) {
 		//// パーティクル UI FBX スプライト描画
-		player_->FbxDraw();
 		player_->EffDraw();
 		armorEnemy_->EffDraw();
 		bikeEnemy_->EffDraw();
