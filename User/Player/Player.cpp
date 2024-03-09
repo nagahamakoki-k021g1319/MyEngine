@@ -9,6 +9,7 @@ Player::Player() {
 
 Player::~Player() {
 	delete spriteCommon;
+	delete playerUI_;
 	for ( int i = 0; i < 3; i++ )
 	{
 		delete shootObj_[i];
@@ -38,22 +39,7 @@ Player::~Player() {
 	delete hpgreenUI;
 	delete hpredUI;
 
-	delete Bullet2dUI;
-	delete Bullet2fUI;
-	delete Bullet2mUI;
-
-	delete Bullet3dUI;
-	delete Bullet3fUI;
-	delete Bullet3mUI;
-
-	delete Bullet4dUI;
-	delete Bullet4fUI;
-	delete Bullet4mUI;
-
-	delete Bullet5dUI;
-	delete Bullet5fUI;
-	delete Bullet5mUI;
-
+	
 	delete bulletEnptyUI;
 	delete metaUI;
 	delete arrowUI;
@@ -778,71 +764,9 @@ void Player::UIInitialize()
 	hpredUI->SetPozition(hpredPosition);
 	hpredUI->SetSize({ 1280.0f, 720.0f });
 
-	//2発目
-	Bullet2dUI = new Sprite();
-	Bullet2dUI->Initialize(spriteCommon);
-	Bullet2dUI->SetPozition({ 0,0 });
-	Bullet2dUI->SetSize({ 1280.0f, 720.0f });
+	
 
-	Bullet2fUI = new Sprite();
-	Bullet2fUI->Initialize(spriteCommon);
-	Bullet2fUI->SetPozition({ 0,0 });
-	Bullet2fUI->SetSize({ 1280.0f, 720.0f });
-
-	Bullet2mUI = new Sprite();
-	Bullet2mUI->Initialize(spriteCommon);
-	Bullet2mUI->SetPozition({ 0,0 });
-	Bullet2mUI->SetSize({ 1280.0f, 720.0f });
-
-	//3発目
-	Bullet3dUI = new Sprite();
-	Bullet3dUI->Initialize(spriteCommon);
-	Bullet3dUI->SetPozition({ 0,0 });
-	Bullet3dUI->SetSize({ 1280.0f, 720.0f });
-
-	Bullet3fUI = new Sprite();
-	Bullet3fUI->Initialize(spriteCommon);
-	Bullet3fUI->SetPozition({ 0,0 });
-	Bullet3fUI->SetSize({ 1280.0f, 720.0f });
-
-	Bullet3mUI = new Sprite();
-	Bullet3mUI->Initialize(spriteCommon);
-	Bullet3mUI->SetPozition({ 0,0 });
-	Bullet3mUI->SetSize({ 1280.0f, 720.0f });
-
-	//4発目
-	Bullet4dUI = new Sprite();
-	Bullet4dUI->Initialize(spriteCommon);
-	Bullet4dUI->SetPozition({ 0,0 });
-	Bullet4dUI->SetSize({ 1280.0f, 720.0f });
-
-	Bullet4fUI = new Sprite();
-	Bullet4fUI->Initialize(spriteCommon);
-	Bullet4fUI->SetPozition({ 0,0 });
-	Bullet4fUI->SetSize({ 1280.0f, 720.0f });
-
-	Bullet4mUI = new Sprite();
-	Bullet4mUI->Initialize(spriteCommon);
-	Bullet4mUI->SetPozition({ 0,0 });
-	Bullet4mUI->SetSize({ 1280.0f, 720.0f });
-
-	//5発目
-	Bullet5dUI = new Sprite();
-	Bullet5dUI->Initialize(spriteCommon);
-	Bullet5dUI->SetPozition({ 0,0 });
-	Bullet5dUI->SetSize({ 1280.0f, 720.0f });
-
-	Bullet5fUI = new Sprite();
-	Bullet5fUI->Initialize(spriteCommon);
-	Bullet5fUI->SetPozition({ 0,0 });
-	Bullet5fUI->SetSize({ 1280.0f, 720.0f });
-
-	Bullet5mUI = new Sprite();
-	Bullet5mUI->Initialize(spriteCommon);
-	Bullet5mUI->SetPozition({ 0,0 });
-	Bullet5mUI->SetSize({ 1280.0f, 720.0f });
-
-	//6発目
+	//enpty
 	bulletEnptyUI = new Sprite();
 	bulletEnptyUI->Initialize(spriteCommon);
 	bulletEnptyUI->SetPozition({ 0,0 });
@@ -953,38 +877,6 @@ void Player::UIInitialize()
 	//HPの赤の部分
 	spriteCommon->LoadTexture(4,"hpred.png");
 	hpredUI->SetTextureIndex(4);
-
-	//2発目
-	spriteCommon->LoadTexture(5,"ff2d.png");
-	Bullet2dUI->SetTextureIndex(5);
-	spriteCommon->LoadTexture(6,"ff2f.png");
-	Bullet2fUI->SetTextureIndex(6);
-	spriteCommon->LoadTexture(7,"ff2m.png");
-	Bullet2mUI->SetTextureIndex(7);
-
-	//3発目
-	spriteCommon->LoadTexture(8,"ff3d.png");
-	Bullet3dUI->SetTextureIndex(8);
-	spriteCommon->LoadTexture(9,"ff3f.png");
-	Bullet3fUI->SetTextureIndex(9);
-	spriteCommon->LoadTexture(10,"ff3m.png");
-	Bullet3mUI->SetTextureIndex(10);
-
-	//4発目
-	spriteCommon->LoadTexture(11,"ff4d.png");
-	Bullet4dUI->SetTextureIndex(11);
-	spriteCommon->LoadTexture(12,"ff4f.png");
-	Bullet4fUI->SetTextureIndex(12);
-	spriteCommon->LoadTexture(13,"ff4m.png");
-	Bullet4mUI->SetTextureIndex(13);
-
-	//5発目
-	spriteCommon->LoadTexture(20,"ff5d.png");
-	Bullet5dUI->SetTextureIndex(20);
-	spriteCommon->LoadTexture(21,"ff5f.png");
-	Bullet5fUI->SetTextureIndex(21);
-	spriteCommon->LoadTexture(22,"ff5m.png");
-	Bullet5mUI->SetTextureIndex(22);
 
 
 	//メーター
@@ -1105,8 +997,6 @@ hpFlameUI->Draw();*/
 		}
 
 	}
-
-
 }
 
 void Player::PlayerAction()
@@ -1630,28 +1520,6 @@ void Player::EffUpdate()
 		bulletEffTimer_ = 0;
 	}
 
-	if ( isswordchageEffFlag_ == 1 )
-	{
-		swordchageEffTimer_++;
-	}
-	if ( swordchageEffTimer_ <= 20 && swordchageEffTimer_ >= 1 )
-	{
-		/*const float gasLPosX = 0.15f;
-		const float gasRPosX = 0.13f;
-		const float gasAddPosY = 0.2f;
-		const float gasLPosZ = 1.5f;
-		const float gasRPosZ = 2.5f;*/
-
-
-		//剣(チャージ)
-		EffSummarySwordchage(Vector3(Obj_->wtf.position.x - 0.3f,Obj_->wtf.position.y + 0.2f,Obj_->wtf.position.z));
-	}
-	if ( swordchageEffTimer_ >= 20 )
-	{
-		isswordchageEffFlag_ = 0;
-		swordchageEffTimer_ = 0;
-	}
-
 	//自機の弾
 	if ( isBallisticEffFlag_ == 1 )
 	{
@@ -1707,20 +1575,23 @@ void Player::EffSummary(Vector3 bulletpos)
 	for ( int i = 0; i < 20; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
-		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
-		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
-		posG += bulletpos;
+		Vector3 posGas{};
+		posGas.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		posGas.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		posGas.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		posGas += bulletpos;
 		//速度
+		Vector3 velGas{};
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
-		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
-		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 0.2f;
+		velGas.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		velGas.y = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		velGas.z = ( float ) rand() / RAND_MAX * rnd_velGasz - rnd_velGasz / 0.2f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
-		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		Vector3 accGas{};
+		accGas.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
+		accGas.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		//追加
-		gasParticle->Add(60,posG,velG,accG,0.05f,0.0f);
+		gasParticle->Add(60,posGas,velGas,accGas,0.05f,0.0f);
 		gasParticle->Update();
 	}
 }
@@ -1731,32 +1602,23 @@ void Player::EffSummary2(Vector3 bulletpos2)
 	for ( int i = 0; i < 20; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_pos2 = 0.0f;
-		const float rnd_posy2 = 0.0f;
-		const float rnd_posz2 = 0.0f;
 		Vector3 pos2{};
-		pos2.x += ( float ) rand() / RAND_MAX * rnd_pos2 - rnd_pos2 / 2.0f;
-		pos2.y += ( float ) rand() / RAND_MAX * rnd_posy2 - rnd_posy2 / 2.0f;
-		pos2.z += ( float ) rand() / RAND_MAX * rnd_posz2 - rnd_posz2 / 2.0f;
+		pos2.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		pos2.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		pos2.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
 		pos2 += bulletpos2;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_vel2 = 0.0f;
-		const float rnd_vely2 = 0.0f;
-		const float rnd_velz2 = 0.02f;
 		Vector3 vel2{};
-		vel2.x = ( float ) rand() / RAND_MAX * rnd_vel2 - rnd_vel2 / 2.0f;
-		vel2.y = ( float ) rand() / RAND_MAX * rnd_vely2 - rnd_vely2 / 2.0f;
-		vel2.z = ( float ) rand() / RAND_MAX * rnd_velz2 - rnd_velz2 / 0.2f;
+		vel2.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		vel2.y = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		vel2.z = ( float ) rand() / RAND_MAX * rnd_velGasz - rnd_velGasz / 0.2f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_acc2 = 0.000001f;
 		Vector3 acc2{};
-		acc2.x = ( float ) rand() / RAND_MAX * rnd_acc2 - rnd_acc2 / 2.0f;
-		acc2.y = ( float ) rand() / RAND_MAX * rnd_acc2 - rnd_acc2 / 2.0f;
-
+		acc2.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
+		acc2.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		//追加
 		gasParticle2->Add(60,pos2,vel2,acc2,0.05f,0.0f);
-
 		gasParticle2->Update();
 
 	}

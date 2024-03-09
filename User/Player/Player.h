@@ -14,6 +14,8 @@
 #include "ImGuiManager.h"
 
 #include "PlayerEffect.h"
+#include "PlayerUI.h"
+
 
 class Enemy;
 class ArmorEnemy;
@@ -121,6 +123,7 @@ private:
 	Audio* audio = nullptr;
 	SpriteCommon* spriteCommon = nullptr;
 	Collision coll;
+	PlayerUI* playerUI_ = nullptr;
 
 	//ゲームが始まるフラグ
 	bool isGameStartFlag = false;
@@ -262,17 +265,11 @@ private:
 	//パーティクル
 	//ガス(通常)
 	std::unique_ptr<ParticleManager> gasParticle;
-	const float rnd_posG = 0.0f;
-	const float rnd_posGy = 0.0f;
-	const float rnd_posGz = 0.0f;
-	Vector3 posG{};
-	const float rnd_velG = 0.0f;
-	const float rnd_velGy = 0.0f;
-	const float rnd_velGz = 0.02f;
-	Vector3 velG{};
-	const float rnd_accG = 0.000001f;
-	Vector3 accG{};
 	std::unique_ptr<ParticleManager> gasParticle2;
+	const float rnd_posGas = 0.0f;
+	const float rnd_velGasz = 0.02f;
+	const float rnd_accGas = 0.000001f;
+
 	//ガス(加速)
 	std::unique_ptr<ParticleManager> gasParticleAccelR;
 	std::unique_ptr<ParticleManager> gasParticleAccelL;
@@ -316,24 +313,6 @@ private:
 	Sprite* hpredUI = nullptr;
 	Vector2 hpredPosition;
 
-
-	Sprite* Bullet2dUI = nullptr;
-	Sprite* Bullet2fUI = nullptr;
-	Sprite* Bullet2mUI = nullptr;
-
-	Sprite* Bullet3dUI = nullptr;
-	Sprite* Bullet3fUI = nullptr;
-	Sprite* Bullet3mUI = nullptr;
-
-	Sprite* Bullet4dUI = nullptr;
-	Sprite* Bullet4fUI = nullptr;
-	Sprite* Bullet4mUI = nullptr;
-
-	Sprite* Bullet5dUI = nullptr;
-	Sprite* Bullet5fUI = nullptr;
-	Sprite* Bullet5mUI = nullptr;
-
-	
 	Sprite* metaUI = nullptr;
 	Sprite* arrowUI = nullptr;
 	Vector2 arrowPosition;

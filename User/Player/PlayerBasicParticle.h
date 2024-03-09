@@ -1,6 +1,7 @@
 #pragma once
 #include "ParticleManager.h"
 #include"Vector2.h"
+#include "DirectXCommon.h"
 
 struct ParticleSetting
 {
@@ -28,6 +29,8 @@ public:
 	void Update();
 
 	void Draw();
+
+	
 
 	PlayerBasicParticle() = default;
 	~PlayerBasicParticle() = default;
