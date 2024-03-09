@@ -241,6 +241,9 @@
     <ClCompile Include="User\Player\PlayerEffect.cpp">
       <Filter>user\ソース\Player</Filter>
     </ClCompile>
+    <ClCompile Include="User\Player\PlayerUI.cpp">
+      <Filter>user\ソース\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BASE\FPS.h">
@@ -373,6 +376,9 @@
       <Filter>user\ヘッダー\Player</Filter>
     </ClInclude>
     <ClInclude Include="User\Player\PlayerEffect.h">
+      <Filter>user\ヘッダー\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="User\Player\PlayerUI.h">
       <Filter>user\ヘッダー\Player</Filter>
     </ClInclude>
   </ItemGroup>

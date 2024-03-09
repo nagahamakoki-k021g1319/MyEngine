@@ -45,3 +45,5 @@ void PlayerBasicParticle::Draw()
 {
 	particle->Draw();
 }
+
+

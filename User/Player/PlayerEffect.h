@@ -32,37 +32,11 @@ public:
 	void SetLSpinPos(const Vector3& pos);
 	void LSpinEmit();
 	void LSpinStop();
-	////右スピン攻撃
-	//void RSpinUpdate();
-	//void SetRSpinPos(const Vector3& pos);
-	//void RSpinEmit();
-	//void RSpinStop();
-
-	//void GasParticleUpdate();
-	////通常ガス左
-	//void SetLGasParticlePos(const Vector3& pos);
-	////通常ガス右
-	//void SetRGasParticlePos(const Vector3& pos);
-	////加速ガス左
-	//void SetLGasParticleAccelPos(const Vector3& pos);
-	////加速ガス右
-	//void SetRGasParticleAccelPos(const Vector3& pos);
-	////減速ガス左
-	//void SetLGasParticleDecelPos(const Vector3& pos);
-	////減速ガス右
-	//void SetRGasParticleDecelPos(const Vector3& pos);
-
-	//void GasParticleEmit();
-	//void GasParticleStop();
-
-	//void SetNormal();
-	//void SetAcceleration();
-	//void SetDeceleration();
-
-
+	
 	void Update();
 	void Draw();
 
+	void particlepos(Vector3 pos,float randPosX,float randPosY,float randPosZ);
 
 	int isLSpinEffFlag_ = 0;
 	int LSpinEffTimer_ = 0;
@@ -103,6 +77,8 @@ private:
 	//bool isbulletEffFlag_ = false;
 	////自機のバイクのブーストフラグ(0 通常,1 加速,2 減速)
 	//PlayerBoostFlag isboostFlag = NORMAL;
+
+	
 
 public:
 	Vector3 posG{};

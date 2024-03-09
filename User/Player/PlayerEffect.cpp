@@ -150,3 +150,11 @@ void PlayerEffect::Draw()
 	}
 	
 }
+
+void PlayerEffect::particlepos(Vector3 pos,float randPosX, float randPosY, float randPosZ)
+{
+	//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
+	pos.x += (float)rand() / RAND_MAX * randPosX - randPosX / 2.0f;
+	pos.y += (float)rand() / RAND_MAX * randPosY - randPosY / 2.0f;
+	pos.z += (float)rand() / RAND_MAX * randPosZ - randPosZ / 2.0f;
+}
