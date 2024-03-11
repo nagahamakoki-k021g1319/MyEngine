@@ -398,7 +398,7 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 			const float posLimit = -3.0f;
 			const float rotaSpeed = 0.03f;
 			const float rotaLimit = 0.45f;
-			const float damage = 10.0f;
+			const float damage = 1.0f;
 			Obj_[ i ]->wtf.position.x -= bikeSpeed;
 			if ( Obj_[ i ]->wtf.position.x <= posLimit )
 			{
@@ -417,8 +417,7 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 				player_->isKnockbackFlag = true;
 				player_->isCamShake = 1;
 				player_->camShakeTimer = player_->camShakeLimit;
-				player_->hpgreenPosition.x -= damage;//倍ダメ
-				player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
+				player_->playerHP -= damage;//倍ダメ
 			}
 		}
 		//当たったらノックバックタイマー起動
@@ -468,7 +467,7 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 			const float posLimit = 3.0f;
 			const float rotaSpeed = 0.03f;
 			const float rotaLimit = -0.45f;
-			const float damage = 10.0f;
+			const float damage = 1.0f;
 			Obj_[ i ]->wtf.position.x += bikeSpeed;
 			if ( Obj_[ i ]->wtf.position.x >= posLimit )
 			{
@@ -487,8 +486,7 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 				player_->isKnockbackFlagL = true;
 				player_->isCamShake = 1;
 				player_->camShakeTimer = player_->camShakeLimit;
-				player_->hpgreenPosition.x -= damage;//倍ダメ
-				player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
+				player_->playerHP -= damage;//倍ダメ
 				if (player_->isScatterFlag == false )
 				{
 					player_->isScatterFlag = true;

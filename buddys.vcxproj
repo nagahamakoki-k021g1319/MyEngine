@@ -117,6 +117,7 @@
     <ClCompile Include="Engine\IMGUI\ImGuiManager.cpp" />
     <ClCompile Include="Engine\input\Controller.cpp" />
     <ClCompile Include="Engine\INPUT\Input.cpp" />
+    <ClCompile Include="Engine\LevelEditor\json.cpp" />
     <ClCompile Include="Engine\MATH\Affin.cpp" />
     <ClCompile Include="Engine\MATH\ConvertXM.cpp" />
     <ClCompile Include="Engine\MATH\Matrix4.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Engine\IMGUI\ImGuiManager.h" />
     <ClInclude Include="Engine\input\Controller.h" />
     <ClInclude Include="Engine\INPUT\Input.h" />
+    <ClInclude Include="Engine\LevelEditor\json.h" />
     <ClInclude Include="Engine\MATH\Affin.h" />
     <ClInclude Include="Engine\MATH\ConvertXM.h" />
     <ClInclude Include="Engine\MATH\Matrix4.h" />
