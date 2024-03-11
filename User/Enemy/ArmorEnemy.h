@@ -131,25 +131,38 @@ private:
 	//地面のズサ
 	std::unique_ptr<ParticleManager> gasParticle_[ 4 ];
 	std::unique_ptr<ParticleManager> gasParticle2_[ 4 ];
+	const float rnd_posGas= 0.0f;
+	const float rnd_velGas = 0.1f;
+	const float rnd_accG = 0.000001f;
 	//背中の噴射ガス
 	std::unique_ptr<ParticleManager> gasParticle3_[ 4 ];
 	std::unique_ptr<ParticleManager> gasParticle4_[ 4 ];
+	const float rnd_velBGas = -0.07f;
 	int gasEffTimer_[ 4 ] = { 0 };
 	int isgasEffFlag_[ 4 ] = { 0 };
 	//攻撃受けた時の火花のパーティクル
 	std::unique_ptr<ParticleManager> DamageParticle_[ 4 ];
+	const float rnd_posDamage = 5.0f;
+	const float rnd_velDamage = 0.5f;
 	int damEffTimer_[ 4 ] = { 0 };
 	int isdamEffFlag_[ 4 ] = { 0 };
 	//発砲するときの硝煙
 	std::unique_ptr<ParticleManager> smokeParticle_[ 4 ];
+	const float rnd_smokepos = 0.001f;
+	const float rnd_smokevel = 0.05f;
 	int smoEffTimer_[ 4 ] = { 0 };
 	int isSmoEffFlag_[ 4 ] = { 0 };
 	//体力少ないときに煙出る(体力半分)
 	std::unique_ptr<ParticleManager> fumeParticle_[ 4 ];
+	const float rnd_posDamagefume = 0.1f;
+	const float rnd_velDamagefume = 0.0f;
+	const float rnd_velGy = -0.1f;
 	int fumeEffTimer_[ 4 ] = { 0 };
 	int isFumeEffFlag_[ 4 ] = { 0 };
 	//発砲時の弾速エフェクト
 	std::unique_ptr<ParticleManager> ballisticParticle_[ 4 ];
+	const float rnd_posBallistic = 0.03f;
+	const float rnd_velBallistic = 0.01f;
 	int ballisticEffTimer_[ 4 ] = { 0 };
 	int isballisticEffFlag_[ 4 ] = { 0 };
 

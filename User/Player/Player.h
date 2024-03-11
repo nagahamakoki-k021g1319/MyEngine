@@ -212,9 +212,6 @@ private:
 
 	//自機の生存フラグ
 	bool isAliveFlag = true;
-	//自機のHP表示
-	int playerHP = 3;
-	
 
 
 	//遠距離攻撃のUIとゲージ
@@ -286,6 +283,8 @@ private:
 	int isswordchageEffFlag_ = 0;
 	//弾飛ばし
 	std::unique_ptr<ParticleManager> ballisticParticle_[3];
+	const float rnd_posBullet = 0.03f;
+	const float rnd_velBullet = 0.01f;
 	int ballisticEffTimer_ = 0;
 	int isBallisticEffFlag_ = 0;
 	//右スピンエフェクト
@@ -304,14 +303,6 @@ private:
 	bool isDamageFlag = false;
 	bool hpDeclineFlag = false;
 	bool hpFlagReset = false;
-	//HPゲージ
-	Sprite* hpFlameUI = nullptr;
-	//HPの下の黒い部分
-	Sprite* hpbUI = nullptr;
-
-	//HPの赤の部分
-	Sprite* hpredUI = nullptr;
-	Vector2 hpredPosition;
 
 	Sprite* metaUI = nullptr;
 	Sprite* arrowUI = nullptr;
@@ -339,6 +330,9 @@ private:
 
 
 public:
+	//自機のHP表示
+	float playerHP = 20.0f;
+
 	//自機とバイク兵の押し出し処理
 	bool limitmove = false;
 	bool limitmove2 = false;
@@ -395,10 +389,7 @@ public:
 	int incidenceCamera = 0;
 	int incidenceCamera2 = 0;
 	int incidenceCamera3 = 0;
-	//HPの緑の部分
-	Sprite* hpgreenUI = nullptr;
-	Vector2 hpgreenPosition;
-
+	
 	//障害物に当たって減速
 	bool isDecelerationFlag = false;
 	int DecelerationTimer = 0;

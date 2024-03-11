@@ -540,9 +540,8 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos
 				isShootFlag_[ i ] = 0;
 				player_->isCamShake = 1;
 				player_->camShakeTimer = player_->camShakeLimit;
-				const float damage = 10.0f;
-				player_->hpgreenPosition.x -= damage;//倍ダメ
-				player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
+				const float damage = 1.0f;
+				player_->playerHP -= damage;//倍ダメ
 			}
 		}
 	}
@@ -689,32 +688,23 @@ void ArmorEnemy::EffSummary(Vector3 bulletpos,const int& num)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_posG = 0.0f;
-		const float rnd_posGy = 0.0f;
-		const float rnd_posGz = 0.0f;
 		Vector3 posG{};
-		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
-		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
-		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
 		posG += bulletpos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_velG = 0.0f;
-		const float rnd_velGy = 0.0f;
-		const float rnd_velGz = 0.1f;
 		Vector3 velG{};
-		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
-		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
-		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 1.0f;
+		velG.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velGas - rnd_velGas / 1.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_accG = 0.000001f;
 		Vector3 accG{};
 		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
-
 		//追加
 		gasParticle_[ num ]->Add(60,posG,velG,accG,0.5f,0.0f);
-
 		gasParticle_[ num ]->Update();
 	}
 }
@@ -725,32 +715,23 @@ void ArmorEnemy::EffSummary2(Vector3 bulletpos2,const int& num2)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_pos2 = 0.0f;
-		const float rnd_posy2 = 0.0f;
-		const float rnd_posz2 = 0.0f;
 		Vector3 pos2{};
-		pos2.x += ( float ) rand() / RAND_MAX * rnd_pos2 - rnd_pos2 / 2.0f;
-		pos2.y += ( float ) rand() / RAND_MAX * rnd_posy2 - rnd_posy2 / 2.0f;
-		pos2.z += ( float ) rand() / RAND_MAX * rnd_posz2 - rnd_posz2 / 2.0f;
+		pos2.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		pos2.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		pos2.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
 		pos2 += bulletpos2;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_vel2 = 0.0f;
-		const float rnd_vely2 = 0.0f;
-		const float rnd_velz2 = 0.1f;
 		Vector3 vel2{};
-		vel2.x = ( float ) rand() / RAND_MAX * rnd_vel2 - rnd_vel2 / 2.0f;
-		vel2.y = ( float ) rand() / RAND_MAX * rnd_vely2 - rnd_vely2 / 2.0f;
-		vel2.z = ( float ) rand() / RAND_MAX * rnd_velz2 - rnd_velz2 / 1.0f;
+		vel2.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		vel2.y = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		vel2.z = ( float ) rand() / RAND_MAX * rnd_velGas - rnd_velGas / 1.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_acc2 = 0.000001f;
 		Vector3 acc2{};
-		acc2.x = ( float ) rand() / RAND_MAX * rnd_acc2 - rnd_acc2 / 2.0f;
-		acc2.y = ( float ) rand() / RAND_MAX * rnd_acc2 - rnd_acc2 / 2.0f;
-
+		acc2.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		acc2.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 		//追加
 		gasParticle2_[ num2 ]->Add(60,pos2,vel2,acc2,0.5f,0.0f);
-
 		gasParticle2_[ num2 ]->Update();
 
 	}
@@ -763,34 +744,24 @@ void ArmorEnemy::EffSummary3(Vector3 bulletpos3,const int& num3)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_pos3 = 0.0f;
-		const float rnd_posy3 = 0.0f;
-		const float rnd_posz3 = 0.0f;
 		Vector3 pos3{};
-		pos3.x += ( float ) rand() / RAND_MAX * rnd_pos3 - rnd_pos3 / 2.0f;
-		pos3.y += ( float ) rand() / RAND_MAX * rnd_posy3 - rnd_posy3 / 2.0f;
-		pos3.z += ( float ) rand() / RAND_MAX * rnd_posz3 - rnd_posz3 / 2.0f;
+		pos3.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		pos3.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		pos3.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
 		pos3 += bulletpos3;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_vel3 = 0.0f;
-		const float rnd_vely3 = -0.07f;
-		const float rnd_velz3 = 0.0f;
 		Vector3 vel3{};
-		vel3.x = ( float ) rand() / RAND_MAX * rnd_vel3 - rnd_vel3 / 2.0f;
-		vel3.y = ( float ) rand() / RAND_MAX * rnd_vely3 - rnd_vely3 / 2.0f;
-		vel3.z = ( float ) rand() / RAND_MAX * rnd_velz3 - rnd_velz3 / 1.0f;
+		vel3.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		vel3.y = ( float ) rand() / RAND_MAX * rnd_velBGas - rnd_velBGas / 2.0f;
+		vel3.z = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 1.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_acc3 = 0.000001f;
 		Vector3 acc3{};
-		acc3.x = ( float ) rand() / RAND_MAX * rnd_acc3 - rnd_acc3 / 2.0f;
-		acc3.y = ( float ) rand() / RAND_MAX * rnd_acc3 - rnd_acc3 / 2.0f;
-
+		acc3.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		acc3.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 		//追加
 		gasParticle3_[ num3 ]->Add(60,pos3,vel3,acc3,0.5f,0.0f);
-
 		gasParticle3_[ num3 ]->Update();
-
 	}
 }
 
@@ -800,34 +771,24 @@ void ArmorEnemy::EffSummary4(Vector3 bulletpos4,const int& num4)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_pos4 = 0.0f;
-		const float rnd_posy4 = 0.0f;
-		const float rnd_posz4 = 0.0f;
 		Vector3 pos4{};
-		pos4.x += ( float ) rand() / RAND_MAX * rnd_pos4 - rnd_pos4 / 2.0f;
-		pos4.y += ( float ) rand() / RAND_MAX * rnd_posy4 - rnd_posy4 / 2.0f;
-		pos4.z += ( float ) rand() / RAND_MAX * rnd_posz4 - rnd_posz4 / 2.0f;
+		pos4.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		pos4.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		pos4.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
 		pos4 += bulletpos4;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_vel4 = 0.0f;
-		const float rnd_vely4 = -0.07f;
-		const float rnd_velz4 = 0.0f;
 		Vector3 vel4{};
-		vel4.x = ( float ) rand() / RAND_MAX * rnd_vel4 - rnd_vel4 / 2.0f;
-		vel4.y = ( float ) rand() / RAND_MAX * rnd_vely4 - rnd_vely4 / 2.0f;
-		vel4.z = ( float ) rand() / RAND_MAX * rnd_velz4 - rnd_velz4 / 2.0f;
+		vel4.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		vel4.y = ( float ) rand() / RAND_MAX * rnd_velBGas - rnd_velBGas / 2.0f;
+		vel4.z = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_acc4 = 0.000001f;
 		Vector3 acc4{};
-		acc4.x = ( float ) rand() / RAND_MAX * rnd_acc4 - rnd_acc4 / 2.0f;
-		acc4.y = ( float ) rand() / RAND_MAX * rnd_acc4 - rnd_acc4 / 2.0f;
-
+		acc4.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		acc4.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 		//追加
 		gasParticle4_[ num4 ]->Add(60,pos4,vel4,acc4,0.5f,0.0f);
-
 		gasParticle4_[ num4 ]->Update();
-
 	}
 }
 
@@ -837,24 +798,21 @@ void ArmorEnemy::DamageSummary(Vector3 EnePos,const int& eneNum)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_pos = 5.0f;
 		Vector3 pos{};
-		pos.x += ( float ) rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		pos.y += ( float ) rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		pos.z += ( float ) rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.x += ( float ) rand() / RAND_MAX * rnd_posDamage - rnd_posDamage / 2.0f;
+		pos.y += ( float ) rand() / RAND_MAX * rnd_posDamage - rnd_posDamage / 2.0f;
+		pos.z += ( float ) rand() / RAND_MAX * rnd_posDamage - rnd_posDamage / 2.0f;
 		pos += EnePos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_vel = 0.5f;
 		Vector3 vel{};
-		vel.x = ( float ) rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		vel.y = ( float ) rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
-		vel.z = ( float ) rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.x = ( float ) rand() / RAND_MAX * rnd_velDamage - rnd_velDamage / 2.0f;
+		vel.y = ( float ) rand() / RAND_MAX * rnd_velDamage - rnd_velDamage / 2.0f;
+		vel.z = ( float ) rand() / RAND_MAX * rnd_velDamage - rnd_velDamage / 2.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_acc = 0.00001f;
 		Vector3 acc{};
-		acc.x = ( float ) rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
-		acc.y = ( float ) rand() / RAND_MAX * rnd_acc - rnd_acc / 2.0f;
+		acc.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		acc.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 
 		//追加
 		DamageParticle_[ eneNum ]->Add(60,pos,vel,acc,2.0f,1.0f);
@@ -869,7 +827,6 @@ void ArmorEnemy::smokeSummary(Vector3 EnePos,const int& eneNum)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_smokepos = 0.001f;
 		Vector3 poss{};
 		poss.x += ( float ) rand() / RAND_MAX * rnd_smokepos - rnd_smokepos / 2.0f;
 		poss.y += ( float ) rand() / RAND_MAX * rnd_smokepos - rnd_smokepos / 2.0f;
@@ -877,20 +834,16 @@ void ArmorEnemy::smokeSummary(Vector3 EnePos,const int& eneNum)
 		poss += EnePos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_smokevel = 0.05f;
 		Vector3 vels{};
 		vels.x = ( float ) rand() / RAND_MAX * rnd_smokevel - rnd_smokevel / 2.0f;
 		vels.y = ( float ) rand() / RAND_MAX * rnd_smokevel - rnd_smokevel / 2.0f;
 		vels.z = ( float ) rand() / RAND_MAX * rnd_smokevel - rnd_smokevel / 2.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_smokeacc = 0.00001f;
 		Vector3 accs{};
-		accs.x = ( float ) rand() / RAND_MAX * rnd_smokeacc - rnd_smokeacc / 2.0f;
-		accs.y = ( float ) rand() / RAND_MAX * rnd_smokeacc - rnd_smokeacc / 2.0f;
-
+		accs.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
+		accs.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 		//追加
 		smokeParticle_[ eneNum ]->Add(60,poss,vels,accs,0.8f,0.0f);
-
 		smokeParticle_[ eneNum ]->Update();
 	}
 }
@@ -901,25 +854,18 @@ void ArmorEnemy::DamagefumeSummary(Vector3 fumepos,const int& num)
 	for ( int i = 0; i < 10; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_posG = 0.1f;
-		const float rnd_posGy = 0.1f;
-		const float rnd_posGz = 0.1f;
 		Vector3 posG{};
-		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
-		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
-		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posDamagefume - rnd_posDamagefume / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posDamagefume - rnd_posDamagefume / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posDamagefume - rnd_posDamagefume / 2.0f;
 		posG += fumepos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_velG = 0.0f;
-		const float rnd_velGy = -0.1f;
-		const float rnd_velGz = 0.0f;
 		Vector3 velG{};
-		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velDamagefume - rnd_velDamagefume / 2.0f;
 		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 1.0f;
-		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velDamagefume - rnd_velDamagefume / 2.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_accG = 0.000001f;
 		Vector3 accG{};
 		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
@@ -938,25 +884,18 @@ void ArmorEnemy::ballisticfumeSummary(Vector3 bulletpos,const int& num)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_posG = 0.03f;
-		const float rnd_posGy = 0.03f;
-		const float rnd_posGz = 0.03f;
 		Vector3 posG{};
-		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
-		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
-		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posBallistic - rnd_posBallistic / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posBallistic - rnd_posBallistic / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posBallistic - rnd_posBallistic / 2.0f;
 		posG += bulletpos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_velG = 0.01f;
-		const float rnd_velGy = 0.01f;
-		const float rnd_velGz = 0.01f;
 		Vector3 velG{};
-		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
-		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
-		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velBallistic - rnd_velBallistic / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velBallistic - rnd_velBallistic / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velBallistic - rnd_velBallistic / 2.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_accG = 0.000001f;
 		Vector3 accG{};
 		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
@@ -975,7 +914,7 @@ void ArmorEnemy::EffDraw()
 	{
 		for ( int i = 0; i < 4; i++ )
 		{
-//背中の噴射ガス
+			//背中の噴射ガス
 			if ( isgasEffFlag_[ i ] == 1 )
 			{
 				if ( isAliveFlag_[ i ] == 0 )

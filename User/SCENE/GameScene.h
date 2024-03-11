@@ -23,6 +23,10 @@
 #include "ornament/Block.h"
 #include "Light/LightGroup.h"
 
+#include <map>
+
+struct JsonData;
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -128,6 +132,12 @@ private:	//メンバ変数
 	//--------------------//
 
 	//ゲームシーンの背景や床
+
+	/*JsonData* jsonData_ = nullptr;
+	Model* modelSample_ = nullptr;
+	std::map<std::string,Model*> models_;
+	std::vector<Object3d*> objects_;*/
+
 	Object3d* skydome = nullptr;
 	Model* skydomeMD = nullptr;
 

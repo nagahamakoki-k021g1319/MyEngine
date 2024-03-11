@@ -33,13 +33,6 @@ Player::~Player() {
 	delete gageMaxUI;
 	delete underBlackUI;
 
-	delete hpFlameUI;
-
-	delete hpbUI;
-	delete hpgreenUI;
-	delete hpredUI;
-
-	
 	delete bulletEnptyUI;
 	delete metaUI;
 	delete arrowUI;
@@ -667,7 +660,7 @@ void Player::Update() {
 	ImGui::Begin("Player");
 	ImGui::Text("Position:%f,%f,%f",slashRObj_->wtf.position.x,slashRObj_->wtf.position.y,slashRObj_->wtf.position.z);
 	ImGui::Text("bulletgagePosition.x:%f",bulletgagePosition.x);
-	ImGui::Text("gageCount:%d",gageCount);
+	ImGui::Text("playerHP:%f",playerHP);
 	ImGui::Text("CameraBehaviorTimer:%d",CameraBehaviorTimer);
 	ImGui::Text("CameraBehaviorTimer2:%d",CameraBehaviorTimer2);
 	ImGui::Text("isDeadEnemy:%d",isDeadEnemy);
@@ -739,44 +732,18 @@ void Player::FbxDraw() {
 
 void Player::UIInitialize()
 {
-	//HPのUI
-	hpFlameUI = new Sprite();
-	hpFlameUI->Initialize(spriteCommon);
-	hpFlameUI->SetPozition({ 0,0 });
-	hpFlameUI->SetSize({ 1280.0f, 720.0f });
-
-	//HPの裏の黒い部分
-	hpbUI = new Sprite();
-	hpbUI->Initialize(spriteCommon);
-	hpbUI->SetPozition({ 0,0 });
-	hpbUI->SetSize({ 1280.0f, 720.0f });
-
-	//HPの緑の部分
-	hpgreenUI = new Sprite();
-	hpgreenUI->Initialize(spriteCommon);
-	hpgreenPosition = hpgreenUI->GetPosition();
-	hpgreenUI->SetPozition(hpgreenPosition);
-	hpgreenUI->SetSize({ 1280.0f, 720.0f });
-
-	hpredUI = new Sprite();
-	hpredUI->Initialize(spriteCommon);
-	hpredPosition = hpredUI->GetPosition();
-	hpredUI->SetPozition(hpredPosition);
-	hpredUI->SetSize({ 1280.0f, 720.0f });
-
-	
-
 	//enpty
 	bulletEnptyUI = new Sprite();
 	bulletEnptyUI->Initialize(spriteCommon);
 	bulletEnptyUI->SetPozition({ 0,0 });
 	bulletEnptyUI->SetSize({ 1280.0f, 720.0f });
 
+	//タコメータ
 	metaUI = new Sprite();
 	metaUI->Initialize(spriteCommon);
 	metaUI->SetPozition({ 0,0 });
 	metaUI->SetSize({ 1280.0f, 720.0f });
-
+	//メーター矢印
 	arrowUI = new Sprite();
 	arrowUI->Initialize(spriteCommon);
 	arrowPosition = arrowUI->GetPosition();
@@ -864,21 +831,6 @@ void Player::UIInitialize()
 
 
 	//画像読み込み
-	//HPゲージ
-	spriteCommon->LoadTexture(1,"hpflame.png");
-	hpFlameUI->SetTextureIndex(1);
-
-	//HPの裏の黒い部分
-	spriteCommon->LoadTexture(2,"hpflameblack.png");
-	hpbUI->SetTextureIndex(2);
-	//HPの緑の部分
-	spriteCommon->LoadTexture(3,"hpgreen.png");
-	hpgreenUI->SetTextureIndex(3);
-	//HPの赤の部分
-	spriteCommon->LoadTexture(4,"hpred.png");
-	hpredUI->SetTextureIndex(4);
-
-
 	//メーター
 	spriteCommon->LoadTexture(24,"meta.png");
 	metaUI->SetTextureIndex(24);
@@ -1631,36 +1583,25 @@ void Player::EffSummaryAccelR(Vector3 bulletpos3)
 	for ( int i = 0; i < 50; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_pos3G = 0.0f;
-		const float rnd_pos3Gy = 0.0f;
-		const float rnd_pos3Gz = 0.0f;
 		Vector3 pos3G{};
-		pos3G.x += ( float ) rand() / RAND_MAX * rnd_pos3G - rnd_pos3G / 2.0f;
-		pos3G.y += ( float ) rand() / RAND_MAX * rnd_pos3Gy - rnd_pos3Gy / 2.0f;
-		pos3G.z += ( float ) rand() / RAND_MAX * rnd_pos3Gz - rnd_pos3Gz / 2.0f;
+		pos3G.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		pos3G.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		pos3G.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
 		pos3G += bulletpos3;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_vel3G = 0.0f;
-		const float rnd_vel3Gy = 0.0f;
-		const float rnd_vel3Gz = 0.02f;
 		Vector3 vel3G{};
-		vel3G.x = ( float ) rand() / RAND_MAX * rnd_vel3G - rnd_vel3G / 2.0f;
-		vel3G.y = ( float ) rand() / RAND_MAX * rnd_vel3Gy - rnd_vel3Gy / 2.0f;
-		vel3G.z = ( float ) rand() / RAND_MAX * rnd_vel3Gz - rnd_vel3Gz / 2.5f;
+		vel3G.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		vel3G.y = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		vel3G.z = ( float ) rand() / RAND_MAX * rnd_velGasz - rnd_velGasz / 2.5f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_acc3G = 0.000001f;
 		Vector3 acc3G{};
-		acc3G.x = ( float ) rand() / RAND_MAX * rnd_acc3G - rnd_acc3G / 2.0f;
-		acc3G.y = ( float ) rand() / RAND_MAX * rnd_acc3G - rnd_acc3G / 2.0f;
-
+		acc3G.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
+		acc3G.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		//追加
 		gasParticleAccelR->Add(60,pos3G,vel3G,acc3G,0.07f,0.0f);
-
 		gasParticleAccelR->Update();
-
 	}
-
 }
 
 void Player::EffSummaryAccelL(Vector3 bulletpos4)
@@ -1669,36 +1610,25 @@ void Player::EffSummaryAccelL(Vector3 bulletpos4)
 	for ( int i = 0; i < 50; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_pos4G = 0.0f;
-		const float rnd_pos4Gy = 0.0f;
-		const float rnd_pos4Gz = 0.0f;
 		Vector3 pos4G{};
-		pos4G.x += ( float ) rand() / RAND_MAX * rnd_pos4G - rnd_pos4G / 2.0f;
-		pos4G.y += ( float ) rand() / RAND_MAX * rnd_pos4Gy - rnd_pos4Gy / 2.0f;
-		pos4G.z += ( float ) rand() / RAND_MAX * rnd_pos4Gz - rnd_pos4Gz / 2.0f;
+		pos4G.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		pos4G.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		pos4G.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
 		pos4G += bulletpos4;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_vel4G = 0.0f;
-		const float rnd_vel4Gy = 0.0f;
-		const float rnd_vel4Gz = 0.02f;
 		Vector3 vel4G{};
-		vel4G.x = ( float ) rand() / RAND_MAX * rnd_vel4G - rnd_vel4G / 2.0f;
-		vel4G.y = ( float ) rand() / RAND_MAX * rnd_vel4Gy - rnd_vel4Gy / 2.0f;
-		vel4G.z = ( float ) rand() / RAND_MAX * rnd_vel4Gz - rnd_vel4Gz / 2.5f;
+		vel4G.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		vel4G.y = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		vel4G.z = ( float ) rand() / RAND_MAX * rnd_velGasz - rnd_velGasz / 2.5f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_acc4G = 0.000001f;
 		Vector3 acc4G{};
-		acc4G.x = ( float ) rand() / RAND_MAX * rnd_acc4G - rnd_acc4G / 2.0f;
-		acc4G.y = ( float ) rand() / RAND_MAX * rnd_acc4G - rnd_acc4G / 2.0f;
-
+		acc4G.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
+		acc4G.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		//追加
 		gasParticleAccelL->Add(60,pos4G,vel4G,acc4G,0.07f,0.0f);
-
 		gasParticleAccelL->Update();
-
 	}
-
 }
 
 void Player::EffSummaryDecelR(Vector3 bulletpos3)
@@ -1707,32 +1637,23 @@ void Player::EffSummaryDecelR(Vector3 bulletpos3)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_posD = 0.0f;
-		const float rnd_posDy = 0.0f;
-		const float rnd_posDz = 0.0f;
 		Vector3 posD{};
-		posD.x += ( float ) rand() / RAND_MAX * rnd_posD - rnd_posD / 2.0f;
-		posD.y += ( float ) rand() / RAND_MAX * rnd_posDy - rnd_posDy / 2.0f;
-		posD.z += ( float ) rand() / RAND_MAX * rnd_posDz - rnd_posDz / 2.0f;
+		posD.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		posD.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		posD.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
 		posD += bulletpos3;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_velD = 0.0f;
-		const float rnd_velDy = 0.0f;
-		const float rnd_velDz = 0.05f;
 		Vector3 velD{};
-		velD.x = ( float ) rand() / RAND_MAX * rnd_velD - rnd_velD / 2.0f;
-		velD.y = ( float ) rand() / RAND_MAX * rnd_velDy - rnd_velDy / 2.0f;
-		velD.z = ( float ) rand() / RAND_MAX * rnd_velDz - rnd_velDz / 0.05f;
+		velD.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		velD.y = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		velD.z = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 0.05f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_accD = 0.000001f;
 		Vector3 accD{};
-		accD.x = ( float ) rand() / RAND_MAX * rnd_accD - rnd_accD / 2.0f;
-		accD.y = ( float ) rand() / RAND_MAX * rnd_accD - rnd_accD / 2.0f;
-
+		accD.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
+		accD.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		//追加
 		gasParticleDecelR->Add(60,posD,velD,accD,0.05f,0.0f);
-
 		gasParticleDecelR->Update();
 
 	}
@@ -1744,34 +1665,24 @@ void Player::EffSummaryDecelL(Vector3 bulletpos4)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_posD2 = 0.0f;
-		const float rnd_posD2y = 0.0f;
-		const float rnd_posD2z = 0.0f;
 		Vector3 posD2{};
-		posD2.x += ( float ) rand() / RAND_MAX * rnd_posD2 - rnd_posD2 / 2.0f;
-		posD2.y += ( float ) rand() / RAND_MAX * rnd_posD2y - rnd_posD2y / 2.0f;
-		posD2.z += ( float ) rand() / RAND_MAX * rnd_posD2z - rnd_posD2z / 2.0f;
+		posD2.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		posD2.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		posD2.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
 		posD2 += bulletpos4;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_velD2 = 0.0f;
-		const float rnd_velD2y = 0.0f;
-		const float rnd_velD2z = 0.05f;
 		Vector3 velD2{};
-		velD2.x = ( float ) rand() / RAND_MAX * rnd_velD2 - rnd_velD2 / 2.0f;
-		velD2.y = ( float ) rand() / RAND_MAX * rnd_velD2y - rnd_velD2y / 2.0f;
-		velD2.z = ( float ) rand() / RAND_MAX * rnd_velD2z - rnd_velD2z / 0.05f;
+		velD2.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		velD2.y = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
+		velD2.z = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 0.05f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_accD2 = 0.000001f;
 		Vector3 accD2{};
-		accD2.x = ( float ) rand() / RAND_MAX * rnd_accD2 - rnd_accD2 / 2.0f;
-		accD2.y = ( float ) rand() / RAND_MAX * rnd_accD2 - rnd_accD2 / 2.0f;
-
+		accD2.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
+		accD2.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		//追加
 		gasParticleDecelL->Add(60,posD2,velD2,accD2,0.05f,0.0f);
-
 		gasParticleDecelL->Update();
-
 	}
 }
 
@@ -1818,34 +1729,24 @@ void Player::EffSummaryBullet(Vector3 bulletpos)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_posG = 0.03f;
-		const float rnd_posGy = 0.03f;
-		const float rnd_posGz = 0.03f;
 		Vector3 posG{};
-		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
-		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
-		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
 		posG += bulletpos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_velG = 0.01f;
-		const float rnd_velGy = 0.01f;
-		const float rnd_velGz = 0.01f;
 		Vector3 velG{};
-		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
-		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
-		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_accG = 0.000001f;
 		Vector3 accG{};
-		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
-		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
-
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		//追加
 		ballisticParticle_[0]->Add(60,posG,velG,accG,0.5f,0.0f);
-
 		ballisticParticle_[ 0 ]->Update();
-
 	}
 }
 
@@ -1855,34 +1756,24 @@ void Player::EffSummaryBullet2(Vector3 bulletpos)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_posG = 0.03f;
-		const float rnd_posGy = 0.03f;
-		const float rnd_posGz = 0.03f;
 		Vector3 posG{};
-		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
-		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
-		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
 		posG += bulletpos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_velG = 0.01f;
-		const float rnd_velGy = 0.01f;
-		const float rnd_velGz = 0.01f;
 		Vector3 velG{};
-		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
-		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
-		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_accG = 0.000001f;
 		Vector3 accG{};
-		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
-		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
-
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		//追加
 		ballisticParticle_[ 1 ]->Add(60,posG,velG,accG,0.5f,0.0f);
-
 		ballisticParticle_[ 1 ]->Update();
-
 	}
 }
 
@@ -1892,34 +1783,24 @@ void Player::EffSummaryBullet3(Vector3 bulletpos)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_posG = 0.03f;
-		const float rnd_posGy = 0.03f;
-		const float rnd_posGz = 0.03f;
 		Vector3 posG{};
-		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
-		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
-		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
 		posG += bulletpos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_velG = 0.01f;
-		const float rnd_velGy = 0.01f;
-		const float rnd_velGz = 0.01f;
 		Vector3 velG{};
-		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
-		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
-		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		velG.x = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_accG = 0.000001f;
 		Vector3 accG{};
-		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
-		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
-
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		//追加
 		ballisticParticle_[ 2 ]->Add(60,posG,velG,accG,0.5f,0.0f);
-
 		ballisticParticle_[ 2 ]->Update();
-
 	}
 }
 
@@ -1929,34 +1810,24 @@ void Player::EffSummaryRSpin(Vector3 pos)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_posG = 0.03f;
-		const float rnd_posGy = 0.03f;
-		const float rnd_posGz = 0.03f;
 		Vector3 posG{};
-		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
-		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
-		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
 		posG += pos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_velG = 0.03f;
-		const float rnd_velGy = 0.03f;
-		const float rnd_velGz = 0.03f;
 		Vector3 velG{};
-		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
-		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
-		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		velG.x = ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_accG = 0.000001f;
 		Vector3 accG{};
-		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
-		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
-
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		//追加
 		RSpinParticle->Add(60,posG,velG,accG,0.5f,0.0f);
-
 		RSpinParticle->Update();
-
 	}
 }
 
@@ -1966,34 +1837,24 @@ void Player::EffSummaryLSpin(Vector3 pos)
 	for ( int i = 0; i < 5; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		const float rnd_posG = 0.03f;
-		const float rnd_posGy = 0.03f;
-		const float rnd_posGz = 0.03f;
 		Vector3 posG{};
-		posG.x += ( float ) rand() / RAND_MAX * rnd_posG - rnd_posG / 2.0f;
-		posG.y += ( float ) rand() / RAND_MAX * rnd_posGy - rnd_posGy / 2.0f;
-		posG.z += ( float ) rand() / RAND_MAX * rnd_posGz - rnd_posGz / 2.0f;
+		posG.x += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
+		posG.y += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
+		posG.z += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
 		posG += pos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		const float rnd_velG = 0.03f;
-		const float rnd_velGy = 0.03f;
-		const float rnd_velGz = 0.03f;
 		Vector3 velG{};
-		velG.x = ( float ) rand() / RAND_MAX * rnd_velG - rnd_velG / 2.0f;
-		velG.y = ( float ) rand() / RAND_MAX * rnd_velGy - rnd_velGy / 2.0f;
-		velG.z = ( float ) rand() / RAND_MAX * rnd_velGz - rnd_velGz / 2.0f;
+		velG.x = ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
+		velG.y = ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
+		velG.z = ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		const float rnd_accG = 0.000001f;
 		Vector3 accG{};
-		accG.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
-		accG.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
-
+		accG.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
+		accG.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		//追加
 		LSpinParticle->Add(60,posG,velG,accG,0.5f,0.0f);
-
 		LSpinParticle->Update();
-
 	}
 }
 

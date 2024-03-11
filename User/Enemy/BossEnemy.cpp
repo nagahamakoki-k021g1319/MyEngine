@@ -310,8 +310,7 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos,
 			{
 				player_->isCamShake = 1;
 				player_->camShakeTimer = player_->camShakeLimit;
-				player_->hpgreenPosition.x -= 10.0f;//倍ダメ
-				player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
+				player_->playerHP -= 1.0f;//倍ダメ
 			}
 		}
 	}
@@ -324,8 +323,7 @@ void BossEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos,
 			{
 				player_->isCamShake = 1;
 				player_->camShakeTimer = player_->camShakeLimit;
-				player_->hpgreenPosition.x -= 10.0f;//倍ダメ
-				player_->hpgreenUI->SetPozition(player_->hpgreenPosition);
+				player_->playerHP -= 1.0f;//倍ダメ
 			}
 		}
 	}

@@ -118,6 +118,12 @@
     <Filter Include="user\ヘッダー\Player">
       <UniqueIdentifier>{e3c10d6c-901b-482f-af6b-5e9cbe3dc78d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\ソースファイル\LevelEditor">
+      <UniqueIdentifier>{d488fa0e-5e9b-4241-a9b3-dc1846204a19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ヘッダーファイル\LevelEditor">
+      <UniqueIdentifier>{a07df92f-f58c-4853-bd6a-e98610ae088c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -243,6 +249,9 @@
     </ClCompile>
     <ClCompile Include="User\Player\PlayerUI.cpp">
       <Filter>user\ソース\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\LevelEditor\json.cpp">
+      <Filter>Engine\ソースファイル\LevelEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -380,6 +389,9 @@
     </ClInclude>
     <ClInclude Include="User\Player\PlayerUI.h">
       <Filter>user\ヘッダー\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\LevelEditor\json.h">
+      <Filter>Engine\ヘッダーファイル\LevelEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
