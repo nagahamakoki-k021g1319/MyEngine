@@ -6,17 +6,16 @@
 #include "Camera.h"
 #include "SpriteCommon.h"
 #include "Sprite.h"
-
 #include "Collision.h"
 #include "ParticleManager.h"
 #include "Audio.h"
-
 #include "ImGuiManager.h"
+#include "Enemy.h"
 
 class Player;
 
 
-class ArmorEnemy
+class ArmorEnemy : public Enemy
 {
 public:
 	ArmorEnemy();

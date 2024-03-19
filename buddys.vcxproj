@@ -127,7 +127,6 @@
     <ClCompile Include="Engine\MATH\Vector3.cpp" />
     <ClCompile Include="Engine\MATH\Vector4.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="User\Enemy.cpp" />
     <ClCompile Include="User\Enemy\ArmorEnemy.cpp" />
     <ClCompile Include="User\Enemy\BikeEnemy.cpp" />
     <ClCompile Include="User\Enemy\BossEnemy.cpp" />
@@ -175,10 +174,10 @@
     <ClInclude Include="Engine\MATH\Vector2.h" />
     <ClInclude Include="Engine\MATH\Vector3.h" />
     <ClInclude Include="Engine\MATH\Vector4.h" />
-    <ClInclude Include="User\Enemy.h" />
     <ClInclude Include="User\Enemy\ArmorEnemy.h" />
     <ClInclude Include="User\Enemy\BikeEnemy.h" />
     <ClInclude Include="User\Enemy\BossEnemy.h" />
+    <ClInclude Include="User\Enemy\Enemy.h" />
     <ClInclude Include="User\ornament\Block.h" />
     <ClInclude Include="User\ornament\Lamp.h" />
     <ClInclude Include="User\PlayerBullet.h" />

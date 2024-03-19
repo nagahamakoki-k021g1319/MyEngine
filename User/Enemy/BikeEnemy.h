@@ -10,14 +10,14 @@
 #include "Collision.h"
 #include "ParticleManager.h"
 #include "Audio.h"
-
-
 #include "ImGuiManager.h"
+
+#include "Enemy.h"
 
 class Player;
 class Block;
 
-class BikeEnemy
+class BikeEnemy : public Enemy
 {
 public:
 	BikeEnemy();

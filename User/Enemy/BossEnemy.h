@@ -13,9 +13,11 @@
 
 #include "ImGuiManager.h"
 
+#include "Enemy.h"
+
 class Player;
 
-class BossEnemy
+class BossEnemy : public Enemy
 {
 public:
 	BossEnemy();
