@@ -12,31 +12,34 @@
 
 class Framework
 {
-	public://メンバ関数
-
-	//実行
-	void Run();
-
-
-	virtual ~Framework() = default;
+public://メンバ関数
 
 	//初期化
 	virtual void Initialize();
-
 	//終了
 	virtual void Finalize();
+	//終了チェック
+	virtual bool IsEndRequest() {return endRequest;}
 
-	//毎フレーム処理
-	virtual void Update();
+public:
+	virtual ~Framework() = default;
 
-	//描画
-	virtual void Draw() = 0;
+public:
+	//実行
+	void Run();
 
-	////終了チェック
-	//virtual bool IsEndRequst() {
-	//	return endRequest_;
-	//}
+protected:
 
+	//ポインタ
+	WinApp* winApp = nullptr;
+	DirectXCommon* dxCommon = nullptr;
+	FPS* fps = new FPS;
+	Input* input = nullptr;
+	GameScene* gameScene = nullptr;
 
+	ImGuiManager* imgui = nullptr;
+
+private:
+	bool endRequest = false;
 };
 

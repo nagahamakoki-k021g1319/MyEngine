@@ -6,6 +6,13 @@
 class Enemy
 {
 public:
+	enum class EnemyType
+	{
+		Bike,
+		Armor,
+		Boss
+	};
+
 	//getter
 	//IsDead
 	bool GetIsDead() const {return isDead_;}

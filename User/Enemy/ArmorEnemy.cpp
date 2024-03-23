@@ -188,7 +188,6 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos
 	collObj3_->wtf.position = { playerPos };
 	EffUpdate();
 	isGameStartTimer++;
-
 	//魔導兵が一定距離進むとこっちを向く
 	for ( int i = 0; i < 4; i++ )
 	{

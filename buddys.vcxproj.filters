@@ -250,6 +250,9 @@
     <ClCompile Include="Engine\LevelEditor\json.cpp">
       <Filter>Engine\ソースファイル\LevelEditor</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\base\Game.cpp">
+      <Filter>Engine\ソースファイル\BASE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BASE\FPS.h">
@@ -389,6 +392,9 @@
     </ClInclude>
     <ClInclude Include="User\Enemy\Enemy.h">
       <Filter>user\ヘッダー\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\base\Game.h">
+      <Filter>Engine\ヘッダーファイル\BASE</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
