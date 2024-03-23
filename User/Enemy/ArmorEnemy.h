@@ -66,6 +66,7 @@ private:
 	SpriteCommon* spriteCommon = nullptr;
 	Collision coll;
 
+
 	int isGameStartTimer = 0;
 
 	//待機(魔導兵)

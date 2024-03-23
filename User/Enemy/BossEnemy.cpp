@@ -69,6 +69,7 @@ void BossEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	spriteCommon = new SpriteCommon;
 	spriteCommon->Initialize(dxCommon);
 
+	enemyType_ = EnemyType::Boss;
 
 	//雑魚敵(攻撃状態)
 	Model_ = Model::LoadFromOBJ("bossbik");

@@ -102,6 +102,8 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	spriteCommon = new SpriteCommon;
 	spriteCommon->Initialize(dxCommon);
 
+	enemyType_ = EnemyType::Bike;
+
 	for ( int i = 0; i < 9; i++ )
 	{
 		//雑魚敵(攻撃状態)
