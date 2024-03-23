@@ -110,6 +110,7 @@
     <ClCompile Include="Engine\BASE\DirectXCommon.cpp" />
     <ClCompile Include="Engine\BASE\FPS.cpp" />
     <ClCompile Include="Engine\base\Framework.cpp" />
+    <ClCompile Include="Engine\base\Game.cpp" />
     <ClCompile Include="Engine\BASE\WinApp.cpp" />
     <ClCompile Include="Engine\CAMERA\Camera.cpp" />
     <ClCompile Include="Engine\COLLISION\Collision.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Engine\BASE\DirectXCommon.h" />
     <ClInclude Include="Engine\BASE\FPS.h" />
     <ClInclude Include="Engine\base\Framework.h" />
+    <ClInclude Include="Engine\base\Game.h" />
     <ClInclude Include="Engine\BASE\WinApp.h" />
     <ClInclude Include="Engine\CAMERA\Camera.h" />
     <ClInclude Include="Engine\COLLISION\Collision.h" />

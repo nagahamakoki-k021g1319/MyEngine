@@ -62,6 +62,7 @@ private:
 	DirectXCommon* dxCommon_ = nullptr;
 	Audio* audio = nullptr;
 	Player* player_ = nullptr;
+	Enemy* enemy_ = nullptr;
 	SpriteCommon* spriteCommon = nullptr;
 	Collision coll;
 
