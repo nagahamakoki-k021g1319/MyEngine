@@ -62,10 +62,11 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	spriteCommon = new SpriteCommon;
 	spriteCommon->Initialize(dxCommon);
 
+	enemyType_ = EnemyType::Armor;
 
 	for ( int i = 0; i < 4; i++ )
 	{
-//雑魚敵(攻撃状態)
+		//雑魚敵(攻撃状態)
 		Model_[ i ] = Model::LoadFromOBJ("armorenemy");
 		//雑魚敵(待機状態)
 		Modelst_[ i ] = Model::LoadFromOBJ("armorenemyst");

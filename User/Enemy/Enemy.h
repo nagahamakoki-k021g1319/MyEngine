@@ -6,11 +6,13 @@
 class Enemy
 {
 public:
+	//敵の種類
 	enum class EnemyType
 	{
-		Bike,
-		Armor,
-		Boss
+		Bike, //バイク乗った敵
+		Armor, //遠距離の魔導兵
+		drone, //突進するドローン
+		Boss //ボス
 	};
 
 	//getter
@@ -21,6 +23,9 @@ public:
 	int GetHP() const {return hp_;};
 
 public:
+
+	EnemyType enemyType_;
+
 	//デスフラグ
 	//倒されたか
 	bool isDead_ = false;
