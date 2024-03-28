@@ -1,5 +1,4 @@
 #include"Player.h"
-#include"Enemy.h"
 #include <imgui.h>
 #include "Enemy/ArmorEnemy.h"
 
@@ -38,11 +37,12 @@ Player::~Player() {
 	delete arrowUI;
 
 	delete Obj_;
-	delete Model_;
+	for ( int i = 0; i < 2; i++ )
+	{
+		delete Model_[i];
+	}
 	delete Model2_;
-	delete Model3_;
 	delete ModelAt_;
-	delete ModelBefo_;
 	delete ModelBack_;
 	delete Modelst_;
 	delete Modelst2_;
@@ -145,8 +145,8 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 
 
 	//自機
-	Model_ = Model::LoadFromOBJ("bik");
-	ModelBefo_ = Model::LoadFromOBJ("bik2");
+	Model_[ActionState::IDELBlade] = Model::LoadFromOBJ("bik");
+	Model_[ ActionState::IDELBladeBefore ] = Model::LoadFromOBJ("bik2");
 
 	//加速
 	ModelAc_ = Model::LoadFromOBJ("bikac");
@@ -263,60 +263,50 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	//パーティクル生成
 	//ガス(通常)
 	gasParticle = std::make_unique<ParticleManager>();
-	gasParticle.get()->Initialize();
+	gasParticle->Initialize();
 	gasParticle->LoadTexture("gas.png");
-	gasParticle->Update();
 	gasParticle2 = std::make_unique<ParticleManager>();
-	gasParticle2.get()->Initialize();
+	gasParticle2->Initialize();
 	gasParticle2->LoadTexture("gas.png");
-	gasParticle2->Update();
 
 	//ガス(加速)
 	gasParticleAccelR = std::make_unique<ParticleManager>();
-	gasParticleAccelR.get()->Initialize();
+	gasParticleAccelR->Initialize();
 	gasParticleAccelR->LoadTexture("gas1.png");
-	gasParticleAccelR->Update();
 	gasParticleAccelL = std::make_unique<ParticleManager>();
-	gasParticleAccelL.get()->Initialize();
+	gasParticleAccelL->Initialize();
 	gasParticleAccelL->LoadTexture("gas1.png");
-	gasParticleAccelL->Update();
 
 	//ガス(減速)
 	gasParticleDecelR = std::make_unique<ParticleManager>();
-	gasParticleDecelR.get()->Initialize();
+	gasParticleDecelR->Initialize();
 	gasParticleDecelR->LoadTexture("gas.png");
-	gasParticleDecelR->Update();
 	gasParticleDecelL = std::make_unique<ParticleManager>();
-	gasParticleDecelL.get()->Initialize();
+	gasParticleDecelL->Initialize();
 	gasParticleDecelL->LoadTexture("gas.png");
-	gasParticleDecelL->Update();
 
 	//剣チャージ
 	swordchageParticle = std::make_unique<ParticleManager>();
-	swordchageParticle.get()->Initialize();
+	swordchageParticle->Initialize();
 	swordchageParticle->LoadTexture("swordchage.png");
-	swordchageParticle->Update();
 
 	//弾
 	for ( int i = 0; i < 3; i++ )
 	{
 		ballisticParticle_[i] = std::make_unique<ParticleManager>();
-		ballisticParticle_[i].get()->Initialize();
+		ballisticParticle_[i]->Initialize();
 		ballisticParticle_[i]->LoadTexture("bulletchage.png");
-		ballisticParticle_[i]->Update();
 	}
 
 	//右スピンエフェクト
 	RSpinParticle = std::make_unique<ParticleManager>();
-	RSpinParticle.get()->Initialize();
+	RSpinParticle->Initialize();
 	RSpinParticle->LoadTexture("fire.png");
-	RSpinParticle->Update();
 
 	//左スピンエフェクト
 	LSpinParticle = std::make_unique<ParticleManager>();
-	LSpinParticle.get()->Initialize();
+	LSpinParticle->Initialize();
 	LSpinParticle->LoadTexture("fire.png");
-	LSpinParticle->Update();
 
 	playerEffect = std::make_unique<PlayerEffect>();
 	playerEffect->Initialize();
@@ -449,11 +439,11 @@ void Player::Update() {
 		{
 			if ( bikSpinTimer >= 1 && bikSpinTimer <= 5 )
 			{
-				Obj_->SetModel(ModelBefo_);
+				Obj_->SetModel(Model_[ ActionState::IDELBladeBefore]);
 			}
 			else if ( bikSpinTimer >= 6 && bikSpinTimer <= 10 )
 			{
-				Obj_->SetModel(Model_);
+				Obj_->SetModel(Model_[ ActionState::IDELBlade ]);
 			}
 		}
 

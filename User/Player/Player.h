@@ -20,11 +20,21 @@
 class Enemy;
 class ArmorEnemy;
 
+enum ActionState
+{
+	IDELBlade = 0,
+	IDELBladeBefore,
+
+};
+
 class Player
 {
 public:
 	Player();
 	~Player();
+
+	
+
 	void Reset();
 
 	void Initialize(DirectXCommon* dxCommon,Input* input);
@@ -136,11 +146,9 @@ private:
 	//maehito usirohito
 	Object3d* Obj_ = nullptr;
 	//自機のモデル一覧
-	Model* Model_ = nullptr;
+	Model* Model_[ 2 ] = {0};
 	Model* Model2_ = nullptr;
-	Model* Model3_ = nullptr;
 	Model* ModelAt_ = nullptr;
-	Model* ModelBefo_ = nullptr;
 	Model* ModelBack_ = nullptr;
 	Model* Modelst_ = nullptr;
 	Model* Modelst2_ = nullptr;
@@ -180,6 +188,8 @@ private:
 	//左
 	Object3d* slashLObj_ = nullptr;
 	bool spineLffflag = false;
+
+
 
 	//自機の納刀モデルから抜刀モデルに切り替え
 	int isBikswordstyFlag = 0;
