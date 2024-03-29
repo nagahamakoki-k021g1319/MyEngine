@@ -37,23 +37,10 @@ Player::~Player() {
 	delete arrowUI;
 
 	delete Obj_;
-	for ( int i = 0; i < 2; i++ )
+	for ( int i = 0; i < 12; i++ )
 	{
 		delete Model_[i];
 	}
-	delete Model2_;
-	delete ModelAt_;
-	delete ModelBack_;
-	delete Modelst_;
-	delete Modelst2_;
-	delete ModelBikswordsty_;
-	delete ModelBikswordsty2_;
-
-	delete Modelbiksword0_;
-	delete Modelbiksword1_;
-
-	delete ModelAc_;
-	delete ModelAc2_;
 
 	delete collObj_;
 	delete collModel_;
@@ -147,28 +134,28 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	//自機
 	Model_[ActionState::IDELBlade] = Model::LoadFromOBJ("bik");
 	Model_[ ActionState::IDELBladeBefore ] = Model::LoadFromOBJ("bik2");
+	Model_[ ActionState::IDEL ] = Model::LoadFromOBJ("bikst");
+	Model_[ ActionState::IDELBefore ] = Model::LoadFromOBJ("bikst2");
 
 	//加速
-	ModelAc_ = Model::LoadFromOBJ("bikac");
-	ModelAc2_ = Model::LoadFromOBJ("bikac2");
+	Model_[ ActionState::Accel] = Model::LoadFromOBJ("bikac");
+	Model_[ ActionState::AccelBefore] = Model::LoadFromOBJ("bikac2");
 
 	//攻撃
-	Model2_ = Model::LoadFromOBJ("bikmid");
-	ModelAt_ = Model::LoadFromOBJ("bikAt");
+	Model_[ ActionState::BulletAttackMid] = Model::LoadFromOBJ("bikmid");
+	Model_[ ActionState::BulletAttack] = Model::LoadFromOBJ("bikAt");
 
-	//自機納刀
-	Modelst_ = Model::LoadFromOBJ("bikst");
-	Modelst2_ = Model::LoadFromOBJ("bikst2");
-	ModelBikswordsty_ = Model::LoadFromOBJ("bikswordsty");
-	ModelBikswordsty2_ = Model::LoadFromOBJ("bikswordsty2");
+	//自機納刀から抜刀へ
+	Model_[ ActionState::ModeChangeMid] = Model::LoadFromOBJ("bikswordsty");
+	Model_[ ActionState::ModeChange] = Model::LoadFromOBJ("bikswordsty2");
 
 	//近接攻撃(左側)
-	Modelbiksword0_ = Model::LoadFromOBJ("bikswordAt");
-	Modelbiksword1_ = Model::LoadFromOBJ("bikswordAt2");
+	Model_[ ActionState::LSpinAttack] = Model::LoadFromOBJ("bikswordAt");
+	Model_[ ActionState::RSpinAttack] = Model::LoadFromOBJ("bikswordAt2");
 
 	//自機
 	Obj_ = Object3d::Create();
-	Obj_->SetModel(Modelst_);
+	Obj_->SetModel(Model_[ ActionState::IDEL]);
 	Obj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	Obj_->wtf.position = { 0.0f,-2.0f,-20.0f };
 
@@ -452,11 +439,11 @@ void Player::Update() {
 		{
 			if ( bikSpinTimer >= 1 && bikSpinTimer <= 5 )
 			{
-				Obj_->SetModel(ModelAc_);
+				Obj_->SetModel(Model_[ ActionState::Accel]);
 			}
 			else if ( bikSpinTimer >= 6 && bikSpinTimer <= 10 )
 			{
-				Obj_->SetModel(ModelAc2_);
+				Obj_->SetModel(Model_[ ActionState::AccelBefore]);
 			}
 		}
 	}
@@ -472,11 +459,11 @@ void Player::Update() {
 		{
 			if ( bikstSpinTimer >= 1 && bikstSpinTimer <= 5 )
 			{
-				Obj_->SetModel(Modelst_);
+				Obj_->SetModel(Model_[ ActionState::IDEL]);
 			}
 			else if ( bikstSpinTimer >= 6 && bikstSpinTimer <= 10 )
 			{
-				Obj_->SetModel(Modelst2_);
+				Obj_->SetModel(Model_[ ActionState::IDELBefore]);
 			}
 		}
 	}
@@ -1000,11 +987,11 @@ void Player::PlayerAction()
 	}
 	if ( AtTimer >= 1 && AtTimer <= 5 )
 	{
-		Obj_->SetModel(Model2_);
+		Obj_->SetModel(Model_[ ActionState::BulletAttackMid]);
 	}
 	else if ( AtTimer >= 6 && AtTimer <= 20 )
 	{
-		Obj_->SetModel(ModelAt_);
+		Obj_->SetModel(Model_[ ActionState::BulletAttack]);
 	}
 	else if ( AtTimer >= 21 )
 	{
@@ -1034,7 +1021,7 @@ void Player::PlayerAction()
 	}
 	if ( leftAtTimer >= 1 && leftAtTimer < 30 )
 	{
-		Obj_->SetModel(Modelbiksword0_);
+		Obj_->SetModel(Model_[ ActionState::LSpinAttack]);
 		const float LeftAtSpeed = 0.32f;
 		Obj_->wtf.rotation.y += LeftAtSpeed;
 		slashLObj_->wtf.position.z += 0.2f;
@@ -1073,7 +1060,7 @@ void Player::PlayerAction()
 	}
 	if ( rightAtTimer >= 1 && rightAtTimer < 30 )
 	{
-		Obj_->SetModel(Modelbiksword1_);
+		Obj_->SetModel(Model_[ ActionState::RSpinAttack]);
 		const float rightAtSpeed = 0.32f;
 		Obj_->wtf.rotation.y -= rightAtSpeed;
 		slashRObj_->wtf.position.z += 0.2f;
@@ -2115,11 +2102,11 @@ void Player::GameStartMovie()
 
 	if ( BikswordstyTimer >= 1 && BikswordstyTimer <= 5 )
 	{
-		Obj_->SetModel(ModelBikswordsty_);
+		Obj_->SetModel(Model_[ ActionState::ModeChangeMid]);
 	}
 	else if ( BikswordstyTimer >= 6 && BikswordstyTimer <= 11 )
 	{
-		Obj_->SetModel(ModelBikswordsty2_);
+		Obj_->SetModel(Model_[ ActionState::ModeChange]);
 	}
 
 	if ( BikswordstyTimer >= 12 )

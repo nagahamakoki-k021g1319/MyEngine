@@ -22,9 +22,18 @@ class ArmorEnemy;
 
 enum ActionState
 {
-	IDELBlade = 0,
-	IDELBladeBefore,
-
+	IDEL = 0,//納刀状態1
+	IDELBefore,//納刀状態2
+	IDELBlade,//抜刀状態1
+	IDELBladeBefore,//抜刀状態2
+	ModeChangeMid,//納刀から抜刀へ
+	ModeChange,//納刀から抜刀へ2
+	Accel,//加速1
+	AccelBefore,//加速2
+	BulletAttack,//遠距離攻撃
+	BulletAttackMid,//遠距離攻撃するまでの予備動作
+	LSpinAttack,//左スピン攻撃
+	RSpinAttack,//右スピン攻撃
 };
 
 class Player
@@ -146,27 +155,15 @@ private:
 	//maehito usirohito
 	Object3d* Obj_ = nullptr;
 	//自機のモデル一覧
-	Model* Model_[ 2 ] = {0};
-	Model* Model2_ = nullptr;
-	Model* ModelAt_ = nullptr;
-	Model* ModelBack_ = nullptr;
-	Model* Modelst_ = nullptr;
-	Model* Modelst2_ = nullptr;
-	Model* ModelAc_ = nullptr;
-	Model* ModelAc2_ = nullptr;
+	Model* Model_[ 12 ] = {0};
 	//加速するフラグ
 	bool isAccelFlag = false;
-	//モデル(納刀から抜刀)
-	Model* ModelBikswordsty_ = nullptr;
-	Model* ModelBikswordsty2_ = nullptr;
 	//モデル(左側攻撃)
-	Model* Modelbiksword0_ = nullptr;
 	int leftAtTimer = 0;
 	bool isLeftAtFlag = false;
 	Object3d* collSWObj_ = nullptr;
 	Model* collSWModel_ = nullptr;
 	//モデル(右側攻撃)
-	Model* Modelbiksword1_ = nullptr;
 	int rightAtTimer = 0;
 	bool isRightAtFlag = false;
 	Object3d* collSWRightObj_ = nullptr;
