@@ -20,9 +20,10 @@
 class Enemy;
 class ArmorEnemy;
 
+//プレイヤーの行動モデル
 enum ActionState
 {
-	IDEL = 0,//納刀状態1
+	IDEL,//納刀状態1
 	IDELBefore,//納刀状態2
 	IDELBlade,//抜刀状態1
 	IDELBladeBefore,//抜刀状態2
@@ -34,6 +35,46 @@ enum ActionState
 	BulletAttackMid,//遠距離攻撃するまでの予備動作
 	LSpinAttack,//左スピン攻撃
 	RSpinAttack,//右スピン攻撃
+	MaxModel //最大
+};
+//当たり判定用のモデル
+enum CollisionObject
+{
+	PlayerColl,//自機の中心当たり判定
+	LAttackColl,//左攻撃の当たり判定
+	RAttackColl,//右攻撃の当たり判定
+	LPlayerColl,//左側の自機当たり判定
+	RPlayerColl,//右側の自機当たり判定
+	LSparkColl,//左側から火花出すための場所
+	RSparkColl,//右側から火花出すための場所
+	MaxColl //最大
+};
+//弾の数
+enum BulletNumber
+{
+	FirstBullet,
+	SecondBullet,
+	ThirdBullet,
+};
+//スプライト情報
+enum Spritekinds
+{
+	blood,//被弾時
+	bulletgage,//弾倉のUI
+	bluegage,//動く青いバー
+	gagemax,//maxの小さな文字
+	gageblack,//下地の黒
+	bulletenp,//エンプティ時
+	bullet1,//弾1発
+	bullet2,//弾2発
+	bullet3,//弾3発
+	meta,//メーター部分
+	arrow,//メーター矢印
+	operation,  //自機の操作説明
+	operationbb,//↑↑↑これの視線誘導
+	operation2,  //自機の操作説明2
+	operation2bb,//↑↑↑これの視線誘導
+	MaxSprite //最大
 };
 
 class Player
@@ -41,8 +82,6 @@ class Player
 public:
 	Player();
 	~Player();
-
-	
 
 	void Reset();
 
@@ -52,7 +91,6 @@ public:
 	void Update();
 
 	void Draw();
-	void FbxDraw();
 	void UIDraw();
 
 	//プレイヤーの行動一覧
@@ -72,8 +110,6 @@ public:
 	void EffSummaryDecelR(Vector3 bulletpos3);
 	//エフェクトの情報(減速ガス左)
 	void EffSummaryDecelL(Vector3 bulletpos4);
-	//エフェクトの情報(剣チャージ)
-	void EffSummarySwordchage(Vector3 pos);
 	//エフェクトの情報(弾)
 	void EffSummaryBullet(Vector3 bulletpos);
 	void EffSummaryBullet2(Vector3 bulletpos);
@@ -85,26 +121,10 @@ public:
 	//エフェクトの描画
 	void EffDraw();
 
-
-
-	Vector3 bVelocity(Vector3& velocity,Transform& worldTransform);
-
 	////ワールド座標を取得
-	Vector3 GetWorldPosition();
+	Vector3 GetWorldPosition(int CollNumber);
 	//ワールド座標を取得(弾)
-	Vector3 GetBulletWorldPosition();
-	Vector3 GetBulletWorldPosition2();
-	Vector3 GetBulletWorldPosition3();
-	//ワールド座標を取得(近接攻撃)
-	Vector3 GetSwordLeftWorldPosition();
-	Vector3 GetSwordRightWorldPosition();
-	//ワールド座標を取得(左右の押し出し)
-	Vector3 GetCollLeftWorldPosition();
-	Vector3 GetCollRightWorldPosition();
-
-	//ワールド座標を取得(レティクル)
-	Vector3 GetRetWorldPosition();
-
+	Vector3 GetBulletWorldPosition(int BulletNumber);
 
 	Vector3 GetPos() {
 		return Obj_->wtf.position;
@@ -152,41 +172,31 @@ private:
 	bool camerasetFlag = false;
 
 	//待機
-	//maehito usirohito
 	Object3d* Obj_ = nullptr;
 	//自機のモデル一覧
-	Model* Model_[ 12 ] = {0};
+	Model* Model_[ MaxModel ] = {0};
+	//自機の当たり判定のオブジェクト一覧
+	Object3d* collObj_[ MaxColl ] = {0};
+	Model* collModel_ = nullptr;
+	//使うスプライト一覧
+	Sprite* sprite_[ MaxSprite ] = { 0 };
+	//使うスプライトのポジションやローテーション
+	Vector2 bulletPosition;
+	Vector2 bulletgagePosition;
+	Vector2 arrowPosition;
+	Vector2 arrowRotation;
+
 	//加速するフラグ
 	bool isAccelFlag = false;
 	//モデル(左側攻撃)
 	int leftAtTimer = 0;
 	bool isLeftAtFlag = false;
-	Object3d* collSWObj_ = nullptr;
-	Model* collSWModel_ = nullptr;
 	//モデル(右側攻撃)
 	int rightAtTimer = 0;
 	bool isRightAtFlag = false;
-	Object3d* collSWRightObj_ = nullptr;
-	Model* collSWRightModel_ = nullptr;
-
-	//自機が衝突した時用のモデル
-	//右
-	Model* extrusionRightModel_ = nullptr;
-	Object3d* extrusionRightObj_ = nullptr;
-	//左
-	Model* extrusionLeftModel_ = nullptr;
-	Object3d* extrusionLeftObj_ = nullptr;
-
-	//自機が回転攻撃したときに動くモデル(エフェクト用)
-	Model* slashModel_ = nullptr;
-	//右
-	Object3d* slashRObj_ = nullptr;
-	bool spineRffflag = false;
-	//左
-	Object3d* slashLObj_ = nullptr;
+	//自機が回転攻撃したときに動くモデル(左右)
 	bool spineLffflag = false;
-
-
+	bool spineRffflag = false;
 
 	//自機の納刀モデルから抜刀モデルに切り替え
 	int isBikswordstyFlag = 0;
@@ -207,62 +217,30 @@ private:
 	//バイクの車輪動かす(納刀時)
 	int bikstSpinTimer = 0;
 
-	//自機の当たり判定のモデル
-	Object3d* collObj_ = nullptr;
-	Model* collModel_ = nullptr;
 	float collpos = 0.0f;
 
 	//バイクの残骸
 	Model* debrisModel_ = nullptr;
 	Object3d* debrisObj_ = nullptr;
 
-
 	//自機の生存フラグ
 	bool isAliveFlag = true;
 
-
 	//遠距離攻撃のUIとゲージ
-	Sprite* bulletUI = nullptr;
-	Vector2 bulletPosition;
-	Sprite* bulletgageUI = nullptr;
-	Vector2 bulletgagePosition;
-	Sprite* gageMaxUI = nullptr;
-	Sprite* underBlackUI = nullptr;
 	bool isgageUPFlag = false;
 	bool isgageStopFlag = false;
 	int gageCount = 1;
 	int BulletCount = 1;
 
-	//自機のHP表示(スプライト)
-	Sprite* bulletEnptyUI = nullptr;
-	Sprite* bullet1UI = nullptr;
-	Sprite* bullet2UI = nullptr;
-	Sprite* bullet3UI = nullptr;
-
 	//レティクル
 	Object3d* retObj_ = nullptr;
 	Model* retModel_ = nullptr;
-	Model* ret1Model_ = nullptr;
-	Model* ret2Model_ = nullptr;
-	int retResetTimer = 0;
-	bool retdisplay = false;
 	Object3d* retVisualObj_ = nullptr;
 	Model* retVisualModel_ = nullptr;
-
-
-
-	//弾発射(強)
-	Object3d* shootStObj_ = nullptr;
-	Model* shootStModel_ = nullptr;
-	bool isShootStFlag = false;
-	int StBulletCoolTime = 0;
-	int storeStBulletTime = 0;
-	Vector3 enemylen2;
-	Vector3 len2;
-
-
+	int retResetTimer = 0;
+	bool retdisplay = false;
+	
 	//被弾時エフェクト
-	Sprite* BloodUI = nullptr;
 	int EffTimer = 0;
 	int isEffFlag = 0;
 
@@ -284,10 +262,7 @@ private:
 	int isbulletEffFlag_ = 0;
 	//自機のバイクのブーストフラグ(0 通常,1 加速,2 減速)
 	int isboostFlag = 0;
-	//剣(チャージ)
-	std::unique_ptr<ParticleManager> swordchageParticle;
-	int swordchageEffTimer_ = 0;
-	int isswordchageEffFlag_ = 0;
+
 	//弾飛ばし
 	std::unique_ptr<ParticleManager> ballisticParticle_[3];
 	const float rnd_posBullet = 0.03f;
@@ -311,13 +286,8 @@ private:
 	bool hpDeclineFlag = false;
 	bool hpFlagReset = false;
 
-	Sprite* metaUI = nullptr;
-	Sprite* arrowUI = nullptr;
-	Vector2 arrowPosition;
-	Vector2 arrowRotation;
-	int arrowTimer = 0;
-
 	//エンジンメーターのフラグ
+	int arrowTimer = 0;
 	bool isArrowUpFlag = false;
 	bool isArrowDwonFlag = false;
 
@@ -359,13 +329,10 @@ public:
 	//弾発射(3発)
 	Object3d* shootObj_[ 3 ] = {0};
 	Model* shootModel_ = nullptr;
-	bool isShootFlag = false;
-	int BulletCoolTime = 0;
 	Vector3 bulletlen_[3];
 	Vector3 len_[3];
-
-
-
+	bool isShootFlag = false;
+	int BulletCoolTime = 0;
 
 	//自機の近接攻撃判定がでるフラグ
 	//左
@@ -409,14 +376,9 @@ public:
 	int BossCameraResetTimer = 0;
 	//操作説明
 	//1ウェーブ
-	Sprite* operationUI = nullptr;
-	Sprite* operationbbUI = nullptr;
 	bool isOperationFlag = false;
 	int OperationbbTimer = 0;
-
 	//2ウェーブ
-	Sprite* operation2UI = nullptr;
-	Sprite* operationbb2UI = nullptr;
 	bool isOperationFlag2 = false;
 	bool isOperationFlag3 = false;
 	int waveTimer2 = 0;
