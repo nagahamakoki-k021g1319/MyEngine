@@ -17,6 +17,14 @@
 class Player;
 class Block;
 
+//敵の数(ここいじれば敵の数やエフェクトなどもろもろの上げ下げ出来る)
+enum BikeEnemyNumber
+{
+	MaxBikeNumber = 9,//敵の最大数
+	MinBikeNumber = 0//一番はじめ
+};
+
+
 class BikeEnemy : public Enemy
 {
 public:
@@ -84,111 +92,111 @@ private:
 	Model* collRushModel_[ 5 ] = { 0 };
 
 	//待機
-	Object3d* Obj_[ 9 ] = { 0 };
-	Model* Model_[ 9 ] = { 0 };
-	Model* Model2_[ 9 ] = { 0 };
+	Object3d* Obj_[ MaxBikeNumber ] = { 0 };
+	Model* Model_[ MaxBikeNumber ] = { 0 };
+	Model* Model2_[ MaxBikeNumber ] = { 0 };
 	//当たり判定のモデル(本体)
-	Object3d* collObj_[ 9 ] = { 0 };
-	Model* collModel_[ 9 ] = { 0 };
-	int isCollFlag_[ 9 ] = { 0 };
+	Object3d* collObj_[ MaxBikeNumber ] = { 0 };
+	Model* collModel_[ MaxBikeNumber ] = { 0 };
+	int isCollFlag_[ MaxBikeNumber ] = { 0 };
 	//当たり判定のモデル(衝突してノックバックする用)
-	Object3d* collRightObj_[ 9 ] = { 0 };
-	Object3d* collLeftObj_[ 9 ] = { 0 };
-	Object3d* collFrontObj_[ 9 ] = { 0 };
-	Object3d* collBackObj_[ 9 ] = { 0 };
-	Model* collLRModel_[ 9 ] = { 0 };
+	Object3d* collRightObj_[ MaxBikeNumber ] = { 0 };
+	Object3d* collLeftObj_[ MaxBikeNumber ] = { 0 };
+	Object3d* collFrontObj_[ MaxBikeNumber ] = { 0 };
+	Object3d* collBackObj_[ MaxBikeNumber ] = { 0 };
+	Model* collLRModel_[ MaxBikeNumber ] = { 0 };
 
 	//バイク兵同士が当たった時のノックバックフラグ
 	int isEachKnockbackFlag_ = 0;
 	int eachKnockbackTimer_ = 0;
 
 	//死んだときにタイマー動す
-	int deathTimer_[ 9 ] = { 0 };
+	int deathTimer_[ MaxBikeNumber ] = { 0 };
 
 	//自機と横軸があった時に突進するフラグ(0 待機,1 突進,2 自機と衝突)
-	int isRushFlag_[ 9 ] = { 0 };
-	int isRushFlagR_[ 9 ] = { 0 };
+	int isRushFlag_[ MaxBikeNumber ] = { 0 };
+	int isRushFlagR_[ MaxBikeNumber ] = { 0 };
 	//衝突した時のノックバックタイマーとフラグ
-	int rushKnockbackTimer_[ 9 ] = { 0 };
-	int rushKnockbackTimerR_[ 9 ] = { 0 };
-	int isRushKnockbackFlag_[ 9 ] = { 0 };
-	int rushCoolTimer_[ 9 ] = { 0 };
+	int rushKnockbackTimer_[ MaxBikeNumber ] = { 0 };
+	int rushKnockbackTimerR_[ MaxBikeNumber ] = { 0 };
+	int isRushKnockbackFlag_[ MaxBikeNumber ] = { 0 };
+	int rushCoolTimer_[ MaxBikeNumber ] = { 0 };
 
 	//自機のタックルでバイク兵が喰らうフラグ
-	int isHit_[ 9 ] = { 0 };
+	int isHit_[ MaxBikeNumber ] = { 0 };
 
 	//バイクの車輪動かす
 	int bikstSpinTimer = 0;
 
 	//死んだときのバイクがスピンするモデル
-	Object3d* bikclushObj_[ 9 ] = { 0 };
-	Model* bikclushModel_[ 9 ] = { 0 };
-	int isBikclushFlag_[ 9 ] = { 0 };
-	int isBikSpinFlag_[ 9 ] = { 0 };
+	Object3d* bikclushObj_[ MaxBikeNumber ] = { 0 };
+	Model* bikclushModel_[ MaxBikeNumber ] = { 0 };
+	int isBikclushFlag_[ MaxBikeNumber ] = { 0 };
+	int isBikSpinFlag_[ MaxBikeNumber ] = { 0 };
 
 	//敵の生存フラグ(0 生きる,1 死亡)
-	int isAliveFlag_[ 9 ] = { 0 };
+	int isAliveFlag_[ MaxBikeNumber ] = { 0 };
 	int AliveR2Timer = 0;
 	int AliveR3Timer = 0;
 	int AliveR4Timer = 0;
 
 	//体力(一旦0で初期化のタイミングで設定する)
-	int HP_[ 9 ] = { 0 };
+	int HP_[ MaxBikeNumber ] = { 0 };
 
 
 	//後ろから登場するフラグ
-	int isBackEntryFlag_[ 9 ] = { 0 };
+	int isBackEntryFlag_[ MaxBikeNumber ] = { 0 };
 
 	//バイク兵のアクションタイマー
-	int actionTimer_[ 9 ] = { 0 };
-	int isMoveFlag_[ 9 ] = { 0 };
-	int stopTimer_[ 9 ] = { 0 };
-	int stopTimerR_[ 9 ] = { 0 };
+	int actionTimer_[ MaxBikeNumber ] = { 0 };
+	int isMoveFlag_[ MaxBikeNumber ] = { 0 };
+	int stopTimer_[ MaxBikeNumber ] = { 0 };
+	int stopTimerR_[ MaxBikeNumber ] = { 0 };
 	//自機とバイク兵の押し出し処理(0 false,1 true)
-	int limitRightmove_[ 9 ] = { 0 };
-	int limitLeftmove_[ 9 ] = { 0 };
+	int limitRightmove_[ MaxBikeNumber ] = { 0 };
+	int limitLeftmove_[ MaxBikeNumber ] = { 0 };
 
 	//衝突した時のノックバックタイマー(通常時)
-	int knockbackTimer_[ 9 ] = { 0 };
-	int knockbackTimer2_[ 9 ] = { 0 };
+	int knockbackTimer_[ MaxBikeNumber ] = { 0 };
+	int knockbackTimer2_[ MaxBikeNumber ] = { 0 };
 
 	//生きているバイク兵で後ろに近いやつを基準にカメラを少し下げる(数字はバイク兵の番号)
 	int standardPos = 0;
 
 	//パーティクル
 	//地面のズサ
-	std::unique_ptr<ParticleManager> gasParticle_[ 9 ];
-	int bulletEffTimer_[ 9 ] = { 0 };
-	int isbulletEffFlag_[ 9 ] = { 0 };
+	std::unique_ptr<ParticleManager> gasParticle_[ MaxBikeNumber ];
+	int bulletEffTimer_[ MaxBikeNumber ] = { 0 };
+	int isbulletEffFlag_[ MaxBikeNumber ] = { 0 };
 
 	//攻撃受けた時の火花のパーティクル(左側)
-	std::unique_ptr<ParticleManager> DamageLeftParticle_[ 9 ];
-	int DamageLeftEffTimer_[ 9 ] = { 0 };
-	int isDamageLeftEffFlag_[ 9 ] = { 0 };
+	std::unique_ptr<ParticleManager> DamageLeftParticle_[ MaxBikeNumber ];
+	int DamageLeftEffTimer_[ MaxBikeNumber ] = { 0 };
+	int isDamageLeftEffFlag_[ MaxBikeNumber ]  { 0 };
 
 	//攻撃受けた時の火花のパーティクル(右側)
-	std::unique_ptr<ParticleManager> DamageRightParticle_[ 9 ];
-	int DamageRightEffTimer_[ 9 ] = { 0 };
-	int isDamageRightEffFlag_[ 9 ] = { 0 };
+	std::unique_ptr<ParticleManager> DamageRightParticle_[ MaxBikeNumber ];
+	int DamageRightEffTimer_[ MaxBikeNumber ] = { 0 };
+	int isDamageRightEffFlag_[ MaxBikeNumber ] = { 0 };
 
 	//体力少ないときに煙出る(体力半分)
 	std::unique_ptr<ParticleManager> smokeParticle_[ 9 ];
-	int smokeEffTimer_[ 9 ] = { 0 };
-	int isSmokeEffFlag_[ 9 ] = { 0 };
-	float smokePosX_[ 9 ] = { 0.0f };
+	int smokeEffTimer_[ MaxBikeNumber ] = { 0 };
+	int isSmokeEffFlag_[ MaxBikeNumber ] = { 0 };
+	float smokePosX_[ MaxBikeNumber ] = { 0.0f };
 
 	//体力少ないときに煙出る(体力ミリ)
-	std::unique_ptr<ParticleManager> blazeParticle_[ 9 ];
-	std::unique_ptr<ParticleManager> blazeSmokeParticle_[ 9 ];
-	int blazeEffTimer_[ 9 ] = { 0 };
-	int isBlazeEffFlag_[ 9 ] = { 0 };
-	float blazePosX_[ 9 ] = { 0.0f };
+	std::unique_ptr<ParticleManager> blazeParticle_[ MaxBikeNumber ];
+	std::unique_ptr<ParticleManager> blazeSmokeParticle_[ MaxBikeNumber ];
+	int blazeEffTimer_[ MaxBikeNumber ] = { 0 };
+	int isBlazeEffFlag_[ MaxBikeNumber ] = { 0 };
+	float blazePosX_[ MaxBikeNumber ] = { 0.0f };
 
 	//やられたときにでる炎
-	std::unique_ptr<ParticleManager> heatParticle_[ 9 ];
-	int heatEffTimer_[ 9 ] = { 0 };
-	int isHeatEffFlag_[ 9 ] = { 0 };
-	float heatPosX_[ 9 ] = {0.0f};
+	std::unique_ptr<ParticleManager> heatParticle_[ MaxBikeNumber ];
+	int heatEffTimer_[ MaxBikeNumber ] = { 0 };
+	int isHeatEffFlag_[ MaxBikeNumber ] = { 0 };
+	float heatPosX_[ MaxBikeNumber ] = {0.0f};
 
 	//障害物用に当たり判定(判定を少し前に出す)
 	//箱
