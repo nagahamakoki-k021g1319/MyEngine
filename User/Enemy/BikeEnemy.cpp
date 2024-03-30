@@ -11,7 +11,7 @@ BikeEnemy::~BikeEnemy()
 {
 	delete spriteCommon;
 	//バイクのモデル
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		delete Obj_[ i ];
 		delete Model_[ i ];
@@ -25,11 +25,9 @@ BikeEnemy::~BikeEnemy()
 		delete collLRModel_[ i ];
 		delete collFrontObj_[ i ];
 		delete collBackObj_[ i ];
-
 	}
 	//攻撃範囲
-	for ( int i = 0; i < 5; i++ )
-	{
+	for ( int i = 0; i < 5; i++ ){
 		delete collRushObj_[ i ];
 		delete collRushObjL_[ i ];
 		delete collRushModel_[ i ];
@@ -37,16 +35,9 @@ BikeEnemy::~BikeEnemy()
 
 	//木箱の当たり判定モデル(判定を少し前に出したやつ)
 	delete collBlockModel_;
-	for ( int i = 0; i < 12; i++ )
-	{
-		delete collBoxObj_[i];
-	}
+	for ( int i = 0; i < 12; i++ ){delete collBoxObj_[i];}
 	//コーンの当たり判定モデル
-	for ( int i = 0; i < 8; i++ )
-	{
-		delete collKonObj_[ i ];
-	}
-
+	for ( int i = 0; i < 8; i++ ){delete collKonObj_[ i ];}
 }
 
 void BikeEnemy::BEReset()
@@ -62,7 +53,7 @@ void BikeEnemy::BEReset()
 	//stopTimerR_[ 9 ] = { 0 };
 
 
-	//for ( int i = 0; i < 9; i++ )
+	//for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	//{
 	//	HP_[ i ] = 1;
 	//}
@@ -104,7 +95,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 	enemyType_ = EnemyType::Bike;
 
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		//雑魚敵(攻撃状態)
 		Model_[ i ] = Model::LoadFromOBJ("bikenemy");
@@ -129,7 +120,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	Obj_[ 8 ]->wtf.position = { -3.0f,-2.0f,-20.0f };
 
 	//当たり判定のモデル(本体)
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		collModel_[ i ] = Model::LoadFromOBJ("collboll");
 		collObj_[ i ] = Object3d::Create();
@@ -140,7 +131,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		HP_[ i ] = 1;
 	}
 	//当たり判定のモデル(左右の衝突してノックバックする用)
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		const float addPosX = 0.1f;
 		const float addPosZ = 1.0f;
@@ -175,7 +166,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	}
 
 	//雑魚敵(死んだときのバイクスピン)
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		bikclushModel_[ i ] = Model::LoadFromOBJ("bikclush");
 		bikclushObj_[ i ] = Object3d::Create();
@@ -185,7 +176,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	}
 
 	//パーティクル生成
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		//ガス
 		gasParticle_[ i ] = std::make_unique<ParticleManager>();
@@ -248,7 +239,7 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollSWRFlag,Vector3 pRPos,Vector3 pLPos,Vector3 BPos,Vector3 BPos2,Vector3 BPos3,Vector3 BPos4)
 {
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		const float posX = 0.1f;
 		const float posY = 0.5f;
@@ -329,7 +320,7 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 	{
 		bikstSpinTimer = 0;
 	}
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		const float SpinAdjust = 1.0f;
 		const float SpinMax = 5.0f;
@@ -349,7 +340,7 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 	BikeEnemyEntry();
 
 	//エントリー後のバイク兵のアクション
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		if ( isBackEntryFlag_[ i ] == 1 )
 		{
@@ -358,15 +349,6 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 	}
 	//バイク兵の挙動と自機より後ろにいるときカメラを少し下げる
 	BikeEnemyAction();
-
-	/*if ( input_->PushKey(DIK_H))
-	{
-		Obj_[ 2 ]->wtf.position.x -= 0.05f;
-	}
-	if ( input_->PushKey(DIK_K) )
-	{
-		Obj_[ 2 ]->wtf.position.x += 0.05f;
-	}*/
 
 	//突進攻撃の当たり判定
 	for ( int i = 0; i < 5; i++ )
@@ -392,7 +374,7 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 		}
 	}
 	//突進攻撃の当たり判定(右の敵と自機)
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		if ( isRushFlag_[ i ] == 1 )
 		{
@@ -546,7 +528,7 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 	}
 
 	//自機の加減速でバイク兵のZ軸移動
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		if ( isBackEntryFlag_[ i ] == 1 )
 		{
@@ -573,7 +555,7 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 	}
 
 	//当たり判定(自機とバイク兵の当たり判定)
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		//自機の左攻撃の当たり判定
 		if ( HP_[ i ] >= 1 )
@@ -672,7 +654,7 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 
 	//バイクと障害物の当たり判定
 	//木箱とバイク兵
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		
 		if ( isBackEntryFlag_[ i ] == 1 )
@@ -700,7 +682,7 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 	}
 
 	//バイク兵のガス噴射
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		if ( HP_[ i ] <= 0 )
 		{
@@ -733,7 +715,7 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 	}
 
 	//バイクが前進しながら倒れる
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		if ( isBackEntryFlag_[ i ] == 1 )
 		{
@@ -766,7 +748,7 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 	}
 
 	//デスタイマーの起動
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		if ( deathTimer_[ i ] == 1)
 		{
@@ -779,7 +761,7 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 	}
 
 	//数回タックルされたらやられる
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		if ( isHit_[ i ] >= 20 )
 		{
@@ -803,7 +785,7 @@ void BikeEnemy::Draw()
 {
 	if ( isGameStartTimer >= 200 )
 	{
-		for ( int i = 0; i < 9; i++ )
+		for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 		{
 			//バイク兵のモデル
 			if ( isBikclushFlag_[ i ] == 0 )
@@ -853,7 +835,7 @@ void BikeEnemy::Draw()
 
 void BikeEnemy::EffUpdate()
 {
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		//ガス
 		if ( isbulletEffFlag_[ i ] == 1 )
@@ -1269,7 +1251,7 @@ void BikeEnemy::DamageHeatSummary(Vector3 heatpos,int num)
 
 void BikeEnemy::EffDraw()
 {
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		if ( isGameStartTimer >= 200 )
 		{
@@ -1491,7 +1473,7 @@ void BikeEnemy::BikeEnemyEntry()
 void BikeEnemy::BikeEnemyAction()
 {
 	//バイク兵が自機より後ろにいるときカメラを少し下げる
-	for ( int i = 0; i < 9; i++ )
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	{
 		if ( isBackEntryFlag_[ i ] == 1 && isBikclushFlag_[ i ] == 0 )
 		{

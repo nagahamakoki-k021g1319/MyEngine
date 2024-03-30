@@ -55,6 +55,7 @@ enum BulletNumber
 	FirstBullet,
 	SecondBullet,
 	ThirdBullet,
+	MaxBullet
 };
 //スプライト情報
 enum Spritekinds
@@ -327,10 +328,10 @@ public:
 	bool isScatterFlag = false;
 
 	//弾発射(3発)
-	Object3d* shootObj_[ 3 ] = {0};
+	Object3d* shootObj_[ MaxBullet ] = {0};
 	Model* shootModel_ = nullptr;
-	Vector3 bulletlen_[3];
-	Vector3 len_[3];
+	Vector3 bulletlen_[ MaxBullet ];
+	Vector3 len_[ MaxBullet ];
 	bool isShootFlag = false;
 	int BulletCoolTime = 0;
 

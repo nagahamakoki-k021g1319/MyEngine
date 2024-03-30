@@ -9,7 +9,7 @@ ArmorEnemy::ArmorEnemy()
 ArmorEnemy::~ArmorEnemy()
 {
 	delete spriteCommon;
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 	{
 		delete Obj_[ i ];
 		delete Model_[ i ];
@@ -40,7 +40,7 @@ void ArmorEnemy::AEReset()
 	isMoveFlag_[ 4 ] = { 0 };
 	isbesideFlag_[ 4 ] = { 0 };
 
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 	{
 		HP_[i] = 12;
 	}
@@ -64,8 +64,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 	enemyType_ = EnemyType::Armor;
 
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
-	{
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ ){
 		//雑魚敵(攻撃状態)
 		Model_[ i ] = Model::LoadFromOBJ("armorenemy");
 		//雑魚敵(待機状態)
@@ -86,7 +85,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	Obj_[ 3 ]->wtf.position = { -10.0f,-2.0f,-20.0f };
 
 	//大砲の弾
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ ){
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ ){
 		const float addPosY = 2.5f;
 		const float addPosZ = 3.0f;
 		bulletModel_[ i ] = Model::LoadFromOBJ("eneboll");
@@ -98,7 +97,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 
 	//当たり判定のモデル
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ ){
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ ){
 		const float addPosY = 1.0f;
 		collModel_[ i ] = Model::LoadFromOBJ("collboll");
 		collObj_[ i ] = Object3d::Create();
@@ -112,7 +111,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	collObj3_->SetModel(collModel_[ 0 ]);
 
 	//パーティクル生成
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 	{
 		//エフェクトの情報(地面のズサ)
 		gasParticle_[ i ] = std::make_unique<ParticleManager>();
@@ -168,7 +167,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 
 void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos,Vector3 playerB3pos,bool playerShootFlag)
 {
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 	{
 		if ( isAliveFlag_[ i ] == 0 )
 		{
@@ -184,7 +183,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos
 	EffUpdate();
 	isGameStartTimer++;
 	//魔導兵が一定距離進むとこっちを向く
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 	{
 		if ( Obj_[ i ]->wtf.position.z >= 20.0f )
 		{
@@ -332,7 +331,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos
 	}
 
 	//自機の加減速でバイク兵のZ軸移動
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 	{
 		if ( isAliveFlag_[ i ] == 0 )
 		{
@@ -366,7 +365,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos
 	}
 
 	//魔導兵のガス噴射
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 	{
 		if ( isAliveFlag_[ i ] == 0 )
 		{
@@ -396,7 +395,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos
 
 
 	//魔導兵の射撃
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 	{
 		if ( isAliveFlag_[ i ] == 0 )
 		{
@@ -457,7 +456,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos
 	}
 
 	//ポリゴン爆散
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 	{
 		if ( isAliveFlag_[ i ] == 0 )
 		{
@@ -483,7 +482,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos
 		}
 	}
 	//デスタイマーの起動
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 	{
 		if ( deathTimer_[ i ] == 1 )
 		{
@@ -498,7 +497,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos
 	//当たり判定(プレイヤー弾から魔導兵)
 	if ( playerShootFlag == true )
 	{
-		for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+		for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 		{
 			if ( isAliveFlag_[ i ] == 0 )
 			{
@@ -525,7 +524,7 @@ void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos
 	}
 
 	//当たり判定(魔導兵弾からプレイヤー)
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 	{
 		if ( isAliveFlag_[ i ] == 0 )
 		{
@@ -557,7 +556,7 @@ void ArmorEnemy::Draw()
 	//collObj3_->Draw();
 	if ( isGameStartTimer >= 200 )
 	{
-		for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+		for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 		{
 //モデル描画
 			if ( isAliveFlag_[ i ] == 0 )
@@ -581,7 +580,7 @@ void ArmorEnemy::Reset()
 
 void ArmorEnemy::EffUpdate()
 {
-	for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 	{
 		//ガス噴射
 		if ( isgasEffFlag_[ i ] == 1 )
@@ -906,7 +905,7 @@ void ArmorEnemy::EffDraw()
 {
 	if ( isGameStartTimer >= 200 )
 	{
-		for ( int i = EnemyNumber::MinNumber; i < EnemyNumber::MaxNumber; i++ )
+		for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 		{
 			//背中の噴射ガス
 			if ( isgasEffFlag_[ i ] == 1 )
