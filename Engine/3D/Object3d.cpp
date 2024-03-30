@@ -117,7 +117,7 @@ void Object3d::InitializeGraphicsPipeline()
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Engine/SHADER/OBJVertexShader.hlsl",	// シェーダファイル名
+		L"Resources/SHADER/OBJVertexShader.hlsl",	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -140,7 +140,7 @@ void Object3d::InitializeGraphicsPipeline()
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Engine/SHADER/OBJPixelShader.hlsl",	// シェーダファイル名
+		L"Resources/SHADER/OBJPixelShader.hlsl",	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -163,7 +163,7 @@ void Object3d::InitializeGraphicsPipeline()
 
 	// ジオメトリシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"Engine/SHADER/OBJGeometryShader.hlsl",	// シェーダファイル名
+		L"Resources/SHADER/OBJGeometryShader.hlsl",	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main","gs_5_0",	// エントリーポイント名、シェーダーモデル指定

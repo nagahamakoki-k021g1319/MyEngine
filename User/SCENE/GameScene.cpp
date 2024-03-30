@@ -425,21 +425,19 @@ void GameScene::Update() {
 		}
 		
 		player_->Update();
-		armorEnemy_->Update(player_->GetWorldPosition(),player_->GetBulletWorldPosition(),
-			player_->GetBulletWorldPosition2(),
-			player_->GetBulletWorldPosition3(),
+		armorEnemy_->Update(player_->GetWorldPosition(PlayerColl),player_->GetBulletWorldPosition(FirstBullet),player_->GetBulletWorldPosition(SecondBullet),player_->GetBulletWorldPosition(ThirdBullet),
 			player_->isShootFlag);
 		bikeEnemy_->Update(
-			player_->GetSwordLeftWorldPosition(),player_->isCollSWFlag,
-			player_->GetSwordRightWorldPosition(),player_->isCollSWRightFlag,
-			player_->GetCollRightWorldPosition(),player_->GetCollLeftWorldPosition(),
+			player_->GetWorldPosition(LAttackColl),player_->isCollSWFlag,
+			player_->GetWorldPosition(RAttackColl),player_->isCollSWRightFlag,
+			player_->GetWorldPosition(RPlayerColl),player_->GetWorldPosition(LPlayerColl),
 			block_->GetWorldPosition(),block_->GetWorldPosition2(),block_->GetWorldPosition3(),block_->GetWorldPosition4()
 		);
-		bossEnemy_->Update( player_->GetWorldPosition(), player_->GetBulletWorldPosition(),player_->GetBulletWorldPosition2(),player_->GetBulletWorldPosition3());
+		bossEnemy_->Update(player_->GetWorldPosition(PlayerColl),player_->GetBulletWorldPosition(FirstBullet),player_->GetBulletWorldPosition(SecondBullet),player_->GetBulletWorldPosition(ThirdBullet));
 
 		skydome->Update();
 		lamp_->Update();
-		block_->Update(player_->GetWorldPosition());
+		block_->Update(player_->GetWorldPosition(PlayerColl));
 
 		const float stSpeed = 10.0f;
 		const float stLimit = -20000.0f;
