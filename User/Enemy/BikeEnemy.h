@@ -110,6 +110,13 @@ private:
 	int isEachKnockbackFlag_ = 0;
 	int eachKnockbackTimer_ = 0;
 
+	//自機がスピン攻撃した時のエフェクトがでるフラグ
+	int isPlayerLSpinEffFlag_ = 0;
+	int LeftEfftimer = 0;
+	int isPlayerRSpinEffFlag_ = 0;
+	int RightEfftimer = 0;
+	
+
 	//死んだときにタイマー動す
 	int deathTimer_[ MaxBikeNumber ] = { 0 };
 

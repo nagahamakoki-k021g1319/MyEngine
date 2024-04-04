@@ -30,41 +30,77 @@ Player::~Player() {
 
 void Player::Reset()
 {
-	/*isGameStartFlag = false;
+	isGameStartFlag = false;
 	isGameStartTimer = 0;
 	acflag = false;
 	rotaflag = false;
 	camerasetFlag = false;
 
+	//自機の納刀モデルから抜刀モデルに切り替え
+	isBikswordstyFlag = 0;
+	BikswordstyTimer = 0;
+	//自機の生存フラグ
+	isAliveFlag = true;
+
+	//遠距離攻撃のUIとゲージ
+	isgageUPFlag = false;
+	isgageStopFlag = false;
+	gageCount = 1;
+	BulletCount = 1;
+	retResetTimer = 0;
+	retdisplay = false;
+	EffTimer = 0;
+	isEffFlag = 0;
+	//自機のHP表示
+	playerHP = 20.0f;
+
+	//バイクの残骸が後ろに散らばる
+	isScatterFlag = false;
+
+	isShootFlag = false;
+	BulletCoolTime = 0;
+	//ゲームクリアするときのバイク移動
 	isClearFlag = false;
 	isclearFlagTimer = 0;
 
-	gageCount = 1;
-	BulletCount = 1;
-
+	//ボス登場でカメラの向きをかえるフラグ
 	isCameraBehavior = 0;
 	CameraBehaviorTimer = 0;
 	CameraBehaviorTimer2 = 0;
-	
+
+	//画面シェイク
+	isCamShake = 0;
+
+	//ラウンド制御(プレイヤー側で設定する)
 	isRoundFlag = 0;
 	isDeadEnemy = 0;
-	
+	//ラウンドが変わるたびカメラが一旦引く
+	incidenceCamera = 0;
+	incidenceCamera2 = 0;
+	incidenceCamera3 = 0;
+
+	//障害物に当たって減速
+	isDecelerationFlag = false;
+	DecelerationTimer = 0;
+	backTimer = 0;
+
+	//敵が自機より後ろにいるときカメラを少し下げる
 	standardCamera = 0;
 	moveCamera = 0;
 	cameraResetTimer = 0;
 	BossCameraResetTimer = 0;
-
+	//操作説明
+	//1ウェーブ
 	isOperationFlag = false;
 	OperationbbTimer = 0;
-
+	//2ウェーブ
 	isOperationFlag2 = false;
 	isOperationFlag3 = false;
 	waveTimer2 = 0;
 	OperationbbTimer2 = 0;
 
-	isScatterFlag = false;
-
-	Obj_->wtf.position = { 0.0f,-2.0f,-20.0f };*/
+	Obj_->SetModel(Model_[ ActionState::IDEL ]);
+	Obj_->wtf.position = { 0.0f,-2.0f,-20.0f };
 }
 
 void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
@@ -239,10 +275,13 @@ void Player::Update() {
 	EffUpdate();
 	collObj_[ CollisionObject::PlayerColl ]->Update();
 	collObj_[ CollisionObject::RSparkColl ]->Update();
-	if ( spineRffflag == false ){collObj_[ CollisionObject::RSparkColl ]->wtf.position = { Obj_->wtf.position.x + 0.5f,Obj_->wtf.position.y,Obj_->wtf.position.z - 1.0f };}
-
+	if ( spineRffflag == false ){collObj_[ CollisionObject::RSparkColl ]->wtf.position.z = Obj_->wtf.position.z - 1.0f;}
 	collObj_[ CollisionObject::LSparkColl ]->Update();
-	if ( spineLffflag == false ){collObj_[ CollisionObject::LSparkColl ]->wtf.position = { Obj_->wtf.position.x - 0.5f,Obj_->wtf.position.y,Obj_->wtf.position.z - 1.0f };}
+	if ( spineLffflag == false ){collObj_[ CollisionObject::LSparkColl ]->wtf.position.z = Obj_->wtf.position.z - 1.0f;}
+	for ( int i = LSparkColl; i <= RSparkColl; i++ ){collObj_[ i ]->wtf.position.y = Obj_->wtf.position.y;}
+	collObj_[ CollisionObject::RSparkColl ]->wtf.position.x = Obj_->wtf.position.x + 1.0f;
+	collObj_[ CollisionObject::LSparkColl ]->wtf.position.x = Obj_->wtf.position.x - 1.0f;
+
 	const float addPosX = 0.1f;
 	const float addPos = 0.5f;
 	const float addPosZ = 1.0f;
@@ -293,10 +332,7 @@ void Player::Update() {
 	if ( isBikswordstyFlag == 2 ){
 		bikSpinTimer++;
 		//バイクの車輪が動き出す(抜刀)
-		if ( bikSpinTimer > 10 )
-		{
-			bikSpinTimer = 0;
-		}
+		if ( bikSpinTimer > 10 ){bikSpinTimer = 0;}
 		//通常
 		if ( isAtTimerFlag == false && isLeftAtFlag == false && isRightAtFlag == false && isAccelFlag == false ){
 			if ( bikSpinTimer >= 1 && bikSpinTimer <= 5 ){Obj_->SetModel(Model_[ ActionState::IDELBladeBefore]);}
@@ -441,6 +477,8 @@ void Player::Draw() {
 		retVisualObj_->Draw();
 	}
 	if ( isScatterFlag == true ){debrisObj_->Draw();}
+	/*collObj_[ CollisionObject::LSparkColl ]->Draw();
+	collObj_[ CollisionObject::RSparkColl ]->Draw();*/
 	/*slashRObj_->Draw();
 	slashLObj_->Draw();*/
 }
@@ -663,9 +701,6 @@ void Player::PlayerAction()
 		Obj_->SetModel(Model_[ ActionState::LSpinAttack]);
 		const float LeftAtSpeed = 0.32f;
 		Obj_->wtf.rotation.y += LeftAtSpeed;
-		collObj_[ CollisionObject::LSparkColl ]->wtf.position.z += 0.2f;
-		collObj_[ CollisionObject::LSparkColl ]->wtf.position.x += 0.03f;
-		isLSpinEffFlag_ = 1;
 	}
 	else if ( leftAtTimer >= 30 ){
 		leftAtTimer = 0;
@@ -676,6 +711,7 @@ void Player::PlayerAction()
 		spineLffflag = false;
 		isLSpinEffFlag_ = 0;
 	}
+	if ( leftAtTimer >= 1 && leftAtTimer < 30 ){collObj_[ CollisionObject::LSparkColl ]->wtf.position.z += 0.4f;}
 
 	//自機の攻撃モーション(右近接攻撃)
 	if ( isRightAtFlag == false ){
@@ -694,9 +730,6 @@ void Player::PlayerAction()
 		Obj_->SetModel(Model_[ ActionState::RSpinAttack]);
 		const float rightAtSpeed = 0.32f;
 		Obj_->wtf.rotation.y -= rightAtSpeed;
-		collObj_[ CollisionObject::RSparkColl ]->wtf.position.z += 0.2f;
-		collObj_[ CollisionObject::RSparkColl ]->wtf.position.x -= 0.03f;
-		isRSpinEffFlag_ = 1;
 	}
 	else if ( rightAtTimer >= 30 ){
 		rightAtTimer = 0;
@@ -707,6 +740,7 @@ void Player::PlayerAction()
 		spineRffflag = false;
 		isRSpinEffFlag_ = 0;
 	}
+	if ( rightAtTimer >= 1 && rightAtTimer < 10 ){collObj_[ CollisionObject::RSparkColl ]->wtf.position.z += 0.8f;}
 
 	//自機が左右に動いたらモデルも傾く
 	if ( input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT) ){
