@@ -190,10 +190,8 @@ private:
 	//加速するフラグ
 	bool isAccelFlag = false;
 	//モデル(左側攻撃)
-	int leftAtTimer = 0;
 	bool isLeftAtFlag = false;
 	//モデル(右側攻撃)
-	int rightAtTimer = 0;
 	bool isRightAtFlag = false;
 	//自機が回転攻撃したときに動くモデル(左右)
 	bool spineLffflag = false;
@@ -273,11 +271,11 @@ private:
 	//右スピンエフェクト
 	std::unique_ptr<ParticleManager> RSpinParticle;
 	int RSpinEffTimer_ = 0;
-	int isRSpinEffFlag_ = 0;
+
 	//左スピンエフェクト
 	std::unique_ptr<ParticleManager> LSpinParticle;
 	int LSpinEffTimer_ = 0;
-	int isLSpinEffFlag_ = 0;
+	
 
 
 	std::unique_ptr<PlayerEffect>playerEffect;
@@ -314,6 +312,12 @@ public:
 	//自機とバイク兵の押し出し処理
 	bool limitmove = false;
 	bool limitmove2 = false;
+
+	//スピンエフェクト
+	int isRSpinEffFlag_ = 0;
+	int isLSpinEffFlag_ = 0;
+	int leftAtTimer = 0;
+	int rightAtTimer = 0;
 
 	//バイク兵との突進でノックバックするフラグ
 	//右から敵が突進

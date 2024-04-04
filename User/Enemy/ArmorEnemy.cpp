@@ -25,29 +25,43 @@ ArmorEnemy::~ArmorEnemy()
 
 void ArmorEnemy::AEReset()
 {
-	/*isGameStartTimer = 0;
-	isAliveFlag_[ 4 ] = {1};
-	AliveR2Timer = 0;
-	AliveR3Timer = 0;
-	AliveR4Timer = 0;
-	deathTimer_[ 4 ] = { 0 };
-	isRotFlag_[ 4 ] = { 0 };
-	RotTimer_[ 4 ] = { 0 };
-	entryTimer = 0;
-	isExpolFlag_[ 4 ] = { 0 };
-	ExpolTimer_[ 4 ] = { 0 };
-	polygon_[ 4 ];
-	isMoveFlag_[ 4 ] = { 0 };
-	isbesideFlag_[ 4 ] = { 0 };
+	//isGameStartTimer = 0;
+	//AliveR2Timer = 0;
+	//AliveR3Timer = 0;
+	//AliveR4Timer = 0;
+	//
+	////順番に登場
+	//entryTimer = 0;
+	//
+	//for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
+	//{
+	//	isAliveFlag_[ MaxArmorNumber ] = 1;
+	//	//死んだときにタイマー動す
+	//	deathTimer_[ MaxArmorNumber ] = 0;
+	//	isRotFlag_[ MaxArmorNumber ] = 0;
+	//	RotTimer_[ MaxArmorNumber ] = 0;
+	//	//ポリゴン爆さん
+	//	isExpolFlag_[ MaxArmorNumber ] = 0;
+	//	ExpolTimer_[ MaxArmorNumber ] = 0;
+	//	ExpolMT_[ MaxArmorNumber ] = 40;
+	//	polygon_[ MaxArmorNumber ];
+	//	isCollFlag_[ MaxArmorNumber ] = 0 ;
 
-	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
-	{
-		HP_[i] = 12;
-	}
-	Obj_[ 0 ]->wtf.position = { 10.0f,-2.0f,-10.0f };
-	Obj_[ 1 ]->wtf.position = { -10.0f,-2.0f,-10.0f };
-	Obj_[ 2 ]->wtf.position = { 10.0f,-2.0f,-20.0f };
-	Obj_[ 3 ]->wtf.position = { -10.0f,-2.0f,-20.0f };*/
+	//	//体力(一旦0で初期化のタイミングで設定する)
+	//	isShootFlag_[ MaxArmorNumber ] = 0;
+	//	BulletdurationTime_[ MaxArmorNumber ] = 0;
+	//	BulletCoolTime_[ MaxArmorNumber ] = 0;
+	//	isMoveFlag_[ MaxArmorNumber ] = 0;
+	//	isbesideFlag_[ MaxArmorNumber ] = 0;
+	//}
+	//for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
+	//{
+	//	HP_[i] = 12;
+	//}
+	//Obj_[ 0 ]->wtf.position = { 10.0f,-2.0f,-10.0f };
+	//Obj_[ 1 ]->wtf.position = { -10.0f,-2.0f,-10.0f };
+	//Obj_[ 2 ]->wtf.position = { 10.0f,-2.0f,-20.0f };
+	//Obj_[ 3 ]->wtf.position = { -10.0f,-2.0f,-20.0f };
 }
 
 void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)

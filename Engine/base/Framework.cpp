@@ -125,7 +125,7 @@ void Framework::Run()
 		// Imgui受付終了
 		imgui->End();
 		//// Imgui描画
-		imgui->Draw();
+		/*imgui->Draw();*/
 
 		// 描画終了
 		dxCommon->PostDraw();

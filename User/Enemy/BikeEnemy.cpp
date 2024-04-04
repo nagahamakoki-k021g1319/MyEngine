@@ -43,28 +43,75 @@ BikeEnemy::~BikeEnemy()
 void BikeEnemy::BEReset()
 {
 	//isGameStartTimer = 0;
-	//isAliveFlag_[ 9 ] = { 0 };
+	//
+	////バイク兵同士が当たった時のノックバックフラグ
+	//isEachKnockbackFlag_ = 0;
+	//eachKnockbackTimer_ = 0;
+
+	//
 	//AliveR2Timer = 0;
 	//AliveR3Timer = 0;
 	//AliveR4Timer = 0;
-	//actionTimer_[ 9 ] = { 0 };
-	//isMoveFlag_[ 9 ] = { 0 };
-	//stopTimer_[ 9 ] = { 0 };
-	//stopTimerR_[ 9 ] = { 0 };
 
+
+	////生きているバイク兵で後ろに近いやつを基準にカメラを少し下げる(数字はバイク兵の番号)
+	//standardPos = 0;
+
+	//
+
+
+	//for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
+	//{
+	//	isCollFlag_[ MaxBikeNumber ] = 0;
+	//	//死んだときにタイマー動す
+	//	deathTimer_[ MaxBikeNumber ] = 0;
+	//	isRushFlag_[ MaxBikeNumber ] = 0;
+	//	isRushFlagR_[ MaxBikeNumber ] = 0;
+	//	//衝突した時のノックバックタイマーとフラグ
+	//	rushKnockbackTimer_[ MaxBikeNumber ] = 0 ;
+	//	rushKnockbackTimerR_[ MaxBikeNumber ] = 0 ;
+	//	isRushKnockbackFlag_[ MaxBikeNumber ] = 0 ;
+	//	rushCoolTimer_[ MaxBikeNumber ] = 0;
+
+	//	//自機のタックルでバイク兵が喰らうフラグ
+	//	isHit_[ MaxBikeNumber ] = 0;
+
+	//	isBikclushFlag_[ MaxBikeNumber ] = 0;
+	//	isBikSpinFlag_[ MaxBikeNumber ] = 0;
+
+	//	//敵の生存フラグ(0 生きる,1 死亡)
+	//	isAliveFlag_[ MaxBikeNumber ] =  0;
+	//	//後ろから登場するフラグ
+	//	isBackEntryFlag_[ MaxBikeNumber ] = 0;
+
+	//	//バイク兵のアクションタイマー
+	//	actionTimer_[ MaxBikeNumber ] = 0;
+	//	isMoveFlag_[ MaxBikeNumber ] = 0;
+	//	stopTimer_[ MaxBikeNumber ] = 0;
+	//	stopTimerR_[ MaxBikeNumber ] = 0;
+	//	//自機とバイク兵の押し出し処理(0 false,1 true)
+	//	limitRightmove_[ MaxBikeNumber ] = 0;
+	//	limitLeftmove_[ MaxBikeNumber ] = 0;
+
+	//	//衝突した時のノックバックタイマー(通常時)
+	//	knockbackTimer_[ MaxBikeNumber ] = 0;
+	//	knockbackTimer2_[ MaxBikeNumber ] = 0;
+	//}
 
 	//for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
 	//{
 	//	HP_[ i ] = 1;
 	//}
 
-	//isBackEntryFlag_[ 9 ] = { 0 };
-	//standardPos = 0;
+	//for ( int i = 0; i < 12; i++ )
+	//{
+	//	isBoxFlag_[i] = 0;
+	//}
 
-	//isBoxFlag_[ 12 ] = { 0 };
-	//isKonFlag_[ 8 ] = { 0 };
-
-
+	//for ( int i = 0; i < 8; i++ )
+	//{
+	//	isKonFlag_[i] = 0;
+	//}
 	////ラウンド1
 	//Obj_[ 0 ]->wtf.position = { -3.0f,-2.0f,-30.0f };
 	//Obj_[ 1 ]->wtf.position = { 3.0f,-2.0f,-20.0f };
@@ -152,12 +199,10 @@ void BikeEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		collBackObj_[ i ] = Object3d::Create();
 		collBackObj_[ i ]->SetModel(collLRModel_[ i ]);
 		collBackObj_[ i ]->wtf.position = { Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z - addPosZ };
-
 	}
 
 	//突進用に自機に対して横一列になってる当たり判定モデル
-	for ( int i = 0; i < 5; i++ )
-	{
+	for ( int i = 0; i < 5; i++ ){
 		collRushModel_[ i ] = Model::LoadFromOBJ("collboll");
 		collRushObj_[ i ] = Object3d::Create();
 		collRushObj_[ i ]->SetModel(collRushModel_[ i ]);
@@ -554,29 +599,46 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 		}
 	}
 
+
+	//自機のスピン攻撃喰らった時のエフェクト(左)
+	if ( isPlayerLSpinEffFlag_ == 1 ){
+		LeftEfftimer++;
+		if ( LeftEfftimer >= 1 && LeftEfftimer < 30 ){player_->isLSpinEffFlag_ = 1;}
+	}
+	if ( LeftEfftimer >= 31){
+		LeftEfftimer = 0;
+		player_->isLSpinEffFlag_ = 0;
+		isPlayerLSpinEffFlag_ = 0;
+	}
+	//自機のスピン攻撃喰らった時のエフェクト(右)
+	if ( isPlayerRSpinEffFlag_ == 1 ){
+		RightEfftimer++;
+		if ( RightEfftimer >= 1 && RightEfftimer < 30 ){player_->isRSpinEffFlag_ = 1;}
+	}
+	if ( RightEfftimer >= 31 ){
+		RightEfftimer = 0;
+		player_->isRSpinEffFlag_ = 0;
+		isPlayerRSpinEffFlag_ = 0;
+	}
+
 	//当たり判定(自機とバイク兵の当たり判定)
-	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ )
-	{
+	for ( int i = MinBikeNumber; i < MaxBikeNumber; i++ ){
 		//自機の左攻撃の当たり判定
-		if ( HP_[ i ] >= 1 )
-		{
-			if ( CollSWFlag == true )
-			{
-				if ( coll.CircleCollision(pSWPos,collObj_[ i ]->wtf.position,0.6f,0.6f) )
-				{
+		if ( HP_[ i ] >= 1 ){
+			if ( CollSWFlag == true ){
+				if ( coll.CircleCollision(pSWPos,collObj_[ i ]->wtf.position,0.6f,0.6f) ){
 					HP_[ i ]--;
+					isPlayerLSpinEffFlag_ = 1;
 				}
 			}
 		}
 
 		//自機の右攻撃の当たり判定
-		if ( HP_[ i ] >= 1 )
-		{
-			if ( CollSWRFlag == true )
-			{
-				if ( coll.CircleCollision(pSWRPos,collObj_[ i ]->wtf.position,0.6f,0.6f) )
-				{
+		if ( HP_[ i ] >= 1 ){
+			if ( CollSWRFlag == true ){
+				if ( coll.CircleCollision(pSWRPos,collObj_[ i ]->wtf.position,0.6f,0.6f) ){
 					HP_[ i ]--;
+					isPlayerRSpinEffFlag_ = 1;
 				}
 			}
 		}
