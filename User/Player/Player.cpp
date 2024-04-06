@@ -140,26 +140,19 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	Obj_->SetModel(Model_[ ActionState::IDEL]);
 	Obj_->wtf.scale = { 0.4f,0.4f,0.4f };
 	Obj_->wtf.position = { 0.0f,-2.0f,-20.0f };
-
-	const float addPos = 0.5f;
-	const float addPosZ = -1.0f;
 	//自機の当たり判定のモデル
 	collModel_ = Model::LoadFromOBJ("collboll");
 	collObj_[CollisionObject::PlayerColl] = Object3d::Create();
 	collObj_[ CollisionObject::PlayerColl ]->SetModel(collModel_);
 	collObj_[ CollisionObject::PlayerColl ]->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + addPos,addPosZ };
-
 	//自機の近接攻撃判定のモデル(左)
 	collObj_[ CollisionObject::LAttackColl] = Object3d::Create();
 	collObj_[ CollisionObject::LAttackColl]->SetModel(collModel_);
 	collObj_[ CollisionObject::LAttackColl ]->wtf.position = { Obj_->wtf.position.x - addPos,Obj_->wtf.position.y + addPos,addPosZ };
-
 	//自機の近接攻撃判定のモデル(右)
 	collObj_[ CollisionObject::RAttackColl ] = Object3d::Create();
 	collObj_[ CollisionObject::RAttackColl ]->SetModel(collModel_);
 	collObj_[ CollisionObject::RAttackColl ]->wtf.position = { Obj_->wtf.position.x + addPos,Obj_->wtf.position.y + addPos,addPosZ };
-
-	const float addPosX = 0.1f;
 	//自機が衝突した時用のモデル
 	//右
 	collObj_[ CollisionObject::RPlayerColl] = Object3d::Create();
@@ -169,7 +162,6 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	collObj_[ CollisionObject::LPlayerColl ] = Object3d::Create();
 	collObj_[ CollisionObject::LPlayerColl ]->SetModel(collModel_);
 	collObj_[ CollisionObject::LPlayerColl ]->wtf.position = { Obj_->wtf.position.x - addPosX,Obj_->wtf.position.y + addPos,addPosZ };
-
 	//自機が回転攻撃したときに動くモデル(エフェクト用)
 	//右
 	collObj_[ CollisionObject::RSparkColl ] = Object3d::Create();
@@ -181,7 +173,6 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 	collObj_[ CollisionObject::LSparkColl ]->SetModel(collModel_);
 	collObj_[ CollisionObject::LSparkColl ]->wtf.scale = { 0.3f,0.3f,0.3f };
 	collObj_[ CollisionObject::LSparkColl ]->wtf.position = { 1.0f,-2.5f,0.0f };
-
 	//自機の弾(弱)
 	shootModel_ = Model::LoadFromOBJ("boll2");
 	for ( int i = 0; i < 3; i++ ){
@@ -190,8 +181,8 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 		shootObj_[i]->wtf.scale = { 5.0f,5.0f,5.0f };
 	}
 	shootObj_[ BulletNumber::FirstBullet]->wtf.position = {Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z};
-	shootObj_[ BulletNumber::SecondBullet ]->wtf.position = {Obj_->wtf.position.x - 0.5f,Obj_->wtf.position.y - 0.2f, Obj_->wtf.position.z - 0.5f};
-	shootObj_[ BulletNumber::ThirdBullet]->wtf.position = {Obj_->wtf.position.x + 0.5f,Obj_->wtf.position.y - 0.4f, Obj_->wtf.position.z - 1.0f};
+	shootObj_[ BulletNumber::SecondBullet ]->wtf.position = {Obj_->wtf.position.x - addPos,Obj_->wtf.position.y - addBulletPos, Obj_->wtf.position.z - addPos };
+	shootObj_[ BulletNumber::ThirdBullet]->wtf.position = {Obj_->wtf.position.x + addPos,Obj_->wtf.position.y - addBulletPos2, Obj_->wtf.position.z - addPosZ2};
 
 	//レティクル(見えないレティクル)
 	retModel_ = Model::LoadFromOBJ("ster");
@@ -215,85 +206,55 @@ void Player::Initialize(DirectXCommon* dxCommon,Input* input) {
 
 	//パーティクル生成
 	//ガス(通常)
-	gasParticle = std::make_unique<ParticleManager>();
-	gasParticle->Initialize();
-	gasParticle->LoadTexture("gas.png");
-	gasParticle2 = std::make_unique<ParticleManager>();
-	gasParticle2->Initialize();
-	gasParticle2->LoadTexture("gas.png");
-
-	//ガス(加速)
-	gasParticleAccelR = std::make_unique<ParticleManager>();
-	gasParticleAccelR->Initialize();
-	gasParticleAccelR->LoadTexture("gas1.png");
-	gasParticleAccelL = std::make_unique<ParticleManager>();
-	gasParticleAccelL->Initialize();
-	gasParticleAccelL->LoadTexture("gas1.png");
-
-	//ガス(減速)
-	gasParticleDecelR = std::make_unique<ParticleManager>();
-	gasParticleDecelR->Initialize();
-	gasParticleDecelR->LoadTexture("gas.png");
-	gasParticleDecelL = std::make_unique<ParticleManager>();
-	gasParticleDecelL->Initialize();
-	gasParticleDecelL->LoadTexture("gas.png");
-
+	for ( int i = NormalRight; i < MaxGasParticle; i++ ){
+		gasParticle_[ i ] = std::make_unique<ParticleManager>();
+		gasParticle_[i]->Initialize();
+	}
+	for ( int i = NormalRight; i <= NormalLeft; i++ ){gasParticle_[i]->LoadTexture("gas.png");}
+	for ( int i = AccelRight; i <= AccelLeft; i++ ){gasParticle_[ i ]->LoadTexture("gas1.png");}
 	//弾
-	for ( int i = 0; i < 3; i++ ){
+	for ( int i = FirstBullet; i < MaxBullet; i++ ){
 		ballisticParticle_[i] = std::make_unique<ParticleManager>();
 		ballisticParticle_[i]->Initialize();
 		ballisticParticle_[i]->LoadTexture("bulletchage.png");
 	}
-
-	//右スピンエフェクト
-	RSpinParticle = std::make_unique<ParticleManager>();
-	RSpinParticle->Initialize();
-	RSpinParticle->LoadTexture("fire.png");
-
-	//左スピンエフェクト
-	LSpinParticle = std::make_unique<ParticleManager>();
-	LSpinParticle->Initialize();
-	LSpinParticle->LoadTexture("fire.png");
-
-	playerEffect = std::make_unique<PlayerEffect>();
-	playerEffect->Initialize();
+	//左右スピンエフェクト
+	for ( int i = SpinRightParticle; i < MaxSpinParticle; i++ ){
+		SpinParticle_[i] = std::make_unique<ParticleManager>();
+		SpinParticle_[i]->Initialize();
+		SpinParticle_[i]->LoadTexture("fire.png");
+	}
 	//UIの初期化(枚数が多いため)
 	UIInitialize();
 }
 
 void Player::Update() {
 	camera->Update();
-	for ( int i = 0; i < 3; i++ ){shootObj_[i]->Update();}
-	const float addRetPos = 50.0f;
+	for ( int i = FirstBullet; i < MaxBullet; i++ ){shootObj_[i]->Update();}
 	retObj_->Update();
 	retObj_->wtf.position.z = Obj_->wtf.position.z + addRetPos;
-
-	const float addRetVPos = 15.0f;
 	retVisualObj_->Update();
 	retVisualObj_->wtf.position.z = Obj_->wtf.position.z + addRetVPos;
 	Obj_->Update();
 	EffUpdate();
 	collObj_[ CollisionObject::PlayerColl ]->Update();
 	collObj_[ CollisionObject::RSparkColl ]->Update();
-	if ( spineRffflag == false ){collObj_[ CollisionObject::RSparkColl ]->wtf.position.z = Obj_->wtf.position.z - 1.0f;}
+	if ( spineRffflag == false ){collObj_[ CollisionObject::RSparkColl ]->wtf.position.z = Obj_->wtf.position.z - addPosZ2;}
 	collObj_[ CollisionObject::LSparkColl ]->Update();
-	if ( spineLffflag == false ){collObj_[ CollisionObject::LSparkColl ]->wtf.position.z = Obj_->wtf.position.z - 1.0f;}
+	if ( spineLffflag == false ){collObj_[ CollisionObject::LSparkColl ]->wtf.position.z = Obj_->wtf.position.z - addPosZ2;}
 	for ( int i = LSparkColl; i <= RSparkColl; i++ ){collObj_[ i ]->wtf.position.y = Obj_->wtf.position.y;}
-	collObj_[ CollisionObject::RSparkColl ]->wtf.position.x = Obj_->wtf.position.x + 1.0f;
-	collObj_[ CollisionObject::LSparkColl ]->wtf.position.x = Obj_->wtf.position.x - 1.0f;
+	collObj_[ CollisionObject::RSparkColl ]->wtf.position.x = Obj_->wtf.position.x + addPosZ2;
+	collObj_[ CollisionObject::LSparkColl ]->wtf.position.x = Obj_->wtf.position.x - addPosZ2;
 
-	const float addPosX = 0.1f;
-	const float addPos = 0.5f;
-	const float addPosZ = 1.0f;
-	if ( isGameStartTimer >= 180 ){collObj_[ CollisionObject::PlayerColl ]->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z - addPosZ };}
+	if ( isGameStartTimer >= 180 ){collObj_[ CollisionObject::PlayerColl ]->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z - addPosZ2 };}
 	collObj_[ CollisionObject::LAttackColl ]->Update();
-	collObj_[ CollisionObject::LAttackColl ]->wtf.position = { Obj_->wtf.position.x - addPosZ,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z - addPosZ };
+	collObj_[ CollisionObject::LAttackColl ]->wtf.position = { Obj_->wtf.position.x - addPosZ2,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z - addPosZ2 };
 	collObj_[ CollisionObject::RAttackColl ]->Update();
-	collObj_[ CollisionObject::RAttackColl ]->wtf.position = { Obj_->wtf.position.x + addPosZ,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z - addPosZ };
+	collObj_[ CollisionObject::RAttackColl ]->wtf.position = { Obj_->wtf.position.x + addPosZ2,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z - addPosZ2 };
 	collObj_[ CollisionObject::RPlayerColl]->Update();
-	collObj_[ CollisionObject::RPlayerColl ]->wtf.position = { Obj_->wtf.position.x + addPosX,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z - addPosZ };
+	collObj_[ CollisionObject::RPlayerColl ]->wtf.position = { Obj_->wtf.position.x + addPosX,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z - addPosZ2 };
 	collObj_[ CollisionObject::LPlayerColl ]->Update();
-	collObj_[ CollisionObject::LPlayerColl ]->wtf.position = { Obj_->wtf.position.x - addPosX,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z - addPosZ };
+	collObj_[ CollisionObject::LPlayerColl ]->wtf.position = { Obj_->wtf.position.x - addPosX,Obj_->wtf.position.y + addPos,Obj_->wtf.position.z - addPosZ2 };
 	debrisObj_->Update();
 	if ( isScatterFlag == false ){debrisObj_->wtf.position = { Obj_->wtf.position.x,Obj_->wtf.position.y + 0.7f,Obj_->wtf.position.z };}
 
@@ -301,7 +262,6 @@ void Player::Update() {
 
 	//ゲームが始まる
 	GameStartMovie();
-
 	//操作説明(1ステの視線誘導)
 	if ( isGameStartTimer >= 310 ){OperationbbTimer++;}
 	if ( OperationbbTimer >= 1 && OperationbbTimer <= 60 ){isOperationFlag = true;}
@@ -324,10 +284,10 @@ void Player::Update() {
 	//プレイヤーの行動一覧
 	PlayerAction();
 	if ( isbikslidFlag == true || isLeftAtFlag == true || isRightAtFlag == true ){
-		isbulletEffFlag_ = 0;
-		bulletEffTimer_ = 0;
+		isgasEffFlag_ = false;
+		gasEffTimer_ = 0;
 	}
-	else{isbulletEffFlag_ = 1;}
+	else{isgasEffFlag_ = true;}
 
 	if ( isBikswordstyFlag == 2 ){
 		bikSpinTimer++;
@@ -359,8 +319,7 @@ void Player::Update() {
 
 	//ゲームクリア時に自機が前に進む
 	if ( isClearFlag == true ){
-		const float addObjPosZ = 0.5f;
-		Obj_->wtf.position.z += addObjPosZ;
+		Obj_->wtf.position.z += addPos;
 		isclearFlagTimer++;
 	}
 	if ( isclearFlagTimer >= 100 ){isclearFlagTimer = 100;}
@@ -371,14 +330,8 @@ void Player::Update() {
 	}
 	if ( isCameraBehavior == 1 ){CameraBehaviorTimer++;}
 	if ( isCameraBehavior == 1 ){
-		if ( CameraBehaviorTimer <= 70 ){
-			const float addcameraPosZ = 0.2f;
-			camera->wtf.position.z -= addcameraPosZ;
-		}
-		if ( CameraBehaviorTimer >= 20 ){
-			const float addcameraPosY = 0.05f;
-			camera->wtf.rotation.y += addcameraPosY;
-		}
+		if ( CameraBehaviorTimer <= 70 ){camera->wtf.position.z -= addcameraPosZ;}
+		if ( CameraBehaviorTimer >= 20 ){camera->wtf.rotation.y += addcameraPosY;}
 		if ( camera->wtf.position.z <= -14.0f ){camera->wtf.position.z = -14.0f;}
 		if ( camera->wtf.rotation.y >= 2.5f ){
 			camera->wtf.rotation.y = 2.5f;
@@ -387,14 +340,8 @@ void Player::Update() {
 	}
 	if ( isCameraBehavior == 2 ){
 		CameraBehaviorTimer2++;
-		if ( CameraBehaviorTimer2 >= 80 ){
-			const float addcameraPosZ = 0.2f;
-			camera->wtf.position.z += addcameraPosZ;
-		}
-		if ( CameraBehaviorTimer2 >= 100 ){
-			const float addcameraPosY = 0.05f;
-			camera->wtf.rotation.y -= addcameraPosY;
-		}
+		if ( CameraBehaviorTimer2 >= 80 ){camera->wtf.position.z += addcameraPosZ;}
+		if ( CameraBehaviorTimer2 >= 100 ){camera->wtf.rotation.y -= addcameraPosY;}
 		if ( camera->wtf.position.z >= 10.0f ){camera->wtf.position.z = 10.0f;}
 		if ( camera->wtf.rotation.y <= 0.0f ){
 			camera->wtf.rotation.y = 0.0f;
@@ -436,13 +383,11 @@ void Player::Update() {
 	//敵が自機より後ろにいるときカメラを少し下げる
 	if ( isGameStartTimer >= 250 ){
 		if ( standardCamera == 0 ){
-			const float addcameraPosZ = 0.1f;
-			camera->wtf.position.z += addcameraPosZ;
+			camera->wtf.position.z += addcameraPosZ2;
 			if ( camera->wtf.position.z >= 0.0f ){camera->wtf.position.z = 0.0f;}
 		}
 		if ( standardCamera == 1 ){
-			const float addcameraPosZ = 0.1f;
-			camera->wtf.position.z -= addcameraPosZ;
+			camera->wtf.position.z -= addcameraPosZ2;
 			if ( camera->wtf.position.z <= -10.0f ){camera->wtf.position.z = -10.0f;}
 		}
 	}
@@ -470,7 +415,7 @@ void Player::Draw() {
 	}
 
 	if ( isShootFlag == true ){/*shootObj_->Draw();*/}
-	for ( int i = 0; i < 3; i++ ){/*shootObj_[i]->Draw();*/}
+	for ( int i = FirstBullet; i < MaxBullet; i++ ){/*shootObj_[i]->Draw();*/}
 
 	if ( retdisplay == true && isClearFlag == false && OperationbbTimer2 >= 60 ){
 		/*retObj_->Draw();*/
@@ -490,7 +435,6 @@ void Player::UIInitialize()
 	sprite_[ Spritekinds::bulletenp ]->Initialize(spriteCommon);
 	sprite_[ Spritekinds::bulletenp ]->SetPozition({ 0,0 });
 	sprite_[ Spritekinds::bulletenp ]->SetSize({ 1280.0f, 720.0f });
-
 	//タコメータ
 	sprite_[ Spritekinds::meta] = new Sprite();
 	sprite_[ Spritekinds::meta]->Initialize(spriteCommon);
@@ -637,23 +581,13 @@ void Player::UIDraw()
 
 void Player::PlayerAction()
 {
-	//自機とレティクルの速度
-	const float playerSpeed = 0.08f;
-	const float playerSpeed2 = 0.06f;
-	const float retSpeed = 0.08f;
-	const float retSpeed2 = 0.20f;
-
 	//減速
 	if ( isDecelerationFlag == true ){
 		DecelerationTimer++;
 		backTimer++;
 		//減速で自機も少し後ろに下がる
-		if ( backTimer >= 1 && backTimer <= 30 ){
-			const float backSpeed = 0.07f;
-			Obj_->wtf.position.z -= backSpeed;
-		}
+		if ( backTimer >= 1 && backTimer <= 30 ){Obj_->wtf.position.z -= backSpeed;}
 		if ( backTimer >= 31 && backTimer <= 90 ){
-			const float backSpeedZ = 0.03f;
 			Obj_->wtf.position.z += backSpeedZ;
 			if ( Obj_->wtf.position.z >= -0.3f ){Obj_->wtf.position.z = -0.3f;}
 		}
@@ -699,8 +633,8 @@ void Player::PlayerAction()
 	}
 	if ( leftAtTimer >= 1 && leftAtTimer < 30 ){
 		Obj_->SetModel(Model_[ ActionState::LSpinAttack]);
-		const float LeftAtSpeed = 0.32f;
-		Obj_->wtf.rotation.y += LeftAtSpeed;
+		
+		Obj_->wtf.rotation.y += AtSpeed;
 	}
 	else if ( leftAtTimer >= 30 ){
 		leftAtTimer = 0;
@@ -709,7 +643,7 @@ void Player::PlayerAction()
 		isCollSWFlag = false;
 		isLeftAtFlag = false;
 		spineLffflag = false;
-		isLSpinEffFlag_ = 0;
+		isLSpinEffFlag_ = false;
 	}
 	if ( leftAtTimer >= 1 && leftAtTimer < 30 ){collObj_[ CollisionObject::LSparkColl ]->wtf.position.z += 0.4f;}
 
@@ -728,8 +662,7 @@ void Player::PlayerAction()
 	}
 	if ( rightAtTimer >= 1 && rightAtTimer < 30 ){
 		Obj_->SetModel(Model_[ ActionState::RSpinAttack]);
-		const float rightAtSpeed = 0.32f;
-		Obj_->wtf.rotation.y -= rightAtSpeed;
+		Obj_->wtf.rotation.y -= AtSpeed;
 	}
 	else if ( rightAtTimer >= 30 ){
 		rightAtTimer = 0;
@@ -738,18 +671,16 @@ void Player::PlayerAction()
 		isCollSWRightFlag = false;
 		isRightAtFlag = false;
 		spineRffflag = false;
-		isRSpinEffFlag_ = 0;
+		isRSpinEffFlag_ = false;
 	}
 	if ( rightAtTimer >= 1 && rightAtTimer < 10 ){collObj_[ CollisionObject::RSparkColl ]->wtf.position.z += 0.8f;}
 
 	//自機が左右に動いたらモデルも傾く
 	if ( input_->PushKey(DIK_D) || input_->StickInput(L_RIGHT) ){
-		const float Speed = 0.03f;
 		Obj_->wtf.rotation.z -= Speed;
 		if ( Obj_->wtf.rotation.z <= -0.4f ){Obj_->wtf.rotation.z = -0.4f;}
 	}
 	else if ( input_->PushKey(DIK_A) || input_->StickInput(L_LEFT) ){
-		const float Speed = 0.03f;
 		Obj_->wtf.rotation.z += Speed;
 		if ( Obj_->wtf.rotation.z >= 0.4f ){Obj_->wtf.rotation.z = 0.4f;}
 	}
@@ -791,17 +722,17 @@ void Player::PlayerAction()
 	if ( input_->PushKey(DIK_W) || input_->StickInput(L_UP) ){
 		limitmove = false;
 		limitmove2 = false;
-		isboostFlag = 1;
+		isboostFlag = bikeGas::GasAccel;
 		isArrowUpFlag = true;
 	}
 	else if ( input_->PushKey(DIK_S) || input_->StickInput(L_DOWN) ){
 		limitmove = false;
 		limitmove2 = false;
-		isboostFlag = 2;
+		isboostFlag = bikeGas::GasDecel;
 		isArrowDwonFlag = true;
 	}
 	else{
-		isboostFlag = 0;
+		isboostFlag = bikeGas::GasNormal;
 		isArrowUpFlag = false;
 		isArrowDwonFlag = false;
 	}
@@ -827,8 +758,7 @@ void Player::PlayerAction()
 		retVisualObj_->wtf.position.x += retSpeed;
 	}
 
-	//弾発射(弱)
-	float ShortSpeed = 0.01f;
+	//弾発射
 	if ( input_->TriggerKey(DIK_SPACE) || input_->PButtonTrigger(RT) ){
 		if ( isShootFlag == false ){
 			isShootFlag = true;
@@ -871,18 +801,18 @@ void Player::PlayerAction()
 				len_[ ThirdBullet ] *= ShortSpeed;
 			}
 		}
-		isBallisticEffFlag_ = 1;
+		isBallisticEffFlag_ = true;
 	}
 	else{ 
-		shootObj_[FirstBullet]->wtf.position = {Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z +1.0f};
-		shootObj_[SecondBullet]->wtf.position = { Obj_->wtf.position.x - 1.0f,Obj_->wtf.position.y - 0.4f, Obj_->wtf.position.z+1.0f};
-		shootObj_[ThirdBullet]->wtf.position = { Obj_->wtf.position.x + 1.0f,Obj_->wtf.position.y - 0.8f, Obj_->wtf.position.z+1.0f};
-		isBallisticEffFlag_ = 0;
+		shootObj_[FirstBullet]->wtf.position = {Obj_->wtf.position.x,Obj_->wtf.position.y, Obj_->wtf.position.z + addPosZ2 };
+		shootObj_[SecondBullet]->wtf.position = { Obj_->wtf.position.x - addPosZ2,Obj_->wtf.position.y - addBulletPos2, Obj_->wtf.position.z+ addPosZ2 };
+		shootObj_[ThirdBullet]->wtf.position = { Obj_->wtf.position.x + addPosZ2,Obj_->wtf.position.y - addBulletPosY, Obj_->wtf.position.z+ addPosZ2 };
+		isBallisticEffFlag_ = false;
 	}
 	if ( BulletCoolTime >= 55.0f ){
 		BulletCoolTime = 0;
 		isShootFlag = false;
-		isBallisticEffFlag_ = 0;
+		isBallisticEffFlag_ = false;
 		isgageStopFlag = false;
 		gageCount = 1;
 		BulletCount = 1;
@@ -891,19 +821,19 @@ void Player::PlayerAction()
 	//残り残数のUI表示
 	if ( isgageStopFlag == true ){
 		gageCount = 0;
-		bulletgagePosition.x = -187.0f;
+		bulletgagePosition.x = bulletgagePos;
 		sprite_[ Spritekinds::bluegage ]->SetPozition(bulletgagePosition);
 	}
 	else{
 		if ( OperationbbTimer2 >= 60 ){
-			bulletgagePosition.x += 0.8f;
+			bulletgagePosition.x += addBulletPosY;
 			sprite_[ Spritekinds::bluegage ]->SetPozition(bulletgagePosition);
 		}
 	}
 	if ( bulletgagePosition.x >= 0.0f ){
 		gageCount++;
 		BulletCount++;
-		bulletgagePosition.x = -187.0f;
+		bulletgagePosition.x = bulletgagePos;
 		sprite_[ Spritekinds::bluegage ]->SetPozition(bulletgagePosition);
 	}
 	if ( gageCount >= 3 ){
@@ -914,14 +844,14 @@ void Player::PlayerAction()
 
 	//突進を受けた時にノックバック(右からの突進)
 	if ( isKnockbackFlag == true ){knockbackTimer++;}
-	if ( knockbackTimer >= 1 ){Obj_->wtf.position.x -= 0.03f;}
+	if ( knockbackTimer >= 1 ){Obj_->wtf.position.x -= backSpeedZ;}
 	if ( knockbackTimer >= 21 ){
 		knockbackTimer = 0;
 		isKnockbackFlag = false;
 	}
 	//突進を受けた時にノックバック(左からの突進)
 	if ( isKnockbackFlagL == true ){knockbackTimerL++;}
-	if ( knockbackTimerL >= 1 ){Obj_->wtf.position.x += 0.03f;}
+	if ( knockbackTimerL >= 1 ){Obj_->wtf.position.x += backSpeedZ;}
 	if ( knockbackTimerL >= 21 ){
 		knockbackTimerL = 0;
 		isKnockbackFlagL = false;
@@ -931,32 +861,32 @@ void Player::PlayerAction()
 	arrowTimer++;
 	if ( arrowTimer >= 6 ){arrowTimer = 0;}
 	if ( arrowTimer >= 0 && arrowTimer <= 3 ){
-		arrowRotation.x += 1.0f;
+		arrowRotation.x += AllowPos;
 		sprite_[ Spritekinds::arrow ]->SetRotation(arrowRotation.x);
 	}
 	if ( arrowTimer >= 4 && arrowTimer <= 6 ){
-		arrowRotation.x -= 2.0f;
+		arrowRotation.x -= AllowPos2;
 		sprite_[ Spritekinds::arrow ]->SetRotation(arrowRotation.x);
 	}
 	//エンジン動く
 	if ( isArrowUpFlag == true ){
-		arrowRotation.x += 1.0f;
+		arrowRotation.x += AllowPos;
 		sprite_[ Spritekinds::arrow ]->SetRotation(arrowRotation.x);
 		if ( arrowRotation.x >= -85.0f ){arrowRotation.x = -85.0f;}
 	}
 	if ( isArrowDwonFlag == true ){
-		arrowRotation.x -= 1.0f;
+		arrowRotation.x -= AllowPos;
 		sprite_[ Spritekinds::arrow ]->SetRotation(arrowRotation.x);
 		if ( arrowRotation.x <= -190.0f ){arrowRotation.x = -190.0f;}
 	}
 	if ( isArrowUpFlag == false && isArrowDwonFlag == false ){
 		if ( arrowRotation.x >= -146.0f ){
-			arrowRotation.x -= 1.4f;
+			arrowRotation.x -= metaPos;
 			sprite_[ Spritekinds::arrow ]->SetRotation(arrowRotation.x);
 			if ( arrowRotation.x <= -145.0f ){arrowRotation.x = -145.0f;}
 		}
 		if ( arrowRotation.x <= -144.0f ){
-			arrowRotation.x += 1.4f;
+			arrowRotation.x += metaPos;
 			sprite_[ Spritekinds::arrow ]->SetRotation(arrowRotation.x);
 			if ( arrowRotation.x >= -145.0f ){arrowRotation.x = -145.0f;}
 		}
@@ -966,53 +896,44 @@ void Player::PlayerAction()
 void Player::EffUpdate()
 {
 	//バイクのエンジン
-	if ( isbulletEffFlag_ == 1 ){bulletEffTimer_++;}
-	if ( bulletEffTimer_ <= 20 && bulletEffTimer_ >= 1 ){
-		const float gasLPosX = 0.15f;
-		const float gasRPosX = 0.13f;
-		const float gasAddPosY = 0.2f;
-		const float gasLPosZ = 1.5f;
-		const float gasRPosZ = 2.5f;
-		//通常
-		EffSummary(Vector3(Obj_->wtf.position.x - gasLPosX,Obj_->wtf.position.y + gasAddPosY,Obj_->wtf.position.z - gasLPosZ));
-		EffSummary2(Vector3(Obj_->wtf.position.x + gasRPosX,Obj_->wtf.position.y + gasAddPosY,Obj_->wtf.position.z - gasLPosZ));
-		//加速
-		EffSummaryAccelR(Vector3(Obj_->wtf.position.x - gasLPosX,Obj_->wtf.position.y + gasAddPosY,Obj_->wtf.position.z - gasRPosZ));
-		EffSummaryAccelL(Vector3(Obj_->wtf.position.x + gasRPosX,Obj_->wtf.position.y + gasAddPosY,Obj_->wtf.position.z - gasRPosZ));
-		//減速
-		EffSummaryDecelR(Vector3(Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z));
-		EffSummaryDecelL(Vector3(Obj_->wtf.position.x,Obj_->wtf.position.y,Obj_->wtf.position.z));
+	if ( isgasEffFlag_ == true ){gasEffTimer_++;}
+	if ( gasEffTimer_ <= 20 && gasEffTimer_ >= 1 ){
+		//エンジンエフェクトのでる場所
+		EffSummary(Vector3(Obj_->wtf.position.x - gasLPosX,Obj_->wtf.position.y + gasAddPosY,Obj_->wtf.position.z - gasLPosZ),NormalLeft,gasNomalRand,gasNomalStartParticle);
+		EffSummary(Vector3(Obj_->wtf.position.x + gasRPosX,Obj_->wtf.position.y + gasAddPosY,Obj_->wtf.position.z - gasLPosZ),NormalRight,gasNomalRand,gasNomalStartParticle);
+		EffSummary(Vector3(Obj_->wtf.position.x - gasLPosX,Obj_->wtf.position.y + gasAddPosY,Obj_->wtf.position.z - gasRPosZ),AccelLeft,gasAccelRand,gasAccelStartParticle);
+		EffSummary(Vector3(Obj_->wtf.position.x + gasRPosX,Obj_->wtf.position.y + gasAddPosY,Obj_->wtf.position.z - gasRPosZ),AccelRight,gasAccelRand,gasAccelStartParticle);
 	}
-	if ( bulletEffTimer_ >= 20 ){
-		isbulletEffFlag_ = 0;
-		bulletEffTimer_ = 0;
+	if ( gasEffTimer_ >= 20 ){
+		isgasEffFlag_ = false;
+		gasEffTimer_ = 0;
 	}
 
 	//自機の弾
-	if ( isBallisticEffFlag_ == 1 ){ballisticEffTimer_++;}
+	if ( isBallisticEffFlag_ == true ){ballisticEffTimer_++;}
 	if ( ballisticEffTimer_ <= 10 && ballisticEffTimer_ >= 0 ){
-		EffSummaryBullet(Vector3(shootObj_[0]->wtf.position.x,shootObj_[0]->wtf.position.y + 0.5f,shootObj_[0]->wtf.position.z));
-		EffSummaryBullet2(Vector3(shootObj_[1]->wtf.position.x,shootObj_[1]->wtf.position.y + 0.5f,shootObj_[1]->wtf.position.z));
-		EffSummaryBullet3(Vector3(shootObj_[2]->wtf.position.x,shootObj_[2]->wtf.position.y + 0.5f,shootObj_[2]->wtf.position.z));
+		for ( int i = FirstBullet; i < MaxBullet; i++ ){
+			EffSummaryBullet(Vector3(shootObj_[i]->wtf.position.x,shootObj_[i]->wtf.position.y + addPos,shootObj_[i]->wtf.position.z),i);
+		}
 	}
 	if ( ballisticEffTimer_ >= 10 ){
-		isBallisticEffFlag_ = 0;
+		isBallisticEffFlag_ = false;
 		ballisticEffTimer_ = 0;
 	}
 
-	//スピン
-	if ( isRSpinEffFlag_ == 1 ){RSpinEffTimer_++;}
+	//スピンエフェクト右
+	if ( isRSpinEffFlag_ == true ){RSpinEffTimer_++;}
 	if ( RSpinEffTimer_ <= 10 && RSpinEffTimer_ >= 0 ){
-		EffSummaryRSpin(Vector3(collObj_[ CollisionObject::RSparkColl ]->wtf.position.x,collObj_[ CollisionObject::RSparkColl ]->wtf.position.y + 0.5f,collObj_[ CollisionObject::RSparkColl ]->wtf.position.z));
+		EffSummarySpin(Vector3(collObj_[ CollisionObject::RSparkColl ]->wtf.position.x,collObj_[ CollisionObject::RSparkColl ]->wtf.position.y + addPos,collObj_[ CollisionObject::RSparkColl ]->wtf.position.z),SpinRightParticle);
 	}
 	if ( RSpinEffTimer_ >= 10 ){
 		isRSpinEffFlag_ = 0;
 		RSpinEffTimer_ = 0;
 	}
-
-	if ( isLSpinEffFlag_ == 1 ){LSpinEffTimer_++;}
+	//スピンエフェクト左
+	if ( isLSpinEffFlag_ == true ){LSpinEffTimer_++;}
 	if ( LSpinEffTimer_ <= 10 && LSpinEffTimer_ >= 0 ){
-		EffSummaryLSpin(Vector3(collObj_[ CollisionObject::LSparkColl ]->wtf.position.x,collObj_[ CollisionObject::LSparkColl ]->wtf.position.y + 0.5f,collObj_[ CollisionObject::LSparkColl ]->wtf.position.z));
+		EffSummarySpin(Vector3(collObj_[ CollisionObject::LSparkColl ]->wtf.position.x,collObj_[ CollisionObject::LSparkColl ]->wtf.position.y + addPos,collObj_[ CollisionObject::LSparkColl ]->wtf.position.z),SpinLeftParticle);
 	}
 	if ( LSpinEffTimer_ >= 10 ){
 		isLSpinEffFlag_ = 0;
@@ -1020,7 +941,7 @@ void Player::EffUpdate()
 	}
 }
 
-void Player::EffSummary(Vector3 bulletpos)
+void Player::EffSummary(Vector3 bulletpos,int GasNum,float randVelz,float start_particle)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < 20; i++ ){
@@ -1035,149 +956,18 @@ void Player::EffSummary(Vector3 bulletpos)
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 		velGas.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
 		velGas.y = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		velGas.z = ( float ) rand() / RAND_MAX * rnd_velGasz - rnd_velGasz / 0.2f;
+		velGas.z = ( float ) rand() / RAND_MAX * rnd_velGasz - rnd_velGasz / randVelz;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
 		Vector3 accGas{};
 		accGas.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		accGas.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		//追加
-		gasParticle->Add(60,posGas,velGas,accGas,0.05f,0.0f);
-		gasParticle->Update();
+		gasParticle_[ GasNum ]->Add(60,posGas,velGas,accGas,start_particle,0.0f);
+		gasParticle_[ GasNum ]->Update();
 	}
 }
 
-void Player::EffSummary2(Vector3 bulletpos2)
-{
-	//パーティクル範囲
-	for ( int i = 0; i < 20; i++ ){
-		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		Vector3 pos2{};
-		pos2.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		pos2.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		pos2.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		pos2 += bulletpos2;
-		//速度
-		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		Vector3 vel2{};
-		vel2.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		vel2.y = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		vel2.z = ( float ) rand() / RAND_MAX * rnd_velGasz - rnd_velGasz / 0.2f;
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		Vector3 acc2{};
-		acc2.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		acc2.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		//追加
-		gasParticle2->Add(60,pos2,vel2,acc2,0.05f,0.0f);
-		gasParticle2->Update();
-	}
-}
-
-void Player::EffSummaryAccelR(Vector3 bulletpos3)
-{
-	//パーティクル範囲
-	for ( int i = 0; i < 50; i++ )
-	{
-		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		Vector3 pos3G{};
-		pos3G.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		pos3G.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		pos3G.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		pos3G += bulletpos3;
-		//速度
-		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		Vector3 vel3G{};
-		vel3G.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		vel3G.y = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		vel3G.z = ( float ) rand() / RAND_MAX * rnd_velGasz - rnd_velGasz / 2.5f;
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		Vector3 acc3G{};
-		acc3G.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		acc3G.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		//追加
-		gasParticleAccelR->Add(60,pos3G,vel3G,acc3G,0.07f,0.0f);
-		gasParticleAccelR->Update();
-	}
-}
-
-void Player::EffSummaryAccelL(Vector3 bulletpos4)
-{
-	//パーティクル範囲
-	for ( int i = 0; i < 50; i++ ){
-		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		Vector3 pos4G{};
-		pos4G.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		pos4G.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		pos4G.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		pos4G += bulletpos4;
-		//速度
-		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		Vector3 vel4G{};
-		vel4G.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		vel4G.y = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		vel4G.z = ( float ) rand() / RAND_MAX * rnd_velGasz - rnd_velGasz / 2.5f;
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		Vector3 acc4G{};
-		acc4G.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		acc4G.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		//追加
-		gasParticleAccelL->Add(60,pos4G,vel4G,acc4G,0.07f,0.0f);
-		gasParticleAccelL->Update();
-	}
-}
-
-void Player::EffSummaryDecelR(Vector3 bulletpos3)
-{
-	//パーティクル範囲
-	for ( int i = 0; i < 5; i++ ){
-		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		Vector3 posD{};
-		posD.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		posD.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		posD.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		posD += bulletpos3;
-		//速度
-		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		Vector3 velD{};
-		velD.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		velD.y = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		velD.z = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 0.05f;
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		Vector3 accD{};
-		accD.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		accD.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		//追加
-		gasParticleDecelR->Add(60,posD,velD,accD,0.05f,0.0f);
-		gasParticleDecelR->Update();
-	}
-}
-
-void Player::EffSummaryDecelL(Vector3 bulletpos4)
-{
-	//パーティクル範囲
-	for ( int i = 0; i < 5; i++ ){
-		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		Vector3 posD2{};
-		posD2.x += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		posD2.y += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		posD2.z += ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		posD2 += bulletpos4;
-		//速度
-		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		Vector3 velD2{};
-		velD2.x = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		velD2.y = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 2.0f;
-		velD2.z = ( float ) rand() / RAND_MAX * rnd_posGas - rnd_posGas / 0.05f;
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		Vector3 accD2{};
-		accD2.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		accD2.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		//追加
-		gasParticleDecelL->Add(60,posD2,velD2,accD2,0.05f,0.0f);
-		gasParticleDecelL->Update();
-	}
-}
-
-void Player::EffSummaryBullet(Vector3 bulletpos)
+void Player::EffSummaryBullet(Vector3 bulletpos,int BulletNum)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < 5; i++ ){
@@ -1198,64 +988,12 @@ void Player::EffSummaryBullet(Vector3 bulletpos)
 		accG.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		accG.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		//追加
-		ballisticParticle_[0]->Add(60,posG,velG,accG,0.5f,0.0f);
-		ballisticParticle_[ 0 ]->Update();
+		ballisticParticle_[ BulletNum ]->Add(60,posG,velG,accG,0.5f,0.0f);
+		ballisticParticle_[ BulletNum ]->Update();
 	}
 }
 
-void Player::EffSummaryBullet2(Vector3 bulletpos)
-{
-	//パーティクル範囲
-	for ( int i = 0; i < 5; i++ ){
-		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		Vector3 posG{};
-		posG.x += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
-		posG.y += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
-		posG.z += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
-		posG += bulletpos;
-		//速度
-		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		Vector3 velG{};
-		velG.x = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
-		velG.y = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
-		velG.z = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		Vector3 accG{};
-		accG.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		accG.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		//追加
-		ballisticParticle_[ 1 ]->Add(60,posG,velG,accG,0.5f,0.0f);
-		ballisticParticle_[ 1 ]->Update();
-	}
-}
-
-void Player::EffSummaryBullet3(Vector3 bulletpos)
-{
-	//パーティクル範囲
-	for ( int i = 0; i < 5; i++ ){
-		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		Vector3 posG{};
-		posG.x += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
-		posG.y += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
-		posG.z += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
-		posG += bulletpos;
-		//速度
-		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		Vector3 velG{};
-		velG.x = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
-		velG.y = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
-		velG.z = ( float ) rand() / RAND_MAX * rnd_velBullet - rnd_velBullet / 2.0f;
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		Vector3 accG{};
-		accG.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		accG.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		//追加
-		ballisticParticle_[ 2 ]->Add(60,posG,velG,accG,0.5f,0.0f);
-		ballisticParticle_[ 2 ]->Update();
-	}
-}
-
-void Player::EffSummaryRSpin(Vector3 pos)
+void Player::EffSummarySpin(Vector3 pos,int SpinNum)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < 5; i++ ){
@@ -1276,64 +1014,33 @@ void Player::EffSummaryRSpin(Vector3 pos)
 		accG.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		accG.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
 		//追加
-		RSpinParticle->Add(60,posG,velG,accG,0.5f,0.0f);
-		RSpinParticle->Update();
-	}
-}
-
-void Player::EffSummaryLSpin(Vector3 pos)
-{
-	//パーティクル範囲
-	for ( int i = 0; i < 5; i++ ){
-		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
-		Vector3 posG{};
-		posG.x += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
-		posG.y += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
-		posG.z += ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
-		posG += pos;
-		//速度
-		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
-		Vector3 velG{};
-		velG.x = ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
-		velG.y = ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
-		velG.z = ( float ) rand() / RAND_MAX * rnd_posBullet - rnd_posBullet / 2.0f;
-		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		Vector3 accG{};
-		accG.x = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		accG.y = ( float ) rand() / RAND_MAX * rnd_accGas - rnd_accGas / 2.0f;
-		//追加
-		LSpinParticle->Add(60,posG,velG,accG,0.5f,0.0f);
-		LSpinParticle->Update();
+		SpinParticle_[ SpinNum ]->Add(60,posG,velG,accG,0.5f,0.0f);
+		SpinParticle_[ SpinNum ]->Update();
 	}
 }
 
 void Player::EffDraw()
 {
-	if ( isbulletEffFlag_ == 1 ){
-		if ( isboostFlag == 0 ){
-			gasParticle->Draw();
-			gasParticle2->Draw();
+	if ( isgasEffFlag_ == true ){
+		if ( isboostFlag == bikeGas::GasNormal ){
+			gasParticle_[ NormalRight ]->Draw();
+			gasParticle_[ NormalLeft ]->Draw();
 		}
-		else if ( isboostFlag == 1 ){
-			gasParticleAccelR->Draw();
-			gasParticleAccelL->Draw();
-		}
-		else if ( isboostFlag == 2 ){
-			/*gasParticleDecelR->Draw();
-			gasParticleDecelL->Draw();*/
+		else if ( isboostFlag == bikeGas::GasAccel){
+			gasParticle_[ AccelRight ]->Draw();
+			gasParticle_[ AccelLeft ]->Draw();
 		}
 	}
 
 	//遠距離攻撃
-	if ( isBallisticEffFlag_ == 1 ){
-		ballisticParticle_[ 0 ]->Draw();
-		if ( BulletCount >= 2 ){ballisticParticle_[ 1 ]->Draw();}
-		if ( BulletCount >= 3 ){ballisticParticle_[ 2 ]->Draw();}
+	if ( isBallisticEffFlag_ == true ){
+		ballisticParticle_[ FirstBullet ]->Draw();
+		if ( BulletCount >= 2 ){ballisticParticle_[ SecondBullet ]->Draw();}
+		if ( BulletCount >= 3 ){ballisticParticle_[ ThirdBullet ]->Draw();}
 	}
-	playerEffect->Draw();
 	//左右のスピンの火花
-	if ( isRSpinEffFlag_ == 1 && RSpinEffTimer_ <= 10 && RSpinEffTimer_ >= 1 ){RSpinParticle->Draw();}
-	if ( isLSpinEffFlag_ == 1 && LSpinEffTimer_ <= 10 && LSpinEffTimer_ >= 1 ){LSpinParticle->Draw();}
+	if ( isRSpinEffFlag_ == true && RSpinEffTimer_ <= 10 && RSpinEffTimer_ >= 1 ){SpinParticle_[ SpinRightParticle ]->Draw(); }
+	if ( isLSpinEffFlag_ == true && LSpinEffTimer_ <= 10 && LSpinEffTimer_ >= 1 ){SpinParticle_[ SpinLeftParticle ]->Draw(); }
 }
 
 Vector3 Player::GetWorldPosition(int CollNumber) {
@@ -1371,43 +1078,29 @@ void Player::GameStartMovie()
 		isGameStartTimer++;
 		bikstSpinTimer++;
 	}
-
 	if ( camerasetFlag == true ){camerasetFlag = false;}
-
-	if ( acflag == true ){
-		const float PosSpeed = 0.3f;
-		Obj_->wtf.position.z += PosSpeed;
-	}
+	if ( acflag == true ){Obj_->wtf.position.z += PosSpeed;}
 
 	if ( isGameStartTimer >= 60 ){rotaflag = true;}
-
-	if ( isGameStartTimer <= 180 && rotaflag == true ){
-		const float RotSpeed = 0.05f;
-		camera->wtf.rotation.y -= RotSpeed;
-	}
+	if ( isGameStartTimer <= 180 && rotaflag == true ){camera->wtf.rotation.y -= RotSpeed;}
 
 	if ( isGameStartTimer <= 180 && camera->wtf.rotation.y <= 0.2f && rotaflag == true ){
-		const float RotSpeed = 0.2f;
-		camera->wtf.rotation.y = RotSpeed;
+		camera->wtf.rotation.y = RotSpeed2;
 		rotaflag = false;
 	}
 
 	if ( isGameStartTimer >= 179 && isGameStartTimer <= 180 ){Obj_->wtf.position.z = 0.0f;}
 	if ( isGameStartTimer >= 180 ){
 		acflag = false;
-		const float PosSpeed = 0.3f;
-		Obj_->wtf.position.z -= PosSpeed;
+		Obj_->wtf.position.z -= PosSpeed2;
 		retdisplay = true;
 	}
 
 	if ( isGameStartTimer >= 180 && isGameStartTimer <= 220 ){camera->wtf.rotation.y = 0.0f;}
 	if ( isGameStartTimer >= 220 ){isBikswordstyFlag = 1;}
-
 	if ( isBikswordstyFlag == 1 ){BikswordstyTimer++;}
-
 	if ( BikswordstyTimer >= 1 && BikswordstyTimer <= 5 ){Obj_->SetModel(Model_[ ActionState::ModeChangeMid]);}
 	else if ( BikswordstyTimer >= 6 && BikswordstyTimer <= 11 ){Obj_->SetModel(Model_[ ActionState::ModeChange]);}
-
 	if ( BikswordstyTimer >= 12 ){isBikswordstyFlag = 2;}
 }
 
@@ -1415,8 +1108,6 @@ void Player::DamageCamShake()
 {
 	//画面シェイク
 	if ( isCamShake == 1 ){
-		const float shakePos = 0.2f;
-		const float shakePosY = 0.1f;
 		camShakeTimer--;
 		if ( camShakeTimer <= camShakeLimit && camShakeTimer > camShakeLimit * 3 / 4 ){camera->wtf.position.y += shakePosY;}
 		else if ( camShakeTimer <= camShakeLimit * 3 / 4 && camShakeTimer > camShakeLimit * 2 / 4 ){camera->wtf.position.y -= shakePos;}

@@ -603,21 +603,21 @@ void BikeEnemy::Update(Vector3 pSWPos,bool CollSWFlag,Vector3 pSWRPos,bool CollS
 	//自機のスピン攻撃喰らった時のエフェクト(左)
 	if ( isPlayerLSpinEffFlag_ == 1 ){
 		LeftEfftimer++;
-		if ( LeftEfftimer >= 1 && LeftEfftimer < 30 ){player_->isLSpinEffFlag_ = 1;}
+		if ( LeftEfftimer >= 1 && LeftEfftimer < 30 ){player_->isLSpinEffFlag_ = true;}
 	}
 	if ( LeftEfftimer >= 31){
 		LeftEfftimer = 0;
-		player_->isLSpinEffFlag_ = 0;
+		player_->isLSpinEffFlag_ = false;
 		isPlayerLSpinEffFlag_ = 0;
 	}
 	//自機のスピン攻撃喰らった時のエフェクト(右)
 	if ( isPlayerRSpinEffFlag_ == 1 ){
 		RightEfftimer++;
-		if ( RightEfftimer >= 1 && RightEfftimer < 30 ){player_->isRSpinEffFlag_ = 1;}
+		if ( RightEfftimer >= 1 && RightEfftimer < 30 ){player_->isRSpinEffFlag_ = true;}
 	}
 	if ( RightEfftimer >= 31 ){
 		RightEfftimer = 0;
-		player_->isRSpinEffFlag_ = 0;
+		player_->isRSpinEffFlag_ = false;
 		isPlayerRSpinEffFlag_ = 0;
 	}
 
@@ -1045,9 +1045,6 @@ void BikeEnemy::EffUpdate()
 		}
 
 	}
-
-
-
 }
 
 void BikeEnemy::EffSummary(Vector3 bulletpos,int num)

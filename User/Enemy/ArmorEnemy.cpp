@@ -174,9 +174,6 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 		ballisticParticle_[ i ]->Update();
 
 	}
-
-
-
 }
 
 void ArmorEnemy::Update(Vector3 playerPos,Vector3 playerBpos,Vector3 playerB2pos,Vector3 playerB3pos,bool playerShootFlag)
