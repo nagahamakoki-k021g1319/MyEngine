@@ -13,7 +13,6 @@
 
 #include "ImGuiManager.h"
 
-#include "PlayerEffect.h"
 #include "PlayerUI.h"
 
 
@@ -77,6 +76,25 @@ enum Spritekinds
 	operation2bb,//↑↑↑これの視線誘導
 	MaxSprite //最大
 };
+//バイクのガスエンジンのフラグとパーティクル
+enum bikeGas
+{
+	GasNormal = 0, //通常状態のガス
+	GasAccel, //加速状態のガス
+	GasDecel, //減速状態のガス
+	NormalRight = 0,//通常状態の右側パーティクル
+	NormalLeft, //通常状態の左側パーティクル
+	AccelRight, //加速状態の右側パーティクル
+	AccelLeft, //加速状態の左側パーティクル
+	MaxGasParticle //ガスの最大
+};
+//バイクスピンのパーティクル
+enum bikeSpin
+{
+	SpinRightParticle,//右側から出る火花のエフェクト
+	SpinLeftParticle,//左側から出る火花のエフェクト
+	MaxSpinParticle 
+};
 
 class Player
 {
@@ -99,26 +117,12 @@ public:
 
 	//エフェクトの更新処理
 	void EffUpdate();
-	//エフェクトの情報(通常ガス右)
-	void EffSummary(Vector3 bulletpos);
-	//エフェクトの情報(通常ガス左)
-	void EffSummary2(Vector3 bulletpos2);
-	//エフェクトの情報(加速ガス右)
-	void EffSummaryAccelR(Vector3 bulletpos3);
-	//エフェクトの情報(加速ガス左)
-	void EffSummaryAccelL(Vector3 bulletpos4);
-	//エフェクトの情報(減速ガス右)
-	void EffSummaryDecelR(Vector3 bulletpos3);
-	//エフェクトの情報(減速ガス左)
-	void EffSummaryDecelL(Vector3 bulletpos4);
+	//エフェクトの情報(バイクのガス)
+	void EffSummary(Vector3 bulletpos,int GasNum,float randVelz,float start_particle);
 	//エフェクトの情報(弾)
-	void EffSummaryBullet(Vector3 bulletpos);
-	void EffSummaryBullet2(Vector3 bulletpos);
-	void EffSummaryBullet3(Vector3 bulletpos);
-	//エフェクトの情報(右スピン)
-	void EffSummaryRSpin(Vector3 pos);
-	//エフェクトの情報(左スピン)
-	void EffSummaryLSpin(Vector3 pos);
+	void EffSummaryBullet(Vector3 bulletpos, int BulletNum);
+	//エフェクトの情報(左右スピン)
+	void EffSummarySpin(Vector3 pos,int SpinNum);
 	//エフェクトの描画
 	void EffDraw();
 
@@ -187,6 +191,31 @@ private:
 	Vector2 arrowPosition;
 	Vector2 arrowRotation;
 
+	//自機とレティクルの速度マジックナンバーの一覧
+	const float addPos = 0.5f;
+	const float addPosZ = -1.0f;
+	const float addPosZ2 = 1.0f;
+	const float addPosX = 0.1f;
+	const float playerSpeed = 0.08f;
+	const float playerSpeed2 = 0.06f;
+	const float retSpeed = 0.08f;
+	const float retSpeed2 = 0.20f;
+	const float backSpeed = 0.07f;
+	const float backSpeedZ = 0.03f;
+	float ShortSpeed = 0.01f;
+	const float addRetPos = 50.0f;
+	const float addRetVPos = 15.0f;
+	const float addBulletPos = 0.2f;
+	const float addBulletPos2 = 0.4f;
+	const float addBulletPosY = 0.8f;
+	const float addcameraPosZ = 0.2f;
+	const float addcameraPosY = 0.05f;
+	const float addcameraPosZ2 = 0.1f;
+	const float AtSpeed = 0.32f;
+	const float Speed = 0.03f;
+	const float bulletgagePos = -187.0f;
+	
+
 	//加速するフラグ
 	bool isAccelFlag = false;
 	//モデル(左側攻撃)
@@ -244,41 +273,38 @@ private:
 	int isEffFlag = 0;
 
 	//パーティクル
+	//パーティクルで使うマジックナンバーの一覧
+	const float gasLPosX = 0.15f;
+	const float gasRPosX = 0.13f;
+	const float gasAddPosY = 0.2f;
+	const float gasLPosZ = 1.5f;
+	const float gasRPosZ = 2.5f;
+	const float gasNomalRand = 0.2f;
+	const float gasNomalStartParticle = 0.05f;
+	const float gasAccelRand = 2.5f;
+	const float gasAccelStartParticle = 0.07f;
 	//ガス(通常)
-	std::unique_ptr<ParticleManager> gasParticle;
-	std::unique_ptr<ParticleManager> gasParticle2;
+	std::unique_ptr<ParticleManager> gasParticle_[MaxGasParticle];
 	const float rnd_posGas = 0.0f;
 	const float rnd_velGasz = 0.02f;
 	const float rnd_accGas = 0.000001f;
 
-	//ガス(加速)
-	std::unique_ptr<ParticleManager> gasParticleAccelR;
-	std::unique_ptr<ParticleManager> gasParticleAccelL;
-	//ガス(減速)
-	std::unique_ptr<ParticleManager> gasParticleDecelR;
-	std::unique_ptr<ParticleManager> gasParticleDecelL;
-	int bulletEffTimer_ = 0;
-	int isbulletEffFlag_ = 0;
+	int gasEffTimer_ = 0;
+	bool isgasEffFlag_ = false;
 	//自機のバイクのブーストフラグ(0 通常,1 加速,2 減速)
 	int isboostFlag = 0;
 
 	//弾飛ばし
-	std::unique_ptr<ParticleManager> ballisticParticle_[3];
+	std::unique_ptr<ParticleManager> ballisticParticle_[MaxBullet];
 	const float rnd_posBullet = 0.03f;
 	const float rnd_velBullet = 0.01f;
 	int ballisticEffTimer_ = 0;
-	int isBallisticEffFlag_ = 0;
-	//右スピンエフェクト
-	std::unique_ptr<ParticleManager> RSpinParticle;
+	bool isBallisticEffFlag_ = false;
+
+	//左右スピンエフェクト
+	std::unique_ptr<ParticleManager> SpinParticle_[ MaxSpinParticle ];
 	int RSpinEffTimer_ = 0;
-
-	//左スピンエフェクト
-	std::unique_ptr<ParticleManager> LSpinParticle;
 	int LSpinEffTimer_ = 0;
-	
-
-
-	std::unique_ptr<PlayerEffect>playerEffect;
 
 	//ダメージを受けた時のフラグ
 	bool isDamageFlag = false;
@@ -289,6 +315,9 @@ private:
 	int arrowTimer = 0;
 	bool isArrowUpFlag = false;
 	bool isArrowDwonFlag = false;
+	const float AllowPos = 1.0f;
+	const float AllowPos2 = 2.0f;
+	const float metaPos = 1.4f;
 
 	const float moveSpeed_ = 0.1f;
 	const float rotaSpeed_ = 0.1f;
@@ -304,6 +333,16 @@ private:
 
 	Vector2 camRotaSpeed = { PI / 1800, PI / 1800 };
 
+	//ゲームスタート時のムービーで使うマジックナンバーの一覧
+	const float PosSpeed = 0.3f;
+	const float RotSpeed = 0.05f;
+	const float RotSpeed2 = 0.2f;
+	const float PosSpeed2 = 0.3f;
+
+	//画面シェイクで使うマジックナンバーの一覧
+	const float shakePos = 0.2f;
+	const float shakePosY = 0.1f;
+
 
 public:
 	//自機のHP表示
@@ -314,8 +353,8 @@ public:
 	bool limitmove2 = false;
 
 	//スピンエフェクト
-	int isRSpinEffFlag_ = 0;
-	int isLSpinEffFlag_ = 0;
+	bool isRSpinEffFlag_ = false;
+	bool isLSpinEffFlag_ = false;
 	int leftAtTimer = 0;
 	int rightAtTimer = 0;
 
