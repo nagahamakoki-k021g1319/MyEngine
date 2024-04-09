@@ -941,7 +941,7 @@ void Player::EffUpdate()
 	}
 }
 
-void Player::EffSummary(Vector3 bulletpos,int GasNum,float randVelz,float start_particle)
+void Player::EffSummary(Vector3 bulletpos,const int& GasNum,const float& randVelz,const float& start_particle)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < 20; i++ ){
@@ -967,7 +967,7 @@ void Player::EffSummary(Vector3 bulletpos,int GasNum,float randVelz,float start_
 	}
 }
 
-void Player::EffSummaryBullet(Vector3 bulletpos,int BulletNum)
+void Player::EffSummaryBullet(Vector3 bulletpos,const int& BulletNum)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < 5; i++ ){
@@ -993,7 +993,7 @@ void Player::EffSummaryBullet(Vector3 bulletpos,int BulletNum)
 	}
 }
 
-void Player::EffSummarySpin(Vector3 pos,int SpinNum)
+void Player::EffSummarySpin(Vector3 pos,const int& SpinNum)
 {
 	//パーティクル範囲
 	for ( int i = 0; i < 5; i++ ){
@@ -1043,7 +1043,7 @@ void Player::EffDraw()
 	if ( isLSpinEffFlag_ == true && LSpinEffTimer_ <= 10 && LSpinEffTimer_ >= 1 ){SpinParticle_[ SpinLeftParticle ]->Draw(); }
 }
 
-Vector3 Player::GetWorldPosition(int CollNumber) {
+Vector3 Player::GetWorldPosition(const int& CollNumber) {
 	//ワールド座標を入れる変数
 	Vector3 worldPos;
 
@@ -1056,7 +1056,7 @@ Vector3 Player::GetWorldPosition(int CollNumber) {
 	return worldPos;
 }
 
-Vector3 Player::GetBulletWorldPosition(int BulletNumber)
+Vector3 Player::GetBulletWorldPosition(const int& BulletNumber)
 {
 	//ワールド座標を入れる変数
 	Vector3 BulletWorldPos;
