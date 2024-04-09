@@ -20,7 +20,15 @@ enum ArmorEnemyNumber
 	MaxArmorNumber = 4,//敵の最大数
 	MinArmorNumber = 0//一番はじめ
 };
-
+//魔導兵のエフェクト
+enum AromorEffect
+{
+	RightLeg = 0,//右足のズサ
+	LeftLeg,//右足のズサ
+	RightBoost,//右足のズサ
+	LeftBoost,//右足のズサ
+	MaxEffect
+};
 
 
 class ArmorEnemy : public Enemy
@@ -35,18 +43,10 @@ public:
 
 	void Draw();
 
-	void Reset();
-
 	//エフェクトの更新処理
 	void EffUpdate();
 	//エフェクトの情報(地面のズサ)
-	void EffSummary(Vector3 bulletpos,const int& num);
-	//エフェクトの情報(地面のズサ)
-	void EffSummary2(Vector3 bulletpos2,const int& num2);
-	//エフェクトの情報(背中の噴射ガス)
-	void EffSummary3(Vector3 bulletpos3,const int& num3);
-	//エフェクトの情報(背中の噴射ガス)
-	void EffSummary4(Vector3 bulletpos4,const int& num4);
+	void EffSummary(Vector3 bulletpos,const int& enemyNum,const int& effectNum,const float& rnd_posY,const float& rnd_posZ);
 	//エフェクトの情報(ダメージ受けた時の火花)
 	void DamageSummary(Vector3 EnePos,const int& eneNum);
 	//エフェクトの情報(発砲するときの硝煙)
@@ -138,14 +138,10 @@ private:
 
 	//パーティクル
 	//地面のズサ
-	std::unique_ptr<ParticleManager> gasParticle_[ MaxArmorNumber ];
-	std::unique_ptr<ParticleManager> gasParticle2_[ MaxArmorNumber ];
+	std::unique_ptr<ParticleManager> gasParticle_[ MaxArmorNumber ][ MaxEffect ];;
 	const float rnd_posGas= 0.0f;
 	const float rnd_velGas = 0.1f;
-	const float rnd_accG = 0.000001f;
-	//背中の噴射ガス
-	std::unique_ptr<ParticleManager> gasParticle3_[ MaxArmorNumber ];
-	std::unique_ptr<ParticleManager> gasParticle4_[ MaxArmorNumber ];
+	const float rnd_accG = 0.000001f;;
 	const float rnd_velBGas = -0.07f;
 	int gasEffTimer_[ MaxArmorNumber ] = { 0 };
 	int isgasEffFlag_[ MaxArmorNumber ] = { 0 };

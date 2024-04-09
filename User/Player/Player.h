@@ -118,18 +118,18 @@ public:
 	//エフェクトの更新処理
 	void EffUpdate();
 	//エフェクトの情報(バイクのガス)
-	void EffSummary(Vector3 bulletpos,int GasNum,float randVelz,float start_particle);
+	void EffSummary(Vector3 bulletpos,const int& GasNum,const float& randVelz,const float& start_particle);
 	//エフェクトの情報(弾)
-	void EffSummaryBullet(Vector3 bulletpos, int BulletNum);
+	void EffSummaryBullet(Vector3 bulletpos,const int& BulletNum);
 	//エフェクトの情報(左右スピン)
-	void EffSummarySpin(Vector3 pos,int SpinNum);
+	void EffSummarySpin(Vector3 pos,const int& SpinNum);
 	//エフェクトの描画
 	void EffDraw();
 
 	////ワールド座標を取得
-	Vector3 GetWorldPosition(int CollNumber);
+	Vector3 GetWorldPosition(const int& CollNumber);
 	//ワールド座標を取得(弾)
-	Vector3 GetBulletWorldPosition(int BulletNumber);
+	Vector3 GetBulletWorldPosition(const int& BulletNumber);
 
 	Vector3 GetPos() {
 		return Obj_->wtf.position;
