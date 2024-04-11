@@ -125,10 +125,7 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	collObj3_->SetModel(collModel_[ 0 ]);
 
 
-
 	//パーティクル生成
-
-		//パーティクル生成
 	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ ){
 		for ( int j = RightLeg; j < MaxEffect; j++ ){
 			//エフェクトの情報(地面のズサ)
@@ -138,15 +135,11 @@ void ArmorEnemy::Initialize(DirectXCommon* dxCommon,Input* input)
 	}
 	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ ){for ( int j = RightLeg; j <= LeftLeg; j++ ){gasParticle_[ i ][j]->LoadTexture("gas.png");}}
 	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ ){for ( int j = RightBoost; j <= LeftBoost; j++ ){gasParticle_[ i ][ j ]->LoadTexture("fire.png");}}
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ ){gasParticle_[ i ][ Damage ]->LoadTexture("fire.png");}
+	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ ){gasParticle_[ i ][ fume ]->LoadTexture("blaze.png");}
 
 	for ( int i = MinArmorNumber; i < MaxArmorNumber; i++ )
 	{
-		//攻撃受けた時の火花のパーティクル
-		DamageParticle_[ i ] = std::make_unique<ParticleManager>();
-		DamageParticle_[ i ].get()->Initialize();
-		DamageParticle_[ i ]->LoadTexture("fire.png");
-		DamageParticle_[ i ]->Update();
-
 		//攻撃受けた時の火花のパーティクル
 		smokeParticle_[ i ] = std::make_unique<ParticleManager>();
 		smokeParticle_[ i ].get()->Initialize();
@@ -593,8 +586,8 @@ void ArmorEnemy::EffUpdate()
 			const float addGasPosY = 1.8f;
 			const float addGasPosZ = 2.0f;
 
-			EffSummary(Vector3(Obj_[ i ]->wtf.position.x + addPosX,Obj_[ i ]->wtf.position.y - addPosY,Obj_[ i ]->wtf.position.z),i,RightLeg,rnd_posGas,rnd_velBGas);
-			EffSummary(Vector3(Obj_[ i ]->wtf.position.x - addPosX,Obj_[ i ]->wtf.position.y - addPosY,Obj_[ i ]->wtf.position.z),i,LeftLeg,rnd_posGas,rnd_velBGas);
+			EffSummary(Vector3(Obj_[ i ]->wtf.position.x + addPosX,Obj_[ i ]->wtf.position.y - addPosY,Obj_[ i ]->wtf.position.z + 1.5f),i,RightLeg,rnd_posGas,rnd_velBGas);
+			EffSummary(Vector3(Obj_[ i ]->wtf.position.x - addPosX,Obj_[ i ]->wtf.position.y - addPosY,Obj_[ i ]->wtf.position.z + 1.5f),i,LeftLeg,rnd_posGas,rnd_velBGas);
 			EffSummary(Vector3(Obj_[ i ]->wtf.position.x + addGasPosX,Obj_[ i ]->wtf.position.y + addGasPosY,Obj_[ i ]->wtf.position.z + addGasPosZ),i,RightBoost,rnd_velBGas,rnd_posGas);
 			EffSummary(Vector3(Obj_[ i ]->wtf.position.x - addGasPosX,Obj_[ i ]->wtf.position.y + addGasPosY,Obj_[ i ]->wtf.position.z + addGasPosZ),i,LeftBoost,rnd_velBGas,rnd_posGas);
 		}
@@ -629,7 +622,7 @@ void ArmorEnemy::EffUpdate()
 		}
 		if ( damEffTimer_[ i ] <= 10 && damEffTimer_[ i ] >= 1 )
 		{
-			DamageSummary(Vector3(Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z),i);
+			AroundEffSummary(Vector3(Obj_[ i ]->wtf.position.x,Obj_[ i ]->wtf.position.y,Obj_[ i ]->wtf.position.z),i,Damage,5,rnd_posDamage,rnd_velDamage,rnd_velDamage,2.0f);
 		}
 		if ( damEffTimer_[ i ] >= 10 )
 		{
@@ -698,32 +691,31 @@ void ArmorEnemy::EffSummary(Vector3 bulletpos,const int& enemyNum,const int& eff
 	}
 }
 
-void ArmorEnemy::DamageSummary(Vector3 EnePos,const int& eneNum)
+void ArmorEnemy::AroundEffSummary(Vector3 bulletpos,const int& enemyNum,const int& effectNum,const int& maxCount,const float& rnd_pos,const float& rnd_vel,const float& rnd_velY, const float& start_particle)
 {
 	//パーティクル範囲
-	for ( int i = 0; i < 5; i++ )
+	for ( int i = 0; i < maxCount; i++ )
 	{
 		//X,Y,Z全て[-5.0f,+5.0f]でランダムに分布
 		Vector3 pos{};
-		pos.x += ( float ) rand() / RAND_MAX * rnd_posDamage - rnd_posDamage / 2.0f;
-		pos.y += ( float ) rand() / RAND_MAX * rnd_posDamage - rnd_posDamage / 2.0f;
-		pos.z += ( float ) rand() / RAND_MAX * rnd_posDamage - rnd_posDamage / 2.0f;
-		pos += EnePos;
+		pos.x += ( float ) rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.y += ( float ) rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.z += ( float ) rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos += bulletpos;
 		//速度
 		//X,Y,Z全て[-0.05f,+0.05f]でランダムに分布
 		Vector3 vel{};
-		vel.x = ( float ) rand() / RAND_MAX * rnd_velDamage - rnd_velDamage / 2.0f;
-		vel.y = ( float ) rand() / RAND_MAX * rnd_velDamage - rnd_velDamage / 2.0f;
-		vel.z = ( float ) rand() / RAND_MAX * rnd_velDamage - rnd_velDamage / 2.0f;
+		vel.x = ( float ) rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = ( float ) rand() / RAND_MAX * rnd_velY - rnd_velY / 2.0f;
+		vel.z = ( float ) rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
 		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
 		Vector3 acc{};
 		acc.x = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 		acc.y = ( float ) rand() / RAND_MAX * rnd_accG - rnd_accG / 2.0f;
 
 		//追加
-		DamageParticle_[ eneNum ]->Add(60,pos,vel,acc,2.0f,1.0f);
-
-		DamageParticle_[ eneNum ]->Update();
+		gasParticle_[ enemyNum ][ effectNum ]->Add(60,pos,vel,acc,start_particle,1.0f);
+		gasParticle_[ enemyNum ][ effectNum ]->Update();
 	}
 }
 
@@ -837,7 +829,7 @@ void ArmorEnemy::EffDraw()
 			//攻撃受けた時の火花のパーティクル
 			if ( isdamEffFlag_[ i ] == 1 )
 			{
-				DamageParticle_[ i ]->Draw();
+				gasParticle_[ i ][Damage]->Draw();
 			}
 			//発砲時の硝煙パーティクル
 			if ( isSmoEffFlag_[ i ] == 1 && smoEffTimer_[ i ] <= 5 && smoEffTimer_[ i ] >= 1 )
