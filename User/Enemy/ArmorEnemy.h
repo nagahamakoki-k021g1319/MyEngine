@@ -27,6 +27,8 @@ enum AromorEffect
 	LeftLeg,//右足のズサ
 	RightBoost,//右足のズサ
 	LeftBoost,//右足のズサ
+	Damage,//攻撃受けた時の火花
+	fume,//体力少ないときに煙出る(体力半分)
 	MaxEffect
 };
 
@@ -48,7 +50,7 @@ public:
 	//エフェクトの情報(地面のズサ)
 	void EffSummary(Vector3 bulletpos,const int& enemyNum,const int& effectNum,const float& rnd_posY,const float& rnd_posZ);
 	//エフェクトの情報(ダメージ受けた時の火花)
-	void DamageSummary(Vector3 EnePos,const int& eneNum);
+	void AroundEffSummary(Vector3 bulletpos,const int& enemyNum,const int& effectNum,const int& maxCount, const float& rnd_pos,const float& rnd_vel,const float& rnd_velY,const float& start_particle);
 	//エフェクトの情報(発砲するときの硝煙)
 	void smokeSummary(Vector3 EnePos,const int& eneNum);
 	//エフェクトの情報(体力半分になった時にでる煙)
@@ -146,7 +148,6 @@ private:
 	int gasEffTimer_[ MaxArmorNumber ] = { 0 };
 	int isgasEffFlag_[ MaxArmorNumber ] = { 0 };
 	//攻撃受けた時の火花のパーティクル
-	std::unique_ptr<ParticleManager> DamageParticle_[ MaxArmorNumber ];
 	const float rnd_posDamage = 5.0f;
 	const float rnd_velDamage = 0.5f;
 	int damEffTimer_[ 4 ] = { 0 };
